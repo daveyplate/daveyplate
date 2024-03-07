@@ -1,0 +1,61 @@
+.font-semibold {
+    font-weight: 500;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply scroll-m-20 tracking-tight;
+}
+
+h1 {
+    @apply text-4xl font-extrabold lg:text-5xl;
+}
+
+h2 {
+    @apply text-3xl font-semibold;
+}
+
+h3 {
+    @apply text-2xl font-semibold;
+}
+
+h4 {
+    @apply text-xl font-semibold;
+}
+
+h5 {
+    @apply text-lg font-semibold;
+}
+
+h6 {
+    @apply font-semibold;
+}
+
+body {
+    touch-action: pan-y;
+}
+
+.flex-container {
+    @apply flex flex-col p-4 gap-4 mx-auto flex-grow;
+}
+
+.flex-center {
+    @apply items-center justify-center text-center;
+}
+
+.backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+}
+
+.top-safe {
+    top: env(safe-area-inset-top);
+}
+
+.h-safe {
+    height: env(safe-area-inset-top);
+}

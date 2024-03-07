@@ -1,0 +1,164 @@
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { useSWRConfig } from 'swr'
+
+import { useUser } from '@supabase/auth-helpers-react'
+import { Auth } from '@supabase/auth-ui-react'
+import { ThemeSupa } from '@supabase/auth-ui-shared'
+
+import { useTheme } from 'next-themes'
+
+import { useAutoTranslate } from 'next-auto-translate'
+
+import { createClient } from '@/utils/supabase/component'
+import { getStaticPaths as getExportStaticPaths } from "@/lib/get-static"
+import { getTranslationProps } from '@/lib/translation-props'
+import { isExport } from "@/utils/utils"
+
+import MainFont from "@/styles/fonts"
+
+import { Card, CardBody } from "@nextui-org/react"
+
+import { getURL } from '@/utils/utils'
+import { localeHref } from '@/components/locale-link'
+
+import { Capacitor } from '@capacitor/core'
+
+export default function Login({ view, locale }) {
+    const router = useRouter()
+    const supabase = createClient()
+    const { autoTranslate } = useAutoTranslate("login")
+    const { resolvedTheme } = useTheme()
+    const user = useUser()
+    const [isClient, setIsClient] = useState(false)
+    const { mutate } = useSWRConfig()
+
+    const defaultReturnTo = localeHref('/', locale)
+
+    useEffect(() => {
+        if (user) {
+            router.replace(router.query.returnTo || defaultReturnTo)
+
+            mutate("/api/users/me")
+        }
+    }, [user])
+    useEffect(() => { setIsClient(true) }, [])
+
+    const variables = {
+        sign_up: {
+            email_label: autoTranslate('sign_up_email_label', 'Email address'),
+            password_label: autoTranslate('sign_up_password_label', 'Create a Password'),
+            email_input_placeholder: autoTranslate('sign_up_email_input_placeholder', 'Your email address'),
+            password_input_placeholder: autoTranslate('sign_up_password_input_placeholder', 'Your password'),
+            button_label: autoTranslate('sign_up_button_label', 'Sign up'),
+            loading_button_label: autoTranslate('sign_up_loading_button_label', 'Signing up ...'),
+            social_provider_text: autoTranslate('sign_up_social_provider_text', 'Log in with {{provider}}'),
+            link_text: autoTranslate('sign_up_link_text', "Don't have an account? Sign up"),
+            confirmation_text: autoTranslate('sign_up_confirmation_text', 'Check your email for the confirmation link'),
+        },
+        sign_in: {
+            email_label: autoTranslate('sign_in_email_label', 'Email address'),
+            password_label: autoTranslate('sign_in_password_label', 'Your Password'),
+            email_input_placeholder: autoTranslate('sign_in_email_input_placeholder', 'Your email address'),
+            password_input_placeholder: autoTranslate('sign_in_password_input_placeholder', 'Your password'),
+            button_label: autoTranslate('sign_in_button_label', 'Log in'),
+            loading_button_label: autoTranslate('sign_in_loading_button_label', 'Logging in ...'),
+            social_provider_text: autoTranslate('sign_in_social_provider_text', 'Log in with {{provider}}'),
+            link_text: autoTranslate('sign_in_link_text', 'Already have an account? Log in'),
+        },
+        magic_link: {
+            email_input_label: autoTranslate('magic_link_email_input_label', 'Email address'),
+            email_input_placeholder: autoTranslate('magic_link_email_input_placeholder', 'Your email address'),
+            button_label: autoTranslate('magic_link_button_label', 'Log in'),
+            loading_button_label: autoTranslate('magic_link_loading_button_label', 'Logging in ...'),
+            link_text: autoTranslate('magic_link_link_text', 'Already have an account? Log in'),
+            confirmation_text: autoTranslate('magic_link_confirmation_text', 'Check your email for the magic link'),
+        },
+        forgotten_password: {
+            email_label: autoTranslate('forgotten_password_email_label', 'Email address'),
+            password_label: autoTranslate('forgotten_password_password_label', 'Your Password'),
+            email_input_placeholder: autoTranslate('forgotten_password_email_input_placeholder', 'Your email address'),
+            button_label: autoTranslate('forgotten_password_button_label', 'Send reset password instructions'),
+            loading_button_label: autoTranslate('forgotten_password_loading_button_label', 'Sending reset instructions ...'),
+            link_text: autoTranslate('forgotten_password_link_text', 'Forgot your password?'),
+            confirmation_text: autoTranslate('forgotten_password_confirmation_text', 'Check your email for the password reset link'),
+        },
+        update_password: {
+            password_label: autoTranslate('update_password_password_label', 'New Password'),
+            password_input_placeholder: autoTranslate('update_password_password_input_placeholder', 'Your new password'),
+            button_label: autoTranslate('update_password_button_label', 'Update password'),
+            loading_button_label: autoTranslate('update_password_loading_button_label', 'Updating password ...'),
+            confirmation_text: autoTranslate('update_password_confirmation_text', 'Your password has been updated'),
+        },
+        verify_otp: {
+            email_input_label: autoTranslate('verify_otp_email_input_label', 'Email address'),
+            email_input_placeholder: autoTranslate('verify_otp_email_input_placeholder', 'Your email address'),
+            phone_input_label: autoTranslate('verify_otp_phone_input_label', 'Phone number'),
+            phone_input_placeholder: autoTranslate('verify_otp_phone_input_placeholder', 'Your phone number'),
+            token_input_label: autoTranslate('verify_otp_token_input_label', 'Token'),
+            token_input_placeholder: autoTranslate('verify_otp_token_input_placeholder', 'Your Otp token'),
+            button_label: autoTranslate('verify_otp_button_label', 'Verify token'),
+            loading_button_label: autoTranslate('verify_otp_loading_button_label', 'Logging in …'),
+        },
+    }
+
+    if (!isClient) return null
+
+    let redirectTo = getURL() + (router.query.returnTo || defaultReturnTo)
+
+    if (Capacitor.isNativePlatform()) {
+        redirectTo = 'com.leaked.daveyplate://login-callback/?returnTo=' + (router.query.returnTo || defaultReturnTo)
+    }
+
+    return (
+        <div className="flex-container flex-center max-w-lg">
+            <Card className="w-full">
+                <CardBody className="px-4 pb-0">
+                    <Auth
+                        socialLayout='horizontal'
+                        showLinks={true}
+                        view={view || router.query?.view || 'sign_in'}
+                        supabaseClient={supabase}
+                        providers={['google', 'facebook', 'apple']}
+                        redirectTo={redirectTo}
+                        magicLink={true}
+                        theme={resolvedTheme}
+                        appearance={{
+                            theme: ThemeSupa,
+                            variables: {
+                                default: {
+                                    colors: {
+                                        brand: `hsl(var(--nextui-primary))`,
+                                        brandAccent: `hsl(var(--nextui-primary))`,
+                                    }
+                                }
+                            },
+                            style: {
+                                label: { fontFamily: MainFont.style.fontFamily },
+                                button: { fontFamily: MainFont.style.fontFamily },
+                                input: { fontFamily: MainFont.style.fontFamily },
+                                divider: { fontFamily: MainFont.style.fontFamily },
+                                anchor: { fontFamily: MainFont.style.fontFamily },
+                            },
+                            className: {
+                                label: '!text-foreground !text-base',
+                                button: '!rounded-xl !h-12 !text-base',
+                                input: '!rounded-xl !text-base !h-12 !border-2 focus:!border-foreground',
+                                anchor: '!text-sm',
+                            }
+                        }}
+                        localization={{ variables }}
+                    />
+                </CardBody>
+            </Card>
+        </div>
+    )
+}
+
+export async function getStaticProps({ locale, ...context }) {
+    const translationProps = await getTranslationProps({ locale, ...context })
+
+    return { props: { ...translationProps } }
+}
+
+export const getStaticPaths = isExport() ? getExportStaticPaths : undefined

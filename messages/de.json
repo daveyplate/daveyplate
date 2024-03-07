@@ -1,0 +1,128 @@
+{
+  "header": {
+    "view_profile": "Profil anzeigen",
+    "edit_profile": "Profil bearbeiten",
+    "settings": "Einstellungen",
+    "logout": "Abmelden",
+    "login": "Anmelden",
+    "sign_up": "Anmelden",
+    "Home": "Zuhause",
+    "Users": "Benutzer",
+    "Products": "Produkte",
+    "Chat": "Chat"
+  },
+  "users": {
+    "title": "Benutzer",
+    "subscription": "Abonnement:",
+    "inactive": "Inaktiv",
+    "active": "Aktiv",
+    "search_placeholder": "Geben Sie zum Suchen ein..."
+  },
+  "products": {
+    "title": "Produkte",
+    "prod_PTCPJwcdwf1sqd-name": "Premium",
+    "prod_PTCPJwcdwf1sqd-description": "Abonnieren Sie Premium.",
+    "month-interval": "Monat",
+    "year-interval": "Jahr"
+  },
+  "chat": {
+    "title": "Chat",
+    "description": "Willkommen in meinem Chatroom, bitte sei höflich. Bitte sei niedlich.",
+    "shout": "Was ist ein Shoutbox? Nun, zunächst einmal ist es eine Box. Und du schreist hinein. Es ist so einfach."
+  },
+  "user": {
+    "subscription": "Abonnement:",
+    "active": "Aktiv",
+    "edit_profile": "Profil bearbeiten",
+    "inactive": "Inaktiv"
+  },
+  "edit-profile": {
+    "name_required": "Name ist erforderlich.",
+    "min_name": "Name sollte mindestens 2 Zeichen lang sein",
+    "max_bio": "Bio muss weniger als 500 Zeichen lang sein.",
+    "profile_error": "Fehler beim Aktualisieren des Profils",
+    "name": "Name",
+    "name_placeholder": "Name",
+    "bio": "Bio.",
+    "bio_placeholder": "Geben Sie Ihre Biografie hier ein.",
+    "title": "Profil bearbeiten",
+    "save_changes": "Änderungen speichern"
+  },
+  "settings": {
+    "confirm_email": "Überprüfen Sie Ihre E-Mail, um die Aktualisierung zu bestätigen.",
+    "password_changed": "Ihr Passwort wurde geändert",
+    "account_deactivated": "Konto deaktiviert",
+    "updating": "Aktualisieren...",
+    "loading": "Wird geladen...",
+    "change_email": "Ändern Sie die E-Mail",
+    "Email Address": "E-Mail-Adresse",
+    "settings": "Einstellungen",
+    "update_email": "Aktualisiere E-Mail.",
+    "change_password": "Passwort ändern",
+    "manage_subscription": "Verwalte Abonnement",
+    "deactivate_account": "Konto deaktivieren",
+    "delete_account": "Konto löschen"
+  },
+  "login": {
+    "sign_up_email_label": "E-Mail-Adresse",
+    "sign_up_password_label": "Erstellen Sie ein Passwort",
+    "sign_up_email_input_placeholder": "Deine E-Mail-Adresse",
+    "sign_up_password_input_placeholder": "Dein Passwort",
+    "sign_up_button_label": "Registrieren",
+    "sign_up_loading_button_label": "Anmeldung ...",
+    "sign_up_social_provider_text": "Mit {{provider}} einloggen.",
+    "sign_up_link_text": "Haben Sie kein Konto? Registrieren Sie sich.",
+    "sign_up_confirmation_text": "Überprüfen Sie Ihre E-Mail auf den Bestätigungslink.",
+    "sign_in_email_label": "E-Mail-Adresse",
+    "sign_in_password_label": "Dein Passwort",
+    "sign_in_email_input_placeholder": "Deine E-Mail-Adresse",
+    "sign_in_password_input_placeholder": "Dein Passwort",
+    "sign_in_button_label": "Einloggen",
+    "sign_in_loading_button_label": "Anmelden ...",
+    "sign_in_social_provider_text": "Mit {{provider}} anmelden.",
+    "sign_in_link_text": "Bereits ein Konto vorhanden? Einloggen",
+    "magic_link_email_input_label": "E-Mail-Adresse",
+    "magic_link_email_input_placeholder": "Ihre E-Mail-Adresse",
+    "magic_link_button_label": "Einloggen",
+    "magic_link_loading_button_label": "Anmeldung ...",
+    "magic_link_link_text": "Schon ein Konto? Einloggen.",
+    "magic_link_confirmation_text": "Überprüfe deine E-Mail auf den magischen Link",
+    "forgotten_password_email_label": "E-Mail-Adresse",
+    "forgotten_password_password_label": "Dein Passwort",
+    "forgotten_password_email_input_placeholder": "Ihre E-Mail-Adresse",
+    "forgotten_password_button_label": "Senden Sie Anweisungen zum Zurücksetzen des Passworts.",
+    "forgotten_password_loading_button_label": "Senden von Zurücksetzen Anweisungen ...",
+    "forgotten_password_link_text": "Haben Sie Ihr Passwort vergessen?",
+    "forgotten_password_confirmation_text": "Überprüfen Sie Ihre E-Mail auf den Link zur Passwortrücksetzung.",
+    "update_password_password_label": "Neues Passwort",
+    "update_password_password_input_placeholder": "Dein neues Passwort",
+    "update_password_button_label": "Passwort aktualisieren",
+    "update_password_loading_button_label": "Aktualisiere Passwort ...",
+    "update_password_confirmation_text": "Ihr Passwort wurde aktualisiert.",
+    "verify_otp_email_input_label": "Email-Adresse",
+    "verify_otp_email_input_placeholder": "Ihre E-Mail-Adresse",
+    "verify_otp_phone_input_label": "Telefonnummer",
+    "verify_otp_phone_input_placeholder": "Deine Telefonnummer",
+    "verify_otp_token_input_label": "Token",
+    "verify_otp_token_input_placeholder": "Ihr OTP-Token",
+    "verify_otp_button_label": "Token überprüfen",
+    "verify_otp_loading_button_label": "Anmeldung …"
+  },
+  "index": {
+    "title": "Willkommen bei Daveyplate",
+    "heading": "Next.js-Boilerplatte",
+    "description_2": "NextJS Seitenrouter, um ein einfaches Navigationssystem zu erstellen. Stripe zum Akzeptieren von Zahlungen und Synchronisieren von Abonnements & Produkten.",
+    "description_1": "Einfaches Benutzerverwaltungssystem, das mit Next.js, NextUI und Supabase erstellt wurde. Verwende JavaScript, weil es viel einfacher ist als TypeScript."
+  },
+  "footer": {
+    "language_menu": "Sprachmenü",
+    "language": "Sprache"
+  },
+  "toggle_theme": {
+    "themes_menu": "Themenmenü",
+    "light": "Licht",
+    "dark": "Dunkel",
+    "system": "System",
+    "toggle_theme": "Thema umschalten"
+  }
+}

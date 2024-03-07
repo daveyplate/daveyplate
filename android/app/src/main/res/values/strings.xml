@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">daveyplate</string>
+    <string name="title_activity_main">daveyplate</string>
+    <string name="package_name">com.leaked.daveyplate</string>
+    <string name="custom_url_scheme">com.leaked.daveyplate</string>
+</resources>

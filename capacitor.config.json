@@ -1,0 +1,13 @@
+{
+  "appId": "com.leaked.daveyplate",
+  "appName": "daveyplate",
+  "webDir": "out",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "CapacitorCookies": {
+      "enabled": true
+    }
+  }
+}

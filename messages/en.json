@@ -1,0 +1,128 @@
+{
+  "header": {
+    "view_profile": "View Profile",
+    "edit_profile": "Edit Profile",
+    "settings": "Settings",
+    "logout": "Log Out",
+    "login": "Log In",
+    "sign_up": "Sign Up",
+    "Home": "Home",
+    "Users": "Users",
+    "Products": "Products",
+    "Chat": "Chat"
+  },
+  "users": {
+    "title": "Users",
+    "subscription": "Subscription:",
+    "inactive": "Inactive",
+    "active": "Active",
+    "search_placeholder": "Type to search..."
+  },
+  "products": {
+    "title": "Products",
+    "prod_PTCPJwcdwf1sqd-name": "Premium",
+    "prod_PTCPJwcdwf1sqd-description": "Subscribe for premium.",
+    "month-interval": "month",
+    "year-interval": "year"
+  },
+  "chat": {
+    "title": "Chat",
+    "description": "Welcome to my shoutbox, please be polite. Please be cute.",
+    "shout": "What is a shoutbox? Well, first off it's a box. And you shout into it. It's that simple."
+  },
+  "user": {
+    "subscription": "Subscription:",
+    "active": "Active",
+    "edit_profile": "Edit Profile",
+    "inactive": "Inactive"
+  },
+  "edit-profile": {
+    "name_required": "Name is required",
+    "min_name": "Name must be at least 2 characters",
+    "max_bio": "Bio must be less than 500 characters",
+    "profile_error": "Error updating profile",
+    "name": "Name",
+    "name_placeholder": "Name",
+    "bio": "Bio",
+    "bio_placeholder": "Type your bio here",
+    "title": "Edit Profile",
+    "save_changes": "Save Changes"
+  },
+  "settings": {
+    "confirm_email": "Check your email to confirm update",
+    "password_changed": "Your password has been changed",
+    "account_deactivated": "Account deactivated",
+    "updating": "Updating...",
+    "loading": "Loading...",
+    "change_email": "Change Email",
+    "Email Address": "Email Address",
+    "settings": "Settings",
+    "update_email": "Update Email",
+    "change_password": "Change Password",
+    "manage_subscription": "Manage Subscription",
+    "deactivate_account": "Deactivate Account",
+    "delete_account": "Delete Account"
+  },
+  "login": {
+    "sign_up_email_label": "Email address",
+    "sign_up_password_label": "Create a Password",
+    "sign_up_email_input_placeholder": "Your email address",
+    "sign_up_password_input_placeholder": "Your password",
+    "sign_up_button_label": "Sign up",
+    "sign_up_loading_button_label": "Signing up ...",
+    "sign_up_social_provider_text": "Log in with {{provider}}",
+    "sign_up_link_text": "Don't have an account? Sign up",
+    "sign_up_confirmation_text": "Check your email for the confirmation link",
+    "sign_in_email_label": "Email address",
+    "sign_in_password_label": "Your Password",
+    "sign_in_email_input_placeholder": "Your email address",
+    "sign_in_password_input_placeholder": "Your password",
+    "sign_in_button_label": "Log in",
+    "sign_in_loading_button_label": "Logging in ...",
+    "sign_in_social_provider_text": "Log in with {{provider}}",
+    "sign_in_link_text": "Already have an account? Log in",
+    "magic_link_email_input_label": "Email address",
+    "magic_link_email_input_placeholder": "Your email address",
+    "magic_link_button_label": "Log in",
+    "magic_link_loading_button_label": "Logging in ...",
+    "magic_link_link_text": "Already have an account? Log in",
+    "magic_link_confirmation_text": "Check your email for the magic link",
+    "forgotten_password_email_label": "Email address",
+    "forgotten_password_password_label": "Your Password",
+    "forgotten_password_email_input_placeholder": "Your email address",
+    "forgotten_password_button_label": "Send reset password instructions",
+    "forgotten_password_loading_button_label": "Sending reset instructions ...",
+    "forgotten_password_link_text": "Forgot your password?",
+    "forgotten_password_confirmation_text": "Check your email for the password reset link",
+    "update_password_password_label": "New Password",
+    "update_password_password_input_placeholder": "Your new password",
+    "update_password_button_label": "Update password",
+    "update_password_loading_button_label": "Updating password ...",
+    "update_password_confirmation_text": "Your password has been updated",
+    "verify_otp_email_input_label": "Email address",
+    "verify_otp_email_input_placeholder": "Your email address",
+    "verify_otp_phone_input_label": "Phone number",
+    "verify_otp_phone_input_placeholder": "Your phone number",
+    "verify_otp_token_input_label": "Token",
+    "verify_otp_token_input_placeholder": "Your Otp token",
+    "verify_otp_button_label": "Verify token",
+    "verify_otp_loading_button_label": "Logging in …"
+  },
+  "index": {
+    "title": "Welcome to Daveyplate",
+    "heading": "Next.js Boilerplate",
+    "description_1": "Simple user management system built with Next.js, NextUI, and Supabase. Using JavaScript because it is much more simple than TypeScript.",
+    "description_2": "NextJS Page Router to create a simple navigation system. Stripe to accept payments and synchronize subscriptions & products."
+  },
+  "footer": {
+    "language_menu": "Language Menu",
+    "language": "Language"
+  },
+  "toggle_theme": {
+    "themes_menu": "Themes Menu",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggle_theme": "Toggle theme"
+  }
+}
