@@ -3,28 +3,28 @@ import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { useSession } from "@supabase/auth-helpers-react"
 
-import { useCache } from "@/components/cache-provider"
 import { postAPI } from "@/utils/utils"
-
-import { toast } from "@/components/toast-provider"
+import { useEntity } from "@daveyplate/supabase-swr-entities"
+import { toast } from "@/components/providers/toast-provider"
 
 // The key purpose is to ensure that the user's subscription status is checked after a successful order
 export default function CheckoutStatus() {
+    // TODO FIX postAPI missing session here
     const router = useRouter()
     const session = useSession()
-    const { data: user, mutate } = useCache(session ? '/api/users/me' : null)
+    const { entity: user, mutate: mutateUser } = useEntity(session ? 'profiles' : null, 'me')
 
     useEffect(() => {
-        if (router.query.success) {
+        if (router.query.success && user) {
             toast('Order placed!')
 
-            if (user && !user.claims?.premium) {
+            if (!user.premium) {
                 // Check subscription status
                 postAPI('/api/check-subscription')
                     .then(res => {
                         if (res.data.active) {
                             toast('Subscription active!', { color: 'success' })
-                            mutate()
+                            mutateUser()
                         }
                     })
                     .catch(err => {
@@ -38,5 +38,5 @@ export default function CheckoutStatus() {
         if (router.query.canceled) {
             toast('Order canceled')
         }
-    }, [router.query])
+    }, [router.query, user])
 }

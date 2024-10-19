@@ -1,13 +1,11 @@
-import { useSession } from "@supabase/auth-helpers-react"
 import { useEffect, useState } from "react"
-import { useSWRConfig } from "swr"
-import { useCache } from "./cache-provider"
-import { patchAPI } from "@/utils/utils"
+import { useSession } from "@supabase/auth-helpers-react"
+
+import { useEntity } from "@daveyplate/supabase-swr-entities"
 
 export default () => {
     const session = useSession()
-    const { data: user } = useCache(session ? '/api/users/me' : null)
-    const { mutate } = useSWRConfig()
+    const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
     const [checked, setChecked] = useState(false)
 
     useEffect(() => {
@@ -15,12 +13,7 @@ export default () => {
             if (checked) return
             setChecked(true)
 
-            patchAPI(session, '/api/users/me', { deactivated: false })
-                .catch((error) => console.error(error))
-                .finally(() => {
-                    mutate('/api/users/me')
-                    mutate('/api/users')
-                })
+            updateUser(user, { deactivated: false })
         } else {
             setChecked(false)
         }

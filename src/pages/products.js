@@ -3,23 +3,23 @@ import { useRouter } from "next/router"
 
 import axios from 'axios'
 
-import { useUser } from '@supabase/auth-helpers-react'
+import { useSession } from '@supabase/auth-helpers-react'
 
 import { AutoTranslate } from 'next-auto-translate'
 
 import { getStaticPaths as getExportStaticPaths } from "@/lib/get-static"
 import { getTranslationProps } from '@/lib/translation-props'
 import { isExport } from "@/utils/utils"
-import { useCache } from "@/components/cache-provider"
 
 import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react"
 
 import { toast } from '@/components/toast-provider'
+import { useEntity } from "@daveyplate/supabase-swr-entities"
 
 export default function Products({ products, prices }) {
     const router = useRouter()
-    const sessionUser = useUser()
-    const { data: user } = useCache(sessionUser ? '/api/users/me' : null)
+    const session = useSession()
+    const { entity: user } = useEntity(session ? 'profiles' : null, 'me')
 
     const [priceIdLoading, setPriceIdLoading] = useState(null)
 
@@ -36,7 +36,7 @@ export default function Products({ products, prices }) {
             {
                 price,
                 metadata: product.metadata,
-                customer_name: user?.full_name || sessionUser?.user_metadata.full_name,
+                customer_name: user?.full_name
             }
         )
 
@@ -107,11 +107,13 @@ export default function Products({ products, prices }) {
 export async function getStaticProps({ locale, ...context }) {
     const translationProps = await getTranslationProps({ locale, ...context })
 
-    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+    // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
-    const products = await stripe.products.list().then(res => res.data)
-    const prices = await stripe.prices.list().then(res => res.data)
+    // const products = await stripe.products.list().then(res => res.data)
+    // const prices = await stripe.prices.list().then(res => res.data)
 
+    const products = []
+    const prices = []
     return {
         props: {
             ...translationProps,

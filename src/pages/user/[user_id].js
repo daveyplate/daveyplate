@@ -38,6 +38,7 @@ import { isExport } from "@/utils/utils"
 import { toast } from "@/components/toast-provider"
 
 import { CloudArrowUpIcon, PencilIcon } from "@heroicons/react/24/solid"
+import { useEntity } from "@daveyplate/supabase-swr-entities"
 
 const avatarSize = 512
 
@@ -65,11 +66,7 @@ export default function UserPage({ user: fallbackData, locale }) {
 
     const { getRootProps, getInputProps, open, isDragActive, fileRejections } = useDropzone({ onDrop, disabled: !isMe, accept: { 'image/*': [] } })
 
-    const { data: user, isLoading } = useCache(
-        user_id ?
-            (isMe ? '/api/users/me' : `/api/users/${user_id}`)
-            : null,
-        { fallbackData })
+    const { data: user, isLoading } = useEntity('profiles', user_id)
 
     const editor = useRef(null)
     const [uploadingAvatar, setUploadingAvatar] = useState(false)

@@ -19,14 +19,12 @@ export function createClient(req, res) {
         {
             cookies: {
                 getAll() {
-                    return Object.keys(req.cookies).map((name) => ({ name, value: req.cookies[name] || '' }))
+                    return req.cookies.getAll()
                 },
                 setAll(cookiesToSet) {
-                    res.setHeader(
-                        'Set-Cookie',
-                        cookiesToSet.map(({ name, value, options }) =>
-                            serializeCookieHeader(name, value, options)
-                        )
+                    cookiesToSet.forEach(({ name, value, options }) => req.cookies.set(name, value))
+                    cookiesToSet.forEach(({ name, value, options }) =>
+                        res.cookies.set(name, value, options)
                     )
                 },
             },

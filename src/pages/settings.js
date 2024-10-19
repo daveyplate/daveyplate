@@ -29,12 +29,13 @@ import {
 
 import { toast } from '@/components/toast-provider'
 import { localeHref } from '@/components/locale-link'
+import { useEntity } from '@daveyplate/supabase-swr-entities'
 
 export default function Settings({ locale }) {
     const router = useRouter()
     const { autoTranslate } = useAutoTranslate()
     const { session, isLoading } = useSessionContext()
-    const { data: user } = useCache(session ? '/api/users/me' : null, { revalidateOnFocus: false })
+    const { entity: user } = useEntity(session ? 'profiles' : null, 'me')
     const { mutate } = useSWRConfig()
 
     const supabase = createClient()

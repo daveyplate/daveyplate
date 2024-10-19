@@ -8,7 +8,6 @@ import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { getStaticPaths as getExportStaticPaths } from "@/lib/get-static"
 import { getTranslationProps } from '@/lib/translation-props'
 import { isExport } from "@/utils/utils"
-import { useCache } from '@/components/cache-provider'
 import { patchAPI } from '@/utils/utils'
 
 import {
@@ -22,12 +21,12 @@ import {
 } from "@nextui-org/react"
 
 import { toast } from "@/components/toast-provider"
+import { useEntity } from '@daveyplate/supabase-swr-entities'
 
 export default function EditProfile() {
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()
-    const sessionUser = useUser()
-    const { data: user } = useCache(sessionUser ? '/api/users/me' : null, { revalidateOnFocus: false })
+    const { entity: user } = useEntity(session ? 'profiles' : null, 'me')
     const { mutate } = useSWRConfig()
 
     const [isUpdating, setIsUpdating] = useState(false)

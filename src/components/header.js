@@ -56,6 +56,7 @@ import {
 } from '@heroicons/react/24/solid'
 import PageTitle, { useDocumentTitle } from "./page-title"
 import { isExport } from "@/utils/utils"
+import { useEntity } from "@daveyplate/supabase-swr-entities"
 
 const siteName = "Daveyplate"
 
@@ -76,7 +77,7 @@ export default function Header({ locale, overrideTitle }) {
     const session = useSession()
     const { isLoading: sessionLoading } = useSessionContext()
     const { autoTranslate } = useAutoTranslate("header")
-    const { data: user, isLoading, error } = useCache(session ? '/api/users/me' : null)
+    const { entity: user, isLoading, error } = useEntity(session ? 'profiles' : null, 'me')
 
     const basePath = localeHref('/', locale)
 
