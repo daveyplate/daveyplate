@@ -48,8 +48,8 @@ export default function UsersPage({ users }) {
     }, [users, enabled])
 
     return (
-        <div className="flex-container max-w-xl transition-all flex flex-col !px-0 !pt-0">
-            <h2 className="text-center hidden sm:block">
+        <div className="flex-container mx-auto items-center max-w-xl transition-all">
+            <h2 className="text-center hidden sm:block w-full">
                 <AutoTranslate tKey="title">
                     Users
                 </AutoTranslate>
@@ -57,8 +57,9 @@ export default function UsersPage({ users }) {
 
             <div className="fixed top-0 w-screen h-safe bg-background z-40" />
 
-            <div className="sticky top-safe z-40 backdrop-blur-xl bg-background/70 p-4 shadow-lg sm:shadow-none">
+            <div className="sticky top-safe z-40 backdrop-blur-xl bg-background/70 shadow-lg sm:shadow-none w-full">
                 <Input
+                    fullWidth
                     isClearable
                     classNames={{
                         input: "!text-base",
@@ -74,9 +75,9 @@ export default function UsersPage({ users }) {
                 />
             </div>
 
-            <div className="flex flex-col gap-4 px-4 transition-all">
+            <div className="flex flex-col gap-4 transition-all w-full">
                 {(!users || users.length == 0) && !isLoading && (
-                    <Card>
+                    <Card fullWidth>
                         <CardBody className="p-8">
                             <AutoTranslate tKey="no_users">
                                 No users found...
