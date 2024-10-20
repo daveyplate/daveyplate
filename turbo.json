@@ -19,5 +19,8 @@
             "persistent": true,
             "cache": false
         }
-    }
+    },
+    "globalEnv": [
+        "TEST_ENV_VAR"
+    ]
 }
