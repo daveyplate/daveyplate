@@ -25,18 +25,10 @@ export default function Providers({ initialSession, children, title, Component, 
     useWindowFocusBlur()
 
     return (
-        <SessionContextProvider
-            initialSession={pageProps.initialSession}
-            supabaseClient={supabase}
-        >
-            <CacheProvider {...pageProps}>
+        <SessionContextProvider supabaseClient={supabase}>
+            <CacheProvider>
                 <NextUIProvider navigate={router.push}>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+                    <ThemeProvider attribute="class">
                         <NextIntlClientProvider
                             locale={pageProps.locale || "en"}
                             messages={pageProps.messages}
