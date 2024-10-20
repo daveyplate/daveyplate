@@ -149,6 +149,8 @@ export async function getStaticProps({ locale, ...context }) {
 
     if (isExport()) return { props: { ...translationProps } }
 
+    console.log(process.env)
+
     const supabase = createClient()
     const { data: users, error } = await supabase
         .from('profiles')
