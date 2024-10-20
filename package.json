@@ -47,8 +47,6 @@
     "compressorjs": "^1.2.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express-rate-limit": "^7.1.5",
-    "express-slow-down": "^2.0.1",
     "framer-motion": "^11.11.9",
     "ignore": "^6.0.2",
     "imagemin": "^9.0.0",
