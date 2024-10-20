@@ -4,7 +4,6 @@ import NextImage from "next/image"
 import { useRouter } from "next/router"
 
 import { useSession, useSessionContext } from "@supabase/auth-helpers-react"
-import { useSWRConfig } from "swr"
 
 import { Network } from '@capacitor/network'
 import { Capacitor } from "@capacitor/core"
@@ -92,18 +91,6 @@ export default function Header({ locale, overrideTitle }) {
         { icon: ChatBubbleLeftRightIcon, name: "Chat", path: "/chat" },
     ]
 
-    const { cache } = useSWRConfig()
-
-    useEffect(() => {
-        console.log("cache", cache)
-    }, [cache])
-
-    if (isExport()) {
-        useEffect(() => {
-            console.log("router.asPath", router.asPath)
-        }, [router.asPath])
-    }
-
     useEffect(() => {
         if (Capacitor.isPluginAvailable('Network')) {
             Network.addListener('networkStatusChange', status => {
@@ -122,18 +109,6 @@ export default function Header({ locale, overrideTitle }) {
             return () => Network.removeAllListeners()
         }
     }, [])
-
-    /*
-    const goBackOrFallback = () => {
-        // Attempt to go back if there's a history within the site
-        if (document.referrer.includes(window.location.hostname)) {
-            router.back()
-        } else {
-            // Fallback to a specific path within your site
-            router.replace('/')
-        }
-    }
-    */
 
     return (
         <>

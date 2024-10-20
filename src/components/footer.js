@@ -45,7 +45,7 @@ export default function Footer({ locales, locale: currentLocale }) {
     }
 
     return (
-        <footer className="backdrop-blur-xl bg-content1 pb-safe">
+        <footer className="backdrop-blur-xl bg-content1 pb-safe sticky bottom-0">
             <div className="flex justify-center items-center h-16 gap-2 overflow-hidden">
                 <Dropdown
                     classNames={{

@@ -32,7 +32,7 @@ const PulseGreen = ({ children, className }) => {
 
 export default function Home() {
     return (
-        <div className="flex-container flex-center max-w-2xl">
+        <div className="flex-center max-w-2xl">
             <h1>
                 <AutoTranslate tKey="title">
                     Welcome to Daveyplate
