@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     if (token_hash && type) {
         const supabase = createClient(req, res)
         const { error } = await supabase.auth.verifyOtp({
-            type: type,
+            type,
             token_hash,
         })
 

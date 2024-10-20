@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     }
 
     const supabase = createClient(req, res)
-    await supabase.auth.signOut()
+    await supabase.auth.signOut({ scope: "local" })
 
     res.redirect('/login')
 }
