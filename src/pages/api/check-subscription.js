@@ -1,12 +1,9 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-import applyRateLimit from '@/utils/apply-rate-limit';
 import { createClient } from '@/utils/supabase/api'
 import { createClient as createAdminClient } from '@/utils/supabase/service-role'
 
 export default async function handler(req, res) {
-    await applyRateLimit(req, res)
-
     if (req.method === 'POST') {
         const supabase = createClient(req, res)
 

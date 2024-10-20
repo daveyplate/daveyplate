@@ -1,5 +1,4 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-import applyRateLimit from '@/utils/apply-rate-limit'
 import { createClient } from '@/utils/supabase/api'
 import { runMiddleware } from '@/utils/utils'
 
@@ -7,7 +6,6 @@ import Cors from "cors"
 const cors = Cors()
 
 export default async function handler(req, res) {
-    await applyRateLimit(req, res)
     await runMiddleware(req, res, cors)
 
     if (req.method === 'POST') {

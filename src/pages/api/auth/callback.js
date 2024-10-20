@@ -1,4 +1,3 @@
-import applyRateLimit from '@/utils/apply-rate-limit'
 import { createClient } from '@/utils/supabase/api'
 
 function stringOrFirstString(item) {
@@ -6,8 +5,6 @@ function stringOrFirstString(item) {
 }
 
 export default async function handler(req, res) {
-    await applyRateLimit(req, res)
-
     if (req.method !== 'GET') {
         res.status(405).appendHeader('Allow', 'GET').end()
         return
