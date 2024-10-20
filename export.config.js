@@ -1,7 +1,6 @@
-
-/** @type {import('next').NextConfig} */
 const withTM = require('next-transpile-modules')(['@stampmyvisa/react-flagpack']);
 
+/** @type {import('next').NextConfig} */
 module.exports = withTM({
     output: "export",
     images: { unoptimized: true },
