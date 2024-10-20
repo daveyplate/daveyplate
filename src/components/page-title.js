@@ -1,50 +1,23 @@
-import { useEffect, useState } from 'react'
 import Head from "next/head"
 import { useRouter } from "next/router"
-
+import { useAutoTranslate } from "next-auto-translate"
 import { localeHref } from "@/components/locale-link"
 
 const siteName = "Daveyplate"
 
-export function useDocumentTitle() {
-    const [title, setTitle] = useState(typeof (document) != "undefined" ? document.title : "")
-
-    useEffect(() => {
-        // Observe the title element for changes
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.type === "childList") {
-                    setTitle(document.title)
-                }
-            })
-        })
-
-        const target = document.querySelector('title')
-        if (target) {
-            observer.observe(target, { childList: true })
-        }
-
-        setTitle(document.title)
-
-        // Cleanup observer on component unmount
-        return () => observer.disconnect()
-    }, [])
-
-    return title.split('|')[0].trim()
-}
-
 export default function PageTitle({ title, locale }) {
     const router = useRouter()
     const basePath = localeHref('/', locale)
+    const { autoTranslate } = useAutoTranslate("page_title")
 
     if (title == undefined) {
-        title = formatPathToTitle(router.pathname)
+        title = autoTranslate(formatPathToTitle(router.pathname), formatPathToTitle(router.pathname))
     }
 
     return (
         <Head>
             <title>
-                {router.asPath == basePath ? siteName : `${title} | ${siteName}`}
+                {router.asPath == basePath ? siteName : title ? `${title} | ${siteName}` : null}
             </title>
         </Head>
     )

@@ -35,7 +35,6 @@ import {
 
 import Link from "@/components/locale-link"
 import { localeHref } from "@/components/locale-link"
-import { useCache } from "@/components/providers/cache-provider"
 
 import ToggleTheme from "@/components/toggle-theme"
 import UserAvatar from "@/components/user-avatar"
@@ -54,7 +53,9 @@ import {
     ChatBubbleLeftRightIcon,
     ChevronLeftIcon
 } from '@heroicons/react/24/solid'
-import PageTitle, { useDocumentTitle } from "./page-title"
+import PageTitle from "./page-title"
+import { useDocumentTitle } from "@daveyplate/use-document-title"
+
 import { isExport } from "@/utils/utils"
 import { useEntity } from "@daveyplate/supabase-swr-entities"
 
@@ -185,7 +186,7 @@ export default function Header({ locale, overrideTitle }) {
                         {router.asPath == basePath && logo}
 
                         <p className="font-bold truncate max-w-[160px]" suppressHydrationWarning>
-                            {currentTitle}
+                            {currentTitle?.split('|')[0].trim()}
                         </p>
                     </NavbarBrand>
                 </NavbarContent>
