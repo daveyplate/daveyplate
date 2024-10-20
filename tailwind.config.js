@@ -1,4 +1,3 @@
-// tailwind.config.js
 const { nextui } = require("@nextui-org/react")
 
 /** @type {import('tailwindcss').Config} */
@@ -23,13 +22,13 @@ module.exports = {
       themes: {
         dark: {
           colors: {
-            background: '#000000'
+            background: "#000000"
           }
         }
       }
     }),
     require("tailwindcss-animate"),
-    require('tailwindcss-safe-area'),
-    require('autoprefixer'),
+    require("tailwindcss-safe-area"),
+    require("autoprefixer"),
   ],
 }
