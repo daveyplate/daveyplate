@@ -149,7 +149,6 @@ export async function getStaticProps({ locale, ...context }) {
 
     if (isExport()) return { props: { ...translationProps } }
 
-    /*
     const supabase = createClient()
     const { data: users, error } = await supabase
         .from('profiles')
@@ -158,12 +157,11 @@ export async function getStaticProps({ locale, ...context }) {
         .order('created_at', { ascending: false })
 
     if (error) return { notFound: true }
-    */
 
     return {
         props: {
             ...translationProps,
-            // users,
+            users,
         },
         revalidate: 60
     }
