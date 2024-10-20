@@ -13,16 +13,21 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        "2xl": "1400px",
-        '3xl': '1600px',
-        "xs": "475px",
         "tall": { "raw": "(min-height: 800px)" },
       },
     },
   },
   darkMode: "class",
   plugins: [
-    nextui(),
+    nextui({
+      themes: {
+        dark: {
+          colors: {
+            background: '#000000'
+          }
+        }
+      }
+    }),
     require("tailwindcss-animate"),
     require('tailwindcss-safe-area'),
     require('autoprefixer'),
