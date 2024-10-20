@@ -152,9 +152,21 @@ export default function UsersPage({ users: fallbackData }) {
 export async function getStaticProps({ locale, ...context }) {
     const translationProps = await getTranslationProps({ locale, ...context })
 
+    if (isExport()) return { props: { ...translationProps } }
+
+    const supabase = createClient()
+    const { data: users, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('deactivated', false)
+        .order('created_at', { ascending: false })
+
+    if (error) return { notFound: true }
+
     return {
         props: {
-            ...translationProps
+            ...translationProps,
+            users,
         },
         revalidate: 60
     }

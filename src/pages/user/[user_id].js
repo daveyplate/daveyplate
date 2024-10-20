@@ -348,8 +348,8 @@ export async function getStaticProps({ locale, params, ...context }) {
     if (isExport()) return { props: { ...translationProps, overrideTitle: true } }
 
     const supabase = createAdminClient()
-    const { data: user, error } = await supabase.from('users')
-        .select('id, full_name, claims, avatar_url, bio')
+    const { data: user, error } = await supabase.from('profiles')
+        .select('*')
         .eq('id', params.user_id)
         .eq('deactivated', false)
         .single()
