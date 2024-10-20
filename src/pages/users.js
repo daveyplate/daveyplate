@@ -155,6 +155,8 @@ export async function getStaticProps({ locale, ...context }) {
         console.error("Service role key is not defined")
     }
 
+    console.log(process.env.TEST_ENV_VAR)
+
     const supabase = createClient()
     const { data: users, error } = await supabase
         .from('profiles')
