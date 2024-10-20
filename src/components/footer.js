@@ -10,7 +10,7 @@ import {
     Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection, Button
 } from "@nextui-org/react"
 
-import Flag from "@stampmyvisa/react-flagpack"
+import Flag from 'react-flagpack'
 import { isExport } from "@/utils/utils"
 
 const localeToCountry = {
@@ -60,23 +60,21 @@ export default function Footer({ locales, locale: currentLocale }) {
                     }}
                 >
                     <DropdownTrigger>
-                        <Button variant="light" size="lg" isIconOnly>
+                        <Button variant="light" isIconOnly>
                             <Flag
-                                className="shadow shadow-black/20 !w-7 !h-auto"
                                 code={localeToCountry[currentLocale]}
                                 gradient="real-linear"
-                                hasBorder
+                                size="m"
+                                hasDropShadow
                             />
                         </Button>
                     </DropdownTrigger>
 
                     <DropdownMenu
                         aria-label={autoTranslate("language_menu", "Language Menu")}
-                        itemClasses={{ title: "!text-lg", base: "gap-3" }}
                     >
                         <DropdownSection
                             title={autoTranslate("language", "Language")}
-                            classNames={{ heading: "text-base" }}
                             showDivider
                         />
 
@@ -86,11 +84,10 @@ export default function Footer({ locales, locale: currentLocale }) {
                                 onPress={() => handleLocaleChange(locale)}
                                 startContent={
                                     <Flag
-                                        className="!w-7 !h-auto"
                                         code={localeToCountry[locale]}
                                         gradient="real-linear"
                                         hasDropShadow
-                                        hasBorder
+                                        size="m"
                                     />
                                 }
                             >
