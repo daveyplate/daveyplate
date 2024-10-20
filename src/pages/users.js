@@ -149,7 +149,11 @@ export async function getStaticProps({ locale, ...context }) {
 
     if (isExport()) return { props: { ...translationProps } }
 
-    console.log(process.env)
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+    // Ensure that you add error handling to check if the variable is undefined
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
+        console.error("Service role key is not defined")
+    }
 
     const supabase = createClient()
     const { data: users, error } = await supabase
