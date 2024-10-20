@@ -15,7 +15,6 @@ import { createClient } from '@/utils/supabase/component'
 
 import CacheProvider from "@/components/cache-provider"
 import CheckoutStatus from "@/components/checkout-status"
-import MetaTheme from "@/components/meta-theme"
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
 import ReactivateUser from "@/components/reactivate-user"
 import { CapacitorProvider } from "@/components/capacitor-provider"
@@ -57,7 +56,6 @@ export default function Providers({ initialSession, children, title, Component, 
                                 <ReactivateUser />
                                 <CheckoutStatus />
                                 <ToastProvider />
-                                <MetaTheme />
                                 <CapacitorProvider />
 
                                 <SpeedInsights debug={false} />
