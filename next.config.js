@@ -6,7 +6,7 @@ const { i18n } = require('./next-i18next.config')
 module.exports = withTM({
   // output: "export",
   // images: { unoptimized: true },
-  i18n,
+  // i18n,
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     config.module.rules.push({
