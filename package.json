@@ -52,7 +52,6 @@
     "imagemin": "^9.0.0",
     "imagemin-optipng": "^8.0.0",
     "imagemin-pngquant": "^10.0.0",
-    "jsonwebtoken": "^9.0.2",
     "lodash.debounce": "^4.0.8",
     "micro": "^10.0.1",
     "next": "^14.2.15",
