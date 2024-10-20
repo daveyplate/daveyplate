@@ -1,4 +1,4 @@
-import { getTranslationProps } from "@/lib/translation-props"
+import { getTranslationProps } from "@/utils/translation-props"
 import { AutoTranslate } from "next-auto-translate"
 
 export default function Custom404() {

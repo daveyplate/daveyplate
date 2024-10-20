@@ -1,7 +1,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import languageDetector from '@/lib/language-detector'
+import languageDetector from '@/utils/language-detector'
 
 // Index redirect for static export & Capacitor
 export default () => {

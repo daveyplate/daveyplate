@@ -1,5 +1,5 @@
-import { getStaticPaths as getExportStaticPaths } from "@/lib/get-static"
-import { getTranslationProps } from "@/lib/translation-props"
+import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
+import { getTranslationProps } from "@/utils/translation-props"
 import { isExport } from "@/utils/utils"
 
 import LoginPage from "./login"

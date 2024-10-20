@@ -8,8 +8,8 @@ import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
 import { createClient } from '@/utils/supabase/component'
 
-import { getStaticPaths as getExportStaticPaths } from "@/lib/get-static"
-import { getTranslationProps } from '@/lib/translation-props'
+import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
+import { getTranslationProps } from '@/utils/translation-props'
 import { isExport, patchAPI, postAPI, deleteAPI } from "@/utils/utils"
 import { useCache } from '@/components/providers/cache-provider'
 
