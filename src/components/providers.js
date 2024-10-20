@@ -10,8 +10,6 @@ import { AutoTranslateProvider } from 'next-auto-translate'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 
-import { GoogleAnalytics } from "nextjs-google-analytics"
-
 import ToastProvider from "@/components/toast-provider"
 import { createClient } from '@/utils/supabase/component'
 
@@ -62,7 +60,6 @@ export default function Providers({ initialSession, children, title, Component, 
                                 <MetaTheme />
                                 <CapacitorProvider />
 
-                                <GoogleAnalytics trackPageViews />
                                 <SpeedInsights debug={false} />
                                 <Analytics debug={false} />
                             </AutoTranslateProvider>
