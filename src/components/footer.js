@@ -44,9 +44,17 @@ export default function Footer({ locales, locale: currentLocale }) {
         return `/${locale}${path}`
     }
 
+    const handleLocaleChange = (locale) => {
+        if (isExport()) {
+            router.push(getLocaleLink(locale))
+        } else {
+            router.push(router.pathname, router.asPath, { locale })
+        }
+    }
+
     return (
-        <footer className="backdrop-blur-xl bg-content1 pb-safe sticky bottom-0">
-            <div className="flex justify-center items-center h-16 gap-2 overflow-hidden">
+        <footer className="backdrop-blur-xl bg-background/70 pb-safe sticky bottom-0">
+            <div className="flex justify-center items-center py-2 gap-2 overflow-hidden">
                 <Dropdown
                     classNames={{
                         content: "min-w-fit border border-default bg-gradient-to-br to-background from-default/20",
@@ -75,11 +83,8 @@ export default function Footer({ locales, locale: currentLocale }) {
 
                         {locales?.map((locale) => (
                             <DropdownItem
-                                as={Link}
                                 key={locale}
-                                href={getLocaleLink(locale)}
-                                replace
-                                locale={locale}
+                                onPress={() => handleLocaleChange(locale)}
                                 startContent={
                                     <Flag
                                         className="!w-7 !h-auto"
