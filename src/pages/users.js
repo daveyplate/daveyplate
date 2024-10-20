@@ -18,7 +18,7 @@ import UserAvatar from "@/components/user-avatar"
 
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
 
-export default function UsersPage({ users: fallbackData }) {
+export default function UsersPage({ users }) {
     const { autoTranslate } = useAutoTranslate()
     const { mutate, enabled } = useSWRConfig()
 
@@ -26,12 +26,7 @@ export default function UsersPage({ users: fallbackData }) {
     const [search, setSearch] = useState('')
     const [q, setQ] = useState('')
 
-    const { data: users, isLoading } = useCache(
-        search.length > 0 && q.length > 0 ? (
-            `/api/users?q=${encodeURIComponent(q)}`
-        ) : (
-            '/api/users'
-        ), { fallbackData: search.length > 0 ? undefined : fallbackData })
+    const isLoading = false
 
     // Debounce the search function
     const debouncedSearch = useCallback(debounce((query) => setQ(query), 300), [])
