@@ -28,7 +28,10 @@ export default function Providers({ initialSession, children, title, Component, 
         <SessionContextProvider supabaseClient={supabase}>
             <CacheProvider>
                 <NextUIProvider navigate={router.push}>
-                    <ThemeProvider attribute="class">
+                    <ThemeProvider
+                        attribute="class"
+                        disableTransitionOnChange
+                    >
                         <NextIntlClientProvider
                             locale={pageProps.locale || "en"}
                             messages={pageProps.messages}
