@@ -21,6 +21,9 @@
         }
     },
     "globalEnv": [
-        "TEST_ENV_VAR"
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_JWT_SECRET",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_URL"
     ]
 }

@@ -144,35 +144,10 @@ export default function UsersPage({ users }) {
     )
 }
 
-export async function getStaticProps() {
-    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
-    // Ensure that you add error handling to check if the variable is undefined
-    if (!SUPABASE_SERVICE_ROLE_KEY) {
-        console.error("Service role key is not defined")
-    }
-
-    console.log(process.env.TEST_ENV_VAR)
-
-    return {
-        props: {
-            users: []
-        },
-        revalidate: 60
-    }
-}
-/*
 export async function getStaticProps({ locale, ...context }) {
     const translationProps = await getTranslationProps({ locale, ...context })
 
     if (isExport()) return { props: { ...translationProps } }
-
-    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
-    // Ensure that you add error handling to check if the variable is undefined
-    if (!SUPABASE_SERVICE_ROLE_KEY) {
-        console.error("Service role key is not defined")
-    }
-
-    console.log(process.env.TEST_ENV_VAR)
 
     const supabase = createClient()
     const { data: users, error } = await supabase
@@ -193,4 +168,3 @@ export async function getStaticProps({ locale, ...context }) {
 }
 
 export const getStaticPaths = isExport() ? getExportStaticPaths : undefined
-*/
