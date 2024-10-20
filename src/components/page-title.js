@@ -3,8 +3,9 @@ import { useRouter } from "next/router"
 import { useAutoTranslate } from "next-auto-translate"
 import { localeHref } from "@/components/locale-link"
 
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME
+
 export default function PageTitle({ title, locale }) {
-    const siteName = process.env.NEXT_PUBLIC_SITE_NAME
     const router = useRouter()
     const basePath = localeHref('/', locale)
     const { autoTranslate } = useAutoTranslate("page_title")
