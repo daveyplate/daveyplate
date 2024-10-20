@@ -1,8 +1,7 @@
+import { cn } from "@nextui-org/react"
 import { useTheme } from "next-themes"
 import { Toaster, toast as sonnerToast } from "sonner"
-import { cn } from "@nextui-org/react"
 
-// TODO add pointer-events-none to daveyplate
 export default function ToastProvider() {
     const { theme } = useTheme()
     return (
@@ -21,9 +20,8 @@ export default function ToastProvider() {
                     text-center
                     rounded-full
                     w-full
-                    mb-[5svh]
-                    shadow-lg
-                    pointer-events-none
+                    mb-[8svh]
+                    shadow-sm
                 `,
             }}
         />

@@ -5,7 +5,7 @@ import { getTranslationProps } from '@/lib/translation-props'
 import { isExport } from "@/utils/utils"
 
 import { Button, Card, CardBody } from "@nextui-org/react"
-import { useClearCache } from '@/components/cache-provider'
+import { useClearCache } from '@/components/providers/cache-provider'
 
 export default function Messages() {
     const clearCache = useClearCache()

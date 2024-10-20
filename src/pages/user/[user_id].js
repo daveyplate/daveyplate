@@ -13,7 +13,7 @@ import { useUser } from "@supabase/auth-helpers-react"
 
 import { getTranslationProps } from "@/lib/translation-props"
 import { getStaticPaths as getExportStaticPaths } from "@/lib/get-static"
-import { useCache } from "@/components/cache-provider"
+import { useCache } from "@/components/providers/cache-provider"
 
 import {
     Button,
@@ -35,7 +35,7 @@ import Link from "@/components/locale-link"
 import UserAvatar from "@/components/user-avatar"
 import PageTitle from "@/components/page-title"
 import { isExport } from "@/utils/utils"
-import { toast } from "@/components/toast-provider"
+import { toast } from "@/components/providers/toast-provider"
 
 import { CloudArrowUpIcon, PencilIcon } from "@heroicons/react/24/solid"
 import { useEntity } from "@daveyplate/supabase-swr-entities"

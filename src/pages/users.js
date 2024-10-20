@@ -9,7 +9,7 @@ import { createClient } from "@/utils/supabase/service-role"
 import { getStaticPaths as getExportStaticPaths } from "@/lib/get-static"
 import { getTranslationProps } from "@/lib/translation-props"
 import { isExport } from "@/utils/utils"
-import { useCache } from "@/components/cache-provider"
+import { useCache } from "@/components/providers/cache-provider"
 
 import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
 

@@ -35,7 +35,7 @@ import {
 
 import Link from "@/components/locale-link"
 import { localeHref } from "@/components/locale-link"
-import { useCache } from "@/components/cache-provider"
+import { useCache } from "@/components/providers/cache-provider"
 
 import ToggleTheme from "@/components/toggle-theme"
 import UserAvatar from "@/components/user-avatar"

@@ -11,7 +11,7 @@ import { createClient } from '@/utils/supabase/component'
 import { getStaticPaths as getExportStaticPaths } from "@/lib/get-static"
 import { getTranslationProps } from '@/lib/translation-props'
 import { isExport, patchAPI, postAPI, deleteAPI } from "@/utils/utils"
-import { useCache } from '@/components/cache-provider'
+import { useCache } from '@/components/providers/cache-provider'
 
 import {
     Button,
@@ -27,7 +27,7 @@ import {
     useDisclosure
 } from "@nextui-org/react"
 
-import { toast } from '@/components/toast-provider'
+import { toast } from '@/components/providers/toast-provider'
 import { localeHref } from '@/components/locale-link'
 import { useEntity } from '@daveyplate/supabase-swr-entities'
 

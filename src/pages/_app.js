@@ -7,7 +7,7 @@ import "@/styles/custom.css"
 
 import DefaultFont from "@/styles/fonts"
 
-import Providers from "@/components/providers"
+import Providers from "@/components/providers/providers"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 

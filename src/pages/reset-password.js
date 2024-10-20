@@ -13,7 +13,7 @@ import { localeHref } from '@/components/locale-link'
 
 import { Button, Card, CardBody, Input, Spinner } from "@nextui-org/react"
 
-import { toast } from '@/components/toast-provider'
+import { toast } from '@/components/providers/toast-provider'
 
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 

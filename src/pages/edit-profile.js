@@ -20,7 +20,7 @@ import {
     Spinner
 } from "@nextui-org/react"
 
-import { toast } from "@/components/toast-provider"
+import { toast } from "@/components/providers/toast-provider"
 import { useEntity } from '@daveyplate/supabase-swr-entities'
 
 export default function EditProfile() {

@@ -10,14 +10,14 @@ import { AutoTranslateProvider } from 'next-auto-translate'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 
-import ToastProvider from "@/components/toast-provider"
+import ToastProvider from "@/components/providers/toast-provider"
 import { createClient } from '@/utils/supabase/component'
 
-import CacheProvider from "@/components/cache-provider"
-import CheckoutStatus from "@/components/checkout-status"
+import CacheProvider from "@/components/providers/cache-provider"
+import CheckoutStatus from "@/components/providers/checkout-status"
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
-import ReactivateUser from "@/components/reactivate-user"
-import { CapacitorProvider } from "@/components/capacitor-provider"
+import ReactivateUser from "@/components/providers/reactivate-user"
+import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 
 export default function Providers({ initialSession, children, title, Component, ...pageProps }) {
     const router = useRouter()

@@ -13,7 +13,7 @@ import { isExport } from "@/utils/utils"
 
 import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react"
 
-import { toast } from '@/components/toast-provider'
+import { toast } from '@/components/providers/toast-provider'
 import { useEntity } from "@daveyplate/supabase-swr-entities"
 
 export default function Products({ products, prices }) {
