@@ -1,6 +1,6 @@
-import { cn } from "@nextui-org/react"
 import { useTheme } from "next-themes"
 import { Toaster, toast as sonnerToast } from "sonner"
+import { cn } from "@nextui-org/react"
 
 export default function ToastProvider() {
     const { theme } = useTheme()
@@ -20,8 +20,9 @@ export default function ToastProvider() {
                     text-center
                     rounded-full
                     w-full
-                    mb-[8svh]
-                    shadow-sm
+                    mb-[5svh]
+                    shadow-lg
+                    pointer-events-none
                 `,
             }}
         />
