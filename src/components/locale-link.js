@@ -1,8 +1,9 @@
+import { forwardRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import i18nextConfig from '../../next-i18next.config'
-import { forwardRef } from 'react'
+
 import { isExport } from '@/utils/utils'
+import i18nextConfig from '@/../next-i18next.config'
 
 export const localeHref = (pathname, locale = i18nextConfig.i18n.defaultLocale) => {
   if (!isExport()) return pathname
@@ -17,7 +18,13 @@ export const localeHref = (pathname, locale = i18nextConfig.i18n.defaultLocale) 
   return `/${locale}${pathname}`
 }
 
-const LocaleLink = forwardRef((props, ref) => {
+const LocaleLink = forwardRef(({ linkAs, ...linkProps }, ref) => {
+  let props = { ...linkProps }
+
+  if (linkAs) {
+    props.as = linkAs
+  }
+
   let href = props.href
 
   if (!isExport() || !href) return <Link ref={ref} {...props}>{props.children}</Link>
