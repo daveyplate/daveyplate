@@ -55,10 +55,9 @@ import {
 import PageTitle from "./page-title"
 import { useDocumentTitle } from "@daveyplate/use-document-title"
 
-import { isExport } from "@/utils/utils"
 import { useEntity } from "@daveyplate/supabase-swr-entities"
 
-const siteName = "Daveyplate"
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
 const logo = (
     <Image

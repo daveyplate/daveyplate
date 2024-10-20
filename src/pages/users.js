@@ -9,7 +9,6 @@ import { createClient } from "@/utils/supabase/service-role"
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from "@/utils/translation-props"
 import { isExport } from "@/utils/utils"
-import { useCache } from "@/components/providers/cache-provider"
 
 import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
 
@@ -43,7 +42,7 @@ export default function UsersPage({ users }) {
         }
 
         users?.map(user => {
-            mutate(`/api/users/${user.id}`, user)
+            mutate(`/api/profiles/${user.id}`, user)
         })
     }, [users, enabled])
 

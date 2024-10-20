@@ -13,7 +13,6 @@ import { useUser } from "@supabase/auth-helpers-react"
 
 import { getTranslationProps } from "@/utils/translation-props"
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
-import { useCache } from "@/components/providers/cache-provider"
 
 import {
     Button,

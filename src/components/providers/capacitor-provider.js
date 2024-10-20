@@ -64,6 +64,9 @@ export const CapacitorProvider = () => {
             return
         }
 
+        // Re-fetch the user into cache
+        mutate("/api/profiles/me")
+
         const returnTo = params.get('returnTo') || '/'
         router.replace(returnTo)
     }

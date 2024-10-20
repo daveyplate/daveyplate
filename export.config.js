@@ -3,7 +3,6 @@
 const withTM = require('next-transpile-modules')(['@stampmyvisa/react-flagpack']);
 
 module.exports = withTM({
-    trailingSlash: false,
     output: "export",
     images: { unoptimized: true },
     webpack: (config, { isServer }) => {
