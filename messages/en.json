@@ -9,7 +9,9 @@
     "Home": "Home",
     "Users": "Users",
     "Products": "Products",
-    "Chat": "Chat"
+    "Chat": "Chat",
+    "profile_actions": "Profile actions",
+    "account": "Account"
   },
   "users": {
     "title": "Users",
@@ -34,7 +36,10 @@
     "subscription": "Subscription:",
     "active": "Active",
     "edit_profile": "Edit Profile",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "user_not_found": "User not found",
+    "avatar_error": "Error uploading avatar",
+    "invalid_image": "Invalid image"
   },
   "edit-profile": {
     "name_required": "Name is required",
@@ -46,7 +51,14 @@
     "bio": "Bio",
     "bio_placeholder": "Type your bio here",
     "title": "Edit Profile",
-    "save_changes": "Save Changes"
+    "save_changes": "Save Changes",
+    "upload_avatar": "Upload Avatar",
+    "avatar": "Avatar",
+    "upload": "Upload",
+    "cancel": "Cancel",
+    "delete_avatar": "Delete Avatar",
+    "delete_avatar_message": "Are you sure you want to delete your avatar?",
+    "delete": "Delete"
   },
   "settings": {
     "confirm_email": "Check your email to confirm update",
@@ -61,7 +73,17 @@
     "change_password": "Change Password",
     "manage_subscription": "Manage Subscription",
     "deactivate_account": "Deactivate Account",
-    "delete_account": "Delete Account"
+    "delete_account": "Delete Account",
+    "email_error": "Error updating email",
+    "password_error": "Error updating password",
+    "deactivate_error": "Error deactivating account",
+    "delete_error": "Error deleting account",
+    "portal_error": "Customer portal error",
+    "account_deleted": "Account deleted",
+    "email_address": "Email Address",
+    "confirm_deactivate": "Are you sure you want to deactivate your account? Your account will be reactivated if you login again.",
+    "cancel": "Cancel",
+    "confirm_delete": "Are you sure you want to delete your account? This deletion is permanent and cannot be undone."
   },
   "login": {
     "sign_up_email_label": "Email address",
@@ -111,7 +133,7 @@
   "index": {
     "title": "Welcome to Daveyplate",
     "heading": "Next.js Boilerplate",
-    "description_1": "Simple user management system built with Next.js, NextUI, and Supabase. Using JavaScript because it is much more simple than TypeScript.",
+    "description_1": "Simple user management system built with Next.js, NextUI, and Supabase.",
     "description_2": "NextJS Page Router to create a simple navigation system. Stripe to accept payments and synchronize subscriptions & products."
   },
   "footer": {
@@ -124,5 +146,12 @@
     "dark": "Dark",
     "system": "System",
     "toggle_theme": "Toggle theme"
+  },
+  "page_title": {
+    "Users": "Users",
+    "Edit Profile": "Edit Profile",
+    "Settings": "Settings",
+    "Products": "Products",
+    "Chat": "Chat"
   }
 }

@@ -9,7 +9,9 @@
     "Home": "Zuhause",
     "Users": "Benutzer",
     "Products": "Produkte",
-    "Chat": "Chat"
+    "Chat": "Chat",
+    "profile_actions": "Profilaktionen",
+    "account": "Konto"
   },
   "users": {
     "title": "Benutzer",
@@ -34,7 +36,10 @@
     "subscription": "Abonnement:",
     "active": "Aktiv",
     "edit_profile": "Profil bearbeiten",
-    "inactive": "Inaktiv"
+    "inactive": "Inaktiv",
+    "user_not_found": "Benutzer nicht gefunden",
+    "avatar_error": "Fehler beim Hochladen des Avatars",
+    "invalid_image": "Ungültiges Bild"
   },
   "edit-profile": {
     "name_required": "Name ist erforderlich.",
@@ -46,7 +51,14 @@
     "bio": "Bio.",
     "bio_placeholder": "Geben Sie Ihre Biografie hier ein.",
     "title": "Profil bearbeiten",
-    "save_changes": "Änderungen speichern"
+    "save_changes": "Änderungen speichern",
+    "upload_avatar": "Avatar hochladen",
+    "avatar": "Avatar",
+    "upload": "Hochladen",
+    "cancel": "Stornieren",
+    "delete_avatar": "Avatar löschen",
+    "delete_avatar_message": "Bist du sicher, dass du dein Avatar löschen möchtest?",
+    "delete": "Löschen"
   },
   "settings": {
     "confirm_email": "Überprüfen Sie Ihre E-Mail, um die Aktualisierung zu bestätigen.",
@@ -61,7 +73,17 @@
     "change_password": "Passwort ändern",
     "manage_subscription": "Verwalte Abonnement",
     "deactivate_account": "Konto deaktivieren",
-    "delete_account": "Konto löschen"
+    "delete_account": "Konto löschen",
+    "email_error": "Fehler beim Aktualisieren der E-Mail.",
+    "password_error": "Fehler beim Aktualisieren des Passworts",
+    "deactivate_error": "Fehler beim Deaktivieren des Kontos",
+    "delete_error": "Fehler beim Löschen des Kontos",
+    "portal_error": "Kundenportalfehler",
+    "account_deleted": "Konto gelöscht",
+    "email_address": "E-Mail-Adresse",
+    "confirm_deactivate": "Bist du sicher, dass du dein Konto deaktivieren möchtest? Dein Konto wird wieder aktiviert, wenn du dich erneut anmeldest.",
+    "cancel": "Stornieren",
+    "confirm_delete": "Bist du sicher, dass du dein Konto löschen möchtest? Diese Löschung ist dauerhaft und kann nicht rückgängig gemacht werden."
   },
   "login": {
     "sign_up_email_label": "E-Mail-Adresse",
@@ -112,7 +134,7 @@
     "title": "Willkommen bei Daveyplate",
     "heading": "Next.js-Boilerplatte",
     "description_2": "NextJS Seitenrouter, um ein einfaches Navigationssystem zu erstellen. Stripe zum Akzeptieren von Zahlungen und Synchronisieren von Abonnements & Produkten.",
-    "description_1": "Einfaches Benutzerverwaltungssystem, das mit Next.js, NextUI und Supabase erstellt wurde. Verwende JavaScript, weil es viel einfacher ist als TypeScript."
+    "description_1": "Einfaches Benutzerverwaltungssystem, das mit Next.js, NextUI und Supabase erstellt wurde."
   },
   "footer": {
     "language_menu": "Sprachmenü",
@@ -124,5 +146,12 @@
     "dark": "Dunkel",
     "system": "System",
     "toggle_theme": "Thema umschalten"
+  },
+  "page_title": {
+    "Users": "Benutzer",
+    "Edit Profile": "Profil bearbeiten",
+    "Settings": "Einstellungen",
+    "Products": "Produkte",
+    "Chat": "Chat"
   }
 }
