@@ -225,7 +225,7 @@ export default function EditProfile() {
                             errorMessage={bioError}
                         />
 
-                        <Skeleton isLoaded={!!user} className="self-end rounded-2xl min-w-10 me-2 -mt-1 -mb-1">
+                        <Skeleton isLoaded={!!user} className="self-end rounded-2xl min-w-10 me-2 -mt-2">
                             <p className="text-right text-tiny text-foreground/60">
                                 {bio.length}/{maxBioLength}
                             </p>
