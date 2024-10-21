@@ -25,18 +25,20 @@ import { isExport } from "@/utils/utils"
 
 import { toast } from "@/components/providers/toast-provider"
 import UserAvatar from '@/components/user-avatar'
-import EditAvatarModal from '@/components/edit-avatar-modal'
+import UploadAvatarModal from '@/components/upload-avatar-modal'
+import { createClient } from '@/utils/supabase/component'
 
 export default function EditProfile() {
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()
+    const supabase = createClient()
     const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
 
     const [name, setName] = useState(user?.full_name || '')
     const [bio, setBio] = useState(user?.bio || '')
     const [nameError, setNameError] = useState(null)
     const [bioError, setBioError] = useState(null)
-    const [avatarURL, setAvatarURL] = useState(null)
+    const [avatarFile, setAvatarFile] = useState(null)
 
     const uploadRef = useRef(null)
 
@@ -110,7 +112,7 @@ export default function EditProfile() {
                         size="lg"
                         label={autoTranslate("upload_avatar", "Upload Avatar")}
                         openRef={uploadRef}
-                        onFiles={(files) => setAvatarURL(URL.createObjectURL(files[0]))}
+                        onFiles={(files) => setAvatarFile(files[0])}
                         onError={(error) => toast(error.message, { color: 'danger' })}
                         className="gap-4 flex flex-col"
                     >
@@ -221,19 +223,18 @@ export default function EditProfile() {
                 </CardBody>
             </Card>
 
-            <EditAvatarModal
-                user={user}
-                avatarURL={avatarURL}
-                setAvatarURL={setAvatarURL}
+            <UploadAvatarModal
+                avatarFile={avatarFile}
+                setAvatarFile={setAvatarFile}
                 onUpload={async (url) => {
                     const { error: updateError } = await updateUser({ ...user, id: 'me' }, { avatar_url: url })
 
                     if (updateError) {
                         console.error(updateError)
                         toast("Error updating avatar", { color: "danger" })
-                        return
                     }
                 }}
+                onError={(error) => toast(error.message, { color: 'danger' })}
             />
         </div>
     )

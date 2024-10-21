@@ -1,4 +1,10 @@
-import { CheckIcon } from "@heroicons/react/24/solid"
+import { useRef, useState } from "react"
+import Compressor from "compressorjs"
+import { useSession } from "@supabase/auth-helpers-react"
+import AvatarEditor from "react-avatar-editor"
+
+import { AutoTranslate } from 'next-auto-translate'
+
 import {
     Button,
     Slider,
@@ -10,18 +16,35 @@ import {
     ModalFooter,
 } from "@nextui-org/react"
 
-import Compressor from "compressorjs"
-import { AutoTranslate } from 'next-auto-translate'
-import { useRef, useState } from "react"
-import AvatarEditor from "react-avatar-editor"
-import { toast } from "./providers/toast-provider"
+import { CloudArrowUpIcon } from "@heroicons/react/24/solid"
+
 import { createClient } from "@/utils/supabase/component"
 
-export default function EditAvatarModal({ user, avatarURL, setAvatarURL, bucket = "avatars", avatarSize = 512, onUpload }) {
+/**
+ * Upload Avatar Modal
+ * 
+ * @param {Object} props
+ * @param {File} props.avatarFile The avatar file to upload
+ * @param {(file: File) => void} props.setAvatarFile Set the avatar file
+ * @param {string} [props.bucket="avatars"] The bucket to upload the avatar to
+ * @param {number} [props.avatarSize=512] The size of the avatar to upload
+ * @param {(url: string) => void} props.onUpload Callback when the avatar is uploaded
+ * @param {(error: Error) => void} props.onError Callback when an error occurs
+ * @returns {JSX.Element}
+ */
+export default function UploadAvatarModal({
+    avatarFile,
+    setAvatarFile,
+    bucket = "avatars",
+    avatarSize = 512,
+    onUpload,
+    onError
+}) {
+    const supabase = createClient()
+    const session = useSession()
     const [avatarScale, setAvatarScale] = useState(1)
     const [uploadingAvatar, setUploadingAvatar] = useState(false)
     const editor = useRef(null)
-    const supabase = createClient()
 
     // Crop then upload the new avatar
     const cropAvatar = () => {
@@ -34,7 +57,6 @@ export default function EditAvatarModal({ user, avatarURL, setAvatarURL, bucket 
             const avatarFile = new File([blob], "avatar.jpg", { type: "image/jpeg" })
 
             new Compressor(avatarFile, {
-                // quality: 0.6,
                 maxWidth: avatarSize,
                 maxHeight: avatarSize,
                 resize: "cover",
@@ -43,49 +65,54 @@ export default function EditAvatarModal({ user, avatarURL, setAvatarURL, bucket 
                     uploadAvatar(result)
                 },
                 error(error) {
-                    console.error(error.message)
-                    toast(error.message, { color: "danger" })
+                    console.error(error)
+                    onError && onError(error)
+                    setAvatarFile(null)
                     setUploadingAvatar(false)
+                    setAvatarScale(1)
                 }
             })
         }, 'image/jpeg')
     }
 
     const uploadAvatar = async (file) => {
-        const fileName = `${user.id}.jpg`
+        const fileName = `${session.user.id}.jpg`
 
         const { error } = await supabase.storage
             .from(bucket)
             .upload(fileName, file, { upsert: true, cacheControl: 3600 })
 
+        setUploadingAvatar(false)
+        setAvatarScale(1)
+        setAvatarFile(null)
+
         if (error) {
             console.error(error)
-            toast(error.message, { color: "danger" })
-            setUploadingAvatar(false)
+            onError && onError(error)
             return
         }
 
         // Update the user Avatar URL
         const avatarUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${fileName}` + `?${new Date().getTime()}`
-        await onUpload(avatarUrl)
-
-        setUploadingAvatar(false)
-        setAvatarURL(null)
+        onUpload && onUpload(avatarUrl)
     }
 
     return (
         <Modal
-            isOpen={!!avatarURL}
-            onOpenChange={(isOpen) => !isOpen && setAvatarURL(null)}
+            isOpen={!!avatarFile}
+            onOpenChange={() => {
+                setAvatarFile(null)
+                setAvatarScale(1)
+            }}
             classNames={{ closeButton: "text-xl" }}
-            scrollBehavior="outside"
+            placement="center"
         >
             <ModalContent>
                 {(onClose) => (
                     <>
                         <ModalHeader>
-                            <AutoTranslate tKey="crop_image">
-                                Crop Image
+                            <AutoTranslate tKey="upload_avatar">
+                                Upload Avatar
                             </AutoTranslate>
                         </ModalHeader>
 
@@ -94,7 +121,7 @@ export default function EditAvatarModal({ user, avatarURL, setAvatarURL, bucket 
                                 className="rounded-xl"
                                 borderRadius={256 / 2}
                                 ref={editor}
-                                image={avatarURL}
+                                image={avatarFile}
                                 width={256}
                                 height={256}
                                 scale={avatarScale}
@@ -123,15 +150,16 @@ export default function EditAvatarModal({ user, avatarURL, setAvatarURL, bucket 
 
                             <Button
                                 onPress={cropAvatar}
+                                color="primary"
                                 size="lg"
                                 startContent={!uploadingAvatar &&
-                                    <CheckIcon className="size-5 -ms-1" />
+                                    <CloudArrowUpIcon className="size-5 -ms-1" />
                                 }
                                 spinner={<Spinner color="current" size="sm" />}
                                 isLoading={uploadingAvatar}
                             >
                                 <AutoTranslate tKey="upload">
-                                    Save
+                                    Upload
                                 </AutoTranslate>
                             </Button>
                         </ModalFooter>
