@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "ngrok": "ngrok http --domain=leaked.ngrok.dev 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
