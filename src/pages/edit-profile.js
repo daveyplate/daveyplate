@@ -26,12 +26,10 @@ import { isExport } from "@/utils/utils"
 import { toast } from "@/components/providers/toast-provider"
 import UserAvatar from '@/components/user-avatar'
 import UploadAvatarModal from '@/components/upload-avatar-modal'
-import { createClient } from '@/utils/supabase/component'
 
 export default function EditProfile() {
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()
-    const supabase = createClient()
     const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
 
     const [name, setName] = useState(user?.full_name || '')
@@ -227,7 +225,7 @@ export default function EditProfile() {
                 avatarFile={avatarFile}
                 setAvatarFile={setAvatarFile}
                 onUpload={async (url) => {
-                    const { error: updateError } = await updateUser({ ...user, id: 'me' }, { avatar_url: url })
+                    const { error: updateError } = await updateUser({ ...user, id: 'me' }, { avatar_urlz: url })
 
                     if (updateError) {
                         console.error(updateError)
