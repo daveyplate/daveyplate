@@ -10,9 +10,9 @@ import { AutoTranslateProvider } from 'next-auto-translate'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 
-import ToastProvider from "@/components/providers/toast-provider"
 import { createClient } from '@/utils/supabase/component'
 
+import ToastProvider from "@/components/providers/toast-provider"
 import CacheProvider from "@/components/providers/cache-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
