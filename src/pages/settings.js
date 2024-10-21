@@ -172,12 +172,6 @@ export default function Settings({ locale }) {
 
     return (
         <div className="flex-center max-w-xl">
-            <h3 className="hidden sm:flex">
-                <AutoTranslate tKey="settings">
-                    Settings
-                </AutoTranslate>
-            </h3>
-
             {/* Change Email */}
             <Card fullWidth>
                 <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updateEmail}>
@@ -298,7 +292,7 @@ export default function Settings({ locale }) {
             {/* Account Management */}
             <Card fullWidth>
                 <CardBody className="gap-4 flex p-4 items-start">
-                    <div className="flex gap-2 items-center -mb-1">
+                    <div className="flex gap-2 items-center -my-1">
                         <UserIcon className="size-4 text-primary" />
 
                         <AutoTranslate tKey="manage_account">

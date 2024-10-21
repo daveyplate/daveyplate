@@ -102,12 +102,6 @@ export default function EditProfile() {
 
     return (
         <div className="flex-center max-w-xl">
-            <h3 className="hidden sm:flex">
-                <AutoTranslate tKey="title">
-                    Edit Profile
-                </AutoTranslate>
-            </h3>
-
             <Card fullWidth>
                 <CardBody as="form" onSubmit={updateProfile} className="p-4">
                     <DragDropzone
@@ -118,7 +112,7 @@ export default function EditProfile() {
                         onError={(error) => toast(error.message, { color: 'danger' })}
                         className="gap-4 flex flex-col"
                     >
-                        <div className="flex items-center gap-2 -mb-2 -mt-0.5">
+                        <div className="flex items-center gap-2 -mb-2 -mt-1">
                             <UserCircleIcon className="size-5 text-primary" />
 
                             <AutoTranslate tKey="avatar">
