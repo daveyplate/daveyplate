@@ -1,11 +1,11 @@
 import { AutoTranslate } from 'next-auto-translate'
+import { useClearCache } from '@daveyplate/supabase-swr-entities'
+
+import { Button, Card, CardBody } from "@nextui-org/react"
 
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from '@/utils/translation-props'
 import { isExport } from "@/utils/utils"
-
-import { Button, Card, CardBody } from "@nextui-org/react"
-import { useClearCache } from '@/components/providers/cache-provider'
 
 export default function Messages() {
     const clearCache = useClearCache()

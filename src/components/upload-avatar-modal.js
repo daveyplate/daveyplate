@@ -24,12 +24,12 @@ import { createClient } from "@/utils/supabase/component"
  * Upload Avatar Modal
  * 
  * @param {Object} props
- * @param {File} props.avatarFile The avatar file to upload
- * @param {(file: File) => void} props.setAvatarFile Set the avatar file
- * @param {string} [props.bucket="avatars"] The bucket to upload the avatar to
- * @param {number} [props.avatarSize=512] The size of the avatar to upload
- * @param {(url: string) => void} props.onUpload Callback when the avatar is uploaded
- * @param {(error: Error) => void} props.onError Callback when an error occurs
+ * @param {File} props.avatarFile - The avatar file to upload
+ * @param {(file: File) => void} props.setAvatarFile - Set the avatar file
+ * @param {string} [props.bucket="avatars"] - The bucket to upload the avatar to
+ * @param {number} [props.avatarSize=512] - The size of the avatar to upload
+ * @param {(url: string) => void} props.onUpload - Callback when the avatar is uploaded
+ * @param {(error: Error) => void} props.onError - Callback when an error occurs
  * @returns {JSX.Element}
  */
 export default function UploadAvatarModal({

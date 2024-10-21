@@ -3,6 +3,8 @@ import { SessionContextProvider } from '@supabase/auth-helpers-react'
 
 import { ThemeProvider } from "next-themes"
 import { NextUIProvider } from "@nextui-org/react"
+import { SWRConfig } from "swr"
+import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
 
 import { NextIntlClientProvider } from 'next-intl'
 import { AutoTranslateProvider } from 'next-auto-translate'
@@ -13,19 +15,22 @@ import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
 
 import { createClient } from '@/utils/supabase/component'
 import ToastProvider from "@/components/providers/toast-provider"
-import CacheProvider from "@/components/providers/cache-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
 import ReactivateUser from "@/components/providers/reactivate-user"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 
-export default function Providers({ initialSession, children, title, Component, ...pageProps }) {
+export default function Providers({ children, ...pageProps }) {
+    useWindowFocusBlur()
     const router = useRouter()
     const supabase = createClient()
-    useWindowFocusBlur()
+    const cacheProvider = useCacheProvider({
+        dbName: 'daveyplate',
+        storeName: 'swr-cache',
+    })
 
     return (
         <SessionContextProvider supabaseClient={supabase}>
-            <CacheProvider>
+            <SWRConfig value={{ provider: cacheProvider }}>
                 <NextUIProvider navigate={router.push}>
                     <ThemeProvider
                         attribute="class"
@@ -58,7 +63,7 @@ export default function Providers({ initialSession, children, title, Component, 
                         </NextIntlClientProvider>
                     </ThemeProvider>
                 </NextUIProvider>
-            </CacheProvider>
+            </SWRConfig>
         </SessionContextProvider>
     )
 }
