@@ -26,6 +26,7 @@ import { isExport } from "@/utils/utils"
 import { toast } from "@/components/providers/toast-provider"
 import UserAvatar from '@/components/user-avatar'
 import UploadAvatarModal from '@/components/upload-avatar-modal'
+import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
 
 export default function EditProfile() {
     const { autoTranslate } = useAutoTranslate()
@@ -37,6 +38,7 @@ export default function EditProfile() {
     const [nameError, setNameError] = useState(null)
     const [bioError, setBioError] = useState(null)
     const [avatarFile, setAvatarFile] = useState(null)
+    const [confirm, setConfirm] = useState(null)
 
     const uploadRef = useRef(null)
 
@@ -116,7 +118,7 @@ export default function EditProfile() {
                         onError={(error) => toast(error.message, { color: 'danger' })}
                         className="gap-4 flex flex-col"
                     >
-                        <div className="flex items-center gap-2 -mb-2 -mt-1">
+                        <div className="flex items-center gap-2 -mb-2 -mt-0.5">
                             <UserCircleIcon className="size-5 text-primary" />
 
                             <AutoTranslate tKey="avatar">
@@ -166,7 +168,14 @@ export default function EditProfile() {
                                 className="mt-1"
                                 size="lg"
                                 color="danger"
-                                onPress={() => updateUser({ ...user, id: 'me' }, { avatar_url: null })}
+                                onPress={() => setConfirm({
+                                    title: autoTranslate('delete_avatar', 'Delete Avatar'),
+                                    content: autoTranslate('delete_avatar_message', 'Are you sure you want to delete your avatar?'),
+                                    label: autoTranslate('delete', 'Delete'),
+                                    color: "danger",
+                                    icon: <TrashIcon className="size-5 -ms-1" />,
+                                    action: () => updateUser({ ...user, id: 'me' }, { avatar_url: null })
+                                })}
                                 isDisabled={!user?.avatar_url}
                             >
                                 <TrashIcon className="size-5" />
@@ -249,6 +258,11 @@ export default function EditProfile() {
                     error && toast(error.message, { color: "danger" })
                 }}
                 onError={(error) => toast(error.message, { color: 'danger' })}
+            />
+
+            <ConfirmModal
+                confirm={confirm}
+                setConfirm={setConfirm}
             />
         </div>
     )
