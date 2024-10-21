@@ -30,7 +30,7 @@ const formatPathToTitle = (path) => {
         .shift() // Take the first non-empty segment
 
     // Replace hyphens with spaces and capitalize each word
-    return firstPart?.split('-') // Split the part on hyphen
+    return firstPart?.replace("_", "").split('-') // Split the part on hyphen
         .map(subPart => subPart.charAt(0).toUpperCase() + subPart.slice(1)) // Capitalize the first letter of each sub-part
         .join(' ') // Join the sub-parts with spaces
         || ""

@@ -3,32 +3,39 @@ import { useRouter } from "next/router"
 
 import { AutoTranslate } from "next-auto-translate"
 
+import { Button, Card, CardBody } from "@nextui-org/react"
+import { ArrowPathIcon } from "@heroicons/react/24/solid"
+
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from '@/utils/translation-props'
 import { isExport } from "@/utils/utils"
-
-import { Button, Card, CardBody } from "@nextui-org/react"
 
 export default function OfflinePage() {
     const router = useRouter()
 
     return (
-        <div className="flex-container flex-center">
-            <h1>
+        <div className="flex-center max-w-md">
+            <h3 className="hidden sm:flex">
                 <AutoTranslate tKey="title">
                     Offline
                 </AutoTranslate>
-            </h1>
+            </h3>
 
-            <Card>
-                <CardBody className="flex-center max-w-sm p-6 gap-4">
+            <Card fullWidth>
+                <CardBody className="gap-4 p-4 text-center items-center">
                     <p>
                         <AutoTranslate tKey="description">
                             You are offline. Please check your internet connection and try again.
                         </AutoTranslate>
                     </p>
 
-                    <Button onClick={() => router.reload()} color="primary">
+                    <Button
+                        onClick={() => router.reload()}
+                        size="lg"
+                        startContent={
+                            <ArrowPathIcon className="size-5 -ms-1" />
+                        }
+                    >
                         <AutoTranslate tKey="reload">
                             Reload
                         </AutoTranslate>
