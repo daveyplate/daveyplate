@@ -10,14 +10,13 @@ import {
     Card,
     CardBody,
     cn,
-    Dropdown,
-    DropdownTrigger,
     Input,
     Spinner,
 } from "@nextui-org/react"
 
 import {
     ArrowLeftStartOnRectangleIcon,
+    ArrowRightEndOnRectangleIcon,
     CheckIcon,
     EnvelopeIcon,
     EyeIcon,
@@ -33,17 +32,17 @@ import { createClient } from '@/utils/supabase/component'
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from '@/utils/translation-props'
 import { isExport } from "@/utils/utils"
-import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
 
 import { toast } from '@/components/providers/toast-provider'
 import Link, { localeHref } from '@/components/locale-link'
 import ThemeDropdown from '@/components/theme-dropdown'
+import { useSessionContext } from '@supabase/auth-helpers-react'
 
 export default function Settings({ locale }) {
     const router = useRouter()
     const supabase = createClient()
     const { autoTranslate } = useAutoTranslate()
-    const { session } = useAuthenticatedPage({ locale })
+    const { session, isLoading: sessionLoading } = useSessionContext()
 
     const { entity: user, updateEntity: updateUser, deleteEntity: deleteUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
     const [confirm, setConfirm] = useState(null)
@@ -183,140 +182,144 @@ export default function Settings({ locale }) {
 
     return (
         <div
-            className={cn(session ? "opacity-1" : "opacity-0",
+            className={cn(sessionLoading ? "opacity-0" : "opacity-1",
                 "flex-center max-w-xl transition-all"
             )}
         >
             {/* Change Email */}
-            <Card fullWidth>
-                <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updateEmail}>
-                    <Input
-                        type="email"
-                        size="lg"
-                        variant="bordered"
-                        label={
-                            <div className="flex gap-2.5 items-center">
-                                <EnvelopeIcon className="size-4 text-primary" />
+            {session && (
+                <>
+                    <Card fullWidth>
+                        <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updateEmail}>
+                            <Input
+                                type="email"
+                                size="lg"
+                                variant="bordered"
+                                label={
+                                    <div className="flex gap-2.5 items-center">
+                                        <EnvelopeIcon className="size-4 text-primary" />
 
-                                <AutoTranslate tKey="change_email">
-                                    Change Email
-                                </AutoTranslate>
-                            </div>
-                        }
-                        labelPlacement="outside"
-                        placeholder={autoTranslate('email_address', 'Email Address')}
-                        value={email}
-                        onValueChange={(value) => setEmail(value)}
-                        isDisabled={updatingEmail}
-                    />
+                                        <AutoTranslate tKey="change_email">
+                                            Change Email
+                                        </AutoTranslate>
+                                    </div>
+                                }
+                                labelPlacement="outside"
+                                placeholder={autoTranslate('email_address', 'Email Address')}
+                                value={email}
+                                onValueChange={(value) => setEmail(value)}
+                                isDisabled={updatingEmail}
+                            />
 
-                    <Button
-                        type="submit"
-                        color="primary"
-                        size="lg"
-                        isDisabled={
-                            updatingEmail ||
-                            email == session?.user?.email ||
-                            email == newEmail
-                        }
-                        isLoading={updatingEmail}
-                        spinner={
-                            <Spinner color="current" size="sm" />
-                        }
-                        startContent={!updatingEmail && (
-                            <CheckIcon className="size-5 -ms-1" />
-                        )}
-                    >
-                        <AutoTranslate tKey="update_email">
-                            Update Email
-                        </AutoTranslate>
-                    </Button>
-                </CardBody>
-            </Card>
-
-            {/* Change Password */}
-            <Card fullWidth>
-                <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updatePassword}>
-                    <input type="hidden" name="email" value={session?.user?.email} />
-
-                    <Input
-                        size="lg"
-                        labelPlacement="outside"
-                        variant="bordered"
-                        type={passwordVisible ? "text" : "password"}
-                        name="password"
-                        value={password}
-                        onValueChange={(value) => setPassword(value)}
-                        label={
-                            <div className="flex gap-2.5 items-center">
-                                <KeyIcon className="size-4 text-primary" />
-
-                                {changePasswordText}
-                            </div>
-                        }
-                        placeholder={autoTranslate('new_password', 'New Password')}
-                        isDisabled={!session || updatingPassword}
-                        endContent={
                             <Button
-                                size="sm"
-                                variant="light"
-                                isIconOnly
-                                onPress={() => setPasswordVisible(!passwordVisible)}
-                                disableRipple
-                            >
-                                {passwordVisible ? (
-                                    <EyeSlashIcon className="size-6" />
-                                ) : (
-                                    <EyeIcon className="size-6" />
+                                type="submit"
+                                color="primary"
+                                size="lg"
+                                isDisabled={
+                                    updatingEmail ||
+                                    email == session?.user?.email ||
+                                    email == newEmail
+                                }
+                                isLoading={updatingEmail}
+                                spinner={
+                                    <Spinner color="current" size="sm" />
+                                }
+                                startContent={!updatingEmail && (
+                                    <CheckIcon className="size-5 -ms-1" />
                                 )}
+                            >
+                                <AutoTranslate tKey="update_email">
+                                    Update Email
+                                </AutoTranslate>
                             </Button>
-                        }
-                    />
+                        </CardBody>
+                    </Card>
 
-                    {requireNonce && (
-                        <Input
-                            autoFocus
-                            size="lg"
-                            labelPlacement="outside"
-                            variant="bordered"
-                            type="text"
-                            value={nonce}
-                            onValueChange={(value) => setNonce(value)}
-                            label={
-                                <div className="flex gap-2 items-center">
-                                    <HashtagIcon className="size-4 text-primary" />
+                    {/* Change Password */}
+                    <Card fullWidth>
+                        <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updatePassword}>
+                            <input type="hidden" name="email" value={session?.user?.email} />
 
-                                    {authenticationCodeText}
-                                </div>
-                            }
-                            placeholder={authenticationCodeText}
-                            isDisabled={updatingPassword}
-                        />
-                    )}
+                            <Input
+                                size="lg"
+                                labelPlacement="outside"
+                                variant="bordered"
+                                type={passwordVisible ? "text" : "password"}
+                                name="password"
+                                value={password}
+                                onValueChange={(value) => setPassword(value)}
+                                label={
+                                    <div className="flex gap-2.5 items-center">
+                                        <KeyIcon className="size-4 text-primary" />
 
-                    <Button
-                        type="submit"
-                        size="lg"
-                        color="primary"
-                        isDisabled={
-                            updatingPassword ||
-                            password.length == 0 ||
-                            (requireNonce && nonce.length == 0)
-                        }
-                        isLoading={updatingPassword}
-                        spinner={
-                            <Spinner color="current" size="sm" />
-                        }
-                        startContent={!updatingPassword && (
-                            <CheckIcon className="size-5 -ms-1" />
-                        )}
-                    >
-                        <AutoTranslate tKey="update_password">
-                            Update Password
-                        </AutoTranslate>
-                    </Button>
-                </CardBody>
-            </Card>
+                                        {changePasswordText}
+                                    </div>
+                                }
+                                placeholder={autoTranslate('new_password', 'New Password')}
+                                isDisabled={!session || updatingPassword}
+                                endContent={
+                                    <Button
+                                        size="sm"
+                                        variant="light"
+                                        isIconOnly
+                                        onPress={() => setPasswordVisible(!passwordVisible)}
+                                        disableRipple
+                                    >
+                                        {passwordVisible ? (
+                                            <EyeSlashIcon className="size-6" />
+                                        ) : (
+                                            <EyeIcon className="size-6" />
+                                        )}
+                                    </Button>
+                                }
+                            />
+
+                            {requireNonce && (
+                                <Input
+                                    autoFocus
+                                    size="lg"
+                                    labelPlacement="outside"
+                                    variant="bordered"
+                                    type="text"
+                                    value={nonce}
+                                    onValueChange={(value) => setNonce(value)}
+                                    label={
+                                        <div className="flex gap-2 items-center">
+                                            <HashtagIcon className="size-4 text-primary" />
+
+                                            {authenticationCodeText}
+                                        </div>
+                                    }
+                                    placeholder={authenticationCodeText}
+                                    isDisabled={updatingPassword}
+                                />
+                            )}
+
+                            <Button
+                                type="submit"
+                                size="lg"
+                                color="primary"
+                                isDisabled={
+                                    updatingPassword ||
+                                    password.length == 0 ||
+                                    (requireNonce && nonce.length == 0)
+                                }
+                                isLoading={updatingPassword}
+                                spinner={
+                                    <Spinner color="current" size="sm" />
+                                }
+                                startContent={!updatingPassword && (
+                                    <CheckIcon className="size-5 -ms-1" />
+                                )}
+                            >
+                                <AutoTranslate tKey="update_password">
+                                    Update Password
+                                </AutoTranslate>
+                            </Button>
+                        </CardBody>
+                    </Card>
+                </>
+            )}
 
             <Card fullWidth>
                 <CardBody className="gap-4 p-4 items-start">
@@ -351,76 +354,96 @@ export default function Settings({ locale }) {
                         </AutoTranslate>
                     </div>
 
-                    {user?.premium && (
+                    {session ? (
+                        <>
+                            {user?.premium && (
+                                <Button
+                                    onPress={manageSubscription}
+                                    isDisabled={loadingPortal}
+                                    size="lg"
+                                    isLoading={loadingPortal}
+                                    spinner={
+                                        <Spinner color="current" size="sm" />
+                                    }
+                                >
+                                    <AutoTranslate tKey="manage_subscription">
+                                        Manage Subscription
+                                    </AutoTranslate>
+                                </Button>
+                            )}
+
+                            <Button
+                                as={Link}
+                                size="lg"
+                                href="/logout"
+                                startContent={
+                                    <ArrowLeftStartOnRectangleIcon className="size-5 -ms-1.5 me-[1px]" />
+                                }
+                            >
+                                <AutoTranslate tKey="logout">
+                                    Log Out
+                                </AutoTranslate>
+                            </Button>
+
+                            <Button
+                                color="warning"
+                                size="lg"
+                                onPress={() => {
+                                    setConfirm({
+                                        title: deactivateAccountText,
+                                        content: deactivateConfirm,
+                                        label: deactivateText,
+                                        action: deactivateAccount,
+                                        color: 'warning'
+                                    })
+                                }}
+                                startContent={
+                                    <NoSymbolIcon className="size-5 -ms-1" />
+                                }
+                            >
+                                <AutoTranslate tKey="deactivate_account">
+                                    Deactivate Account
+                                </AutoTranslate>
+                            </Button>
+
+                            <Button
+                                color="danger"
+                                size="lg"
+                                onPress={() => {
+                                    setConfirm({
+                                        title: deleteAccountText,
+                                        content: deleteConfirm,
+                                        label: deleteText,
+                                        action: deleteAccount,
+                                        color: 'danger'
+                                    })
+                                }}
+                                startContent={
+                                    <TrashIcon className="size-5 -ms-1" />
+                                }
+                            >
+                                <AutoTranslate tKey="delete_account">
+                                    Delete Account
+                                </AutoTranslate>
+                            </Button>
+                        </>
+                    ) : (
                         <Button
-                            onPress={manageSubscription}
-                            isDisabled={loadingPortal}
+                            as={Link}
                             size="lg"
-                            isLoading={loadingPortal}
-                            spinner={
-                                <Spinner color="current" size="sm" />
+                            color="primary"
+                            href="/login"
+                            startContent={
+                                <ArrowRightEndOnRectangleIcon className="size-5 -ms-1.5 mt-[1px]" />
                             }
                         >
-                            <AutoTranslate tKey="manage_subscription">
-                                Manage Subscription
+                            <AutoTranslate tKey="login">
+                                Log In
                             </AutoTranslate>
                         </Button>
                     )}
 
-                    <Button
-                        as={Link}
-                        size="lg"
-                        href="/logout"
-                        startContent={
-                            <ArrowLeftStartOnRectangleIcon className="size-5 -ms-1.5 me-[1px]" />
-                        }
-                    >
-                        <AutoTranslate tKey="logout">
-                            Log Out
-                        </AutoTranslate>
-                    </Button>
 
-                    <Button
-                        color="warning"
-                        size="lg"
-                        onPress={() => {
-                            setConfirm({
-                                title: deactivateAccountText,
-                                content: deactivateConfirm,
-                                label: deactivateText,
-                                action: deactivateAccount,
-                                color: 'warning'
-                            })
-                        }}
-                        startContent={
-                            <NoSymbolIcon className="size-5 -ms-1" />
-                        }
-                    >
-                        <AutoTranslate tKey="deactivate_account">
-                            Deactivate Account
-                        </AutoTranslate>
-                    </Button>
-
-                    <Button
-                        color="danger"
-                        size="lg"
-                        onPress={() => {
-                            setConfirm({
-                                title: deleteAccountText,
-                                content: deleteConfirm,
-                                label: deleteText,
-                                action: deleteAccount,
-                                color: 'danger'
-                            })
-                        }}
-                        startContent={
-                            <TrashIcon className="size-5 -ms-1" />
-                        }
-                    >
-                        <AutoTranslate tKey="delete_account">
-                            Delete Account
-                        </AutoTranslate>
-                    </Button>
                 </CardBody>
             </Card>
 

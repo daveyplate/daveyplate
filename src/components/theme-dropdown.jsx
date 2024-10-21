@@ -23,7 +23,7 @@ export default function ThemeDropdown() {
         {
             key: 'system',
             title: autoTranslate("system", "System"),
-            icon: <ComputerDesktopIcon className="size-5 mt-0.5 -ms-0.5 me-0.5" />
+            icon: <ComputerDesktopIcon className="size-5 mt-[1px] -ms-0.5 me-0.5" />
         },
     ]
 
@@ -34,7 +34,6 @@ export default function ThemeDropdown() {
             <DropdownTrigger>
                 <Button
                     size="lg"
-                    color="primary"
                     startContent={
                         themes.find(theme => theme.key === currentTheme)?.icon
                     }
