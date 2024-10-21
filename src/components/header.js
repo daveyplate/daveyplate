@@ -146,7 +146,7 @@ export default function Header({ locale, overrideTitle }) {
                 </NavbarContent>
 
                 <NavbarContent className="hidden sm:flex" justify="start">
-                    <NavbarBrand className="gap-1" as={Link} href="/">
+                    <NavbarBrand className="gap-2" as={Link} href="/">
                         {logo}
 
                         <p className="font-bold text-lg">
@@ -156,7 +156,7 @@ export default function Header({ locale, overrideTitle }) {
                 </NavbarContent>
 
                 <NavbarContent className="sm:hidden me-1" justify="center">
-                    <NavbarBrand className="gap-1 text-foreground text-xl">
+                    <NavbarBrand className="gap-2 text-foreground text-xl">
                         {router.asPath == basePath && logo}
 
                         <p className="font-bold truncate max-w-[160px]" suppressHydrationWarning>

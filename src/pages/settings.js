@@ -1,17 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useSWRConfig } from 'swr'
-
-import { useSessionContext } from '@supabase/auth-helpers-react'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-
-import { createClient } from '@/utils/supabase/component'
-
-import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
-import { getTranslationProps } from '@/utils/translation-props'
-import { isExport, patchAPI, postAPI, deleteAPI } from "@/utils/utils"
-import { useCache } from '@/components/providers/cache-provider'
+import { postAPI, useEntity } from '@daveyplate/supabase-swr-entities'
+import { ConfirmModal } from "@daveyplate/nextui-confirm-modal"
 
 import {
     Button,
@@ -19,68 +11,62 @@ import {
     CardBody,
     Input,
     Spinner,
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    useDisclosure
 } from "@nextui-org/react"
 
+import { createClient } from '@/utils/supabase/component'
+import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
+import { getTranslationProps } from '@/utils/translation-props'
+import { isExport } from "@/utils/utils"
+import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
+
 import { toast } from '@/components/providers/toast-provider'
-import { localeHref } from '@/components/locale-link'
-import { useEntity } from '@daveyplate/supabase-swr-entities'
+import { ArrowLeftStartOnRectangleIcon, CheckIcon, EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon, NoSymbolIcon, TrashIcon, UserIcon } from '@heroicons/react/24/solid'
+import Link, { localeHref } from '@/components/locale-link'
 
 export default function Settings({ locale }) {
     const router = useRouter()
-    const { autoTranslate } = useAutoTranslate()
-    const { session, isLoading } = useSessionContext()
-    const { entity: user } = useEntity(session ? 'profiles' : null, 'me')
-    const { mutate } = useSWRConfig()
-
     const supabase = createClient()
+    const { autoTranslate } = useAutoTranslate()
+    const { session } = useAuthenticatedPage({ locale })
 
-    const { isOpen: deactivateModalOpen, onOpen: openDeactivateModal, onOpenChange: deactivateModalChange } = useDisclosure()
-    const { isOpen: deleteModalOpen, onOpen: openDeleteModal, onOpenChange: deleteModalChange } = useDisclosure()
-    const { isOpen: passwordModalOpen, onOpen: openPasswordModal, onOpenChange: passwordModalChange } = useDisclosure()
+    const { entity: user, updateEntity: updateUser, deleteEntity: deleteUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
+    const [confirm, setConfirm] = useState(null)
 
     const [email, setEmail] = useState('')
     const [newEmail, setNewEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const [isVisible, setIsVisible] = useState(false)
+
+    const [nonce, setNonce] = useState('')
+    const [requireNonce, setRequireNonce] = useState(false)
+
     const [updatingEmail, setUpdatingEmail] = useState(false)
     const [updatingPassword, setUpdatingPassword] = useState(false)
-    const [deactivating, setDeactivating] = useState(false)
     const [loadingPortal, setLoadingPortal] = useState(false)
 
     const confirmEmail = autoTranslate('confirm_email', 'Check your email to confirm update')
-    const emailError = autoTranslate('email_error', 'Error updating email')
-    const passwordError = autoTranslate('password_error', 'Error updating password')
-    const deactivateError = autoTranslate('deactivate_error', 'Error deactivating account')
-    const deleteError = autoTranslate('delete_error', 'Error deleting account')
+    const deactivateText = autoTranslate('deactivate', 'Deactivate')
+    const deactivateAccountText = autoTranslate('deactivate_account', 'Deactivate Account')
+    const deactivateConfirm = autoTranslate('deactivate_confirm', 'Are you sure you want to deactivate your account? Your account will be reactivated when you login again.')
+    const deleteText = autoTranslate('delete', 'Delete')
+    const deleteAccountText = autoTranslate('delete_account', 'Delete Account')
+    const deleteConfirm = autoTranslate('delete_confirm', 'Are you sure you want to delete your account? This deletion is permanent and cannot be undone.')
+    const changePasswordText = autoTranslate('change_password', 'Change Password')
     const portalError = autoTranslate('portal_error', 'Customer portal error')
     const passwordChanged = autoTranslate('password_changed', 'Your password has been changed')
     const accountDeactivated = autoTranslate('account_deactivated', 'Account deactivated')
     const accountDeleted = autoTranslate('account_deleted', 'Account deleted')
     const updatingText = autoTranslate('updating', 'Updating...')
     const loadingText = autoTranslate('loading', 'Loading...')
+    const authenticationCodeText = autoTranslate('authentication_code', 'Authentication Code')
+    const checkEmailText = autoTranslate('check_email', 'Check your email for an authentication code')
 
     useEffect(() => {
-        if (user) {
-            setEmail(user.email)
+        if (session?.user) {
+            setEmail(session.user.email)
         }
-    }, [user])
-
-    useEffect(() => {
-        if (!isLoading && !session) {
-            router.replace(localeHref('/login?returnTo=/settings', locale), localeHref('/login', locale))
-        }
-    }, [isLoading, session])
-
-    // Force reload the user on page load
-    useEffect(() => {
-        mutate('/api/users/me')
-    }, [])
+    }, [session])
 
     const updateEmail = async (e) => {
         e.preventDefault()
@@ -93,7 +79,7 @@ export default function Settings({ locale }) {
 
         if (error) {
             console.error(error)
-            toast(emailError, { color: 'danger' })
+            toast(error.message, { color: 'danger' })
         } else {
             setNewEmail(email)
             toast(confirmEmail)
@@ -105,15 +91,43 @@ export default function Settings({ locale }) {
 
         setUpdatingPassword(true)
 
-        const { error } = await supabase.auth.updateUser({ password })
+        // Prepare parameters for updating the password
+        const params = { password }
 
-        setPassword('')
+        if (requireNonce) {
+            params.nonce = nonce
+        }
+
+        // Attempt to update the password
+        const { error } = await supabase.auth.updateUser(params)
+
+        // Reauthenticate the user if the nonce is required
+        if (error?.message?.includes('reauthentication')) {
+            // Require Nonce for password update
+            const { error } = await supabase.auth.reauthenticate()
+            setUpdatingPassword(false)
+
+            if (error) {
+                console.error(error)
+                toast(error.message, { color: 'danger' })
+                return
+            }
+
+            toast(checkEmailText, { color: 'warning' })
+            setRequireNonce(true)
+            return
+        }
+
+        // Clear the nonce and requireNonce state
+        setNonce('')
+        setRequireNonce(false)
         setUpdatingPassword(false)
 
         if (error) {
-            console.error(error)
-            toast(passwordError, { color: 'danger' })
+            toast(error.message, { color: 'danger' })
         } else {
+            setPassword('')
+
             toast(passwordChanged, { color: 'success' })
 
             // Sign out other devices
@@ -122,34 +136,25 @@ export default function Settings({ locale }) {
     }
 
     const deactivateAccount = async () => {
-        setDeactivating(true)
-
-        const { error } = await patchAPI(session, '/api/users/me', { deactivated: true }).catch((error) => ({ error }))
+        const { error } = await updateUser(user, { deactivated: true })
 
         if (error) {
-            console.error(error)
-            toast(deactivateError, { color: 'danger' })
-            setDeactivating(false)
+            toast(error.message, { color: 'danger' })
         } else {
             toast(accountDeactivated, { color: 'warning' })
-            mutate('/api/users')
             router.replace(localeHref('/logout', locale))
         }
-
     }
 
     const deleteAccount = async () => {
-        setDeactivating(true)
+        const { error } = await deleteUser()
 
-        deleteAPI(session, '/api/users/me').then(async () => {
+        if (error) {
+            toast(error.message, { color: 'danger' })
+        } else {
             toast(accountDeleted, { color: 'danger' })
-            mutate('/api/users')
             router.replace(localeHref('/logout', locale))
-        }).catch((error) => {
-            console.error(error)
-            toast(deleteError, { color: 'danger' })
-            setDeactivating(false)
-        })
+        }
     }
 
     const manageSubscription = () => {
@@ -165,44 +170,34 @@ export default function Settings({ locale }) {
         })
     }
 
-    // Check if the user has signed in recently, required to change password
-    const signedInRecently = () => {
-        const now = new Date()
-        const lastSignIn = new Date(session?.user?.last_sign_in_at)
-        const diff = now.getTime() - lastSignIn.getTime()
-
-        // 30 seconds during development
-        if (process.env.NODE_ENV == 'development') {
-            return diff < 30000
-        }
-
-        // 5 minutes in production
-        return diff < 300000
-
-        // Supabase allows up to 24 hours
-        // return diff < 86400000
-    }
-
     return (
-        <div className="flex-container flex-center max-w-lg">
-            <h2 className="hidden sm:flex">
+        <div className="flex-center max-w-xl">
+            <h3 className="hidden sm:flex">
                 <AutoTranslate tKey="settings">
                     Settings
                 </AutoTranslate>
-            </h2>
+            </h3>
 
             {/* Change Email */}
-            <Card className="w-full">
+            <Card fullWidth>
                 <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updateEmail}>
                     <Input
                         type="email"
                         size="lg"
                         variant="bordered"
-                        label={autoTranslate('change_email', 'Change Email')}
+                        label={
+                            <div className="flex gap-2.5 items-center">
+                                <EnvelopeIcon className="size-4 text-primary" />
+
+                                <AutoTranslate tKey="change_email">
+                                    Change Email
+                                </AutoTranslate>
+                            </div>
+                        }
                         labelPlacement="outside"
-                        placeholder={autoTranslate('email_address', 'Email Address')}
+                        placeholder={session ? autoTranslate('email_address', 'Email Address') : ' '}
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onValueChange={(value) => setEmail(value)}
                         isDisabled={updatingEmail}
                     />
 
@@ -210,9 +205,10 @@ export default function Settings({ locale }) {
                         type="submit"
                         color="primary"
                         size="lg"
-                        isDisabled={updatingEmail || email == user?.email || email == newEmail}
+                        isDisabled={updatingEmail || email == session?.user?.email || email == newEmail}
                         isLoading={updatingEmail}
                         spinner={<Spinner color="current" size="sm" />}
+                        startContent={!updatingEmail && <CheckIcon className="size-5 -ms-1" />}
                     >
                         {updatingEmail ? (
                             updatingText
@@ -226,96 +222,91 @@ export default function Settings({ locale }) {
             </Card>
 
             {/* Change Password */}
-            <Card className="w-full">
+            <Card fullWidth>
                 <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updatePassword}>
-                    {signedInRecently() ?
-                        <>
-                            <Input
-                                size="lg"
-                                variant="bordered"
-                                labelPlacement="outside"
-                                id="password"
-                                type="password"
-                                value={password}
-                                label={autoTranslate('new_password', 'New Password')}
-                                placeholder={autoTranslate('new_password', 'New Password')}
-                                onChange={(e) => setPassword(e.target.value)}
-                                isDisabled={updatingPassword}
-                            />
+                    <input type="hidden" name="email" value={session?.user?.email} />
 
-                            <Button
-                                type="submit"
-                                size="lg"
-                                color="primary"
-                                isDisabled={updatingPassword || password.length == 0}
-                                isLoading={updatingPassword}
-                                spinner={<Spinner color="current" size="sm" />}
-                            >
-                                {updatingPassword ? (
-                                    updatingText
+                    <Input
+                        size="lg"
+                        labelPlacement="outside"
+                        variant="bordered"
+                        type={isVisible ? "text" : "password"}
+                        name="password"
+                        value={password}
+                        onValueChange={(value) => setPassword(value)}
+                        label={
+                            <div className="flex gap-2.5 items-center">
+                                <KeyIcon className="size-4 text-primary" />
+
+                                {changePasswordText}
+                            </div>
+                        }
+                        placeholder={autoTranslate('new_password', 'New Password')}
+                        isDisabled={!session || updatingPassword}
+                        endContent={
+                            <Button size="sm" variant="light" isIconOnly onPress={() => setIsVisible(!isVisible)} disableRipple>
+                                {isVisible ? (
+                                    <EyeSlashIcon className="size-6" />
                                 ) : (
-                                    <AutoTranslate tKey="update_password">
-                                        Update Password
-                                    </AutoTranslate>
+                                    <EyeIcon className="size-6" />
                                 )}
                             </Button>
-                        </>
-                        :
-                        <>
-                            <label>
-                                <AutoTranslate tKey="change_password">
-                                    Change Password
-                                </AutoTranslate>
-                            </label>
+                        }
+                    />
 
-                            <Button color="primary" onPress={openPasswordModal} size="lg">
-                                <AutoTranslate tKey="change_password">
-                                    Change Password
-                                </AutoTranslate>
-                            </Button>
+                    {requireNonce && (
+                        <Input
+                            autoFocus
+                            size="lg"
+                            labelPlacement="outside"
+                            variant="bordered"
+                            type="text"
+                            value={nonce}
+                            onValueChange={(value) => setNonce(value)}
+                            label={
+                                <div className="flex gap-2 items-center">
+                                    <HashtagIcon className="size-4 text-primary" />
 
-                            <Modal isOpen={passwordModalOpen} onOpenChange={passwordModalChange} placement="center" hideCloseButton>
-                                <ModalContent>
-                                    {(onClose) => (
-                                        <>
-                                            <ModalHeader className="flex flex-col gap-1">
-                                                <AutoTranslate tKey="change_password">
-                                                    Change Password
-                                                </AutoTranslate>
-                                            </ModalHeader>
+                                    {authenticationCodeText}
+                                </div>
+                            }
+                            placeholder={authenticationCodeText}
+                            isDisabled={updatingPassword}
+                        />
+                    )}
 
-                                            <ModalBody>
-                                                <AutoTranslate tKey="login_again">
-                                                    You must login again to change your password.
-                                                </AutoTranslate>
-                                            </ModalBody>
-
-                                            <ModalFooter>
-                                                <Button variant="light" onPress={onClose} size="lg">
-                                                    <AutoTranslate tKey="cancel">
-                                                        Cancel
-                                                    </AutoTranslate>
-                                                </Button>
-
-                                                <Button color="primary" onPress={() => supabase.auth.signOut({ scope: 'local' })} size="lg">
-                                                    <AutoTranslate tKey="continue">
-                                                        Continue
-                                                    </AutoTranslate>
-                                                </Button>
-                                            </ModalFooter>
-                                        </>
-                                    )}
-                                </ModalContent>
-                            </Modal>
-                        </>
-                    }
+                    <Button
+                        type="submit"
+                        size="lg"
+                        color="primary"
+                        isDisabled={updatingPassword || password.length == 0 || (requireNonce && nonce.length == 0)}
+                        isLoading={updatingPassword}
+                        spinner={<Spinner color="current" size="sm" />}
+                        startContent={!updatingPassword && <CheckIcon className="size-5 -ms-1" />}
+                    >
+                        {updatingPassword ? (
+                            updatingText
+                        ) : (
+                            <AutoTranslate tKey="update_password">
+                                Update Password
+                            </AutoTranslate>
+                        )}
+                    </Button>
                 </CardBody>
             </Card>
 
             {/* Account Management */}
-            <Card className="w-full">
+            <Card fullWidth>
                 <CardBody className="gap-4 flex p-4 items-start">
-                    {user?.claims?.premium && (
+                    <div className="flex gap-2 items-center -mb-1">
+                        <UserIcon className="size-4 text-primary" />
+
+                        <AutoTranslate tKey="manage_account">
+                            Manage Account
+                        </AutoTranslate>
+                    </div>
+
+                    {user?.premium && (
                         <Button
                             onPress={manageSubscription}
                             isDisabled={loadingPortal}
@@ -333,101 +324,58 @@ export default function Settings({ locale }) {
                         </Button>
                     )}
 
-                    <Button color="warning" onPress={openDeactivateModal} size="lg">
+                    <Button
+                        as={Link}
+                        size="lg"
+                        href="/logout"
+                        startContent={<ArrowLeftStartOnRectangleIcon className="size-5 -ms-1.5 me-[1px]" />}
+                    >
+                        <AutoTranslate tKey="logout">
+                            Log Out
+                        </AutoTranslate>
+                    </Button>
+
+                    <Button
+                        color="warning"
+                        onPress={() => {
+                            setConfirm({
+                                title: deactivateAccountText,
+                                content: deactivateConfirm,
+                                label: deactivateText,
+                                action: deactivateAccount,
+                                color: 'warning'
+                            })
+                        }}
+                        size="lg"
+                        startContent={<NoSymbolIcon className="size-5 -ms-1" />}
+                    >
                         <AutoTranslate tKey="deactivate_account">
                             Deactivate Account
                         </AutoTranslate>
                     </Button>
 
-                    <Modal isOpen={deactivateModalOpen} onOpenChange={deactivateModalChange} placement="center" hideCloseButton>
-                        <ModalContent>
-                            {(onClose) => (
-                                <>
-                                    <ModalHeader className="flex flex-col gap-1">
-                                        <AutoTranslate tKey="deactivate_account">
-                                            Deactivate Account
-                                        </AutoTranslate>
-                                    </ModalHeader>
-
-                                    <ModalBody>
-                                        <AutoTranslate tKey="confirm_deactivate">
-                                            Are you sure you want to deactivate your account?
-                                            Your account will be reactivated if you login again.
-                                        </AutoTranslate>
-                                    </ModalBody>
-
-                                    <ModalFooter>
-                                        <Button variant="light" onPress={onClose} size="lg">
-                                            <AutoTranslate tKey="cancel">
-                                                Cancel
-                                            </AutoTranslate>
-                                        </Button>
-
-                                        <Button
-                                            color="warning"
-                                            onPress={deactivateAccount}
-                                            size="lg"
-                                            isLoading={deactivating}
-                                            spinner={<Spinner color="current" size="sm" />}
-                                        >
-                                            <AutoTranslate tKey="deactivate_account">
-                                                Deactivate Account
-                                            </AutoTranslate>
-                                        </Button>
-                                    </ModalFooter>
-                                </>
-                            )}
-                        </ModalContent>
-                    </Modal>
-
-                    <Button color="danger" onPress={openDeleteModal} size="lg">
+                    <Button
+                        color="danger"
+                        onPress={() => {
+                            setConfirm({
+                                title: deleteAccountText,
+                                content: deleteConfirm,
+                                label: deleteText,
+                                action: deleteAccount,
+                                color: 'danger'
+                            })
+                        }}
+                        size="lg"
+                        startContent={<TrashIcon className="size-5 -ms-1" />}
+                    >
                         <AutoTranslate tKey="delete_account">
                             Delete Account
                         </AutoTranslate>
                     </Button>
-
-                    <Modal isOpen={deleteModalOpen} onOpenChange={deleteModalChange} placement="center" hideCloseButton>
-                        <ModalContent>
-                            {(onClose) => (
-                                <>
-                                    <ModalHeader className="flex flex-col gap-1">
-                                        <AutoTranslate tKey="delete_account">
-                                            Delete Account
-                                        </AutoTranslate>
-                                    </ModalHeader>
-
-                                    <ModalBody>
-                                        <AutoTranslate tKey="confirm_delete">
-                                            Are you sure you want to delete your account?
-                                            This deletion is permanent and cannot be undone.
-                                        </AutoTranslate>
-                                    </ModalBody>
-
-                                    <ModalFooter>
-                                        <Button variant="light" onPress={onClose} size="lg">
-                                            <AutoTranslate tKey="cancel">
-                                                Cancel
-                                            </AutoTranslate>
-                                        </Button>
-
-                                        <Button
-                                            color="danger"
-                                            onPress={deleteAccount}
-                                            size="lg"
-                                            isLoading={deactivating}
-                                            spinner={<Spinner color="current" size="sm" />}
-                                        >
-                                            <AutoTranslate tKey="delete_account">
-                                                Delete Account
-                                            </AutoTranslate>
-                                        </Button>
-                                    </ModalFooter>
-                                </>
-                            )}
-                        </ModalContent>
-                    </Modal>
                 </CardBody>
             </Card>
+
+            <ConfirmModal confirm={confirm} setConfirm={setConfirm} />
         </div>
     )
 }
