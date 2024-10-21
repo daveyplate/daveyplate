@@ -6,7 +6,7 @@ import { isExport } from "@/utils/utils"
 
 export default function ErrorPage() {
     return (
-        <div className="flex-container flex-center">
+        <div className="flex-center">
             <h3>
                 <AutoTranslate tKey="sorry">
                     Sorry, something went wrong...

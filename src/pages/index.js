@@ -55,7 +55,6 @@ export default function Home() {
                         <p>
                             <AutoTranslate tKey="description_1">
                                 Simple user management system built with Next.js, NextUI, and Supabase.
-                                Using JavaScript because it is much more simple than TypeScript.
                             </AutoTranslate>
                         </p>
 
