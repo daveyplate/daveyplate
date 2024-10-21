@@ -17,7 +17,7 @@ import {
     Badge
 } from "@nextui-org/react"
 
-import { CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon } from '@heroicons/react/24/solid'
 
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from '@/utils/translation-props'
@@ -87,10 +87,10 @@ export default function EditProfile() {
 
     // Set the form values when the user initially loads
     useEffect(() => {
-        if (user) {
-            setName(user.full_name || '')
-            setBio(user.bio || '')
-        }
+        if (!user) return
+
+        setName(user.full_name || '')
+        setBio(user.bio || '')
     }, [user])
 
     // Validate the form when the user changes the name or bio
@@ -100,14 +100,14 @@ export default function EditProfile() {
 
     return (
         <div className="flex-center max-w-xl">
-            <h2 className="hidden sm:flex">
+            <h3 className="hidden sm:flex">
                 <AutoTranslate tKey="title">
                     Edit Profile
                 </AutoTranslate>
-            </h2>
+            </h3>
 
             <Card fullWidth>
-                <CardBody as="form" onSubmit={updateProfile} className="p-5">
+                <CardBody as="form" onSubmit={updateProfile} className="p-4">
                     <DragDropzone
                         size="lg"
                         label={autoTranslate("upload_avatar", "Upload Avatar")}
@@ -116,11 +116,13 @@ export default function EditProfile() {
                         onError={(error) => toast(error.message, { color: 'danger' })}
                         className="gap-4 flex flex-col"
                     >
-                        <p className="-mb-2 -mt-1">
+                        <div className="flex items-center gap-2 -mb-2 -mt-1">
+                            <UserCircleIcon className="size-5 text-primary" />
+
                             <AutoTranslate tKey="avatar">
                                 Avatar
                             </AutoTranslate>
-                        </p>
+                        </div>
 
                         <div className="flex items-center gap-4 mb-1">
                             <Badge
@@ -174,7 +176,15 @@ export default function EditProfile() {
                         <Input
                             variant="bordered"
                             size="lg"
-                            label={autoTranslate("name", "Name")}
+                            label={
+                                <div className="flex items-center gap-2">
+                                    <UserIcon className="size-4 text-primary" />
+
+                                    <AutoTranslate tKey="name">
+                                        Name
+                                    </AutoTranslate>
+                                </div>
+                            }
                             labelPlacement="outside"
                             isDisabled={!user}
                             placeholder={user ? autoTranslate('name_placeholder', 'Name') : ' '}
@@ -188,7 +198,15 @@ export default function EditProfile() {
                             variant="bordered"
                             size="lg"
                             classNames={{ label: "text-base", inputWrapper: "!min-h-24" }}
-                            label={autoTranslate("bio", "Bio")}
+                            label={
+                                <div className="flex items-center gap-2">
+                                    <PencilIcon className="mx-0.5 size-3.5 text-primary" />
+
+                                    <AutoTranslate tKey="bio">
+                                        Bio
+                                    </AutoTranslate>
+                                </div>
+                            }
                             labelPlacement="outside"
                             isDisabled={!user}
                             placeholder={user ? autoTranslate('bio_placeholder', 'Type your bio here') : ' '}
