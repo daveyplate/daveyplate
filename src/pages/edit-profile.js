@@ -189,7 +189,7 @@ export default function EditProfile() {
                             isDisabled={!user}
                             placeholder={user ? autoTranslate('name_placeholder', 'Name') : ' '}
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onValueChange={(value) => setName(value)}
                             isInvalid={!!nameError}
                             errorMessage={nameError}
                         />
@@ -211,7 +211,7 @@ export default function EditProfile() {
                             isDisabled={!user}
                             placeholder={user ? autoTranslate('bio_placeholder', 'Type your bio here') : ' '}
                             value={bio}
-                            onChange={(e) => setBio(e.target.value)}
+                            onValueChange={(value) => setBio(value)}
                             isInvalid={!!bioError}
                             errorMessage={bioError}
                         />
