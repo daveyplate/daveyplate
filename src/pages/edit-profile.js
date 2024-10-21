@@ -18,6 +18,8 @@ import {
 
 import { CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon } from '@heroicons/react/24/solid'
 
+import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
+import { createClient } from '@/utils/supabase/component'
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from '@/utils/translation-props'
 import { isExport } from "@/utils/utils"
@@ -25,9 +27,10 @@ import { isExport } from "@/utils/utils"
 import { toast } from "@/components/providers/toast-provider"
 import UserAvatar from '@/components/user-avatar'
 import UploadAvatarModal from '@/components/upload-avatar-modal'
-import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
+
 
 export default function EditProfile({ locale }) {
+    const supabase = createClient()
     const { autoTranslate } = useAutoTranslate()
     const { session } = useAuthenticatedPage({ locale })
     const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
@@ -76,6 +79,8 @@ export default function EditProfile({ locale }) {
 
         if (name != user.full_name) {
             params.full_name = name
+
+            supabase.auth.updateUser({ data: { full_name: name } })
         }
 
         if (bio != user.bio) {
@@ -165,7 +170,11 @@ export default function EditProfile({ locale }) {
                                     label: autoTranslate('delete', 'Delete'),
                                     color: "danger",
                                     icon: <TrashIcon className="size-5 -ms-1" />,
-                                    action: () => updateUser({ avatar_url: null })
+                                    action: async () => {
+                                        supabase.auth.updateUser({ data: { avatar_url: null } })
+                                        const { error } = await updateUser({ avatar_url: null })
+                                        error && toast(error.message, { color: "danger" })
+                                    }
                                 })}
                                 isDisabled={!user?.avatar_url}
                             >
@@ -244,6 +253,7 @@ export default function EditProfile({ locale }) {
                 avatarFile={avatarFile}
                 setAvatarFile={setAvatarFile}
                 onUpload={async (url) => {
+                    supabase.auth.updateUser({ data: { avatar_url: url } })
                     const { error } = await updateUser({ avatar_url: url })
                     error && toast(error.message, { color: "danger" })
                 }}
