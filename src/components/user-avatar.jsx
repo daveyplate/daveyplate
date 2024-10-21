@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react'
-import { Avatar, cn } from '@nextui-org/react'
+import { cn } from '@nextui-org/react'
+import { Avatar } from '@daveyplate/nextui-fixed-avatar'
 
 /**
  * A user avatar component that displays a user's avatar image and name.
