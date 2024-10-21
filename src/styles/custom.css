@@ -40,7 +40,7 @@ body {
 }
 
 .flex-container {
-    @apply flex flex-col p-4 gap-4 flex-grow items-start w-full;
+    @apply flex flex-col p-4 gap-4 grow items-start w-full;
 }
 
 .flex-center {

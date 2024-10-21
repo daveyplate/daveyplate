@@ -111,8 +111,8 @@ export default function Login({ view, locale }) {
     }
 
     return (
-        <div className="flex-container flex-center max-w-lg">
-            <Card className="w-full">
+        <div className="flex-center max-w-xl">
+            <Card fullWidth>
                 <CardBody className="px-4 pb-0">
                     <Auth
                         socialLayout='horizontal'
