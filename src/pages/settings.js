@@ -9,9 +9,22 @@ import {
     Button,
     Card,
     CardBody,
+    cn,
     Input,
     Spinner,
 } from "@nextui-org/react"
+
+import {
+    ArrowLeftStartOnRectangleIcon,
+    CheckIcon,
+    EnvelopeIcon,
+    EyeIcon,
+    EyeSlashIcon,
+    KeyIcon,
+    NoSymbolIcon,
+    TrashIcon,
+    UserIcon
+} from '@heroicons/react/24/solid'
 
 import { createClient } from '@/utils/supabase/component'
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
@@ -20,7 +33,6 @@ import { isExport } from "@/utils/utils"
 import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
 
 import { toast } from '@/components/providers/toast-provider'
-import { ArrowLeftStartOnRectangleIcon, CheckIcon, EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon, NoSymbolIcon, TrashIcon, UserIcon } from '@heroicons/react/24/solid'
 import Link, { localeHref } from '@/components/locale-link'
 
 export default function Settings({ locale }) {
@@ -35,8 +47,7 @@ export default function Settings({ locale }) {
     const [email, setEmail] = useState('')
     const [newEmail, setNewEmail] = useState('')
     const [password, setPassword] = useState('')
-
-    const [isVisible, setIsVisible] = useState(false)
+    const [passwordVisible, setPasswordVisible] = useState(false)
 
     const [nonce, setNonce] = useState('')
     const [requireNonce, setRequireNonce] = useState(false)
@@ -57,8 +68,6 @@ export default function Settings({ locale }) {
     const passwordChanged = autoTranslate('password_changed', 'Your password has been changed')
     const accountDeactivated = autoTranslate('account_deactivated', 'Account deactivated')
     const accountDeleted = autoTranslate('account_deleted', 'Account deleted')
-    const updatingText = autoTranslate('updating', 'Updating...')
-    const loadingText = autoTranslate('loading', 'Loading...')
     const authenticationCodeText = autoTranslate('authentication_code', 'Authentication Code')
     const checkEmailText = autoTranslate('check_email', 'Check your email for an authentication code')
 
@@ -169,7 +178,11 @@ export default function Settings({ locale }) {
     }
 
     return (
-        <div className="flex-center max-w-xl">
+        <div
+            className={cn(session ? "opacity-1" : "opacity-0",
+                "flex-center max-w-xl transition-all"
+            )}
+        >
             {/* Change Email */}
             <Card fullWidth>
                 <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updateEmail}>
@@ -187,7 +200,7 @@ export default function Settings({ locale }) {
                             </div>
                         }
                         labelPlacement="outside"
-                        placeholder={session ? autoTranslate('email_address', 'Email Address') : ' '}
+                        placeholder={autoTranslate('email_address', 'Email Address')}
                         value={email}
                         onValueChange={(value) => setEmail(value)}
                         isDisabled={updatingEmail}
@@ -199,16 +212,16 @@ export default function Settings({ locale }) {
                         size="lg"
                         isDisabled={updatingEmail || email == session?.user?.email || email == newEmail}
                         isLoading={updatingEmail}
-                        spinner={<Spinner color="current" size="sm" />}
-                        startContent={!updatingEmail && <CheckIcon className="size-5 -ms-1" />}
+                        spinner={
+                            <Spinner color="current" size="sm" />
+                        }
+                        startContent={
+                            !updatingEmail && <CheckIcon className="size-5 -ms-1" />
+                        }
                     >
-                        {updatingEmail ? (
-                            updatingText
-                        ) : (
-                            <AutoTranslate tKey="update_email">
-                                Update Email
-                            </AutoTranslate>
-                        )}
+                        <AutoTranslate tKey="update_email">
+                            Update Email
+                        </AutoTranslate>
                     </Button>
                 </CardBody>
             </Card>
@@ -222,7 +235,7 @@ export default function Settings({ locale }) {
                         size="lg"
                         labelPlacement="outside"
                         variant="bordered"
-                        type={isVisible ? "text" : "password"}
+                        type={passwordVisible ? "text" : "password"}
                         name="password"
                         value={password}
                         onValueChange={(value) => setPassword(value)}
@@ -236,8 +249,14 @@ export default function Settings({ locale }) {
                         placeholder={autoTranslate('new_password', 'New Password')}
                         isDisabled={!session || updatingPassword}
                         endContent={
-                            <Button size="sm" variant="light" isIconOnly onPress={() => setIsVisible(!isVisible)} disableRipple>
-                                {isVisible ? (
+                            <Button
+                                size="sm"
+                                variant="light"
+                                isIconOnly
+                                onPress={() => setPasswordVisible(!passwordVisible)}
+                                disableRipple
+                            >
+                                {passwordVisible ? (
                                     <EyeSlashIcon className="size-6" />
                                 ) : (
                                     <EyeIcon className="size-6" />
@@ -271,18 +290,22 @@ export default function Settings({ locale }) {
                         type="submit"
                         size="lg"
                         color="primary"
-                        isDisabled={updatingPassword || password.length == 0 || (requireNonce && nonce.length == 0)}
+                        isDisabled={
+                            updatingPassword ||
+                            password.length == 0 ||
+                            (requireNonce && nonce.length == 0)
+                        }
                         isLoading={updatingPassword}
-                        spinner={<Spinner color="current" size="sm" />}
-                        startContent={!updatingPassword && <CheckIcon className="size-5 -ms-1" />}
+                        spinner={
+                            <Spinner color="current" size="sm" />
+                        }
+                        startContent={
+                            !updatingPassword && <CheckIcon className="size-5 -ms-1" />
+                        }
                     >
-                        {updatingPassword ? (
-                            updatingText
-                        ) : (
-                            <AutoTranslate tKey="update_password">
-                                Update Password
-                            </AutoTranslate>
-                        )}
+                        <AutoTranslate tKey="update_password">
+                            Update Password
+                        </AutoTranslate>
                     </Button>
                 </CardBody>
             </Card>
@@ -304,15 +327,13 @@ export default function Settings({ locale }) {
                             isDisabled={loadingPortal}
                             size="lg"
                             isLoading={loadingPortal}
-                            spinner={<Spinner color="current" size="sm" />}
+                            spinner={
+                                <Spinner color="current" size="sm" />
+                            }
                         >
-                            {loadingPortal ? (
-                                loadingText
-                            ) : (
-                                <AutoTranslate tKey="manage_subscription">
-                                    Manage Subscription
-                                </AutoTranslate>
-                            )}
+                            <AutoTranslate tKey="manage_subscription">
+                                Manage Subscription
+                            </AutoTranslate>
                         </Button>
                     )}
 
@@ -320,7 +341,9 @@ export default function Settings({ locale }) {
                         as={Link}
                         size="lg"
                         href="/logout"
-                        startContent={<ArrowLeftStartOnRectangleIcon className="size-5 -ms-1.5 me-[1px]" />}
+                        startContent={
+                            <ArrowLeftStartOnRectangleIcon className="size-5 -ms-1.5 me-[1px]" />
+                        }
                     >
                         <AutoTranslate tKey="logout">
                             Log Out
@@ -329,6 +352,7 @@ export default function Settings({ locale }) {
 
                     <Button
                         color="warning"
+                        size="lg"
                         onPress={() => {
                             setConfirm({
                                 title: deactivateAccountText,
@@ -338,8 +362,9 @@ export default function Settings({ locale }) {
                                 color: 'warning'
                             })
                         }}
-                        size="lg"
-                        startContent={<NoSymbolIcon className="size-5 -ms-1" />}
+                        startContent={
+                            <NoSymbolIcon className="size-5 -ms-1" />
+                        }
                     >
                         <AutoTranslate tKey="deactivate_account">
                             Deactivate Account
@@ -348,6 +373,7 @@ export default function Settings({ locale }) {
 
                     <Button
                         color="danger"
+                        size="lg"
                         onPress={() => {
                             setConfirm({
                                 title: deleteAccountText,
@@ -357,8 +383,9 @@ export default function Settings({ locale }) {
                                 color: 'danger'
                             })
                         }}
-                        size="lg"
-                        startContent={<TrashIcon className="size-5 -ms-1" />}
+                        startContent={
+                            <TrashIcon className="size-5 -ms-1" />
+                        }
                     >
                         <AutoTranslate tKey="delete_account">
                             Delete Account
