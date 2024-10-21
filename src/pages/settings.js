@@ -10,6 +10,8 @@ import {
     Card,
     CardBody,
     cn,
+    Dropdown,
+    DropdownTrigger,
     Input,
     Spinner,
 } from "@nextui-org/react"
@@ -21,6 +23,7 @@ import {
     EyeIcon,
     EyeSlashIcon,
     KeyIcon,
+    LanguageIcon,
     NoSymbolIcon,
     TrashIcon,
     UserIcon
@@ -34,6 +37,7 @@ import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
 
 import { toast } from '@/components/providers/toast-provider'
 import Link, { localeHref } from '@/components/locale-link'
+import ThemeDropdown from '@/components/theme-dropdown'
 
 export default function Settings({ locale }) {
     const router = useRouter()
@@ -210,14 +214,18 @@ export default function Settings({ locale }) {
                         type="submit"
                         color="primary"
                         size="lg"
-                        isDisabled={updatingEmail || email == session?.user?.email || email == newEmail}
+                        isDisabled={
+                            updatingEmail ||
+                            email == session?.user?.email ||
+                            email == newEmail
+                        }
                         isLoading={updatingEmail}
                         spinner={
                             <Spinner color="current" size="sm" />
                         }
-                        startContent={
-                            !updatingEmail && <CheckIcon className="size-5 -ms-1" />
-                        }
+                        startContent={!updatingEmail && (
+                            <CheckIcon className="size-5 -ms-1" />
+                        )}
                     >
                         <AutoTranslate tKey="update_email">
                             Update Email
@@ -299,9 +307,9 @@ export default function Settings({ locale }) {
                         spinner={
                             <Spinner color="current" size="sm" />
                         }
-                        startContent={
-                            !updatingPassword && <CheckIcon className="size-5 -ms-1" />
-                        }
+                        startContent={!updatingPassword && (
+                            <CheckIcon className="size-5 -ms-1" />
+                        )}
                     >
                         <AutoTranslate tKey="update_password">
                             Update Password
@@ -310,9 +318,31 @@ export default function Settings({ locale }) {
                 </CardBody>
             </Card>
 
+            <Card fullWidth>
+                <CardBody className="gap-4 p-4 items-start">
+                    <div className="flex gap-2 items-center -mt-1 -mb-2">
+                        <EyeIcon className="size-4 text-primary" />
+
+                        <AutoTranslate tKey="theme">
+                            Theme
+                        </AutoTranslate>
+                    </div>
+
+                    <ThemeDropdown />
+
+                    <div className="flex gap-2 items-center -mt-1 -mb-2">
+                        <LanguageIcon className="size-4 text-primary" />
+
+                        <AutoTranslate tKey="language">
+                            Language
+                        </AutoTranslate>
+                    </div>
+                </CardBody>
+            </Card>
+
             {/* Account Management */}
             <Card fullWidth>
-                <CardBody className="gap-4 flex p-4 items-start">
+                <CardBody className="gap-4 p-4 items-start">
                     <div className="flex gap-2 items-center -my-1">
                         <UserIcon className="size-4 text-primary" />
 
