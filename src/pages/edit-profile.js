@@ -82,7 +82,7 @@ export default function EditProfile({ locale }) {
             params.bio = bio
         }
 
-        const { error } = await updateUser(user, params)
+        const { error } = await updateUser(params)
         error && toast(error.message, { color: "danger" })
     }
 
@@ -165,7 +165,7 @@ export default function EditProfile({ locale }) {
                                     label: autoTranslate('delete', 'Delete'),
                                     color: "danger",
                                     icon: <TrashIcon className="size-5 -ms-1" />,
-                                    action: () => updateUser(user, { avatar_url: null })
+                                    action: () => updateUser({ avatar_url: null })
                                 })}
                                 isDisabled={!user?.avatar_url}
                             >
@@ -244,7 +244,7 @@ export default function EditProfile({ locale }) {
                 avatarFile={avatarFile}
                 setAvatarFile={setAvatarFile}
                 onUpload={async (url) => {
-                    const { error } = await updateUser(user, { avatar_url: url })
+                    const { error } = await updateUser({ avatar_url: url })
                     error && toast(error.message, { color: "danger" })
                 }}
                 onError={(error) => toast(error.message, { color: 'danger' })}

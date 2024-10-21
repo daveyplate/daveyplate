@@ -13,7 +13,7 @@ export default () => {
             if (checked) return
             setChecked(true)
 
-            updateUser(user, { deactivated: false })
+            updateUser({ deactivated: false })
         } else {
             setChecked(false)
         }

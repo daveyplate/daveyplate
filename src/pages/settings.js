@@ -134,7 +134,7 @@ export default function Settings({ locale }) {
     }
 
     const deactivateAccount = async () => {
-        const { error } = await updateUser(user, { deactivated: true })
+        const { error } = await updateUser({ deactivated: true })
 
         if (error) {
             toast(error.message, { color: 'danger' })
