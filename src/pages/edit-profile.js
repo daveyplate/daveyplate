@@ -66,7 +66,8 @@ export default function EditProfile() {
         }
     }
 
-    const updateProfile = async () => {
+    const updateProfile = async (e) => {
+        e?.preventDefault()
         if (!formChanged) return
 
         // Only send the fields that have changed
@@ -80,7 +81,8 @@ export default function EditProfile() {
             params.bio = bio
         }
 
-        updateUser({ ...user, id: 'me' }, { ...params })
+        const { error } = await updateUser({ ...user, id: 'me' }, { ...params })
+        error && toast(error.message, { color: "danger" })
     }
 
     // Set the form values when the user initially loads
@@ -225,12 +227,8 @@ export default function EditProfile() {
                 avatarFile={avatarFile}
                 setAvatarFile={setAvatarFile}
                 onUpload={async (url) => {
-                    const { error: updateError } = await updateUser({ ...user, id: 'me' }, { avatar_urlz: url })
-
-                    if (updateError) {
-                        console.error(updateError)
-                        toast("Error updating avatar", { color: "danger" })
-                    }
+                    const { error } = await updateUser({ ...user, id: 'me' }, { avatar_url: url })
+                    error && toast(error.message, { color: "danger" })
                 }}
                 onError={(error) => toast(error.message, { color: 'danger' })}
             />

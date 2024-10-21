@@ -23,7 +23,7 @@
     "@daveyplate/nextui-button-link-as": "^1.0.0",
     "@daveyplate/nextui-confirm-modal": "^1.0.1",
     "@daveyplate/nextui-fixed-avatar": "^1.0.3",
-    "@daveyplate/supabase-swr-entities": "^1.0.11",
+    "@daveyplate/supabase-swr-entities": "^1.0.13",
     "@daveyplate/tailwind-drag-dropzone": "^1.0.2",
     "@daveyplate/use-document-title": "^1.0.0",
     "@daveyplate/use-scroll-restoration": "^1.0.4",
@@ -80,7 +80,8 @@
   },
   "devDependencies": {
     "@capacitor/cli": "^5.7.0",
-    "file-loader": "^6.2.0"
+    "file-loader": "^6.2.0",
+    "husky": "^9.1.6"
   },
   "packageManager": "npm@10.5.0"
 }
