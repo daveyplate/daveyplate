@@ -63,9 +63,7 @@ export default function Settings({ locale }) {
     const checkEmailText = autoTranslate('check_email', 'Check your email for an authentication code')
 
     useEffect(() => {
-        if (session?.user) {
-            setEmail(session.user.email)
-        }
+        setEmail(session?.user.email || '')
     }, [session])
 
     const updateEmail = async (e) => {

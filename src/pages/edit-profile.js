@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { useSession } from '@supabase/auth-helpers-react'
-
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { useEntity } from '@daveyplate/supabase-swr-entities'
 import { DragDropzone } from '@daveyplate/tailwind-drag-dropzone'
+import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
 
 import {
     Button,
@@ -26,12 +25,12 @@ import { isExport } from "@/utils/utils"
 import { toast } from "@/components/providers/toast-provider"
 import UserAvatar from '@/components/user-avatar'
 import UploadAvatarModal from '@/components/upload-avatar-modal'
-import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
+import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
 
-export default function EditProfile() {
+export default function EditProfile({ locale }) {
     const { autoTranslate } = useAutoTranslate()
-    const session = useSession()
-    const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
+    const { session } = useAuthenticatedPage({ locale })
+    const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
 
     const [name, setName] = useState(user?.full_name || '')
     const [bio, setBio] = useState(user?.bio || '')
@@ -69,7 +68,7 @@ export default function EditProfile() {
     }
 
     const updateProfile = async (e) => {
-        e?.preventDefault()
+        e.preventDefault()
         if (!formChanged) return
 
         // Only send the fields that have changed
@@ -83,16 +82,14 @@ export default function EditProfile() {
             params.bio = bio
         }
 
-        const { error } = await updateUser({ ...user, id: 'me' }, { ...params })
+        const { error } = await updateUser(user, params)
         error && toast(error.message, { color: "danger" })
     }
 
     // Set the form values when the user initially loads
     useEffect(() => {
-        if (!user) return
-
-        setName(user.full_name || '')
-        setBio(user.bio || '')
+        setName(user?.full_name || '')
+        setBio(user?.bio || '')
     }, [user])
 
     // Validate the form when the user changes the name or bio
@@ -168,7 +165,7 @@ export default function EditProfile() {
                                     label: autoTranslate('delete', 'Delete'),
                                     color: "danger",
                                     icon: <TrashIcon className="size-5 -ms-1" />,
-                                    action: () => updateUser({ ...user, id: 'me' }, { avatar_url: null })
+                                    action: () => updateUser(user, { avatar_url: null })
                                 })}
                                 isDisabled={!user?.avatar_url}
                             >
@@ -232,7 +229,6 @@ export default function EditProfile() {
                                 color="primary"
                                 size="lg"
                                 isDisabled={!user || !formChanged || !!nameError || !!bioError}
-                                onClick={updateProfile}
                                 startContent={<CheckIcon className="size-5 -ms-1" />}
                             >
                                 <AutoTranslate tKey="save_changes">
@@ -248,7 +244,7 @@ export default function EditProfile() {
                 avatarFile={avatarFile}
                 setAvatarFile={setAvatarFile}
                 onUpload={async (url) => {
-                    const { error } = await updateUser({ ...user, id: 'me' }, { avatar_url: url })
+                    const { error } = await updateUser(user, { avatar_url: url })
                     error && toast(error.message, { color: "danger" })
                 }}
                 onError={(error) => toast(error.message, { color: 'danger' })}
