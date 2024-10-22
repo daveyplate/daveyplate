@@ -10,7 +10,7 @@ import {
 import Flag from 'react-flagpack'
 import { isExport } from "@/utils/utils"
 
-const localeToCountry = {
+export const localeToCountry = {
     "en": "US",
     "de": "DE",
     "es": "ES",
@@ -44,7 +44,7 @@ export default function ToggleLocale({ locales, locale }) {
         if (isExport()) {
             router.push(getLocaleLink(locale))
         } else {
-            router.push(router.pathname, router.asPath, { locale })
+            router.push(router.pathname, router.asPath, { locale, scroll: false })
         }
     }
 

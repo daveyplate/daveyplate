@@ -46,12 +46,14 @@ export default function ThemeDropdown() {
             </DropdownTrigger>
 
             <DropdownMenu
-                itemClasses={{ title: "text-base ms-1" }}
+                itemClasses={{
+                    title: "text-base ms-1",
+                    base: "px-3 gap-2.5",
+                }}
             >
                 {
                     themes.map(theme => (
                         <DropdownItem
-                            className="ps-3"
                             key={theme.key}
                             startContent={theme.icon}
                             title={theme.title}

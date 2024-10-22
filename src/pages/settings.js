@@ -37,8 +37,9 @@ import { toast } from '@/components/providers/toast-provider'
 import Link, { localeHref } from '@/components/locale-link'
 import ThemeDropdown from '@/components/theme-dropdown'
 import { useSessionContext } from '@supabase/auth-helpers-react'
+import LocaleDropdown from '@/components/locale-dropdown'
 
-export default function Settings({ locale }) {
+export default function Settings({ locales, locale }) {
     const router = useRouter()
     const supabase = createClient()
     const { autoTranslate } = useAutoTranslate()
@@ -340,6 +341,8 @@ export default function Settings({ locale }) {
                             Language
                         </AutoTranslate>
                     </div>
+
+                    <LocaleDropdown locales={locales} locale={locale} />
                 </CardBody>
             </Card>
 
