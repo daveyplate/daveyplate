@@ -114,7 +114,7 @@ export default function Header({ locale, overrideTitle }) {
             {!overrideTitle && <PageTitle locale={locale} />}
 
             <Navbar
-                className="backdrop-blur-xl bg-background/70 pt-safe px-safe"
+                className="backdrop-blur-xl bg-background/70 pt-safe px-safe fixed"
                 isMenuOpen={isMenuOpen}
                 onMenuOpenChange={setIsMenuOpen}
                 onClick={() => setIsMenuOpen(false)}
