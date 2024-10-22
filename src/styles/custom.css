@@ -37,6 +37,7 @@ h6 {
 
 body {
     touch-action: pan-y;
+    @apply overflow-hidden sm:overflow-auto;
 }
 
 .flex-container {
