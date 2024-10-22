@@ -73,24 +73,21 @@ export default function LocaleDropdown({ locales, locale, isIconOnly = false, si
                     base: "px-3 gap-2.5",
                 }}
             >
-                {
-                    locales.map(locale => (
-                        <DropdownItem
-                            key={locale}
-                            startContent={
-                                <Flag
-                                    code={localeToCountry[locale]}
-                                    gradient="real-linear"
-                                    size="m"
-                                    hasDropShadow
-                                />
-                            }
-                            title={new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
-                            onClick={() => handleLocaleChange(locale)}
-                        />
-                    ))
-                }
-
+                {locales.map((locale) => (
+                    <DropdownItem
+                        key={locale}
+                        startContent={
+                            <Flag
+                                code={localeToCountry[locale]}
+                                gradient="real-linear"
+                                size="m"
+                                hasDropShadow
+                            />
+                        }
+                        title={new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
+                        onPress={() => handleLocaleChange(locale)}
+                    />
+                ))}
             </DropdownMenu>
         </Dropdown>
     )
