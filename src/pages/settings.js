@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useSessionContext } from '@supabase/auth-helpers-react'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { postAPI, useEntity } from '@daveyplate/supabase-swr-entities'
@@ -36,7 +37,6 @@ import { isExport } from "@/utils/utils"
 import { toast } from '@/components/providers/toast-provider'
 import Link, { localeHref } from '@/components/locale-link'
 import ThemeDropdown from '@/components/theme-dropdown'
-import { useSessionContext } from '@supabase/auth-helpers-react'
 import LocaleDropdown from '@/components/locale-dropdown'
 
 export default function Settings({ locales, locale }) {
@@ -445,8 +445,6 @@ export default function Settings({ locales, locale }) {
                             </AutoTranslate>
                         </Button>
                     )}
-
-
                 </CardBody>
             </Card>
 

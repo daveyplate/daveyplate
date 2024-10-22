@@ -14,6 +14,8 @@ import { Analytics } from '@vercel/analytics/react'
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
 
 import { createClient } from '@/utils/supabase/component'
+
+import MetaTheme from "@/components/providers/meta-theme"
 import ToastProvider from "@/components/providers/toast-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
 import ReactivateUser from "@/components/providers/reactivate-user"
@@ -50,6 +52,7 @@ export default function Providers({ children, ...pageProps }) {
                                 debug={false}
                                 disabled={true}
                             >
+                                <MetaTheme />
                                 {children}
 
                                 <ReactivateUser />
