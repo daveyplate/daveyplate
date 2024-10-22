@@ -332,7 +332,7 @@ export default function Settings({ locales, locale }) {
                         </AutoTranslate>
                     </div>
 
-                    <ThemeDropdown />
+                    <ThemeDropdown size="lg" />
 
                     <div className="flex gap-2 items-center -mt-1 -mb-2">
                         <LanguageIcon className="size-4 text-primary" />

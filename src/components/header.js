@@ -35,7 +35,6 @@ import {
 import Link from "@/components/locale-link"
 import { localeHref } from "@/components/locale-link"
 
-import ToggleTheme from "@/components/toggle-theme"
 import UserAvatar from "@/components/user-avatar"
 
 import {
@@ -56,6 +55,7 @@ import PageTitle from "./page-title"
 import { useDocumentTitle } from "@daveyplate/use-document-title"
 
 import { useEntity } from "@daveyplate/supabase-swr-entities"
+import ThemeDropdown from "./theme-dropdown"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -186,7 +186,7 @@ export default function Header({ locale, overrideTitle }) {
                     className={cn("transition-all gap-2", isMenuOpen ? "opacity-0 pointer-events-none" : "")}
                 >
                     <NavbarItem>
-                        <ToggleTheme />
+                        <ThemeDropdown isIconOnly variant="light" />
                     </NavbarItem>
 
                     <NavbarItem>
