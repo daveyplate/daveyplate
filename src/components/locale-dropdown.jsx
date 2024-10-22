@@ -54,7 +54,7 @@ export default function LocaleDropdown({ locales, locale, isIconOnly = false, si
     }
 
     return (
-        <Dropdown size={size} classNames={{ content: cn("text-lg", isIconOnly && "min-w-fit") }}>
+        <Dropdown size={size} classNames={{ content: cn(isIconOnly && "min-w-fit") }}>
             <DropdownTrigger>
                 <Button
                     isIconOnly={isIconOnly}
