@@ -52,7 +52,7 @@ export default function LocaleDropdown({ locales, locale, isIconOnly = false, si
                     variant={variant}
                     startContent={
                         <Flag
-                            className={cn(!isIconOnly && "-ms-0.5 me-0.5")}
+                            className={cn(!isIconOnly && "-ms-0.5 me-1")}
                             code={localeToCountry[locale]}
                             gradient="real-linear"
                             size="m"
@@ -70,7 +70,7 @@ export default function LocaleDropdown({ locales, locale, isIconOnly = false, si
             <DropdownMenu
                 itemClasses={{
                     title: "text-base ms-1",
-                    base: "px-3 gap-2.5",
+                    base: "px-3 gap-3",
                 }}
             >
                 {locales.map((locale) => (
