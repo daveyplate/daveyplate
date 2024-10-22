@@ -7,7 +7,7 @@ export default function Footer({ locales, locale }) {
     const year = new Date().getFullYear()
 
     return (
-        <footer className="backdrop-blur-xl bg-background/70 pb-safe sticky bottom-0">
+        <footer className="backdrop-blur-xl bg-background/70 pb-safe sticky bottom-0 z-10">
             <div className="flex justify-center items-center py-2 gap-2 overflow-hidden">
                 <ToggleLocale locales={locales} locale={locale} />
 

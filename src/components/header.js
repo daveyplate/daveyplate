@@ -221,14 +221,14 @@ export default function Header({ locale, overrideTitle }) {
                             <DropdownMenu
                                 aria-label={autoTranslate("profile_actions", "Profile actions")}
                                 itemClasses={{
-                                    title: "text-lg",
-                                    base: "text-foreground gap-3"
+                                    title: "text-base",
+                                    base: "text-foreground gap-3 px-3"
                                 }}
                             >
                                 <DropdownSection
                                     className="truncate pt-1"
-                                    title={user?.email || autoTranslate("account", "Account")}
-                                    classNames={{ heading: "text-base" }}
+                                    title={session?.user.email || autoTranslate("account", "Account")}
+                                    classNames={{ heading: "text-small" }}
                                     showDivider
                                 />
 
@@ -247,33 +247,10 @@ export default function Header({ locale, overrideTitle }) {
                                     <DropdownItem
                                         as={Link}
                                         href={"/edit-profile"}
-                                        startContent={<PencilIcon className="size-5" />}
+                                        startContent={<PencilIcon className="size-4 mx-0.5" />}
                                         onClick={(e) => e.preventDefault()}
                                     >
                                         {autoTranslate('edit_profile', 'Edit Profile')}
-                                    </DropdownItem>
-                                }
-
-                                {user &&
-                                    <DropdownItem
-                                        as={Link}
-                                        href={"/settings"}
-                                        startContent={<CogIcon className="size-5" />}
-                                        onClick={(e) => e.preventDefault()}
-                                    >
-                                        {autoTranslate('settings', 'Settings')}
-                                    </DropdownItem>
-                                }
-
-                                {session &&
-                                    <DropdownItem
-                                        as={Link}
-                                        href={"/logout"}
-                                        color="danger"
-                                        startContent={<LogOutIcon className="size-5" />}
-                                        onClick={(e) => e.preventDefault()}
-                                    >
-                                        {autoTranslate('logout', 'Log Out')}
                                     </DropdownItem>
                                 }
 
@@ -296,6 +273,27 @@ export default function Header({ locale, overrideTitle }) {
                                         onClick={(e) => e.preventDefault()}
                                     >
                                         {autoTranslate('sign_up', 'Sign Up')}
+                                    </DropdownItem>
+                                }
+
+                                <DropdownItem
+                                    as={Link}
+                                    href={"/settings"}
+                                    startContent={<CogIcon className="size-5" />}
+                                    onClick={(e) => e.preventDefault()}
+                                >
+                                    {autoTranslate('settings', 'Settings')}
+                                </DropdownItem>
+
+                                {session &&
+                                    <DropdownItem
+                                        as={Link}
+                                        href={"/logout"}
+                                        color="danger"
+                                        startContent={<LogOutIcon className="size-5" />}
+                                        onClick={(e) => e.preventDefault()}
+                                    >
+                                        {autoTranslate('logout', 'Log Out')}
                                     </DropdownItem>
                                 }
                             </DropdownMenu>
