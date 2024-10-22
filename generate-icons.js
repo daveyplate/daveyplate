@@ -6,7 +6,7 @@ const sourceFile = './public/icons/icon-512.png'
 const sizesAndPaths = [
     { size: 192, path: './public/icons/icon-192.png' },
     { size: 512, path: './public/icons/icon-512.png' },
-    { size: 1024, path: './public/icons/icon-1024.png' },
+    // { size: 1024, path: './public/icons/icon-1024.png' },
     { size: 180, path: './public/apple-touch-icon.png' }
 ]
 
