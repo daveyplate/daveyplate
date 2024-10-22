@@ -184,7 +184,7 @@ export default function Settings({ locales, locale }) {
     return (
         <div
             className={cn(sessionLoading ? "opacity-0" : "opacity-1",
-                "flex-center max-w-xl transition-all"
+                "flex-center max-w-lg transition-all"
             )}
         >
             {/* Change Email */}

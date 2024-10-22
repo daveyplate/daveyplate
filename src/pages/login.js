@@ -107,7 +107,7 @@ export default function Login({ view, locale }) {
 
     return (
         <div className={cn((!session && !sessionLoading) ? "opacity-1" : "opacity-0",
-            "flex-center transition-all max-w-xl"
+            "flex-center transition-all max-w-lg"
         )}>
             <Card fullWidth>
                 <CardBody className="px-4 pb-0">

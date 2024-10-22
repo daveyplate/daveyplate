@@ -103,7 +103,7 @@ export default function EditProfile({ locale }) {
     }, [name, bio])
 
     return (
-        <div className="flex-center max-w-xl">
+        <div className="flex-center max-w-lg">
             <Card fullWidth>
                 <CardBody as="form" onSubmit={updateProfile} className="p-4">
                     <DragDropzone
