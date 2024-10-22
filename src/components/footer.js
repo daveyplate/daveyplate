@@ -7,6 +7,11 @@ export default function Footer({ locales, locale }) {
     const year = new Date().getFullYear()
 
     return (
+        <div className="bg-danger mb-safe p-4 text-center">
+            test
+        </div>
+    )
+    return (
         <footer className="backdrop-blur-xl bg-background/70 sticky bottom-0 z-10 pb-safe mb-safe">
             <div className="flex justify-center items-center py-2 gap-2 overflow-hidden mb-safe">
                 <LocaleDropdown locales={locales} locale={locale} isIconOnly variant="light" />
