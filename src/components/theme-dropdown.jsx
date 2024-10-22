@@ -27,25 +27,24 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
         },
     ]
 
-    if (!isClient) return null
-
     return (
-        <Dropdown size={size} classNames={{ content: cn("text-lg", isIconOnly && "min-w-fit") }}>
+        <Dropdown size={size} classNames={{ content: cn("text-lg transition-all", isIconOnly && "min-w-fit", isClient ? "opacity-1" : "opacity-0") }}>
             <DropdownTrigger>
                 <Button
                     size={size}
                     variant={variant}
                     isIconOnly={isIconOnly}
-                    startContent={isIconOnly ?
-                        themes.find(theme => theme.key === resolvedTheme)?.icon
-                        :
-                        themes.find(theme => theme.key === currentTheme)?.icon
-                    }
+                    startContent={isClient &&
+                        (isIconOnly ?
+                            themes.find(theme => theme.key === resolvedTheme)?.icon
+                            :
+                            themes.find(theme => theme.key === currentTheme)?.icon
+                        )}
                     endContent={!isIconOnly &&
                         <ChevronDownIcon className="size-5 ms-1 -me-1 mt-0.5" />
                     }
                 >
-                    {!isIconOnly && themes.find(theme => theme.key === currentTheme)?.title}
+                    {isClient && !isIconOnly && themes.find(theme => theme.key === currentTheme)?.title}
                 </Button>
             </DropdownTrigger>
 
@@ -55,20 +54,18 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
                     base: "ps-3 pe-4 gap-2.5",
                 }}
             >
-                {
-                    themes.map(theme => (
-                        <DropdownItem
-                            key={theme.key}
-                            startContent={
-                                <div className="size-6 flex justify-center items-center">
-                                    {theme.icon}
-                                </div>
-                            }
-                            title={theme.title}
-                            onClick={() => setTheme(theme.key)}
-                        />
-                    ))
-                }
+                {isClient && themes.map(theme => (
+                    <DropdownItem
+                        key={theme.key}
+                        startContent={
+                            <div className="size-6 flex justify-center items-center">
+                                {theme.icon}
+                            </div>
+                        }
+                        title={theme.title}
+                        onClick={() => setTheme(theme.key)}
+                    />
+                ))}
             </DropdownMenu>
         </Dropdown>
     )
