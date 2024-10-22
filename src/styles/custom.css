@@ -35,9 +35,8 @@ h6 {
     @apply font-semibold;
 }
 
-body {
-    touch-action: pan-y;
-    @apply overflow-hidden sm:overflow-auto;
+html {
+  overscroll-behavior: none;
 }
 
 .flex-container {
