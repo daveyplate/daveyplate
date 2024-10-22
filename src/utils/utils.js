@@ -25,47 +25,6 @@ export function runMiddleware(req, res, fn) {
   })
 }
 
-export const postAPI = async (session, path, params) => {
-  const baseUrl = isExport() ? process.env.NEXT_PUBLIC_BASE_URL : ""
-  const url = baseUrl + path
-
-  return await axios
-    .post(url,
-      params,
-      isExport() ?
-        { headers: { 'Authorization': `Bearer ${session.access_token}` } }
-        : {}
-    )
-    .catch((error) => ({ error }))
-}
-
-export const patchAPI = async (session, path, params) => {
-  const baseUrl = isExport() ? process.env.NEXT_PUBLIC_BASE_URL : ""
-  const url = baseUrl + path
-
-  return await axios
-    .patch(url,
-      params,
-      isExport() ?
-        { headers: { 'Authorization': `Bearer ${session.access_token}` } }
-        : {}
-    )
-    .catch((error) => ({ error }))
-}
-
-export const deleteAPI = async (session, path) => {
-  const baseUrl = isExport() ? process.env.NEXT_PUBLIC_BASE_URL : ""
-  const url = baseUrl + path
-
-  return await axios
-    .delete(url,
-      isExport() ?
-        { headers: { 'Authorization': `Bearer ${session.access_token}` } }
-        : {}
-    )
-    .catch((error) => ({ error }))
-}
-
 /**
  * Compress and base64 encode a string
  * @param {string} string The string to compress
