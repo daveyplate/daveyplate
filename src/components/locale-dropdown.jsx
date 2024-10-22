@@ -1,14 +1,31 @@
-import { ChevronDownIcon } from "@heroicons/react/24/solid"
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
-import { useAutoTranslate } from "next-auto-translate"
 import { useRouter } from "next/router"
-import { isExport } from "@/utils/utils"
-import Flag from "react-flagpack"
-import { localeToCountry } from "./toggle-locale"
 
-export default function LocaleDropdown({ locales, locale }) {
+import Flag from "react-flagpack"
+import { Button, cn, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
+import { ChevronDownIcon } from "@heroicons/react/24/solid"
+
+import { isExport } from "@/utils/utils"
+
+export const localeToCountry = {
+    "en": "US",
+    "de": "DE",
+    "es": "ES",
+    "ja": "JP",
+    "zh": "CN",
+    "it": "IT",
+    "ko": "KR",
+    "fr": "FR",
+    "ru": "RU",
+    "he": "IL",
+    "uk": "UA",
+    "hi": "IN",
+    "ar": "SA",
+    "tr": "TR",
+    "pt": "PT",
+}
+
+export default function LocaleDropdown({ locales, locale, isIconOnly = false, size = "md", variant = "solid" }) {
     const router = useRouter()
-    const { autoTranslate } = useAutoTranslate("footer")
 
     const getLocaleLink = (locale) => {
         if (!isExport()) return router.asPath
@@ -27,24 +44,26 @@ export default function LocaleDropdown({ locales, locale }) {
     }
 
     return (
-        <Dropdown size="lg" classNames={{ content: "text-lg" }}>
+        <Dropdown size={size} classNames={{ content: cn("text-lg", isIconOnly && "min-w-fit") }}>
             <DropdownTrigger>
                 <Button
-                    size="lg"
+                    isIconOnly={isIconOnly}
+                    size={size}
+                    variant={variant}
                     startContent={
                         <Flag
-                            className="-ms-0.5 me-0.5"
+                            className={cn(!isIconOnly && "-ms-0.5 me-0.5")}
                             code={localeToCountry[locale]}
                             gradient="real-linear"
                             size="m"
                             hasDropShadow
                         />
                     }
-                    endContent={
+                    endContent={!isIconOnly &&
                         <ChevronDownIcon className="size-5 ms-1 -me-1 mt-0.5" />
                     }
                 >
-                    {new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
+                    {!isIconOnly && new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
                 </Button>
             </DropdownTrigger>
 

@@ -342,7 +342,7 @@ export default function Settings({ locales, locale }) {
                         </AutoTranslate>
                     </div>
 
-                    <LocaleDropdown locales={locales} locale={locale} />
+                    <LocaleDropdown locales={locales} locale={locale} size="lg" />
                 </CardBody>
             </Card>
 

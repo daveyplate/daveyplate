@@ -1,6 +1,6 @@
 import React from "react"
 import { motion } from "framer-motion"
-import ToggleLocale from "@/components/toggle-locale"
+import LocaleDropdown from "@/components/locale-dropdown"
 
 export default function Footer({ locales, locale }) {
     // Get the current year:
@@ -9,7 +9,7 @@ export default function Footer({ locales, locale }) {
     return (
         <footer className="backdrop-blur-xl bg-background/70 pb-safe sticky bottom-0 z-10">
             <div className="flex justify-center items-center py-2 gap-2 overflow-hidden">
-                <ToggleLocale locales={locales} locale={locale} />
+                <LocaleDropdown locales={locales} locale={locale} isIconOnly variant="light" />
 
                 <motion.div
                     initial={{ scale: 1 }}
