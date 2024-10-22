@@ -149,7 +149,7 @@ export default function Login({ view, locale }) {
                 </CardBody>
             </Card>
 
-            <p className="text-small text-center text-foreground/60 px-8">
+            <p className="text-small text-center text-foreground/60 px-8 max-w-sm">
                 By creating an account, you agree to our <a href="/terms" className="underline">Terms of Service</a> and <a href="/privacy" className="underline">Privacy Policy</a>.
             </p>
         </div>
