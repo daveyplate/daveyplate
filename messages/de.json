@@ -83,7 +83,19 @@
     "email_address": "E-Mail-Adresse",
     "confirm_deactivate": "Bist du sicher, dass du dein Konto deaktivieren möchtest? Dein Konto wird wieder aktiviert, wenn du dich erneut anmeldest.",
     "cancel": "Stornieren",
-    "confirm_delete": "Bist du sicher, dass du dein Konto löschen möchtest? Diese Löschung ist dauerhaft und kann nicht rückgängig gemacht werden."
+    "confirm_delete": "Bist du sicher, dass du dein Konto löschen möchtest? Diese Löschung ist dauerhaft und kann nicht rückgängig gemacht werden.",
+    "deactivate": "Deaktivieren",
+    "deactivate_confirm": "Bist du sicher, dass du dein Konto deaktivieren möchtest? Dein Konto wird wieder aktiviert, wenn du dich erneut anmelden.",
+    "delete": "Löschen",
+    "delete_confirm": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Löschung ist endgültig und kann nicht rückgängig gemacht werden.",
+    "authentication_code": "Authentifizierungscode",
+    "check_email": "Überprüfen Sie Ihre E-Mail auf einen Authentifizierungscode",
+    "theme": "Thema",
+    "language": "Sprache",
+    "manage_account": "Verwalten Sie Ihr Konto",
+    "update_password": "Passwort aktualisieren",
+    "logout": "Abmelden",
+    "new_password": "Neues Passwort"
   },
   "login": {
     "sign_up_email_label": "E-Mail-Adresse",

@@ -4,8 +4,10 @@ import { rateLimit } from '@daveyplate/next-rate-limit'
 export function middleware(request) {
     const nextResponse = NextResponse.next()
 
-    const rateLimitResponse = rateLimit({ request, nextResponse })
-    if (rateLimitResponse) return rateLimitResponse
+    if (process.env.NODE_ENV == 'production') {
+        const rateLimitResponse = rateLimit({ request, nextResponse })
+        if (rateLimitResponse) return rateLimitResponse
+    }
 
     return nextResponse
 }

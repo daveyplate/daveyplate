@@ -83,7 +83,19 @@
     "email_address": "Email Address",
     "confirm_deactivate": "Are you sure you want to deactivate your account? Your account will be reactivated if you login again.",
     "cancel": "Cancel",
-    "confirm_delete": "Are you sure you want to delete your account? This deletion is permanent and cannot be undone."
+    "confirm_delete": "Are you sure you want to delete your account? This deletion is permanent and cannot be undone.",
+    "deactivate": "Deactivate",
+    "deactivate_confirm": "Are you sure you want to deactivate your account? Your account will be reactivated when you login again.",
+    "delete": "Delete",
+    "delete_confirm": "Are you sure you want to delete your account? This deletion is permanent and cannot be undone.",
+    "authentication_code": "Authentication Code",
+    "check_email": "Check your email for an authentication code",
+    "theme": "Theme",
+    "language": "Language",
+    "manage_account": "Manage Account",
+    "update_password": "Update Password",
+    "logout": "Log Out",
+    "new_password": "New Password"
   },
   "login": {
     "sign_up_email_label": "Email address",
