@@ -116,7 +116,7 @@ export default function Login({ view, locale }) {
                         showLinks={true}
                         view={view || 'sign_in'}
                         supabaseClient={supabase}
-                        providers={['google', 'facebook', 'apple']}
+                        providers={['discord', 'google', 'facebook', 'apple']}
                         redirectTo={redirectTo}
                         magicLink={true}
                         theme={resolvedTheme}
