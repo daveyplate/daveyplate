@@ -65,7 +65,7 @@ const logo = (
         as={NextImage}
         width={24}
         height={24}
-        src="/icons/icon-512x512.png"
+        src="/icons/icon-512.png"
         alt={siteName}
     />
 )
