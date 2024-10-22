@@ -36,7 +36,7 @@ h6 {
 }
 
 html {
-  overscroll-behavior: none;
+  overscroll-behavior: auto;
 }
 
 .flex-container {
