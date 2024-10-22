@@ -324,7 +324,7 @@ export default function Settings({ locales, locale }) {
 
             <Card fullWidth>
                 <CardBody className="gap-4 p-4 items-start">
-                    <div className="flex gap-2 items-center -mt-1 -mb-2">
+                    <div className="flex gap-2 items-center -mt-1.5 -mb-2">
                         <EyeIcon className="size-4 text-primary" />
 
                         <AutoTranslate tKey="theme">
@@ -349,7 +349,7 @@ export default function Settings({ locales, locale }) {
             {/* Account Management */}
             <Card fullWidth>
                 <CardBody className="gap-4 p-4 items-start">
-                    <div className="flex gap-2 items-center -my-1">
+                    <div className="flex gap-2 items-center -my-1.5">
                         <UserIcon className="size-4 text-primary" />
 
                         <AutoTranslate tKey="manage_account">
