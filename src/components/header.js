@@ -190,11 +190,7 @@ export default function Header({ locale, overrideTitle }) {
                     </NavbarItem>
 
                     <NavbarItem>
-                        <Dropdown
-                            classNames={{
-                                content: "min-w-[200px] max-w-[220px]"
-                            }}
-                        >
+                        <Dropdown>
                             <DropdownTrigger>
                                 <div className="hover:opacity-90 flex -me-1">
                                     <Badge
