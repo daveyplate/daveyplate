@@ -99,8 +99,6 @@ export default function Login({ view, locale }) {
         },
     }
 
-    if (session) return null
-
     let redirectTo = getURL() + (router.query.returnTo || defaultReturnTo)
 
     if (Capacitor.isNativePlatform()) {
