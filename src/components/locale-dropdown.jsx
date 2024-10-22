@@ -34,7 +34,7 @@ export const localeToCountry = {
  * @param {("bordered"|"faded"|"flat"|"light"|"ghost"|"solid")} [props.variant="solid"] - Variant of the button
  * @returns {JSX.Element}
  */
-export default function LocaleDropdown({ locales, locale, isIconOnly = false, size = "md", variant = "solid" }) {
+export default function LocaleDropdown({ locales, locale: currentLocale, isIconOnly = false, size = "md", variant = "solid" }) {
     const router = useRouter()
 
     const getLocaleLink = (locale) => {
@@ -63,7 +63,7 @@ export default function LocaleDropdown({ locales, locale, isIconOnly = false, si
                     startContent={
                         <Flag
                             className={cn(!isIconOnly && "-ms-0.5 me-1")}
-                            code={localeToCountry[locale]}
+                            code={localeToCountry[currentLocale]}
                             gradient="real-linear"
                             size="m"
                             hasDropShadow
@@ -73,7 +73,7 @@ export default function LocaleDropdown({ locales, locale, isIconOnly = false, si
                         <ChevronDownIcon className="size-5 ms-1 -me-1 mt-0.5" />
                     }
                 >
-                    {!isIconOnly && new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
+                    {!isIconOnly && new Intl.DisplayNames([currentLocale], { type: 'language' }).of(currentLocale)}
                 </Button>
             </DropdownTrigger>
 
@@ -94,7 +94,7 @@ export default function LocaleDropdown({ locales, locale, isIconOnly = false, si
                                 hasDropShadow
                             />
                         }
-                        title={new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
+                        title={new Intl.DisplayNames([locale], { type: 'language' }).of(currentLocale)}
                         onPress={() => handleLocaleChange(locale)}
                     />
                 ))}

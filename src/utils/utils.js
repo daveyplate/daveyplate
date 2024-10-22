@@ -1,4 +1,3 @@
-import axios from "axios"
 import { gzip, ungzip } from 'node-gzip'
 
 export const getURL = () => {
