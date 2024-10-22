@@ -36,7 +36,7 @@ const ToggleTheme = forwardRef((props, ref) => {
             <DropdownMenu
                 aria-label={autoTranslate("themes_menu", "Themes Menu")}
                 onAction={setTheme}
-                itemClasses={{ title: "!text-lg ms-1" }}
+                itemClasses={{ title: "text-base", base: "px-3 gap-3" }}
             >
                 <DropdownItem
                     key="light"

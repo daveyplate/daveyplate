@@ -1,101 +1,15 @@
-
 import React from "react"
-import { useRouter } from 'next/router'
-
 import { motion } from "framer-motion"
+import ToggleLocale from "@/components/toggle-locale"
 
-import { useAutoTranslate } from "next-auto-translate"
-
-import {
-    Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection, Button
-} from "@nextui-org/react"
-
-import Flag from 'react-flagpack'
-import { isExport } from "@/utils/utils"
-
-const localeToCountry = {
-    "en": "US",
-    "de": "DE",
-    "es": "ES",
-    "ja": "JP",
-    "zh": "CN",
-    "it": "IT",
-    "ko": "KR",
-    "fr": "FR",
-    "ru": "RU",
-    "he": "IL",
-    "uk": "UA",
-    "hi": "IN",
-    "ar": "SA",
-    "tr": "TR",
-    "pt": "PT",
-}
-
-export default function Footer({ locales, locale: currentLocale }) {
-    const router = useRouter()
-    const { autoTranslate } = useAutoTranslate("footer")
-
-    const getLocaleLink = (locale) => {
-        if (!isExport()) return router.asPath
-
-        const path = router.asPath.replace(`/${currentLocale}`, '')
-
-        return `/${locale}${path}`
-    }
-
-    const handleLocaleChange = (locale) => {
-        if (isExport()) {
-            router.push(getLocaleLink(locale))
-        } else {
-            router.push(router.pathname, router.asPath, { locale })
-        }
-    }
+export default function Footer({ locales, locale }) {
+    // Get the current year:
+    const year = new Date().getFullYear()
 
     return (
         <footer className="backdrop-blur-xl bg-background/70 pb-safe sticky bottom-0">
             <div className="flex justify-center items-center py-2 gap-2 overflow-hidden">
-                <Dropdown
-                    classNames={{
-                        content: "min-w-fit border border-default bg-gradient-to-br to-background from-default/20",
-                    }}
-                >
-                    <DropdownTrigger>
-                        <Button variant="light" isIconOnly>
-                            <Flag
-                                code={localeToCountry[currentLocale]}
-                                gradient="real-linear"
-                                size="m"
-                                hasDropShadow
-                            />
-                        </Button>
-                    </DropdownTrigger>
-
-                    <DropdownMenu
-                        aria-label={autoTranslate("language_menu", "Language Menu")}
-                    >
-                        <DropdownSection
-                            title={autoTranslate("language", "Language")}
-                            showDivider
-                        />
-
-                        {locales?.map((locale) => (
-                            <DropdownItem
-                                key={locale}
-                                onPress={() => handleLocaleChange(locale)}
-                                startContent={
-                                    <Flag
-                                        code={localeToCountry[locale]}
-                                        gradient="real-linear"
-                                        hasDropShadow
-                                        size="m"
-                                    />
-                                }
-                            >
-                                {new Intl.DisplayNames([currentLocale], { type: 'language' }).of(locale)}
-                            </DropdownItem>
-                        ))}
-                    </DropdownMenu>
-                </Dropdown>
+                <ToggleLocale locales={locales} locale={locale} />
 
                 <motion.div
                     initial={{ scale: 1 }}
@@ -107,7 +21,7 @@ export default function Footer({ locales, locale: currentLocale }) {
                     }}
                 >
                     <p className="text-foreground/80">
-                        © 2024 Daveyplate
+                        © {year} Daveyplate
                     </p>
 
                     {Array.from({ length: 15 }).map((_, index) => (
