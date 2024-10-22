@@ -24,6 +24,16 @@ export const localeToCountry = {
     "pt": "PT",
 }
 
+/**
+ * Dropdown component to switch between locales
+ * @param {Object} props
+ * @param {Array} props.locales - Array of locales
+ * @param {String} props.locale - Current locale
+ * @param {Boolean} [props.isIconOnly=false] - If true, only flag icon will be displayed
+ * @param {("sm"|"md"|"lg")} [props.size="md"] - Size of the button
+ * @param {("bordered"|"faded"|"flat"|"light"|"ghost"|"solid")} [props.variant="solid"] - Variant of the button
+ * @returns {JSX.Element}
+ */
 export default function LocaleDropdown({ locales, locale, isIconOnly = false, size = "md", variant = "solid" }) {
     const router = useRouter()
 
