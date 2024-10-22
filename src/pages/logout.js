@@ -36,6 +36,8 @@ export default ({ locale }) => {
     return (
         <div className="flex-center">
             <PageTitle title="" />
+
+            <Spinner color="current" />
         </div>
     )
 }
