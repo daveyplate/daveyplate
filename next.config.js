@@ -6,5 +6,6 @@ module.exports = {
   reactStrictMode: true,
   experimental: {
     nftTracing: true
-  }
+  },
+  output: "standalone"
 }
