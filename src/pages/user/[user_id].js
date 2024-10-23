@@ -37,7 +37,7 @@ import { isExport } from "@/utils/utils"
 import { toast } from "@/components/providers/toast-provider"
 
 import { CloudArrowUpIcon, PencilIcon } from "@heroicons/react/24/solid"
-import { useEntity } from "@daveyplate/supabase-swr-entities"
+import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 const avatarSize = 512
 

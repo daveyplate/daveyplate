@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { Capacitor, CapacitorCookies } from '@capacitor/core'
 
-import { useClearCache } from "@daveyplate/supabase-swr-entities"
+import { useClearCache } from "@daveyplate/supabase-swr-entities/client"
 
 import { Spinner } from "@nextui-org/react"
 

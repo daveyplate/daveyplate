@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { useSession } from "@supabase/auth-helpers-react"
 
-import { postAPI, useEntity } from "@daveyplate/supabase-swr-entities"
+import { postAPI, useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { toast } from "@/components/providers/toast-provider"
 
 // The key purpose is to ensure that the user's subscription status is checked after a successful order

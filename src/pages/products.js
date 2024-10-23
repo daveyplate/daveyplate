@@ -14,7 +14,7 @@ import { isExport } from "@/utils/utils"
 import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react"
 
 import { toast } from '@/components/providers/toast-provider'
-import { useEntity } from "@daveyplate/supabase-swr-entities"
+import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 export default function Products({ products, prices }) {
     const router = useRouter()

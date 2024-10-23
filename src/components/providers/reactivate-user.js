@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useSession } from "@supabase/auth-helpers-react"
 
-import { useEntity } from "@daveyplate/supabase-swr-entities"
+import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 export default () => {
     const session = useSession()

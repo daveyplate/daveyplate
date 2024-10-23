@@ -54,8 +54,8 @@ import {
 import PageTitle from "./page-title"
 import { useDocumentTitle } from "@daveyplate/use-document-title"
 
-import { useEntity } from "@daveyplate/supabase-swr-entities"
 import ThemeDropdown from "./theme-dropdown"
+import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 

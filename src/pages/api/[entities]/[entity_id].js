@@ -1,10 +1,9 @@
-import { entityRoute } from '@daveyplate/supabase-swr-entities'
+import { entityRoute } from '@daveyplate/supabase-swr-entities/server'
 import Cors from "cors"
 const cors = Cors()
 
 import { createClient } from '@/utils/supabase/api'
 import { createClient as createAdminClient } from '@/utils/supabase/service-role'
-import entitySchemas from '@/utils/entity-schemas'
 
 import { runMiddleware } from '@/utils/utils'
 
@@ -17,7 +16,6 @@ export default async (req, res) => {
     const response = await entityRoute({
         supabase,
         supabaseAdmin,
-        entitySchemas,
         ...req
     })
 
