@@ -5,6 +5,6 @@ module.exports = {
   i18n,
   reactStrictMode: true,
   outputFileTracingIncludes: {
-    '/api/*': ['./*.json'],
+    '/api/*': ['*.json'],
   },
 }
