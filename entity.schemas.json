@@ -1,5 +1,13 @@
 [
     {
-        "table": "profiles"
+        "table": "profiles",
+        "disableList": false,
+        "select": [
+            "*"
+        ],
+        "defaultOrder": "-created_at",
+        "requiredParams": {
+            "deactivated": false
+        }
     }
 ]
