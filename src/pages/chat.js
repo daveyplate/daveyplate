@@ -1,5 +1,5 @@
 import { AutoTranslate } from 'next-auto-translate'
-import { useClearCache } from '@daveyplate/supabase-swr-entities'
+import { useClearCache } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, Card, CardBody } from "@nextui-org/react"
 

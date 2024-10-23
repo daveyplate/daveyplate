@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { useEntity } from '@daveyplate/supabase-swr-entities'
+import { useEntity } from '@daveyplate/supabase-swr-entities/client'
 import { DragDropzone } from '@daveyplate/tailwind-drag-dropzone'
 import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
 

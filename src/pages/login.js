@@ -9,7 +9,7 @@ import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 
 import { useAutoTranslate } from 'next-auto-translate'
-import { useClearCache } from '@daveyplate/supabase-swr-entities'
+import { useClearCache } from '@daveyplate/supabase-swr-entities/client'
 
 import { Card, CardBody, cn } from "@nextui-org/react"
 

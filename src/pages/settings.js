@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { postAPI, useEntity } from '@daveyplate/supabase-swr-entities'
+import { postAPI, useEntity } from '@daveyplate/supabase-swr-entities/client'
 import { ConfirmModal } from "@daveyplate/nextui-confirm-modal"
 
 import {
