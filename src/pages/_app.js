@@ -33,7 +33,11 @@ const MyApp = ({ Component, pageProps }) => {
 
             <main className={`flex flex-col justify-between min-h-svh w-svh py-16`}>
                 <Header {...pageProps} />
-                <Component {...pageProps} />
+
+                <div className="grow flex flex-col m-safe">
+                    <Component {...pageProps} />
+                </div>
+
                 <Footer {...pageProps} />
             </main>
         </Providers>
