@@ -68,7 +68,7 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
             <DropdownMenu
                 itemClasses={{
                     title: "text-base ms-1",
-                    base: "ps-3 pe-4 gap-2",
+                    base: "ps-2.5 pe-3",
                 }}
             >
                 {themes.map(theme => (
