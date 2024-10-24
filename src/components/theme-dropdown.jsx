@@ -57,7 +57,7 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
                     isIconOnly={isIconOnly}
                     startContent={
                         <div className={cn(!isIconOnly && "flex w-6 justify-center -ms-1")}>
-                            {isClient && isIconOnly ? selectedResolvedTheme?.icon : selectedTheme?.icon}
+                            {isClient && (isIconOnly ? selectedResolvedTheme?.icon : selectedTheme?.icon)}
                         </div>
                     }
                     endContent={!isIconOnly &&
