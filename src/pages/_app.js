@@ -31,13 +31,17 @@ const MyApp = ({ Component, pageProps }) => {
                 }
             `}</style>
 
-            <main className={`flex flex-col min-h-svh w-svh py-16 m-safe`}>
-                <Header {...pageProps} />
+            <Header {...pageProps} />
 
+            <main className={`flex min-h-svh w-svh
+                pt-[calc(4rem+env(safe-area-inset-top))] 
+                pb-[calc(4rem+env(safe-area-inset-bottom))] 
+                px-safe
+            `}>
                 <Component {...pageProps} />
-
-                <Footer {...pageProps} />
             </main>
+
+            <Footer {...pageProps} />
         </Providers>
     )
 }

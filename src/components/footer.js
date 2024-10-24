@@ -8,7 +8,7 @@ export default function Footer({ locales, locale }) {
 
     return (
         <footer className="backdrop-blur-xl bg-background/70 fixed w-full bottom-0 z-20 pb-safe">
-            <div className="flex justify-center items-center py-2 gap-2 overflow-hidden">
+            <div className="flex justify-center items-center py-2 gap-2 overflow-hidden h-16">
                 <LocaleDropdown locales={locales} locale={locale} isIconOnly variant="light" />
 
                 <motion.div
