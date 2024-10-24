@@ -29,7 +29,7 @@ fi
 for file in $PAGES_DIR/*; do
     filename=$(basename "$file")
     # Check if the file is not _app.js, _document.js, and also not the api directory or [locale] directory
-    if [[ "$filename" != "_app.js" && "$filename" != "404.js" && "$filename" != "_document.js" && "$filename" != "_redirect.js" && "$filename" != "api" && "$filename" != "[locale]" ]]; then
+    if [[ "$filename" != "_app.js" && "$filename" != "404.js" && "$filename" != "500.js" && "$filename" != "_document.js" && "$filename" != "_redirect.js" && "$filename" != "api" && "$filename" != "[locale]" ]]; then
         echo "Moving $filename to $LOCALE_DIR"
         mv "$file" "$LOCALE_DIR"
     fi
@@ -69,7 +69,7 @@ echo "Renaming operation completed."
 
 # TODO run the build
 npm run build
-npx cap sync
+// npx cap sync
 
 # Check if index.js exists and rename it back to _redirect.js after build
 if [ -f "$PAGES_DIR/index.js" ]; then

@@ -32,7 +32,6 @@ import {
     Button,
 } from "@nextui-org/react"
 
-import Link from "@/components/locale-link"
 import { localeHref } from "@/components/locale-link"
 
 import UserAvatar from "@/components/user-avatar"
@@ -56,6 +55,7 @@ import { useDocumentTitle } from "@daveyplate/use-document-title"
 
 import ThemeDropdown from "./theme-dropdown"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
+import { Link, useRouter as useLocaleRouter } from "@/i18n/routing"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -73,6 +73,7 @@ const logo = (
 export default function Header({ locale, overrideTitle }) {
     const currentTitle = useDocumentTitle()
     const router = useRouter()
+    const localeRouter = useLocaleRouter()
     const session = useSession()
     const { isLoading: sessionLoading } = useSessionContext()
     const { autoTranslate } = useAutoTranslate("header")
@@ -88,6 +89,7 @@ export default function Header({ locale, overrideTitle }) {
         { icon: UsersIcon, name: "Users", path: "/users" },
         { icon: ShoppingBagIcon, name: "Products", path: "/products" },
         { icon: ChatBubbleLeftRightIcon, name: "Chat", path: "/chat" },
+        { icon: ChatBubbleLeftRightIcon, name: "Settings", path: "/settings" },
     ]
 
     useEffect(() => {
@@ -241,10 +243,8 @@ export default function Header({ locale, overrideTitle }) {
 
                                 {user &&
                                     <DropdownItem
-                                        as={Link}
-                                        href={"/edit-profile"}
                                         startContent={<PencilIcon className="size-4 mx-0.5" />}
-                                        onClick={(e) => e.preventDefault()}
+                                        onPress={() => localeRouter.push('/edit-profile')}
                                     >
                                         {autoTranslate('edit_profile', 'Edit Profile')}
                                     </DropdownItem>
