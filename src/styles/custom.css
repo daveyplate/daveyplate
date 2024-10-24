@@ -47,11 +47,6 @@ html {
     @apply flex-container mx-auto justify-center text-center !items-center;
 }
 
-.backdrop-blur-xl {
-    -webkit-backdrop-filter: blur(24px);
-    backdrop-filter: blur(24px);
-}
-
 .top-safe {
     top: env(safe-area-inset-top);
 }
