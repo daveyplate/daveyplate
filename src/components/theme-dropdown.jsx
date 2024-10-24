@@ -22,19 +22,22 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
         {
             key: 'light',
             title: autoTranslate("light", "Light"),
-            icon: <SunIcon className={cn("size-6", !isIconOnly && "-ms-1")} />
+            icon: <SunIcon className="size-6" />
         },
         {
             key: 'dark',
             title: autoTranslate("dark", "Dark"),
-            icon: <MoonIcon className={cn("size-5", !isIconOnly && "-ms-0.5 me-0.5")} />
+            icon: <MoonIcon className="size-5" />
         },
         {
             key: 'system',
             title: autoTranslate("system", "System"),
-            icon: <ComputerDesktopIcon className={cn("size-5 mt-[1px]", !isIconOnly && "-ms-0.5 me-0.5")} />
+            icon: <ComputerDesktopIcon className="size-5 mt-[1px]" />
         },
     ]
+
+    const selectedTheme = themes.find(theme => theme.key === currentTheme)
+    const selectedResolvedTheme = themes.find(theme => theme.key === resolvedTheme)
 
     return (
         <Dropdown
@@ -52,30 +55,30 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
                     size={size}
                     variant={variant}
                     isIconOnly={isIconOnly}
-                    startContent={isClient && (isIconOnly ? (
-                        themes.find(theme => theme.key === resolvedTheme)?.icon
-                    ) : (
-                        themes.find(theme => theme.key === currentTheme)?.icon
-                    ))}
+                    startContent={
+                        <div className={cn(!isIconOnly && "flex w-6 justify-center -ms-1 -me-0.5")}>
+                            {isClient && isIconOnly ? selectedResolvedTheme?.icon : selectedTheme?.icon}
+                        </div>
+                    }
                     endContent={!isIconOnly &&
-                        <ChevronDownIcon className="size-5 ms-1 -me-1 mt-0.5" />
+                        <ChevronDownIcon className="size-5 mt-0.5 -me-1" />
                     }
                 >
-                    {isClient && !isIconOnly && themes.find(theme => theme.key === currentTheme)?.title}
+                    {isClient && !isIconOnly && selectedTheme?.title}
                 </Button>
             </DropdownTrigger>
 
             <DropdownMenu
                 itemClasses={{
-                    title: "text-base ms-1",
-                    base: "ps-2.5 pe-3",
+                    title: "text-base",
+                    base: "pe-3 gap-2.5",
                 }}
             >
                 {themes.map(theme => (
                     <DropdownItem
                         key={theme.key}
                         startContent={
-                            <div className="size-6 flex justify-center items-center">
+                            <div className="flex w-6 justify-center">
                                 {theme.icon}
                             </div>
                         }
