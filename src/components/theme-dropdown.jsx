@@ -56,7 +56,7 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
                     variant={variant}
                     isIconOnly={isIconOnly}
                     startContent={
-                        <div className={cn(!isIconOnly && "flex w-6 justify-center -ms-1 -me-0.5")}>
+                        <div className={cn(!isIconOnly && "flex w-6 justify-center -ms-1")}>
                             {isClient && isIconOnly ? selectedResolvedTheme?.icon : selectedTheme?.icon}
                         </div>
                     }
@@ -71,7 +71,7 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
             <DropdownMenu
                 itemClasses={{
                     title: "text-base",
-                    base: "pe-3 gap-2.5",
+                    base: "pe-3 gap-3",
                 }}
             >
                 {themes.map(theme => (
