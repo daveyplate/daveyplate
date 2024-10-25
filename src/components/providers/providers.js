@@ -19,7 +19,7 @@ import ToastProvider from "@/components/providers/toast-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
 import ReactivateUser from "@/components/providers/reactivate-user"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
-import { usePathname, useRouter as useLocaleRouter } from "@/i18n/routing"
+import { usePathname, useLocaleRouter } from "@/i18n/routing"
 
 export default function Providers({ children, ...pageProps }) {
     useWindowFocusBlur()

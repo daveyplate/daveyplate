@@ -5,7 +5,7 @@ import { useClearCache } from "@daveyplate/supabase-swr-entities/client"
 
 import { Spinner } from "@nextui-org/react"
 
-import { useRouter as useLocaleRouter } from "@/i18n/routing"
+import { useLocaleRouter } from "@/i18n/routing"
 
 import { createClient } from "@/utils/supabase/component"
 import { getLocalePaths } from "@/i18n/locale-paths"

@@ -37,7 +37,7 @@ import { isExport } from "@/utils/utils"
 import { toast } from '@/components/providers/toast-provider'
 import ThemeDropdown from '@/components/theme-dropdown'
 import LocaleDropdown from '@/components/locale-dropdown'
-import { Link, useRouter as useLocaleRouter } from '@/i18n/routing'
+import { Link, useLocaleRouter } from '@/i18n/routing'
 
 export default function Settings() {
     const router = useRouter()

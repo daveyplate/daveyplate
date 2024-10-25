@@ -12,7 +12,7 @@ import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
 import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
-import { useRouter as useLocaleRouter } from '@/i18n/routing'
+import { useLocaleRouter } from '@/i18n/routing'
 
 import { toast } from '@/components/providers/toast-provider'
 

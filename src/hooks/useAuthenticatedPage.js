@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useSessionContext } from "@supabase/auth-helpers-react"
-import { usePathname, useRouter as useLocaleRouter } from "@/i18n/routing"
+import { usePathname, useLocaleRouter } from "@/i18n/routing"
 
 /**
  * Custom hook to ensure that the user is authenticated.
