@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 
 import { ThemeProvider } from "next-themes"
