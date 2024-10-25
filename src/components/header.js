@@ -64,7 +64,7 @@ const logo = (
         as={NextImage}
         width={24}
         height={24}
-        src="/icons/icon-512.png"
+        src="/apple-touch-icon.png"
         alt={siteName}
     />
 )

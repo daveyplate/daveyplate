@@ -16,7 +16,9 @@ import {
     Badge
 } from "@nextui-org/react"
 
-import { CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon } from '@heroicons/react/24/solid'
+import {
+    CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon
+} from '@heroicons/react/24/solid'
 
 import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
 import { createClient } from '@/utils/supabase/component'
@@ -27,7 +29,6 @@ import { isExport } from "@/utils/utils"
 import { toast } from "@/components/providers/toast-provider"
 import UserAvatar from '@/components/user-avatar'
 import UploadAvatarModal from '@/components/upload-avatar-modal'
-
 
 export default function EditProfile() {
     const supabase = createClient()
@@ -225,7 +226,7 @@ export default function EditProfile() {
                             errorMessage={bioError}
                         />
 
-                        <Skeleton isLoaded={!!user} className="self-end rounded-2xl min-w-10 me-2 -mt-2">
+                        <Skeleton isLoaded={!!user} className="self-end rounded-2xl min-w-10 me-2 -mt-2 -mb-1">
                             <p className="text-right text-tiny text-foreground/60">
                                 {bio.length}/{maxBioLength}
                             </p>

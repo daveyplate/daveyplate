@@ -83,7 +83,7 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
                             </div>
                         }
                         title={theme.title}
-                        onClick={() => setTheme(theme.key)}
+                        onPress={() => setTheme(theme.key)}
                     />
                 ))}
             </DropdownMenu>

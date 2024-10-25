@@ -1,13 +1,13 @@
 import { useRouter } from "next/router"
+import { useLocale } from "next-intl"
 
 import Flag from "react-flagpack"
 import { Button, cn, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
 import { ChevronDownIcon } from "@heroicons/react/24/solid"
 
-import { isExport } from "@/utils/utils"
 import i18nConfig from 'i18n.config'
-import { useLocale } from "next-intl"
 import { getPathname, usePathname } from "@/i18n/routing"
+import { isExport } from "@/utils/utils"
 
 export const localeToCountry = {
     "en": "US",
@@ -45,9 +45,9 @@ export default function LocaleDropdown({ isIconOnly = false, size = "md", varian
 
     const handleLocaleChange = (locale) => {
         if (isExport()) {
-            router.push(getPathname({ href: pathname, locale }), null, { scroll: false })
+            router.replace(getPathname({ href: pathname, locale }), null, { scroll: false })
         } else {
-            router.push(pathname, null, { locale, scroll: false })
+            router.replace(pathname, null, { locale, scroll: false })
         }
     }
 
@@ -68,7 +68,7 @@ export default function LocaleDropdown({ isIconOnly = false, size = "md", varian
                         />
                     }
                     endContent={!isIconOnly &&
-                        <ChevronDownIcon className="size-5 ms-1 -me-1 mt-0.5" />
+                        <ChevronDownIcon className="size-5 mt-0.5 -me-1" />
                     }
                 >
                     {!isIconOnly && new Intl.DisplayNames([currentLocale], { type: 'language' }).of(currentLocale)}
@@ -77,8 +77,8 @@ export default function LocaleDropdown({ isIconOnly = false, size = "md", varian
 
             <DropdownMenu
                 itemClasses={{
-                    title: "text-base ms-1",
-                    base: "px-3 gap-3",
+                    title: "text-base",
+                    base: "px-3 gap-3.5",
                 }}
             >
                 {locales.map((locale) => (

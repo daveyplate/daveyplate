@@ -7,7 +7,6 @@ import { useDropzone } from 'react-dropzone'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
-import { createClient as createAdminClient } from "@/utils/supabase/service-role"
 import { createClient } from "@/utils/supabase/component"
 import { useUser } from "@supabase/auth-helpers-react"
 
@@ -41,7 +40,7 @@ import { Link } from "@/i18n/routing"
 
 const avatarSize = 512
 
-export default function UserPage({ user: fallbackData }) {
+export default function UserPage() {
     const me = useUser()
     const router = useRouter()
     const supabase = createClient()
@@ -50,7 +49,7 @@ export default function UserPage({ user: fallbackData }) {
     const { isOpen: newAvatarModalOpen, onOpen: openNewAvatarModal, onOpenChange: newAvatarModalChange } = useDisclosure()
     const { isOpen: avatarModalOpen, onOpen: openAvatarModal, onOpenChange: avatarModalChange } = useDisclosure()
 
-    const user_id = fallbackData?.id || router.query.user_id
+    const user_id = router.query.user_id
     const isMe = (me && me.id == user_id)
 
     const onDrop = useCallback(acceptedFiles => {
@@ -65,7 +64,7 @@ export default function UserPage({ user: fallbackData }) {
 
     const { getRootProps, getInputProps, open, isDragActive, fileRejections } = useDropzone({ onDrop, disabled: !isMe, accept: { 'image/*': [] } })
 
-    const { data: user, isLoading } = useEntity('profiles', user_id)
+    const { entity: user, isLoading } = useEntity('profiles', user_id)
 
     const editor = useRef(null)
     const [uploadingAvatar, setUploadingAvatar] = useState(false)
@@ -345,25 +344,4 @@ export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps, overrideTitle: true, canGoBack: true } }
-
-    /*
-    const supabase = createAdminClient()
-    const { data: user, error } = await supabase.from('profiles')
-        .select('*')
-        .eq('id', params.user_id)
-        .eq('deactivated', false)
-        .single()
-
-    if (error) return { notFound: true }
-
-    // Static pages are used for SEO and performance, and refreshed 60 seconds
-    return {
-        props: {
-            ...translationProps,
-            overrideTitle: true,
-            user
-        },
-        revalidate: 60
-    }
-    */
 }

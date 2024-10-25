@@ -30,7 +30,7 @@ export default function OfflinePage() {
                     </p>
 
                     <Button
-                        onClick={() => router.reload()}
+                        onPress={router.reload}
                         size="lg"
                         startContent={
                             <ArrowPathIcon className="size-5 -ms-1" />
