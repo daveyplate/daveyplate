@@ -102,6 +102,7 @@ export default function UsersPage({ users }) {
 
                 {(!isLoading || search.length == 0) && users?.map((user, index) => (
                     <Card
+                        key={index}
                         as={Link}
                         href={dynamicHref({ pathname: "/user/[user_id]", query: { user_id: user.id } })}
                         isPressable
