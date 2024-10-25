@@ -32,7 +32,7 @@ import {
 
 import UserAvatar from "@/components/user-avatar"
 import PageTitle from "@/components/page-title"
-import { dynamicHref, isExport } from "@/utils/utils"
+import { isExport } from "@/utils/utils"
 import { toast } from "@/components/providers/toast-provider"
 
 import { CloudArrowUpIcon, PencilIcon } from "@heroicons/react/24/solid"
