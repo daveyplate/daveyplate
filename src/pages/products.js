@@ -7,8 +7,8 @@ import { useSession } from '@supabase/auth-helpers-react'
 
 import { AutoTranslate } from 'next-auto-translate'
 
-import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
-import { getTranslationProps } from '@/utils/translation-props'
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
 import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react"
@@ -125,4 +125,4 @@ export async function getStaticProps({ locale, params }) {
     }
 }
 
-export const getStaticPaths = isExport() ? getExportStaticPaths : undefined
+export const getStaticPaths = isExport() ? getLocalePaths : undefined

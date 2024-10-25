@@ -1,4 +1,4 @@
-import i18nextConfig from 'next-i18next.config'
+import i18nConfig from 'i18n.config'
 
 /**
  * @typedef {Object} TranslationProps
@@ -14,7 +14,7 @@ import i18nextConfig from 'next-i18next.config'
  * @returns {Promise<TranslationProps>} An object containing the messages, locale, and locales.
  */
 export const getTranslationProps = async ({ locale, params }) => {
-    locale = params?.locale || locale || i18nextConfig.i18n.defaultLocale
+    locale = params?.locale || locale || i18nConfig.i18n.defaultLocale
 
     let messages = {}
     try { messages = (await import(`messages/${locale}.json`)).default } catch { }

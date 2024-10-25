@@ -11,8 +11,8 @@ import { createClient as createAdminClient } from "@/utils/supabase/service-role
 import { createClient } from "@/utils/supabase/component"
 import { useUser } from "@supabase/auth-helpers-react"
 
-import { getTranslationProps } from "@/utils/translation-props"
-import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
+import { getTranslationProps } from "@/i18n/translation-props"
+import { getLocalePaths } from "@/i18n/locale-paths"
 
 import {
     Button,
@@ -334,7 +334,7 @@ export default function UserPage({ user: fallbackData }) {
 }
 
 export async function getStaticPaths() {
-    if (isExport()) return getExportStaticPaths()
+    if (isExport()) return getLocalePaths()
 
     return {
         paths: [],

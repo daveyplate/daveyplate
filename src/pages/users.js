@@ -6,8 +6,8 @@ import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
 import { createClient } from "@/utils/supabase/service-role"
 
-import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
-import { getTranslationProps } from "@/utils/translation-props"
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { getTranslationProps } from "@/i18n/translation-props"
 import { dynamicHref, isExport } from "@/utils/utils"
 
 import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
@@ -167,4 +167,4 @@ export async function getStaticProps({ locale, params }) {
     }
 }
 
-export const getStaticPaths = isExport() ? getExportStaticPaths : undefined
+export const getStaticPaths = isExport() ? getLocalePaths : undefined

@@ -5,7 +5,7 @@ import { Button, cn, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } fro
 import { ChevronDownIcon } from "@heroicons/react/24/solid"
 
 import { isExport } from "@/utils/utils"
-import i18nextConfig from 'next-i18next.config'
+import i18nConfig from 'i18n.config'
 import { useLocale } from "next-intl"
 import { getPathname, usePathname } from "@/i18n/routing"
 
@@ -41,7 +41,7 @@ export default function LocaleDropdown({ isIconOnly = false, size = "md", varian
     const router = useRouter()
     const currentLocale = useLocale()
     const pathname = usePathname()
-    const locales = i18nextConfig.i18n.locales
+    const locales = i18nConfig.i18n.locales
 
     const handleLocaleChange = (locale) => {
         if (isExport()) {

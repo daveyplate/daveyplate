@@ -15,8 +15,8 @@ import { Card, CardBody, cn } from "@nextui-org/react"
 import { useRouter as useLocaleRouter } from "@/i18n/routing"
 
 import { createClient } from '@/utils/supabase/component'
-import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
-import { getTranslationProps } from '@/utils/translation-props'
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 import { getURL } from '@/utils/utils'
 
@@ -161,4 +161,4 @@ export async function getStaticProps({ locale, params }) {
     return { props: { ...translationProps } }
 }
 
-export const getStaticPaths = isExport() ? getExportStaticPaths : undefined
+export const getStaticPaths = isExport() ? getLocalePaths : undefined

@@ -6,8 +6,8 @@ import { Button, Card, CardBody, Input, Spinner } from "@nextui-org/react"
 
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 
-import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
-import { getTranslationProps } from '@/utils/translation-props'
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { getTranslationProps } from '@/i18n/translation-props'
 import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
@@ -116,4 +116,4 @@ export async function getStaticProps({ locale, params }) {
     return { props: { ...translationProps } }
 }
 
-export const getStaticPaths = isExport() ? getExportStaticPaths : undefined
+export const getStaticPaths = isExport() ? getLocalePaths : undefined
