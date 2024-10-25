@@ -1,5 +1,9 @@
 import { gzip, ungzip } from 'node-gzip'
 
+/**
+ * Get the full URL of the site.
+ * @returns {string} The full URL of the site.
+ */
 export const getURL = () => {
   let url =
     process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
