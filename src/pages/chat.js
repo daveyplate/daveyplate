@@ -41,6 +41,7 @@ export default function Messages() {
 
 export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
+
     return { props: { ...translationProps } }
 }
 
