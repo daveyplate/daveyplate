@@ -2,12 +2,14 @@ import { motion } from 'framer-motion'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useState, useEffect, useRef } from 'react'
+import { isSafari } from 'react-device-detect'
 
 const PageTransition = ({ children }) => {
     const router = useRouter()
     const [direction, setDirection] = useState('forward')
     const [currentKeyIndex, setCurrentKeyIndex] = useState(0)
     const [isMobile, setIsMobile] = useState(false)
+    const [disableAnimation, setDisableAnimation] = useState(false)
     const windowHistoryKeys = useRef([])
 
     useEffect(() => {
@@ -63,6 +65,20 @@ const PageTransition = ({ children }) => {
             onRouteChange()
         }
 
+        const onPopstate = () => {
+            if (isSafari) {
+                setDisableAnimation(true)
+            }
+
+            onRouteChange()
+        }
+
+        const onRouteChangeComplete = () => {
+            setDisableAnimation(false)
+        }
+
+        router.events.on('routeChangeComplete', onRouteChangeComplete)
+
         history.pushState = function () {
             originalPushState.apply(this, arguments)
             onRouteChange()
@@ -74,13 +90,14 @@ const PageTransition = ({ children }) => {
         }
 
         // Listen for popstate event
-        window.addEventListener('popstate', onRouteChange)
+        window.addEventListener('popstate', onPopstate)
 
         // Cleanup function
         return () => {
             history.pushState = originalPushState
             history.replaceState = originalReplaceState
-            window.removeEventListener('popstate', onRouteChange)
+            window.removeEventListener('popstate', onPopstate)
+            router.events.off('routeChangeComplete', onRouteChangeComplete)
         }
     }, [currentKeyIndex])
 
@@ -89,13 +106,13 @@ const PageTransition = ({ children }) => {
             <motion.div
                 key={router.asPath}
                 className="absolute w-svw h-svh bg-background"
-                initial={{
+                initial={!disableAnimation && {
                     x: direction === 'forward' ? '100%' : '-25%',
                     opacity: isMobile ? 1 : 0
                 }}
                 animate={{ x: 0, opacity: 1 }}
-                exit={{
-                    x: direction === 'forward' ? '-25%' : '100%',
+                exit={!disableAnimation && {
+                    x: direction === 'forward' ? '-10%' : '100%',
                     zIndex: direction === 'forward' ? 0 : 1,
                     opacity: isMobile ? 1 : 0
                 }}
