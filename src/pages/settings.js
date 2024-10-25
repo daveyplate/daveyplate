@@ -35,12 +35,13 @@ import { getTranslationProps } from '@/utils/translation-props'
 import { isExport } from "@/utils/utils"
 
 import { toast } from '@/components/providers/toast-provider'
-import Link, { localeHref } from '@/components/locale-link'
 import ThemeDropdown from '@/components/theme-dropdown'
 import LocaleDropdown from '@/components/locale-dropdown'
+import { Link, useRouter as useLocaleRouter } from '@/i18n/routing'
 
 export default function Settings({ locales, locale }) {
     const router = useRouter()
+    const localeRouter = useLocaleRouter()
     const supabase = createClient()
     const { autoTranslate } = useAutoTranslate()
     const { session, isLoading: sessionLoading } = useSessionContext()
@@ -153,7 +154,7 @@ export default function Settings({ locales, locale }) {
             toast(error.message, { color: 'danger' })
         } else {
             toast(accountDeactivated, { color: 'warning' })
-            router.replace(localeHref('/logout', locale))
+            localeRouter.replace('/logout')
         }
     }
 
@@ -164,7 +165,7 @@ export default function Settings({ locales, locale }) {
             toast(error.message, { color: 'danger' })
         } else {
             toast(accountDeleted, { color: 'danger' })
-            router.replace(localeHref('/logout', locale))
+            localeRouter.replace('/logout')
         }
     }
 

@@ -1,23 +1,21 @@
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { useAutoTranslate } from "next-auto-translate"
-import { localeHref } from "@/components/locale-link"
+import { usePathname } from "@/i18n/routing"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
-export default function PageTitle({ title, locale }) {
-    const router = useRouter()
-    const basePath = localeHref('/', locale)
+export default function PageTitle({ title }) {
+    const pathname = usePathname()
     const { autoTranslate } = useAutoTranslate("page_title")
 
     if (title == undefined) {
-        title = autoTranslate(formatPathToTitle(router.pathname), formatPathToTitle(router.pathname))
+        title = autoTranslate(formatPathToTitle(pathname), formatPathToTitle(pathname))
     }
 
     return (
         <Head>
             <title>
-                {router.asPath == basePath ? siteName : title ? `${title} | ${siteName}` : null}
+                {pathname == "/" ? siteName : title ? `${title} | ${siteName}` : null}
             </title>
         </Head>
     )
@@ -26,7 +24,6 @@ export default function PageTitle({ title, locale }) {
 const formatPathToTitle = (path) => {
     const firstPart = path.split('/') // Split the path by '/'
         .filter(Boolean) // Remove any empty strings
-        .filter(segment => segment !== '[locale]') // Remove the '[locale]' segment if present
         .shift() // Take the first non-empty segment
 
     // Replace hyphens with spaces and capitalize each word

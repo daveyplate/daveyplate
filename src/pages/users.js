@@ -8,14 +8,14 @@ import { createClient } from "@/utils/supabase/service-role"
 
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from "@/utils/translation-props"
-import { isExport } from "@/utils/utils"
+import { dynamicHref, isExport } from "@/utils/utils"
 
 import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
 
-import Link from '@/components/locale-link'
 import UserAvatar from "@/components/user-avatar"
 
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
+import { Link } from "@/i18n/routing"
 
 export default function UsersPage({ users }) {
     const { autoTranslate } = useAutoTranslate()
@@ -103,7 +103,7 @@ export default function UsersPage({ users }) {
                 {(!isLoading || search.length == 0) && users?.map((user, index) => (
                     <Link
                         key={index}
-                        href={{ pathname: "/user/[user_id]", query: { user_id: user.id, push: true } }}
+                        href={dynamicHref({ pathname: "/user/[user_id]", query: { user_id: user.id } })}
                         legacyBehavior
                     >
                         <Card isPressable className="w-full">
@@ -147,8 +147,6 @@ export default function UsersPage({ users }) {
 export async function getStaticProps({ locale, ...context }) {
     const translationProps = await getTranslationProps({ locale, ...context })
 
-    if (isExport()) return { props: { ...translationProps } }
-
     const supabase = createClient()
     const { data: users, error } = await supabase
         .from('profiles')
@@ -157,6 +155,8 @@ export async function getStaticProps({ locale, ...context }) {
         .order('created_at', { ascending: false })
 
     if (error) return { notFound: true }
+
+    if (isExport()) return { props: { ...translationProps, users } }
 
     return {
         props: {

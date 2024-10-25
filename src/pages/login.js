@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useIsClient } from '@uidotdev/usehooks'
 import { Capacitor } from '@capacitor/core'
 import { useTheme } from 'next-themes'
 
@@ -13,31 +12,31 @@ import { useClearCache } from '@daveyplate/supabase-swr-entities/client'
 
 import { Card, CardBody, cn } from "@nextui-org/react"
 
+import { useRouter as useLocaleRouter } from "@/i18n/routing"
+
 import { createClient } from '@/utils/supabase/component'
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from '@/utils/translation-props'
 import { isExport } from "@/utils/utils"
 import { getURL } from '@/utils/utils'
 
-import MainFont from "@/styles/fonts"
+import DefaultFont from "@/styles/fonts"
 
-import { localeHref } from '@/components/locale-link'
-
-export default function Login({ view, locale }) {
+export default function Login({ view }) {
     const router = useRouter()
-    const isClient = useIsClient()
+    const localeRouter = useLocaleRouter()
     const supabase = createClient()
     const { autoTranslate } = useAutoTranslate("login")
     const { resolvedTheme } = useTheme()
     const { session, isLoading: sessionLoading } = useSessionContext()
     const clearCache = useClearCache()
 
-    const defaultReturnTo = localeHref('/', locale)
+    const defaultReturnTo = "/"
 
     useEffect(() => {
         if (session) {
             clearCache()
-            router.replace(router.query.returnTo || defaultReturnTo)
+            localeRouter.replace(router.query.returnTo || defaultReturnTo)
         }
     }, [session])
 
@@ -131,11 +130,11 @@ export default function Login({ view, locale }) {
                                 }
                             },
                             style: {
-                                label: { fontFamily: MainFont.style.fontFamily },
-                                button: { fontFamily: MainFont.style.fontFamily },
-                                input: { fontFamily: MainFont.style.fontFamily },
-                                divider: { fontFamily: MainFont.style.fontFamily },
-                                anchor: { fontFamily: MainFont.style.fontFamily },
+                                label: { fontFamily: DefaultFont.style.fontFamily },
+                                button: { fontFamily: DefaultFont.style.fontFamily },
+                                input: { fontFamily: DefaultFont.style.fontFamily },
+                                divider: { fontFamily: DefaultFont.style.fontFamily },
+                                anchor: { fontFamily: DefaultFont.style.fontFamily },
                             },
                             className: {
                                 label: '!text-foreground !text-base',

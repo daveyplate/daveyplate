@@ -29,10 +29,10 @@ import UserAvatar from '@/components/user-avatar'
 import UploadAvatarModal from '@/components/upload-avatar-modal'
 
 
-export default function EditProfile({ locale }) {
+export default function EditProfile() {
     const supabase = createClient()
     const { autoTranslate } = useAutoTranslate()
-    const { session } = useAuthenticatedPage({ locale })
+    const { session } = useAuthenticatedPage()
     const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
 
     const [name, setName] = useState(user?.full_name || '')

@@ -32,8 +32,6 @@ import {
     Button,
 } from "@nextui-org/react"
 
-import { localeHref } from "@/components/locale-link"
-
 import UserAvatar from "@/components/user-avatar"
 
 import {
@@ -55,7 +53,7 @@ import { useDocumentTitle } from "@daveyplate/use-document-title"
 
 import ThemeDropdown from "./theme-dropdown"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
-import { Link, useRouter as useLocaleRouter } from "@/i18n/routing"
+import { Link, useRouter as useLocaleRouter, usePathname } from "@/i18n/routing"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -75,11 +73,10 @@ export default function Header({ locale, overrideTitle }) {
     const router = useRouter()
     const localeRouter = useLocaleRouter()
     const session = useSession()
+    const pathname = usePathname()
     const { isLoading: sessionLoading } = useSessionContext()
     const { autoTranslate } = useAutoTranslate("header")
     const { entity: user, isLoading, error } = useEntity(session ? 'profiles' : null, 'me')
-
-    const basePath = localeHref('/', locale)
 
     const [isConnected, setIsConnected] = useState(true)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -159,7 +156,7 @@ export default function Header({ locale, overrideTitle }) {
 
                 <NavbarContent className="sm:hidden me-1" justify="center">
                     <NavbarBrand className="gap-2 text-foreground text-xl">
-                        {router.asPath == basePath && logo}
+                        {pathname == "/" && logo}
 
                         <p className="font-bold truncate max-w-[160px]" suppressHydrationWarning>
                             {currentTitle?.split('|')[0].trim()}
@@ -172,7 +169,7 @@ export default function Header({ locale, overrideTitle }) {
                         <NavbarItem key={index}>
                             <Link
                                 className={cn("text-lg",
-                                    router.asPath == localeHref(item.path, locale) ? "text-warning" : null)}
+                                    pathname == item.path ? "text-warning" : null)}
                                 href={item.path}
                             >
                                 <AutoTranslate tKey={item.name} namespace="header">
@@ -305,7 +302,7 @@ export default function Header({ locale, overrideTitle }) {
                         <NavbarMenuItem key={index}>
                             <Link
                                 className={cn("w-full flex gap-4 text-xl items-center",
-                                    router.asPath == localeHref(item.path, locale) ? "text-warning" : "")}
+                                    pathname == item.path ? "text-warning" : "")}
                                 href={item.path}
                                 size="lg"
                                 onClick={() => setIsMenuOpen(false)}

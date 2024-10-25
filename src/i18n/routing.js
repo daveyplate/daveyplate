@@ -1,5 +1,6 @@
 import { createNavigation } from 'next-intl/navigation'
 import { defineRouting } from 'next-intl/routing'
+
 import i18nextConfig from 'next-i18next.config'
 import { isExport } from '@/utils/utils'
 

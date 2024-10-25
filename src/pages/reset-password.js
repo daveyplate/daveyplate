@@ -1,25 +1,25 @@
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-
-import { createClient } from '@/utils/supabase/component'
-import { useSessionContext } from '@supabase/auth-helpers-react'
+import { useState } from 'react'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
-import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
-import { getTranslationProps } from '@/utils/translation-props'
-import { isExport } from "@/utils/utils"
-import { localeHref } from '@/components/locale-link'
-
 import { Button, Card, CardBody, Input, Spinner } from "@nextui-org/react"
-
-import { toast } from '@/components/providers/toast-provider'
 
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 
-export default function ResetPassword({ locale }) {
-    const router = useRouter()
-    const { session, isLoading } = useSessionContext()
+import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
+import { getTranslationProps } from '@/utils/translation-props'
+import { createClient } from '@/utils/supabase/component'
+import { isExport } from "@/utils/utils"
+
+import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
+import { useRouter as useLocaleRouter } from '@/i18n/routing'
+
+import { toast } from '@/components/providers/toast-provider'
+
+export default function ResetPassword() {
+    useAuthenticatedPage()
+
+    const localeRouter = useLocaleRouter()
     const supabase = createClient()
     const { autoTranslate } = useAutoTranslate()
 
@@ -33,12 +33,6 @@ export default function ResetPassword({ locale }) {
     const [isVisible, setIsVisible] = useState(false)
 
     const toggleVisibility = () => setIsVisible(!isVisible)
-
-    useEffect(() => {
-        if (!isLoading && !session) {
-            router.replace(localeHref('/login', locale))
-        }
-    }, [session, isLoading])
 
     const updatePassword = async (e) => {
         e.preventDefault()
@@ -55,7 +49,7 @@ export default function ResetPassword({ locale }) {
         } else {
             toast(passwordChanged, { color: 'success' })
 
-            router.replace(localeHref("/", locale))
+            localeRouter.replace("/")
 
             // Sign out other devices
             supabase.auth.signOut({ scope: 'others' })
@@ -73,7 +67,6 @@ export default function ResetPassword({ locale }) {
             {/* Change Password */}
             <Card className="w-full">
                 <CardBody as="form" onSubmit={updatePassword} className="p-5 flex flex-col gap-4 items-start">
-
                     <Input
                         type={isVisible ? "text" : "password"}
                         variant="bordered"
@@ -98,7 +91,7 @@ export default function ResetPassword({ locale }) {
                     <Button
                         type="submit"
                         size="lg"
-                        disabled={updatingPassword || password.length == 0}
+                        isDisabled={updatingPassword || password.length == 0}
                         isLoading={updatingPassword}
                         spinner={<Spinner color="current" size="sm" />}
                         color="primary"

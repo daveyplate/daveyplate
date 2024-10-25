@@ -30,18 +30,19 @@ import {
     cn
 } from "@nextui-org/react"
 
-import Link from "@/components/locale-link"
 import UserAvatar from "@/components/user-avatar"
 import PageTitle from "@/components/page-title"
-import { isExport } from "@/utils/utils"
+import { dynamicHref, isExport } from "@/utils/utils"
 import { toast } from "@/components/providers/toast-provider"
 
 import { CloudArrowUpIcon, PencilIcon } from "@heroicons/react/24/solid"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
+import { Link } from "@/i18n/routing"
 
 const avatarSize = 512
 
-export default function UserPage({ user: fallbackData, locale }) {
+export default function UserPage({ user: fallbackData }) {
+    console.log(dynamicHref({ pathname: "/[username]", query: { username: "andershizzle" } }))
     const me = useUser()
     const router = useRouter()
     const supabase = createClient()
@@ -156,7 +157,7 @@ export default function UserPage({ user: fallbackData, locale }) {
 
     return (
         <>
-            <PageTitle title={user?.full_name || ""} locale={locale} />
+            <PageTitle title={user?.full_name || ""} />
 
             <div className="flex-container flex-center max-w-sm">
                 <h2 className="hidden sm:flex">

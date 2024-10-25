@@ -1,22 +1,22 @@
 import { useEffect } from "react"
-import { useRouter } from "next/router"
 import { Capacitor, CapacitorCookies } from '@capacitor/core'
 
 import { useClearCache } from "@daveyplate/supabase-swr-entities/client"
 
 import { Spinner } from "@nextui-org/react"
 
+import { useRouter as useLocaleRouter } from "@/i18n/routing"
+
 import { createClient } from "@/utils/supabase/component"
 import { getStaticPaths as getExportStaticPaths } from "@/utils/get-static"
 import { getTranslationProps } from '@/utils/translation-props'
 import { isExport } from "@/utils/utils"
 
-import { localeHref } from "@/components/locale-link"
 import PageTitle from "@/components/page-title"
 
-export default ({ locale }) => {
+export default () => {
     const supabase = createClient()
-    const router = useRouter()
+    const localeRouter = useLocaleRouter()
     const clearCache = useClearCache()
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export default ({ locale }) => {
         supabase.auth.signOut(
             { scope: "local" }
         ).finally(() => {
-            router.replace(localeHref("/login", locale))
+            localeRouter.replace("/login")
             clearCache()
         })
     }, [])

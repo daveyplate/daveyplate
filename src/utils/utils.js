@@ -52,3 +52,23 @@ export const decompress = async (base64String) => {
 export const isExport = () => {
   return process.env.NEXT_PUBLIC_IS_EXPORT == "1"
 }
+
+/**
+ * Generate a dynamic href based on the pathname and query object
+ * Supports custom static export behavior for dynamic routing
+ *
+ * @param {Object} href - An object containing pathname and query.
+ * @param {string} href.pathname - The path of the URL (can contain dynamic segments).
+ * @param {Object} href.query - An object containing query parameters.
+ * @returns {string} The constructed href
+ */
+export const dynamicHref = ({ pathname, query }) => {
+  if (isExport()) {
+    const queryString = Object.entries(query)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&')
+    return `${pathname.replace(/\[([^\]]+)\]/g, '$1')}?${queryString}`
+  } else {
+    return pathname.replace(/\[([^\]]+)\]/g, (_, key) => query[key] || '')
+  }
+}
