@@ -5,6 +5,9 @@ import { Button, cn, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } fro
 import { ChevronDownIcon } from "@heroicons/react/24/solid"
 
 import { isExport } from "@/utils/utils"
+import i18nextConfig from 'next-i18next.config'
+import { useLocale } from "next-intl"
+import { getPathname, usePathname } from "@/i18n/routing"
 
 export const localeToCountry = {
     "en": "US",
@@ -34,22 +37,17 @@ export const localeToCountry = {
  * @param {("bordered"|"faded"|"flat"|"light"|"ghost"|"solid")} [props.variant="solid"] - Variant of the button
  * @returns {JSX.Element}
  */
-export default function LocaleDropdown({ locales, locale: currentLocale, isIconOnly = false, size = "md", variant = "solid" }) {
+export default function LocaleDropdown({ isIconOnly = false, size = "md", variant = "solid" }) {
     const router = useRouter()
-
-    const getLocaleLink = (locale) => {
-        if (!isExport()) return router.asPath
-
-        const path = router.asPath.replace(`/${currentLocale}`, '')
-
-        return `/${locale}${path}`
-    }
+    const currentLocale = useLocale()
+    const pathname = usePathname()
+    const locales = i18nextConfig.i18n.locales
 
     const handleLocaleChange = (locale) => {
         if (isExport()) {
-            router.push(getLocaleLink(locale))
+            router.push(getPathname({ href: pathname, locale }), null, { scroll: false })
         } else {
-            router.push(router.pathname, router.asPath, { locale, scroll: false })
+            router.push(pathname, null, { locale, scroll: false })
         }
     }
 
@@ -94,7 +92,7 @@ export default function LocaleDropdown({ locales, locale: currentLocale, isIconO
                                 hasDropShadow
                             />
                         }
-                        title={new Intl.DisplayNames([locale], { type: 'language' }).of(currentLocale)}
+                        title={new Intl.DisplayNames([currentLocale], { type: 'language' }).of(locale)}
                         onPress={() => handleLocaleChange(locale)}
                     />
                 ))}

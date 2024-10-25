@@ -1,4 +1,5 @@
 import Head from "next/head"
+import { NextIntlClientProvider } from 'next-intl'
 
 import "@/styles/global.css"
 import "@/styles/custom.css"
@@ -11,38 +12,44 @@ import Footer from "@/components/footer"
 
 const MyApp = ({ Component, pageProps }) => {
     return (
-        <Providers {...pageProps}>
-            <Head>
-                <meta
-                    name='viewport'
-                    content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover'
-                />
+        <NextIntlClientProvider
+            locale={pageProps.locale || "en"}
+            messages={pageProps.messages}
+            timeZone="America/Los_Angeles"
+        >
+            <Providers {...pageProps}>
+                <Head>
+                    <meta
+                        name='viewport'
+                        content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover'
+                    />
 
-                <meta name="description" content="Description" />
-                <meta name="keywords" content="Keywords" />
+                    <meta name="description" content="Description" />
+                    <meta name="keywords" content="Keywords" />
 
-                <link rel="icon" href="/favicon.ico" sizes="48x48" />
-                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-            </Head>
+                    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+                    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+                </Head>
 
-            <style jsx global>{`
+                <style jsx global>{`
                 html {
                   font-family: ${DefaultFont.style.fontFamily}
                 }
             `}</style>
 
-            <Header {...pageProps} />
+                <Header {...pageProps} />
 
-            <main className={`flex min-h-svh w-svh
+                <main className={`flex min-h-svh w-svh
                 pt-[calc(4rem+env(safe-area-inset-top))] 
                 pb-[calc(4rem+env(safe-area-inset-bottom))] 
                 px-safe
             `}>
-                <Component {...pageProps} />
-            </main>
+                    <Component {...pageProps} />
+                </main>
 
-            <Footer {...pageProps} />
-        </Providers>
+                <Footer {...pageProps} />
+            </Providers>
+        </NextIntlClientProvider>
     )
 }
 

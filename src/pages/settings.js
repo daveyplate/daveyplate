@@ -39,7 +39,7 @@ import ThemeDropdown from '@/components/theme-dropdown'
 import LocaleDropdown from '@/components/locale-dropdown'
 import { Link, useRouter as useLocaleRouter } from '@/i18n/routing'
 
-export default function Settings({ locales, locale }) {
+export default function Settings() {
     const router = useRouter()
     const localeRouter = useLocaleRouter()
     const supabase = createClient()
@@ -343,7 +343,7 @@ export default function Settings({ locales, locale }) {
                         </AutoTranslate>
                     </div>
 
-                    <LocaleDropdown locales={locales} locale={locale} size="lg" />
+                    <LocaleDropdown size="lg" />
                 </CardBody>
             </Card>
 
@@ -454,8 +454,8 @@ export default function Settings({ locales, locale }) {
     )
 }
 
-export async function getStaticProps({ locale, ...context }) {
-    const translationProps = await getTranslationProps({ locale, ...context })
+export async function getStaticProps({ locale, params }) {
+    const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }
 }

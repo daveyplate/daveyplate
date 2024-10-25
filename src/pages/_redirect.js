@@ -2,7 +2,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import languageDetector from '@/utils/language-detector'
-import { getTranslationProps } from "@/utils/translation-props"
 
 // Index redirect for static export & Capacitor
 export default () => {
@@ -18,10 +17,4 @@ export default () => {
 
         router.replace(to)
     }, [])
-}
-
-export async function getStaticProps({ locale, ...context }) {
-    const translationProps = await getTranslationProps({ locale, ...context })
-
-    return { props: { ...translationProps } }
 }

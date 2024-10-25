@@ -1,14 +1,12 @@
-import i18nextConfig from '@/../next-i18next.config'
+import i18nextConfig from 'next-i18next.config'
 
 /**
  * Get an array of paths for each supported language.
  * @returns {Array} Array of paths for each supported language.
  */
 export const getI18nPaths = () =>
-  i18nextConfig.i18n.locales.map((lng) => ({
-    params: {
-      locale: lng
-    }
+  i18nextConfig.i18n.locales.map((locale) => ({
+    params: { locale }
   }))
 
 /**

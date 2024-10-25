@@ -53,7 +53,8 @@ import { useDocumentTitle } from "@daveyplate/use-document-title"
 
 import ThemeDropdown from "./theme-dropdown"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
-import { Link, useRouter as useLocaleRouter, usePathname } from "@/i18n/routing"
+import { Link, usePathname } from "@/i18n/routing"
+import { dynamicHref } from "@/utils/utils"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -68,10 +69,9 @@ const logo = (
     />
 )
 
-export default function Header({ locale, overrideTitle }) {
+export default function Header({ overrideTitle }) {
     const currentTitle = useDocumentTitle()
     const router = useRouter()
-    const localeRouter = useLocaleRouter()
     const session = useSession()
     const pathname = usePathname()
     const { isLoading: sessionLoading } = useSessionContext()
@@ -86,7 +86,6 @@ export default function Header({ locale, overrideTitle }) {
         { icon: UsersIcon, name: "Users", path: "/users" },
         { icon: ShoppingBagIcon, name: "Products", path: "/products" },
         { icon: ChatBubbleLeftRightIcon, name: "Chat", path: "/chat" },
-        { icon: ChatBubbleLeftRightIcon, name: "Settings", path: "/settings" },
     ]
 
     useEffect(() => {
@@ -110,7 +109,7 @@ export default function Header({ locale, overrideTitle }) {
 
     return (
         <>
-            {!overrideTitle && <PageTitle locale={locale} />}
+            {!overrideTitle && <PageTitle />}
 
             <Navbar
                 className="backdrop-blur-xl bg-gradient-to-b from-background via-background/30 to-background/0 pt-safe px-safe fixed"
@@ -230,9 +229,8 @@ export default function Header({ locale, overrideTitle }) {
                                 {user?.id &&
                                     <DropdownItem
                                         as={Link}
-                                        href={{ pathname: `/user/[user_id]`, query: { user_id: user.id } }}
+                                        href={dynamicHref({ pathname: `/user/[user_id]`, query: { user_id: user.id } })}
                                         startContent={<UserIcon className="size-5" />}
-                                        onClick={(e) => e.preventDefault()}
                                     >
                                         {autoTranslate('view_profile', 'View Profile')}
                                     </DropdownItem>
@@ -240,8 +238,9 @@ export default function Header({ locale, overrideTitle }) {
 
                                 {user &&
                                     <DropdownItem
+                                        as={Link}
+                                        href={"/edit-profile"}
                                         startContent={<PencilIcon className="size-4 mx-0.5" />}
-                                        onPress={() => localeRouter.push('/edit-profile')}
                                     >
                                         {autoTranslate('edit_profile', 'Edit Profile')}
                                     </DropdownItem>
@@ -252,7 +251,6 @@ export default function Header({ locale, overrideTitle }) {
                                         as={Link}
                                         href={"/login"}
                                         startContent={<LogInIcon className="size-5" />}
-                                        onClick={(e) => e.preventDefault()}
                                     >
                                         {autoTranslate('login', 'Log In')}
                                     </DropdownItem>
@@ -263,7 +261,6 @@ export default function Header({ locale, overrideTitle }) {
                                         as={Link}
                                         href={"/signup"}
                                         startContent={<UserPlusIcon className="size-5" />}
-                                        onClick={(e) => e.preventDefault()}
                                     >
                                         {autoTranslate('sign_up', 'Sign Up')}
                                     </DropdownItem>
@@ -273,7 +270,6 @@ export default function Header({ locale, overrideTitle }) {
                                     as={Link}
                                     href={"/settings"}
                                     startContent={<CogIcon className="size-5" />}
-                                    onClick={(e) => e.preventDefault()}
                                 >
                                     {autoTranslate('settings', 'Settings')}
                                 </DropdownItem>
@@ -284,7 +280,6 @@ export default function Header({ locale, overrideTitle }) {
                                         href={"/logout"}
                                         color="danger"
                                         startContent={<LogOutIcon className="size-5" />}
-                                        onClick={(e) => e.preventDefault()}
                                     >
                                         {autoTranslate('logout', 'Log Out')}
                                     </DropdownItem>
@@ -296,7 +291,6 @@ export default function Header({ locale, overrideTitle }) {
 
                 <NavbarMenu
                     className="overflow-hidden mt-safe gap-4 z-50"
-                    onClick={() => setIsMenuOpen(false)}
                 >
                     {menuItems.map((item, index) => (
                         <NavbarMenuItem key={index}>
@@ -305,7 +299,6 @@ export default function Header({ locale, overrideTitle }) {
                                     pathname == item.path ? "text-warning" : "")}
                                 href={item.path}
                                 size="lg"
-                                onClick={() => setIsMenuOpen(false)}
                             >
                                 <item.icon className="size-6" />
 

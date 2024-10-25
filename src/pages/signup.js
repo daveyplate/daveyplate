@@ -6,8 +6,8 @@ import LoginPage from "./login"
 
 export default LoginPage
 
-export async function getStaticProps({ locale, ...context }) {
-    const translationProps = await getTranslationProps({ locale, ...context })
+export async function getStaticProps({ locale, params }) {
+    const translationProps = await getTranslationProps({ locale, params })
 
     return {
         props: {

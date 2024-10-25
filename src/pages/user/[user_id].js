@@ -342,8 +342,8 @@ export async function getStaticPaths() {
     }
 }
 
-export async function getStaticProps({ locale, params, ...context }) {
-    const translationProps = await getTranslationProps({ locale, params, ...context })
+export async function getStaticProps({ locale, params }) {
+    const translationProps = await getTranslationProps({ locale, params })
 
     if (isExport()) return { props: { ...translationProps, overrideTitle: true } }
 

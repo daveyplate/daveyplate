@@ -144,8 +144,8 @@ export default function UsersPage({ users }) {
     )
 }
 
-export async function getStaticProps({ locale, ...context }) {
-    const translationProps = await getTranslationProps({ locale, ...context })
+export async function getStaticProps({ locale, params }) {
+    const translationProps = await getTranslationProps({ locale, params })
 
     const supabase = createClient()
     const { data: users, error } = await supabase
