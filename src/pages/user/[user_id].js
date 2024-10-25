@@ -42,7 +42,6 @@ import { Link } from "@/i18n/routing"
 const avatarSize = 512
 
 export default function UserPage({ user: fallbackData }) {
-    console.log(dynamicHref({ pathname: "/[username]", query: { username: "andershizzle" } }))
     const me = useUser()
     const router = useRouter()
     const supabase = createClient()
