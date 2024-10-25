@@ -101,43 +101,42 @@ export default function UsersPage({ users }) {
                 ))}
 
                 {(!isLoading || search.length == 0) && users?.map((user, index) => (
-                    <Link
-                        key={index}
+                    <Card
+                        as={Link}
                         href={dynamicHref({ pathname: "/user/[user_id]", query: { user_id: user.id } })}
-                        legacyBehavior
+                        isPressable
+                        fullWidth
                     >
-                        <Card isPressable className="w-full">
-                            <CardBody className="p-4">
-                                <div className="flex items-center gap-4">
-                                    <UserAvatar user={user} size="lg" className="text-base" />
+                        <CardBody className="p-4">
+                            <div className="flex items-center gap-4">
+                                <UserAvatar user={user} size="lg" className="text-base" />
 
-                                    <div>
-                                        <p className="font-semibold">
-                                            {user.full_name || "Unnamed"}
-                                        </p>
+                                <div>
+                                    <p className="font-semibold">
+                                        {user.full_name || "Unnamed"}
+                                    </p>
 
-                                        <p className="text-foreground-400 text-sm">
-                                            <AutoTranslate tKey="subscription">
-                                                Subscription:
-                                            </AutoTranslate>
+                                    <p className="text-foreground-400 text-sm">
+                                        <AutoTranslate tKey="subscription">
+                                            Subscription:
+                                        </AutoTranslate>
 
-                                            <span className={cn('ml-1', user.claims?.premium ? "text-success font-semibold" : "text-foreground font-light")}>
-                                                {user.claims?.premium ?
-                                                    <AutoTranslate tKey="active">
-                                                        Active
-                                                    </AutoTranslate>
-                                                    :
-                                                    <AutoTranslate tKey="inactive">
-                                                        Inactive
-                                                    </AutoTranslate>
-                                                }
-                                            </span>
-                                        </p>
-                                    </div>
+                                        <span className={cn('ml-1', user.claims?.premium ? "text-success font-semibold" : "text-foreground font-light")}>
+                                            {user.claims?.premium ?
+                                                <AutoTranslate tKey="active">
+                                                    Active
+                                                </AutoTranslate>
+                                                :
+                                                <AutoTranslate tKey="inactive">
+                                                    Inactive
+                                                </AutoTranslate>
+                                            }
+                                        </span>
+                                    </p>
                                 </div>
-                            </CardBody>
-                        </Card>
-                    </Link>
+                            </div>
+                        </CardBody>
+                    </Card>
                 ))}
             </div>
         </div>

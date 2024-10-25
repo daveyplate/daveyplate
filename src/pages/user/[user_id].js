@@ -345,8 +345,9 @@ export async function getStaticPaths() {
 export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
 
-    if (isExport()) return { props: { ...translationProps, overrideTitle: true } }
+    return { props: { ...translationProps, overrideTitle: true, canGoBack: true } }
 
+    /*
     const supabase = createAdminClient()
     const { data: user, error } = await supabase.from('profiles')
         .select('*')
@@ -365,4 +366,5 @@ export async function getStaticProps({ locale, params }) {
         },
         revalidate: 60
     }
+    */
 }

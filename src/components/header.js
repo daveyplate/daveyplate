@@ -53,7 +53,7 @@ import { useDocumentTitle } from "@daveyplate/use-document-title"
 
 import ThemeDropdown from "./theme-dropdown"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
-import { Link, usePathname } from "@/i18n/routing"
+import { Link, useLocaleRouter, usePathname } from "@/i18n/routing"
 import { dynamicHref } from "@/utils/utils"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
@@ -69,9 +69,10 @@ const logo = (
     />
 )
 
-export default function Header({ overrideTitle }) {
+export default function Header({ overrideTitle, canGoBack }) {
     const currentTitle = useDocumentTitle()
     const router = useRouter()
+    const localeRouter = useLocaleRouter()
     const session = useSession()
     const pathname = usePathname()
     const { isLoading: sessionLoading } = useSessionContext()
@@ -107,6 +108,16 @@ export default function Header({ overrideTitle }) {
         }
     }, [])
 
+    const goBack = () => {
+        if (document.referrer && !document.referrer.includes(window.location.origin)) {
+            localeRouter.replace("/")
+        } else if (window.history?.length) {
+            router.back()
+        } else {
+            localeRouter.replace("/")
+        }
+    }
+
     return (
         <>
             {!overrideTitle && <PageTitle />}
@@ -120,7 +131,7 @@ export default function Header({ overrideTitle }) {
             >
                 <NavbarContent className="sm:hidden" justify="start">
                     <AnimatePresence mode="popLayout">
-                        {router.query.push ? (
+                        {canGoBack ? (
                             <motion.div
                                 key="backButton"
                                 initial={{ opacity: 0 }}
@@ -131,7 +142,7 @@ export default function Header({ overrideTitle }) {
                                 <Button
                                     isIconOnly
                                     variant="link"
-                                    onClick={() => router.back()}
+                                    onPress={goBack}
                                     className="-ms-3 focus:text-foreground-400"
                                 >
                                     <ChevronLeftIcon className="size-8" />
