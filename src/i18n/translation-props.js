@@ -1,5 +1,8 @@
 import i18nConfig from 'i18n.config'
 
+import enMessages from 'messages/en.json'
+import deMessages from 'messages/de.json'
+
 /**
  * @typedef {Object} TranslationProps
  * @property {Object} messages - The translation messages for the locale.
@@ -16,11 +19,15 @@ import i18nConfig from 'i18n.config'
 export const getTranslationProps = async ({ locale, params }) => {
     locale = params?.locale || locale || i18nConfig.i18n.defaultLocale
 
-    let messages = {}
-    try { messages = (await import(`messages/${locale}.json`)).default } catch { }
+    switch (locale) {
+        case 'en':
+            return { messages: enMessages, locale }
+        case 'de':
+            return { messages: deMessages, locale }
+    }
 
     return {
-        messages,
+        messages: {},
         locale
     }
 }
