@@ -1,3 +1,4 @@
+import { useIsClient } from '@uidotdev/usehooks'
 import { motion } from 'framer-motion'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
@@ -11,6 +12,7 @@ const PageTransition = ({ children }) => {
     const [isMobile, setIsMobile] = useState(false)
     const [disableAnimation, setDisableAnimation] = useState(false)
     const windowHistoryKeys = useRef([])
+    const isClient = useIsClient()
 
     useEffect(() => {
         // Function to check if the screen matches the mobile breakpoint
@@ -101,28 +103,32 @@ const PageTransition = ({ children }) => {
         }
     }, [currentKeyIndex])
 
-    return (
-        <AnimatePresence initial={false}>
-            <motion.div
-                key={router.asPath}
-                className="absolute w-svw h-svh bg-background"
-                initial={!disableAnimation && {
-                    x: direction === 'forward' ? '100%' : '-25%',
-                    opacity: isMobile ? 1 : 0
-                }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={!disableAnimation && {
-                    x: direction === 'forward' ? '-10%' : '100%',
-                    zIndex: direction === 'forward' ? 0 : 1,
-                    opacity: isMobile ? 1 : 0
-                }}
-                transition={{ ease: 'easeInOut', duration: 0.3 }}
+    if (isClient && !isSafari) {
+        return (
+            <AnimatePresence initial={false}>
+                <motion.div
+                    key={router.asPath}
+                    className="absolute w-svw h-svh bg-background"
+                    initial={!disableAnimation && {
+                        x: direction === 'forward' ? '100%' : '-25%',
+                        opacity: isMobile ? 1 : 0
+                    }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={!disableAnimation && {
+                        x: direction === 'forward' ? '-10%' : '100%',
+                        zIndex: direction === 'forward' ? 0 : 1,
+                        opacity: isMobile ? 1 : 0
+                    }}
+                    transition={{ ease: 'easeInOut', duration: 0.3 }}
 
-            >
-                {children}
-            </motion.div>
-        </AnimatePresence>
-    )
+                >
+                    {children}
+                </motion.div>
+            </AnimatePresence>
+        )
+    }
+
+    return children
 }
 
 export default PageTransition
