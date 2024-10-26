@@ -37,12 +37,20 @@ import { toast } from "@/components/providers/toast-provider"
 import { CloudArrowUpIcon, PencilIcon } from "@heroicons/react/24/solid"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { Link } from "@/i18n/routing"
+import { useIsClient } from "@uidotdev/usehooks"
 
 const avatarSize = 512
 
 export default function UserPage() {
     const me = useUser()
     const router = useRouter()
+    const isClient = useIsClient()
+
+    if (isClient) {
+        return <h1>{router.query.user_id}</h1>
+    }
+
+    /*
     const supabase = createClient()
     const { mutate } = useSWRConfig()
     const { autoTranslate } = useAutoTranslate()
@@ -329,6 +337,7 @@ export default function UserPage() {
             </Modal>
         </>
     )
+    */
 }
 
 export async function getStaticPaths() {
