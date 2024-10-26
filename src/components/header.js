@@ -92,13 +92,11 @@ export default function Header({ overrideTitle, canGoBack }) {
     useEffect(() => {
         if (Capacitor.isPluginAvailable('Network')) {
             Network.addListener('networkStatusChange', status => {
-                console.log('Network status changed', status.connected)
                 setIsConnected(status.connected)
             })
 
             const logCurrentNetworkStatus = async () => {
                 const status = await Network.getStatus()
-                console.log('Network status:', status)
                 setIsConnected(status.connected)
             }
 

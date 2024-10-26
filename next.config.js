@@ -5,7 +5,7 @@ module.exports = {
   i18n,
   reactStrictMode: true,
   outputFileTracingIncludes: {
-    '/api/*': ['*.json'],
+    '**': ['*.json']
   },
   experimental: {
     scrollRestoration: true
