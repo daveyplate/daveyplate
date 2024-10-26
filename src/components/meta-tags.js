@@ -1,10 +1,11 @@
 import Head from "next/head"
 import { useRouter } from "next/router"
 
-export default function MetaTags({ title, description, image, ogType = "website" }) {
+export default function MetaTags({ title, description, image, ogType = "website", url }) {
     const router = useRouter()
     image = image || process.env.NEXT_PUBLIC_BASE_URL + "/apple-touch-icon.png"
     title = title ? `${title} | ${process.env.NEXT_PUBLIC_SITE_NAME}` : process.env.NEXT_PUBLIC_SITE_NAME
+    url = url || process.env.NEXT_PUBLIC_BASE_URL + router.asPath
 
     return (
         <Head>
@@ -16,7 +17,7 @@ export default function MetaTags({ title, description, image, ogType = "website"
             <meta property="og:site_name" content={process.env.NEXT_PUBLIC_SITE_NAME} />
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />
-            <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL + router.asPath} />
+            <meta property="og:url" content={url} />
 
             {/* Twitter */}
             <meta property="twitter:image" content={image} />

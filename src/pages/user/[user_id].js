@@ -19,7 +19,7 @@ import {
 
 import UserAvatar from "@/components/user-avatar"
 import PageTitle from "@/components/page-title"
-import { getURL, isExport } from "@/utils/utils"
+import { isExport } from "@/utils/utils"
 import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
 import { toast } from "@/components/providers/toast-provider"
 import { PencilIcon } from "@heroicons/react/24/solid"
@@ -28,8 +28,6 @@ import { useSession } from "@supabase/auth-helpers-react"
 import LightboxModal from "@/components/lightbox-modal"
 import { createClient } from "@/utils/supabase/component"
 import { getEntity } from "@daveyplate/supabase-swr-entities/server"
-import { useDocumentTitle } from "@daveyplate/use-document-title"
-import Head from "next/head"
 import MetaTags from "@/components/meta-tags"
 
 export default function UserPage({ user_id, user: fallbackData }) {

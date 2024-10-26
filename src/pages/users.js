@@ -27,7 +27,9 @@ export default function UsersPage() {
     const [search, setSearch] = useState('')
     const debouncedSearch = useDebounce(search, 300);
 
-    const { entities: users, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch } : null)
+    const { entities, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch } : null, { keepPreviousData: true })
+
+    const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
     return (
         <div className="flex-container mx-auto max-w-xl">
