@@ -35,7 +35,7 @@ export default function UserPage() {
     const session = useSession()
 
     const userId = router.query.user_id
-    const { entity: user } = useEntity(userId ? 'profiles' : null, userId)
+    const { entity: user, mutate: mutateUser } = useEntity(userId ? 'profiles' : null, userId)
     const { updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
     const [lightboxOpen, setLightboxOpen] = useState(false)
 
@@ -136,8 +136,9 @@ export default function UserPage() {
                 setAvatarFile={setAvatarFile}
                 onUpload={async (url) => {
                     supabase.auth.updateUser({ data: { avatar_url: url } })
-                    const { error } = await updateUser({ avatar_url: url })
+                    const { error, entity } = await updateUser({ avatar_url: url })
                     error && toast(error.message, { color: "danger" })
+                    mutateUser(entity, false)
                 }}
                 onError={(error) => toast(error.message, { color: 'danger' })}
             />
