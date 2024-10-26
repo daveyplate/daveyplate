@@ -61,8 +61,10 @@ export default function UserPage() {
 export async function getStaticPaths() {
     if (isExport()) return getLocalePaths()
 
+    const localePaths = getLocalePaths()
+
     return {
-        paths: [],
+        paths: localePaths.paths.map(path => ({ params: { user_id: "", ...path.params } })),
         fallback: "blocking"
     }
 }
