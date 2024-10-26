@@ -27,15 +27,19 @@ import UploadAvatarModal from "@/components/upload-avatar-modal"
 import { useSession } from "@supabase/auth-helpers-react"
 import LightboxModal from "@/components/lightbox-modal"
 import { createClient } from "@/utils/supabase/component"
+import { getEntity } from "@daveyplate/supabase-swr-entities/server"
+import { NextSeo } from "next-seo"
+import { useDocumentTitle } from "@daveyplate/use-document-title"
 
-export default function UserPage({ user_id }) {
+export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
     const router = useRouter()
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()
+    const title = useDocumentTitle()
 
     const userId = user_id || router.query.user_id
-    const { entity: user, mutate: mutateUser } = useEntity(userId ? 'profiles' : null, userId)
+    const { entity: user, mutate: mutateUser } = useEntity(userId ? 'profiles' : null, userId, null, { fallbackData })
     const { updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
     const [lightboxOpen, setLightboxOpen] = useState(false)
 
@@ -46,6 +50,20 @@ export default function UserPage({ user_id }) {
 
     return (
         <div className="flex-center max-w-lg">
+            <NextSeo
+                title={title}
+                description={user?.bio || `User Profile: ${user?.full_name}`}
+                openGraph={{
+                    title: title,
+                    description: user?.bio || `User Profile: ${user?.full_name}`,
+                    images: [
+                        {
+                            url: user?.avatar_url
+                        }
+                    ]
+                }}
+            />
+
             <PageTitle title={user?.full_name || ""} />
 
             <Card fullWidth>
@@ -74,11 +92,10 @@ export default function UserPage({ user_id }) {
                                 >
                                     <UserAvatar
                                         as={(user?.avatar_url || isMe) ? Button : null}
-                                        isIconOnly
                                         user={user}
                                         size="lg"
-                                        className="!size-20 text-3xl"
-                                        onPress={() => isMe ? uploadRef.current() : setLightboxOpen(true)}
+                                        className="!size-20 text-3xl !p-0"
+                                        onClick={() => isMe ? uploadRef.current() : setLightboxOpen(true)}
                                     />
                                 </Badge>
                             </Skeleton>
@@ -158,5 +175,18 @@ export async function getStaticPaths() {
 export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
 
-    return { props: { ...params, ...translationProps, overrideTitle: true, canGoBack: true } }
+    const { user_id } = params
+
+    const { entity: user } = await getEntity('profiles', user_id)
+
+    return {
+        props: {
+            ...translationProps,
+            user_id,
+            user,
+            overrideTitle: true,
+            canGoBack: true
+        },
+        revalidate: 60
+    }
 }
