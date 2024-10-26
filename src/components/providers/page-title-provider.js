@@ -6,9 +6,11 @@ const PageTitleContext = createContext()
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
+const isBasePath = (path) => path == "/" || path == "/[locale]"
+
 export const PageTitleProvider = ({ children, formatTitle }) => {
     const router = useRouter()
-    const [pageTitle, setPageTitle] = useState(router.pathname == "/" ? siteName : null)
+    const [pageTitle, setPageTitle] = useState(isBasePath(router.pathname) ? siteName : null)
 
     return (
         <PageTitleContext.Provider value={{ pageTitle, setPageTitle, formatTitle }}>
@@ -36,13 +38,13 @@ export default function PageTitle({ title }) {
     }
 
     useEffect(() => {
-        setPageTitle(router.pathname == "/" ? siteName : title)
+        setPageTitle(isBasePath(router.pathname) ? siteName : title)
     }, [title])
 
     return (
         <Head>
             <title>
-                {router.pathname == "/" ? siteName : title ? `${title} | ${siteName}` : null}
+                {isBasePath(router.pathname) ? siteName : title ? `${title} | ${siteName}` : null}
             </title>
         </Head>
     )
@@ -51,6 +53,7 @@ export default function PageTitle({ title }) {
 const formatPathToTitle = (path) => {
     const firstPart = path?.split('/') // Split the path by '/'
         .filter(Boolean) // Remove any empty strings
+        .filter(segment => segment !== '[locale]') // Remove the '[locale]' segment if present
         .shift() // Take the first non-empty segment
 
     // Replace hyphens with spaces and capitalize each word

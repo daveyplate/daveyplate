@@ -174,7 +174,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
 
-    if (isExport()) return { props: { ...translationProps } }
+    if (isExport()) return { props: { ...translationProps, canGoBack: true } }
 
     const { user_id } = params
     const { entity: user } = await getEntity('profiles', user_id)
