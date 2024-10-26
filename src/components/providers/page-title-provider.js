@@ -4,16 +4,14 @@ import { useRouter } from "next/router"
 
 const PageTitleContext = createContext()
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME
-
 const isBasePath = (path) => path == "/" || path == "/[locale]"
 
-export const PageTitleProvider = ({ children, formatTitle }) => {
+export const PageTitleProvider = ({ children, formatTitle, siteName = process.env.NEXT_PUBLIC_SITE_NAME }) => {
     const router = useRouter()
     const [pageTitle, setPageTitle] = useState(isBasePath(router.pathname) ? siteName : null)
 
     return (
-        <PageTitleContext.Provider value={{ pageTitle, setPageTitle, formatTitle }}>
+        <PageTitleContext.Provider value={{ pageTitle, setPageTitle, formatTitle, siteName }}>
             <PageTitle />
 
             {children}
@@ -27,7 +25,7 @@ export const usePageTitle = () => {
 
 export default function PageTitle({ title }) {
     const router = useRouter()
-    const { setPageTitle, formatTitle } = usePageTitle()
+    const { setPageTitle, formatTitle, siteName } = usePageTitle()
 
     if (title == undefined) {
         title = formatPathToTitle(router.pathname)

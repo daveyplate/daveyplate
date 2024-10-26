@@ -27,7 +27,7 @@ import { useSession } from "@supabase/auth-helpers-react"
 import LightboxModal from "@/components/lightbox-modal"
 import { createClient } from "@/utils/supabase/component"
 import { getEntity } from "@daveyplate/supabase-swr-entities/server"
-import MetaTags from "@/components/meta-tags"
+import OpenGraph from "@/components/open-graph"
 import OptionsDropdown from "@/components/options-dropdown"
 import PageTitle from "@/components/providers/page-title-provider"
 
@@ -51,13 +51,12 @@ export default function UserPage({ user_id, user: fallbackData }) {
         <div className="flex-center max-w-lg">
             <PageTitle title={user?.full_name} />
 
-            <MetaTags
+            <OpenGraph
                 title={user?.full_name || "Profile"}
                 description={user?.bio || `User Profile: ${user?.full_name}`}
                 image={user?.avatar_url}
                 ogType="profile"
             />
-
 
             <Card fullWidth>
                 <CardBody className="p-4">

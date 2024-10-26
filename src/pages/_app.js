@@ -13,7 +13,7 @@ import PageTransition from "@/components/page-transition"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { iOS } from "@/utils/utils"
-import MetaTags from "@/components/meta-tags"
+import OpenGraph from "@/components/open-graph"
 
 const MyApp = ({ Component, pageProps }) => {
     const router = useRouter()
@@ -39,7 +39,7 @@ const MyApp = ({ Component, pageProps }) => {
                     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
                 </Head>
 
-                <MetaTags description="Welcome to Daveyplate" />
+                <OpenGraph description="Welcome to Daveyplate" />
 
                 <style jsx global>{`
                     html {
