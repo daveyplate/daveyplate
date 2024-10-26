@@ -50,6 +50,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const MySeo = ({ title, description, image, ogType = "website" }) => {
         image = image || process.env.NEXT_PUBLIC_BASE_URL + "/apple-touch-icon.png"
         title = title ? `${title} | ${process.env.NEXT_PUBLIC_SITE_NAME}` : process.env.NEXT_PUBLIC_SITE_NAME
+
         return (
             <Head>
                 <meta name="description" content={description} />
@@ -64,7 +65,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
                 {/* Twitter */}
                 <meta property="twitter:image" content={image} />
-                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:card" content="summary" />
                 <meta property="twitter:title" content={title} />
                 <meta property="twitter:description" content={description} />
             </Head>

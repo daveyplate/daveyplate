@@ -35,7 +35,6 @@ const MyApp = ({ Component, pageProps }) => {
                     />
 
                     <meta name="description" content="Description" />
-                    <meta name="keywords" content="Keywords" />
 
                     <link rel="icon" href="/favicon.ico" sizes="48x48" />
                     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
