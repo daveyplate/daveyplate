@@ -23,7 +23,7 @@ const OptionsDropdown = () => {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    url: `${process.NEXT_PUBLIC_BASE_URL}${router.asPath}`,
+                    url: `${process.env.NEXT_PUBLIC_BASE_URL}${router.asPath}`,
                     title: title
                 })
             } catch (error) {
@@ -31,7 +31,7 @@ const OptionsDropdown = () => {
             }
         } else {
             try {
-                await navigator.clipboard.writeText(`${process.NEXT_PUBLIC_BASE_URL}${router.asPath}`)
+                await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${router.asPath}`)
                 toast(linkCopiedText, { color: 'secondary' })
             } catch (error) {
                 console.error("Error copying to clipboard:", error)
