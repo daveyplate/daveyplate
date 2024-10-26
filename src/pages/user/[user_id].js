@@ -1,31 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
-import Compressor from 'compressorjs'
-import { useSWRConfig } from "swr"
-import AvatarEditor from 'react-avatar-editor'
-import { useDropzone } from 'react-dropzone'
 
-import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-
-import { createClient } from "@/utils/supabase/component"
-import { useUser } from "@supabase/auth-helpers-react"
+import { AutoTranslate } from 'next-auto-translate'
 
 import { getTranslationProps } from "@/i18n/translation-props"
 import { getLocalePaths } from "@/i18n/locale-paths"
 
 import {
-    Button,
     Card,
     CardBody,
-    Skeleton,
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    useDisclosure,
-    Slider,
-    Badge,
     cn
 } from "@nextui-org/react"
 
