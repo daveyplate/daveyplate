@@ -28,9 +28,8 @@ import { useSession } from "@supabase/auth-helpers-react"
 import LightboxModal from "@/components/lightbox-modal"
 import { createClient } from "@/utils/supabase/component"
 import { getEntity } from "@daveyplate/supabase-swr-entities/server"
-import { NextSeo } from "next-seo"
 import { useDocumentTitle } from "@daveyplate/use-document-title"
-import { getURL } from "next/dist/shared/lib/utils"
+import Head from "next/head"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -49,22 +48,35 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
     const isMe = session && userId == session.user.id
 
+    const MySeo = ({ title, description, image, ogType = "website" }) => {
+        return (
+            <Head>
+                <meta name="description" content={description} />
+
+                {/* Open Graph / Facebook */}
+                <meta property="og:type" content={ogType} />
+                <meta property="og:image" content={image} />
+                <meta property="og:site_name" content={process.env.NEXT_PUBLIC_SITE_NAME} />
+                <meta property="og:title" content={title} />
+                <meta property="og:description" content={description} />
+                <meta property="og:url" content={process.env.NEXT_PUBLIC_SITE_URL + router.asPath} />
+
+                {/* Twitter */}
+                <meta property="twitter:image" content={image} />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content={title} />
+                <meta property="twitter:description" content={description} />
+            </Head>
+        )
+    }
+
     return (
         <div className="flex-center max-w-lg">
-            <NextSeo
+            <MySeo
                 title={title}
                 description={user?.bio || `User Profile: ${user?.full_name}`}
-                openGraph={{
-                    siteName: process.env.NEXT_PUBLIC_SITE_NAME,
-                    url: getURL() + router.asPath,
-                    title: title,
-                    description: user?.bio || `User Profile: ${user?.full_name}`,
-                    images: [
-                        {
-                            url: user?.avatar_url
-                        }
-                    ]
-                }}
+                image={user?.avatar_url || process.env.NEXT_PUBLIC_SITE_URL + "/apple-touch-icon.png"}
+                ogType="profile"
             />
 
             <PageTitle title={user?.full_name || ""} />
