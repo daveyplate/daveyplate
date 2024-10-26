@@ -6,5 +6,8 @@ module.exports = {
   reactStrictMode: true,
   outputFileTracingIncludes: {
     '/api/*': ['*.json'],
+  },
+  experimental: {
+    scrollRestoration: true
   }
 }
