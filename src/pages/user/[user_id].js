@@ -36,7 +36,6 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const router = useRouter()
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()
-    const title = useDocumentTitle()
 
     const userId = user_id || router.query.user_id
     const { entity: user, mutate: mutateUser } = useEntity(userId ? 'profiles' : null, userId, null, { fallbackData })
@@ -50,6 +49,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
     const MySeo = ({ title, description, image, ogType = "website" }) => {
         image = image || process.env.NEXT_PUBLIC_BASE_URL + "/apple-touch-icon.png"
+        title = title ? `${title} | ${process.env.NEXT_PUBLIC_SITE_NAME}` : process.env.NEXT_PUBLIC_SITE_NAME
         return (
             <Head>
                 <meta name="description" content={description} />
@@ -74,7 +74,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     return (
         <div className="flex-center max-w-lg">
             <MySeo
-                title={title}
+                title={user?.full_name || "Profile"}
                 description={user?.bio || `User Profile: ${user?.full_name}`}
                 image={user?.avatar_url}
                 ogType="profile"
