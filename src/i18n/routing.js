@@ -16,17 +16,11 @@ export const { Link: NextIntlLink, redirect, usePathname, useRouter: useLocaleRo
     createNavigation(routing)
 
 /**
- * A wrapper around Next.js' Link component that automatically uses the correct locale
+ * A wrapper around Next.js Link component that automatically uses the correct locale
  * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<import("next/link").LinkProps> & React.RefAttributes<HTMLElement>>}
  */
 export const Link = forwardRef(({ ...props }, ref) => {
-    if (isExport()) {
-        return (
-            <NextIntlLink ref={ref} {...props} />
-        )
-    }
+    if (isExport()) return <NextIntlLink ref={ref} {...props} />
 
-    return (
-        <NextLink ref={ref} {...props} />
-    )
+    return <NextLink ref={ref} {...props} />
 })
