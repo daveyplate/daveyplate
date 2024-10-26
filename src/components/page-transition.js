@@ -76,7 +76,9 @@ const PageTransition = ({ children }) => {
         }
 
         const onRouteChangeComplete = () => {
-            setDisableAnimation(false)
+            setTimeout(() => {
+                setDisableAnimation(false)
+            }, 1000)
         }
 
         router.events.on('routeChangeComplete', onRouteChangeComplete)
