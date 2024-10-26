@@ -285,22 +285,27 @@ export default function Header({ overrideTitle, canGoBack }) {
                 </NavbarContent>
 
                 <NavbarMenu
-                    className="overflow-hidden mt-safe gap-4"
+                    className="overflow-hidden mt-safe gap-0 pt-0"
                 >
                     {menuItems.map((item, index) => (
                         <NavbarMenuItem key={index}>
-                            <Link
+                            <Button
+                                as={Link}
                                 href={item.path}
                                 size="lg"
-                                className={cn("w-full flex gap-4 text-xl items-center",
-                                    pathname == item.path && "text-warning")}
+                                variant="light"
+                                fullWidth
+                                className={cn("justify-start text-xl gap-4", pathname == item.path && "text-warning")}
+                                startContent={
+                                    <item.icon className="size-6 -ms-1" />
+                                }
+                                onPress={() => setIsMenuOpen(false)}
                             >
-                                <item.icon className="size-6" />
 
                                 <AutoTranslate tKey={item.name} namespace="header">
                                     {item.name}
                                 </AutoTranslate>
-                            </Link>
+                            </Button>
                         </NavbarMenuItem>
                     ))}
                 </NavbarMenu>
