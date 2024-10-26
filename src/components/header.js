@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import NextImage from "next/image"
+import Image from "next/image"
 import { useRouter } from "next/router"
 
 import { useSession, useSessionContext } from "@supabase/auth-helpers-react"
@@ -21,7 +21,6 @@ import {
     NavbarMenu,
     NavbarMenuItem,
     NavbarMenuToggle,
-    Image,
     Dropdown,
     DropdownTrigger,
     DropdownMenu,
@@ -57,12 +56,11 @@ const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
 const logo = (
     <Image
-        key={"logo"}
-        as={NextImage}
         width={24}
         height={24}
         src="/apple-touch-icon.png"
         alt={siteName}
+        className="rounded-full"
     />
 )
 
