@@ -18,6 +18,7 @@ import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
 import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 import { useDebounce } from "@uidotdev/usehooks"
 import Link from "next/link"
+import { LocaleLink } from "@/i18n/routing"
 
 export default function UsersPage() {
     const { autoTranslate } = useAutoTranslate()
@@ -73,7 +74,7 @@ export default function UsersPage() {
                 {users?.map((user, index) => (
                     <Card
                         key={index}
-                        as={Link}
+                        as={LocaleLink}
                         href={dynamicHref({ pathname: "/user/[user_id]", query: { user_id: user.id } })}
                         isPressable
                         fullWidth
