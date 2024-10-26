@@ -29,6 +29,7 @@ import LightboxModal from "@/components/lightbox-modal"
 import { createClient } from "@/utils/supabase/component"
 import { getEntity } from "@daveyplate/supabase-swr-entities/server"
 import MetaTags from "@/components/meta-tags"
+import OptionsDropdown from "@/components/options-dropdown"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -82,11 +83,13 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                     }
                                 >
                                     <UserAvatar
-                                        as={(user?.avatar_url || isMe) ? Button : null}
+                                        as={Button}
+                                        isIconOnly
+                                        disabled={!user?.avatar_url && !isMe}
                                         user={user}
                                         size="lg"
-                                        className="!size-20 text-3xl !p-0"
-                                        onClick={() => isMe ? uploadRef.current() : setLightboxOpen(true)}
+                                        className="!size-20 text-3xl"
+                                        onPress={() => isMe ? uploadRef.current() : setLightboxOpen(true)}
                                     />
                                 </Badge>
                             </Skeleton>
@@ -117,6 +120,10 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                         </span>
                                     </p>
                                 </Skeleton>
+                            </div>
+
+                            <div className="self-start ms-auto">
+                                <OptionsDropdown />
                             </div>
                         </div>
 
