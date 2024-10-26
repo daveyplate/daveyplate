@@ -108,7 +108,7 @@ const PageTransition = ({ children }) => {
                     zIndex: direction === 'forward' ? 0 : 1,
                     opacity: isMobile ? 1 : 0
                 }}
-                transition={{ ease: 'easeInOut', duration: (disableAnimation || !isMobile) ? 0 : 0.3 }}
+                transition={{ ease: 'easeInOut', duration: (disableAnimation || !isMobile) ? 0 : 0.25 }}
             >
                 {children}
             </motion.div>
