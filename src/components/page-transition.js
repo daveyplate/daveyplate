@@ -103,7 +103,7 @@ const PageTransition = ({ children }) => {
         }
     }, [currentKeyIndex])
 
-    if (isClient && !isSafari) {
+    if (!disableAnimation) {
         return (
             <AnimatePresence initial={false}>
                 <motion.div
