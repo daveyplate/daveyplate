@@ -32,7 +32,7 @@ const UserAvatar = forwardRef(({ user, ...props }, ref) => {
             className={cn(textSize, props.className)}
             ref={ref}
             name={user?.full_name?.substring(0, 2)?.toUpperCase()}
-            src={user?.avatar_url}
+            src={user?.avatar_url || ""}
             alt={user?.full_name || "Avatar"}
         />
     )

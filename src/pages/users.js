@@ -16,66 +16,36 @@ import UserAvatar from "@/components/user-avatar"
 
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
 import { Link } from "@/i18n/routing"
+import { useEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useDebounce } from "@uidotdev/usehooks"
 
-export default function UsersPage({ users }) {
+export default function UsersPage() {
     const { autoTranslate } = useAutoTranslate()
-    const { mutate, enabled } = useSWRConfig()
-
-    const [skeletonCount, setSkeletonCount] = useState(4)
     const [search, setSearch] = useState('')
-    const [q, setQ] = useState('')
+    const debouncedSearch = useDebounce(search, 300);
 
-    const isLoading = false
-
-    // Debounce the search function
-    const debouncedSearch = useCallback(debounce((query) => setQ(query), 300), [])
-
-    useEffect(() => {
-        debouncedSearch(search)
-    }, [search])
-
-    useEffect(() => {
-        if (!enabled) return
-
-        if (users?.length > 0) {
-            setSkeletonCount(Math.min(4, Math.max(users.length, 1)))
-        }
-
-        users?.map(user => {
-            mutate(`/api/profiles/${user.id}`, user)
-        })
-    }, [users, enabled])
+    const { entities: users, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch } : null)
 
     return (
-        <div className="flex-container mx-auto items-center max-w-xl transition-all">
-            <h2 className="text-center hidden sm:block w-full">
-                <AutoTranslate tKey="title">
-                    Users
-                </AutoTranslate>
-            </h2>
-
+        <div className="flex-container mx-auto max-w-xl">
             <div className="fixed top-0 w-screen h-safe bg-background z-40" />
 
             <div className="sticky top-safe z-40 backdrop-blur-xl bg-background/70 shadow-lg sm:shadow-none w-full">
                 <Input
+                    size="lg"
                     fullWidth
                     isClearable
-                    classNames={{
-                        input: "!text-base",
-                        inputWrapper: "px-4"
-                    }}
                     placeholder={autoTranslate('search_placeholder', "Type to search...")}
                     startContent={
-                        <SearchIcon className="size-6 me-1 pointer-events-none cursor-pointer" />
+                        <SearchIcon className="size-5 me-0.5 pointer-events-none" />
                     }
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    onClear={() => setSearch('')}
+                    onValueChange={(value) => setSearch(value)}
                 />
             </div>
 
             <div className="flex flex-col gap-4 transition-all w-full">
-                {(!users || users.length == 0) && !isLoading && (
+                {!users?.length && !isLoading && (
                     <Card fullWidth>
                         <CardBody className="p-8">
                             <AutoTranslate tKey="no_users">
@@ -85,7 +55,7 @@ export default function UsersPage({ users }) {
                     </Card>
                 )}
 
-                {isLoading && !users && [...Array(skeletonCount)].fill({}).map((_, index) => (
+                {isLoading && !users && [...Array(3)].fill({}).map((_, index) => (
                     <Card key={index}>
                         <CardBody className="p-4">
                             <div className="flex items-center gap-4">
@@ -100,7 +70,7 @@ export default function UsersPage({ users }) {
                     </Card>
                 ))}
 
-                {(!isLoading || search.length == 0) && users?.map((user, index) => (
+                {users?.map((user, index) => (
                     <Card
                         key={index}
                         as={Link}
@@ -108,33 +78,31 @@ export default function UsersPage({ users }) {
                         isPressable
                         fullWidth
                     >
-                        <CardBody className="p-4">
-                            <div className="flex items-center gap-4">
-                                <UserAvatar user={user} size="lg" className="text-base" />
+                        <CardBody className="p-4 flex-row items-center gap-4">
+                            <UserAvatar user={user} size="lg" />
 
-                                <div>
-                                    <p className="font-semibold">
-                                        {user.full_name || "Unnamed"}
-                                    </p>
+                            <div>
+                                <p className="font-semibold">
+                                    {user.full_name || "Unnamed"}
+                                </p>
 
-                                    <p className="text-foreground-400 text-sm">
-                                        <AutoTranslate tKey="subscription">
-                                            Subscription:
-                                        </AutoTranslate>
+                                <p className="text-foreground-400 text-small">
+                                    <AutoTranslate tKey="subscription">
+                                        Subscription:
+                                    </AutoTranslate>
 
-                                        <span className={cn('ml-1', user.claims?.premium ? "text-success font-semibold" : "text-foreground font-light")}>
-                                            {user.claims?.premium ?
-                                                <AutoTranslate tKey="active">
-                                                    Active
-                                                </AutoTranslate>
-                                                :
-                                                <AutoTranslate tKey="inactive">
-                                                    Inactive
-                                                </AutoTranslate>
-                                            }
-                                        </span>
-                                    </p>
-                                </div>
+                                    <span className={cn('ml-1.5', user.claims?.premium ? "text-success font-semibold" : "text-foreground font-light")}>
+                                        {user.claims?.premium ?
+                                            <AutoTranslate tKey="active">
+                                                Active
+                                            </AutoTranslate>
+                                            :
+                                            <AutoTranslate tKey="inactive">
+                                                Inactive
+                                            </AutoTranslate>
+                                        }
+                                    </span>
+                                </p>
                             </div>
                         </CardBody>
                     </Card>
@@ -147,24 +115,8 @@ export default function UsersPage({ users }) {
 export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
 
-    const supabase = createClient()
-    const { data: users, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('deactivated', false)
-        .order('created_at', { ascending: false })
 
-    if (error) return { notFound: true }
-
-    if (isExport()) return { props: { ...translationProps, users } }
-
-    return {
-        props: {
-            ...translationProps,
-            users,
-        },
-        revalidate: 60
-    }
+    return { props: { ...translationProps, } }
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined
