@@ -30,6 +30,7 @@ import { createClient } from "@/utils/supabase/component"
 import { getEntity } from "@daveyplate/supabase-swr-entities/server"
 import { NextSeo } from "next-seo"
 import { useDocumentTitle } from "@daveyplate/use-document-title"
+import { getURL } from "next/dist/shared/lib/utils"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -54,6 +55,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
                 title={title}
                 description={user?.bio || `User Profile: ${user?.full_name}`}
                 openGraph={{
+                    siteName: process.env.NEXT_PUBLIC_SITE_NAME,
+                    url: getURL() + router.asPath,
                     title: title,
                     description: user?.bio || `User Profile: ${user?.full_name}`,
                     images: [
