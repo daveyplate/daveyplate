@@ -128,6 +128,7 @@ export default function Header({ overrideTitle, canGoBack }) {
                 onMenuOpenChange={setIsMenuOpen}
                 onClick={() => setIsMenuOpen(false)}
                 shouldHideOnScroll
+                disableAnimation={!isMenuOpen}
             >
                 <NavbarContent className="sm:hidden" justify="start">
                     <AnimatePresence mode="popLayout">
@@ -310,7 +311,6 @@ export default function Header({ overrideTitle, canGoBack }) {
                                     pathname == item.path ? "text-warning" : "")}
                                 href={item.path}
                                 size="lg"
-                                onClick={() => setIsMenuOpen(false)}
                             >
                                 <item.icon className="size-6" />
 
