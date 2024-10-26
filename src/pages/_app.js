@@ -9,7 +9,6 @@ import DefaultFont from "@/styles/fonts"
 import Providers from "@/components/providers/providers"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import PageTransition from "@/components/page-transition"
 
 const MyApp = ({ Component, pageProps }) => {
     return (
