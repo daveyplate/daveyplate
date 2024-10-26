@@ -1,4 +1,5 @@
 import { useIsClient } from '@uidotdev/usehooks'
+import { detect } from 'detect-browser'
 import { motion } from 'framer-motion'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
@@ -68,8 +69,8 @@ const PageTransition = ({ children }) => {
         }
 
         const onPopstate = () => {
-            console.log("onPopState")
-            if (isSafari) {
+            const browser = detect()
+            if (browser.name == "safari") {
                 console.log("disableAnimation")
                 setDisableAnimation(true)
             }
