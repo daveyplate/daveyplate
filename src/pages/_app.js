@@ -40,15 +40,13 @@ const MyApp = ({ Component, pageProps }) => {
 
                 <Header {...pageProps} />
 
-                <PageTransition>
-                    <main className={`flex min-h-svh w-svh
+                <main className={`flex min-h-svh w-svh
                 pt-[calc(4rem+env(safe-area-inset-top))] 
                 pb-[calc(4rem+env(safe-area-inset-bottom))] 
                 px-safe
             `}>
-                        <Component {...pageProps} />
-                    </main>
-                </PageTransition>
+                    <Component {...pageProps} />
+                </main>
 
                 <Footer {...pageProps} />
             </Providers>
