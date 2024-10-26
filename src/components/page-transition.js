@@ -64,19 +64,7 @@ const PageTransition = ({ children }) => {
         if (windowHistoryKeys.current.length == 0) {
             onRouteChange()
         }
-
-        const onPopstate = () => {
-            console.log("onPopState")
-            if (isSafari) {
-                console.log("disableAnimation")
-                setDisableAnimation(true)
-            }
-
-            onRouteChange()
-        }
-
         const onRouteChangeComplete = () => {
-            console.log("enableAnimation")
             setDisableAnimation(false)
         }
 
@@ -93,8 +81,12 @@ const PageTransition = ({ children }) => {
         }
 
         router.beforePopState(() => {
-            console.log("beforePopState")
-            onPopstate()
+            if (isSafari && !global.backPressed) {
+                setDisableAnimation(true)
+            }
+
+            global.backPressed = false
+            onRouteChange()
 
             return true
         })

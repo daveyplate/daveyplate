@@ -112,6 +112,7 @@ export default function Header({ overrideTitle, canGoBack }) {
         if (document.referrer && !document.referrer.includes(window.location.origin)) {
             localeRouter.replace("/")
         } else if (window.history?.length) {
+            global.backPressed = true
             router.back()
         } else {
             localeRouter.replace("/")
