@@ -1,5 +1,5 @@
 import Head from "next/head"
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from "next/router"
 
 const PageTitleContext = createContext()
