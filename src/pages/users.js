@@ -1,11 +1,6 @@
-import { useCallback, useEffect, useState } from "react"
-import { useSWRConfig } from "swr"
-import debounce from 'lodash.debounce'
+import { useState } from "react"
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-
-import { createClient } from "@/utils/supabase/service-role"
-
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { dynamicHref, isExport } from "@/utils/utils"
@@ -28,7 +23,6 @@ export default function UsersPage() {
     const debouncedSearch = useDebounce(search, 300);
 
     const { entities, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch } : null, { keepPreviousData: true })
-
     const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
     return (

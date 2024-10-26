@@ -1,14 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-
 import { createClient } from '@/utils/supabase/api'
-import { runMiddleware } from '@/utils/utils'
-
-import Cors from "cors"
-const cors = Cors()
 
 export default async function handler(req, res) {
-    await runMiddleware(req, res, cors)
-
     if (req.method === 'POST') {
         const supabase = createClient(req, res)
 
