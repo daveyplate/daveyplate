@@ -20,6 +20,7 @@ import CheckoutStatus from "@/components/providers/checkout-status"
 import ReactivateUser from "@/components/providers/reactivate-user"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 import { usePathname, useLocaleRouter } from "@/i18n/routing"
+import { PageTitleProvider } from './page-title-provider'
 
 export default function Providers({ children, ...pageProps }) {
     useWindowFocusBlur()
@@ -32,34 +33,36 @@ export default function Providers({ children, ...pageProps }) {
     })
 
     return (
-        <SessionContextProvider supabaseClient={supabase}>
-            <SWRConfig value={{ provider: cacheProvider }}>
-                <NextUIProvider navigate={localeRouter.push} >
-                    <ThemeProvider attribute="class" disableTransitionOnChange>
-                        <AutoTranslateProvider
-                            pathname={pathname}
-                            defaultLocale={i18nConfig.i18n.defaultLocale}
-                            locales={i18nConfig.i18n.locales}
-                            messages={pageProps.messages || []}
-                            locale={pageProps.locale}
-                            debug={false}
-                            disabled={true}
-                        >
-                            <MetaTheme />
+        <PageTitleProvider>
+            <SessionContextProvider supabaseClient={supabase}>
+                <SWRConfig value={{ provider: cacheProvider }}>
+                    <NextUIProvider navigate={localeRouter.push} >
+                        <ThemeProvider attribute="class" disableTransitionOnChange>
+                            <AutoTranslateProvider
+                                pathname={pathname}
+                                defaultLocale={i18nConfig.i18n.defaultLocale}
+                                locales={i18nConfig.i18n.locales}
+                                messages={pageProps.messages || []}
+                                locale={pageProps.locale}
+                                debug={false}
+                                disabled={true}
+                            >
+                                <MetaTheme />
 
-                            {children}
+                                {children}
 
-                            <ReactivateUser />
-                            <CheckoutStatus />
-                            <ToastProvider />
-                            <CapacitorProvider />
+                                <ReactivateUser />
+                                <CheckoutStatus />
+                                <ToastProvider />
+                                <CapacitorProvider />
 
-                            <SpeedInsights debug={false} />
-                            <Analytics debug={false} />
-                        </AutoTranslateProvider>
-                    </ThemeProvider>
-                </NextUIProvider>
-            </SWRConfig>
-        </SessionContextProvider >
+                                <SpeedInsights debug={false} />
+                                <Analytics debug={false} />
+                            </AutoTranslateProvider>
+                        </ThemeProvider>
+                    </NextUIProvider>
+                </SWRConfig>
+            </SessionContextProvider>
+        </PageTitleProvider>
     )
 }

@@ -11,8 +11,7 @@ import { createClient } from "@/utils/supabase/component"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-
-import PageTitle from "@/components/page-title"
+import PageTitle from "@/components/providers/page-title-provider"
 
 export default () => {
     const supabase = createClient()
@@ -45,7 +44,7 @@ export default () => {
 export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
 
-    return { props: { ...translationProps, overrideTitle: true } }
+    return { props: { ...translationProps } }
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined

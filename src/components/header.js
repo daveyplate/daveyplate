@@ -8,7 +8,6 @@ import { Network } from '@capacitor/network'
 import { Capacitor } from "@capacitor/core"
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { useDocumentTitle } from "@daveyplate/use-document-title"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 import {
@@ -48,9 +47,9 @@ import {
 import { Link, useLocaleRouter, usePathname } from "@/i18n/routing"
 import { dynamicHref } from "@/utils/utils"
 
-import PageTitle from "@/components/page-title"
 import ThemeDropdown from "@/components/theme-dropdown"
 import UserAvatar from "@/components/user-avatar"
+import { usePageTitle } from "./providers/page-title-provider"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -64,8 +63,8 @@ const logo = (
     />
 )
 
-export default function Header({ overrideTitle, canGoBack }) {
-    const currentTitle = useDocumentTitle()
+export default function Header({ canGoBack }) {
+    const { pageTitle } = usePageTitle()
     const router = useRouter()
     const localeRouter = useLocaleRouter()
     const pathname = usePathname()
@@ -112,8 +111,6 @@ export default function Header({ overrideTitle, canGoBack }) {
 
     return (
         <>
-            {!overrideTitle && <PageTitle />}
-
             <Navbar
                 className="backdrop-blur-xl bg-gradient-to-b from-background via-background/30 to-background/0 pt-safe px-safe fixed"
                 isMenuOpen={isMenuOpen}
@@ -152,7 +149,7 @@ export default function Header({ overrideTitle, canGoBack }) {
                         {pathname == "/" && logo}
 
                         <p className="font-bold truncate max-w-[160px]" suppressHydrationWarning>
-                            {currentTitle?.split('|')[0].trim()}
+                            {pageTitle}
                         </p>
                     </NavbarBrand>
                 </NavbarContent>

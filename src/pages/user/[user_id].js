@@ -18,7 +18,6 @@ import {
 } from "@nextui-org/react"
 
 import UserAvatar from "@/components/user-avatar"
-import PageTitle from "@/components/page-title"
 import { isExport } from "@/utils/utils"
 import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
 import { toast } from "@/components/providers/toast-provider"
@@ -30,6 +29,7 @@ import { createClient } from "@/utils/supabase/component"
 import { getEntity } from "@daveyplate/supabase-swr-entities/server"
 import MetaTags from "@/components/meta-tags"
 import OptionsDropdown from "@/components/options-dropdown"
+import PageTitle from "@/components/providers/page-title-provider"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -49,6 +49,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
     return (
         <div className="flex-center max-w-lg">
+            <PageTitle title={user?.full_name} />
+
             <MetaTags
                 title={user?.full_name || "Profile"}
                 description={user?.bio || `User Profile: ${user?.full_name}`}
@@ -56,7 +58,6 @@ export default function UserPage({ user_id, user: fallbackData }) {
                 ogType="profile"
             />
 
-            <PageTitle title={user?.full_name || ""} />
 
             <Card fullWidth>
                 <CardBody className="p-4">
@@ -183,7 +184,6 @@ export async function getStaticProps({ locale, params }) {
             ...translationProps,
             user_id,
             user,
-            overrideTitle: true,
             canGoBack: true
         },
         revalidate: 60
