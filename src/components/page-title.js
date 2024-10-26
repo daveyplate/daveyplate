@@ -22,7 +22,7 @@ export default function PageTitle({ title }) {
 }
 
 const formatPathToTitle = (path) => {
-    const firstPart = path.split('/') // Split the path by '/'
+    const firstPart = path?.split('/') // Split the path by '/'
         .filter(Boolean) // Remove any empty strings
         .shift() // Take the first non-empty segment
 
