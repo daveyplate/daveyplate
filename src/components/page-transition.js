@@ -94,21 +94,20 @@ const PageTransition = ({ children }) => {
             onRouteChange()
         }
 
-        // Listen for popstate event
-        window.addEventListener('popstate', onPopstate)
-
         router.beforePopState(() => {
+            console.log("beforePopState")
             onPopstate()
+
+            return true
         })
 
         // Cleanup function
         return () => {
             history.pushState = originalPushState
             history.replaceState = originalReplaceState
-            window.removeEventListener('popstate', onPopstate)
             router.events.off('routeChangeComplete', onRouteChangeComplete)
         }
-    }, [currentKeyIndex])
+    }, [currentKeyIndex, router])
 
     if (!disableAnimation) {
         return (
