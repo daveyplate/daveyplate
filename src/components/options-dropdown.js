@@ -27,14 +27,14 @@ const OptionsDropdown = () => {
                     title: title
                 })
             } catch (error) {
-                console.error("Error sharing:", error)
+                console.error(error)
             }
         } else {
             try {
                 await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${router.asPath}`)
                 toast(linkCopiedText, { color: 'secondary' })
             } catch (error) {
-                console.error("Error copying to clipboard:", error)
+                console.error(error)
             }
         }
     }
