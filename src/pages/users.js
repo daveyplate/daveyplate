@@ -15,9 +15,9 @@ import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
 import UserAvatar from "@/components/user-avatar"
 
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
-import { Link } from "@/i18n/routing"
 import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 import { useDebounce } from "@uidotdev/usehooks"
+import Link from "next/link"
 
 export default function UsersPage() {
     const { autoTranslate } = useAutoTranslate()
