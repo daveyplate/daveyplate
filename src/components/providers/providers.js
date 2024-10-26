@@ -35,10 +35,7 @@ export default function Providers({ children, ...pageProps }) {
         <SessionContextProvider supabaseClient={supabase}>
             <SWRConfig value={{ provider: cacheProvider }}>
                 <NextUIProvider navigate={localeRouter.push} >
-                    <ThemeProvider
-                        attribute="class"
-                        disableTransitionOnChange
-                    >
+                    <ThemeProvider attribute="class" disableTransitionOnChange>
                         <AutoTranslateProvider
                             pathname={pathname}
                             defaultLocale={i18nConfig.i18n.defaultLocale}
