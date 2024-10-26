@@ -1,4 +1,3 @@
-import { useIsClient } from '@uidotdev/usehooks'
 import { motion } from 'framer-motion'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
@@ -12,7 +11,6 @@ const PageTransition = ({ children }) => {
     const [isMobile, setIsMobile] = useState(false)
     const [disableAnimation, setDisableAnimation] = useState(false)
     const windowHistoryKeys = useRef([])
-    const isClient = useIsClient()
 
     useEffect(() => {
         // Function to check if the screen matches the mobile breakpoint
@@ -124,8 +122,7 @@ const PageTransition = ({ children }) => {
                     zIndex: direction === 'forward' ? 0 : 1,
                     opacity: isMobile ? 1 : 0
                 }}
-                transition={{ ease: 'easeInOut', duration: disableAnimation ? 0 : 0.3 }}
-
+                transition={{ ease: 'easeInOut', duration: (disableAnimation || !isMobile) ? 0 : 0.3 }}
             >
                 {children}
             </motion.div>
