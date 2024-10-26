@@ -49,7 +49,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const isMe = session && userId == session.user.id
 
     const MySeo = ({ title, description, image, ogType = "website" }) => {
-        image = image || process.env.NEXT_PUBLIC_SITE_URL + "/apple-touch-icon.png"
+        image = image || process.env.NEXT_PUBLIC_BASE_URL + "/apple-touch-icon.png"
         return (
             <Head>
                 <meta name="description" content={description} />
@@ -60,7 +60,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                 <meta property="og:site_name" content={process.env.NEXT_PUBLIC_SITE_NAME} />
                 <meta property="og:title" content={title} />
                 <meta property="og:description" content={description} />
-                <meta property="og:url" content={getURL() + router.asPath} />
+                <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL + router.asPath} />
 
                 {/* Twitter */}
                 <meta property="twitter:image" content={image} />
