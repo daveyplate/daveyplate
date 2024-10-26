@@ -13,7 +13,7 @@ import PageTransition from "@/components/page-transition"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { iOS } from "@/utils/utils"
-import OpenGraph from "@/components/open-graph"
+import { OpenGraph } from "@daveyplate/next-open-graph"
 
 const MyApp = ({ Component, pageProps }) => {
     const router = useRouter()

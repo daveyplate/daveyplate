@@ -27,9 +27,9 @@ import { useSession } from "@supabase/auth-helpers-react"
 import LightboxModal from "@/components/lightbox-modal"
 import { createClient } from "@/utils/supabase/component"
 import { getEntity } from "@daveyplate/supabase-swr-entities/server"
-import OpenGraph from "@/components/open-graph"
 import OptionsDropdown from "@/components/options-dropdown"
 import PageTitle from "@/components/providers/page-title-provider"
+import { OpenGraph } from "@daveyplate/next-open-graph"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
