@@ -17,7 +17,7 @@ export const getTranslationProps = async ({ locale, params }) => {
     locale = params?.locale || locale || i18nConfig.i18n.defaultLocale
 
     let messages = {}
-    try { messages = (await import(`messages/${locale}.json`)).default } catch { }
+    // try { messages = (await import(`messages/${locale}.json`)).default } catch { }
 
     return {
         messages,
