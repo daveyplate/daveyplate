@@ -109,32 +109,28 @@ const PageTransition = ({ children }) => {
         }
     }, [currentKeyIndex, router])
 
-    if (!disableAnimation) {
-        return (
-            <AnimatePresence initial={false}>
-                <motion.div
-                    key={router.asPath}
-                    className="absolute w-svw h-svh bg-background"
-                    initial={!disableAnimation && {
-                        x: direction === 'forward' ? '100%' : '-25%',
-                        opacity: isMobile ? 1 : 0
-                    }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={!disableAnimation && {
-                        x: direction === 'forward' ? '-10%' : '100%',
-                        zIndex: direction === 'forward' ? 0 : 1,
-                        opacity: isMobile ? 1 : 0
-                    }}
-                    transition={{ ease: 'easeInOut', duration: 0.3 }}
+    return (
+        <AnimatePresence initial={false}>
+            <motion.div
+                key={router.asPath}
+                className="absolute w-svw h-svh bg-background"
+                initial={{
+                    x: direction === 'forward' ? '100%' : '-25%',
+                    opacity: isMobile ? 1 : 0
+                }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{
+                    x: direction === 'forward' ? '-10%' : '100%',
+                    zIndex: direction === 'forward' ? 0 : 1,
+                    opacity: isMobile ? 1 : 0
+                }}
+                transition={{ ease: 'easeInOut', duration: disableAnimation ? 0 : 0.3 }}
 
-                >
-                    {children}
-                </motion.div>
-            </AnimatePresence>
-        )
-    }
-
-    return children
+            >
+                {children}
+            </motion.div>
+        </AnimatePresence>
+    )
 }
 
 export default PageTransition
