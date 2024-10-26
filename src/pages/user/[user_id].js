@@ -62,6 +62,7 @@ export async function getStaticPaths() {
     if (isExport()) return getLocalePaths()
 
     return {
+        paths: [],
         fallback: "blocking"
     }
 }
