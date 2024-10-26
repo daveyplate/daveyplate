@@ -71,14 +71,18 @@ const PageTransition = ({ children }) => {
             if (isSafari) {
                 console.log("disableAnimation")
                 setDisableAnimation(true)
-
-                setTimeout(() => {
-                    setDisableAnimation(false)
-                }, 1000)
             }
 
             onRouteChange()
         }
+
+        const onRouteChangeComplete = () => {
+
+            console.log("enableAnimation")
+            setDisableAnimation(false)
+        }
+
+        router.events.on('routeChangeComplete', onRouteChangeComplete)
 
         history.pushState = function () {
             originalPushState.apply(this, arguments)
@@ -98,6 +102,7 @@ const PageTransition = ({ children }) => {
             history.pushState = originalPushState
             history.replaceState = originalReplaceState
             window.removeEventListener('popstate', onPopstate)
+            router.events.off('routeChangeComplete', onRouteChangeComplete)
         }
     }, [currentKeyIndex])
 
