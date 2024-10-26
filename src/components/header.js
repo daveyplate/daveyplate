@@ -143,9 +143,9 @@ export default function Header({ overrideTitle, canGoBack }) {
                             >
                                 <Button
                                     isIconOnly
-                                    variant="link"
+                                    variant="light"
                                     onPress={goBack}
-                                    className="-ms-3 focus:text-foreground-400"
+                                    className="-ms-3 focus:text-foreground-400 bg-transparent"
                                 >
                                     <ChevronLeftIcon className="size-8" />
                                 </Button>

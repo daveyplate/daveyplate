@@ -12,19 +12,17 @@ export const routing = defineRouting({
     localePrefix: isExport() ? 'always' : 'as-needed'
 })
 
-export const { Link, redirect, usePathname, useRouter, getPathname, permanentRedirect } =
+export const { Link: NextIntlLink, redirect, usePathname, useRouter: useLocaleRouter, getPathname, permanentRedirect } =
     createNavigation(routing)
-
-export const useLocaleRouter = useRouter
 
 /**
  * A wrapper around Next.js' Link component that automatically uses the correct locale
  * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<import("next/link").LinkProps> & React.RefAttributes<HTMLElement>>}
  */
-export const LocaleLink = forwardRef(({ ...props }, ref) => {
+export const Link = forwardRef(({ ...props }, ref) => {
     if (isExport()) {
         return (
-            <Link ref={ref} {...props} />
+            <NextIntlLink ref={ref} {...props} />
         )
     }
 
