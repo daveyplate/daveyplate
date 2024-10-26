@@ -13,21 +13,15 @@ const PageTransition = ({ children }) => {
     const windowHistoryKeys = useRef([])
 
     useEffect(() => {
-        // Function to check if the screen matches the mobile breakpoint
         const checkMobile = () => {
             setIsMobile(window.matchMedia("(max-width: 640px)").matches)
         }
 
-        // Check initially
         checkMobile()
 
-        // Create a MediaQueryList object
         const mediaQuery = window.matchMedia("(max-width: 640px)")
-
-        // Add an event listener for when the breakpoint changes
         mediaQuery.addEventListener('change', checkMobile)
 
-        // Cleanup function to remove the listener
         return () => mediaQuery.removeEventListener('change', checkMobile)
     }, [])
 
