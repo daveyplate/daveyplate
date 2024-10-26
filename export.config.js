@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
     output: "export",
-    images: { unoptimized: true }
+    images: { unoptimized: true },
+    experimental: {
+        scrollRestoration: true
+    }
 }
