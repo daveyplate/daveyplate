@@ -19,6 +19,9 @@ import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 import { useDebounce } from "@uidotdev/usehooks"
 import { Link } from "@/i18n/routing"
 
+// <div className="fixed top-0 w-screen h-safe bg-background z-40" />
+// <div className="sticky top-safe z-40 backdrop-blur-xl bg-background/70 shadow-lg sm:shadow-none w-full">
+
 export default function UsersPage() {
     const { autoTranslate } = useAutoTranslate()
     const [search, setSearch] = useState('')
@@ -28,21 +31,17 @@ export default function UsersPage() {
 
     return (
         <div className="flex-container mx-auto max-w-xl">
-            <div className="fixed top-0 w-screen h-safe bg-background z-40" />
-
-            <div className="sticky top-safe z-40 backdrop-blur-xl bg-background/70 shadow-lg sm:shadow-none w-full">
-                <Input
-                    size="lg"
-                    fullWidth
-                    isClearable
-                    placeholder={autoTranslate('search_placeholder', "Type to search...")}
-                    startContent={
-                        <SearchIcon className="size-5 me-0.5 pointer-events-none" />
-                    }
-                    value={search}
-                    onValueChange={(value) => setSearch(value)}
-                />
-            </div>
+            <Input
+                size="lg"
+                fullWidth
+                isClearable
+                placeholder={autoTranslate('search_placeholder', "Type to search...")}
+                startContent={
+                    <SearchIcon className="size-5 me-0.5 pointer-events-none" />
+                }
+                value={search}
+                onValueChange={(value) => setSearch(value)}
+            />
 
             <div className="flex flex-col gap-4 transition-all w-full">
                 {!users?.length && !isLoading && (

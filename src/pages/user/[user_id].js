@@ -28,13 +28,13 @@ import { useSession } from "@supabase/auth-helpers-react"
 import LightboxModal from "@/components/lightbox-modal"
 import { createClient } from "@/utils/supabase/component"
 
-export default function UserPage() {
+export default function UserPage({ user_id }) {
     const supabase = createClient()
     const router = useRouter()
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()
 
-    const userId = router.query.user_id
+    const userId = user_id || router.query.user_id
     const { entity: user, mutate: mutateUser } = useEntity(userId ? 'profiles' : null, userId)
     const { updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
     const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -158,5 +158,5 @@ export async function getStaticPaths() {
 export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
 
-    return { props: { ...translationProps, overrideTitle: true, canGoBack: true } }
+    return { props: { ...params, ...translationProps, overrideTitle: true, canGoBack: true } }
 }
