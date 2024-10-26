@@ -9,6 +9,7 @@ import DefaultFont from "@/styles/fonts"
 import Providers from "@/components/providers/providers"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import PageTransition from "@/components/page-transition"
 
 const MyApp = ({ Component, pageProps }) => {
     return (
@@ -39,13 +40,15 @@ const MyApp = ({ Component, pageProps }) => {
 
                 <Header {...pageProps} />
 
-                <main className={`flex min-h-svh w-svh
+                <PageTransition>
+                    <main className={`flex min-h-svh w-svh
                 pt-[calc(4rem+env(safe-area-inset-top))] 
                 pb-[calc(4rem+env(safe-area-inset-bottom))] 
                 px-safe
             `}>
-                    <Component {...pageProps} />
-                </main>
+                        <Component {...pageProps} />
+                    </main>
+                </PageTransition>
 
                 <Footer {...pageProps} />
             </Providers>
