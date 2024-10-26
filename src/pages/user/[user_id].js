@@ -122,7 +122,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                 </Skeleton>
                             </div>
 
-                            <div className="self-start ms-auto">
+                            <div className="self-start ms-auto -mt-2 -me-1.5">
                                 <OptionsDropdown />
                             </div>
                         </div>
