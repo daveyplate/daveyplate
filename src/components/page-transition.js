@@ -68,6 +68,7 @@ const PageTransition = ({ children }) => {
         }
 
         const onPopstate = () => {
+            console.log("onPopState")
             if (isSafari) {
                 console.log("disableAnimation")
                 setDisableAnimation(true)
@@ -77,7 +78,6 @@ const PageTransition = ({ children }) => {
         }
 
         const onRouteChangeComplete = () => {
-
             console.log("enableAnimation")
             setDisableAnimation(false)
         }
