@@ -19,7 +19,9 @@ import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 export default function UserPage() {
     const router = useRouter()
-    const { entity: user } = useEntity('profiles', router.query.user_id)
+    const userId = router.query.user_id
+
+    const { entity: user } = useEntity(userId ? 'profiles' : null, userId)
 
     return (
         <div className="flex-center max-w-lg">
