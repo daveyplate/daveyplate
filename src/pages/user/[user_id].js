@@ -62,7 +62,6 @@ export async function getStaticPaths() {
     if (isExport()) return getLocalePaths()
 
     return {
-        paths: [{ params: { user_id: "me" } }],
         fallback: "blocking"
     }
 }
