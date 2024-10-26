@@ -50,6 +50,7 @@ const MyApp = ({ Component, pageProps }) => {
                     </main>
                 </PageTransition>
 
+                <Footer {...pageProps} />
             </Providers>
         </NextIntlClientProvider>
     )
