@@ -9,21 +9,21 @@ export default function MetaTags({ title, description, image, ogType = "website"
 
     return (
         <Head>
-            <meta name="description" content={description} />
+            <meta key="meta-description" name="description" content={description} />
 
             {/* Open Graph / Facebook */}
-            <meta property="og:type" content={ogType} />
-            <meta property="og:image" content={image} />
-            <meta property="og:site_name" content={process.env.NEXT_PUBLIC_SITE_NAME} />
-            <meta property="og:title" content={title} />
-            <meta property="og:description" content={description} />
-            <meta property="og:url" content={url} />
+            <meta key="og:type" property="og:type" content={ogType} />
+            <meta key="og:image" property="og:image" content={image} />
+            <meta key="og:site_name" property="og:site_name" content={process.env.NEXT_PUBLIC_SITE_NAME} />
+            <meta key="og:title" property="og:title" content={title} />
+            <meta key="og:description" property="og:description" content={description} />
+            <meta key="og:url" property="og:url" content={url} />
 
             {/* Twitter */}
-            <meta property="twitter:image" content={image} />
-            <meta property="twitter:card" content="summary" />
-            <meta property="twitter:title" content={title} />
-            <meta property="twitter:description" content={description} />
+            <meta key="twitter:image" property="twitter:image" content={image} />
+            <meta key="twitter:card" property="twitter:card" content="summary" />
+            <meta key="twitter:title" property="twitter:title" content={title} />
+            <meta key="twitter:description" property="twitter:description" content={description} />
         </Head>
     )
 }
