@@ -26,8 +26,10 @@ import { PencilIcon } from "@heroicons/react/24/solid"
 import UploadAvatarModal from "@/components/upload-avatar-modal"
 import { useSession } from "@supabase/auth-helpers-react"
 import LightboxModal from "@/components/lightbox-modal"
+import { createClient } from "@/utils/supabase/component"
 
 export default function UserPage() {
+    const supabase = createClient()
     const router = useRouter()
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()

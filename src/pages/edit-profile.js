@@ -94,6 +94,8 @@ export default function EditProfile() {
 
     // Set the form values when the user initially loads
     useEffect(() => {
+        if (name || bio) return
+
         setName(user?.full_name || '')
         setBio(user?.bio || '')
     }, [user])
@@ -155,6 +157,7 @@ export default function EditProfile() {
                                     <CloudArrowUpIcon className="size-6 -ms-1" />
                                 }
                                 onPress={() => uploadRef.current()}
+                                isDisabled={!user}
                             >
                                 <AutoTranslate tKey="upload">
                                     Upload
