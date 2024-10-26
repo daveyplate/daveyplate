@@ -68,11 +68,10 @@ export default function Header({ overrideTitle, canGoBack }) {
     const currentTitle = useDocumentTitle()
     const router = useRouter()
     const localeRouter = useLocaleRouter()
-    const session = useSession()
     const pathname = usePathname()
-    const { isLoading: sessionLoading } = useSessionContext()
     const { autoTranslate } = useAutoTranslate("header")
-    const { entity: user, isLoading, error } = useEntity(session ? 'profiles' : null, 'me')
+    const { session, isLoading: sessionLoading } = useSessionContext()
+    const { entity: user, isLoading: userLoading, error: userError } = useEntity(session ? 'profiles' : null, 'me')
 
     const [isConnected, setIsConnected] = useState(true)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -180,30 +179,28 @@ export default function Header({ overrideTitle, canGoBack }) {
                         <ThemeDropdown isIconOnly variant="light" />
                     </NavbarItem>
 
-                    <NavbarItem>
+                    <NavbarItem className="mt-1 -me-1">
                         <Dropdown>
-                            <DropdownTrigger>
-                                <div className="hover:opacity-90 flex -me-1">
-                                    <Badge
-                                        as="button"
-                                        isOneChar
-                                        size="sm"
-                                        color={(error || !isConnected) ? "danger" : (user ? "success" : "default")}
-                                        content={
-                                            <ChevronDownIcon className={cn("w-2.5 pt-0.5", (user || !isConnected) ? "invisible" : "")} />
-                                        }
-                                        shape="circle"
-                                        placement="bottom-right"
-                                    >
-                                        <Skeleton className="rounded-full" isLoaded={!isLoading && !sessionLoading}>
-                                            <UserAvatar
-                                                as="button"
-                                                user={user}
-                                            />
-                                        </Skeleton>
-                                    </Badge>
-                                </div>
-                            </DropdownTrigger>
+                            <Badge
+                                isOneChar
+                                size="sm"
+                                color={(userError || !isConnected) ? "danger" : (user ? "success" : "default")}
+                                content={
+                                    <ChevronDownIcon className={cn("w-2.5 pt-0.5", (user || !isConnected || userLoading || sessionLoading) ? "hidden" : "")} />
+                                }
+                                shape="circle"
+                                placement="bottom-right"
+                            >
+                                <Skeleton className="rounded-full" isLoaded={!userLoading && !sessionLoading}>
+                                    <DropdownTrigger>
+                                        <UserAvatar
+                                            as={Button}
+                                            user={user}
+                                            isIconOnly
+                                        />
+                                    </DropdownTrigger>
+                                </Skeleton>
+                            </Badge>
 
                             <DropdownMenu
                                 aria-label={autoTranslate("profile_actions", "Profile actions")}
