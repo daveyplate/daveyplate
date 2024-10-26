@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 
-import { useSession, useSessionContext } from "@supabase/auth-helpers-react"
+import { useSessionContext } from "@supabase/auth-helpers-react"
 
 import { Network } from '@capacitor/network'
 import { Capacitor } from "@capacitor/core"
@@ -120,20 +120,21 @@ export default function Header({ overrideTitle, canGoBack }) {
                 onMenuOpenChange={setIsMenuOpen}
                 onClick={() => setIsMenuOpen(false)}
             >
-                <NavbarContent className="sm:hidden" justify="start">
-                    {canGoBack ? (
-                        <Button
-                            isIconOnly
-                            variant="light"
-                            onPress={goBack}
-                            className="-ms-4 focus:text-foreground-400 bg-transparent"
-                            disableRipple
-                        >
-                            <ChevronLeftIcon className="size-8" />
-                        </Button>
-                    ) : (
-                        <NavbarMenuToggle className="size-12 me-1" />
-                    )}
+                <NavbarContent className="sm:hidden relative" justify="start">
+                    <Button
+                        isIconOnly
+                        variant="light"
+                        onPress={goBack}
+                        className={cn("absolute focus:text-foreground-400 !bg-transparent -ms-3", canGoBack ? "opacity-1" : "opacity-0")}
+                        disableRipple
+                        isDisabled={!canGoBack}
+                    >
+                        <ChevronLeftIcon className="size-8" />
+                    </Button>
+
+                    <NavbarMenuToggle
+                        className={cn("absolute size-12 me-1", canGoBack ? "opacity-0 pointer-events-none" : "opacity-1")}
+                    />
                 </NavbarContent>
 
                 <NavbarContent className="hidden sm:flex" justify="start">
