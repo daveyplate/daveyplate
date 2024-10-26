@@ -146,6 +146,7 @@ export default function Header({ overrideTitle, canGoBack }) {
                                     variant="light"
                                     onPress={goBack}
                                     className="-ms-3 focus:text-foreground-400 bg-transparent"
+                                    disableRipple
                                 >
                                     <ChevronLeftIcon className="size-8" />
                                 </Button>

@@ -142,6 +142,7 @@ export default function EditProfile() {
                                         onPress={() => uploadRef.current()}
                                         user={user}
                                         size="lg"
+                                        className="!size-16"
                                     />
                                 </Skeleton>
                             </Badge>
