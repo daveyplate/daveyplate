@@ -71,3 +71,13 @@ export const dynamicHref = ({ pathname, query }) => {
 
   return { pathname: pathname.replace("[", "").replace("]", ""), query }
 }
+
+/**
+ * Check if the current device is running iOS.
+ * @returns {boolean} True if the device is running iOS, false otherwise.
+ */
+export const iOS = () => {
+  return navigator.userAgent.match(/(iPad|iPhone|iPod)/g)
+    // iPad on iOS 13 detection
+    || (navigator.userAgent.includes("Mac") && navigator.maxTouchPoints > 1)
+}
