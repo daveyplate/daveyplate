@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-
 import NextImage from "next/image"
 import { useRouter } from "next/router"
 
@@ -8,12 +7,12 @@ import { useSession, useSessionContext } from "@supabase/auth-helpers-react"
 import { Network } from '@capacitor/network'
 import { Capacitor } from "@capacitor/core"
 
-import { cn } from "@nextui-org/react"
-import { AnimatePresence, motion } from "framer-motion"
-
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
+import { useDocumentTitle } from "@daveyplate/use-document-title"
+import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 import {
+    cn,
     Badge,
     Navbar,
     NavbarBrand,
@@ -32,8 +31,6 @@ import {
     Button,
 } from "@nextui-org/react"
 
-import UserAvatar from "@/components/user-avatar"
-
 import {
     HomeIcon,
     ChevronDownIcon,
@@ -48,13 +45,13 @@ import {
     ChatBubbleLeftRightIcon,
     ChevronLeftIcon
 } from '@heroicons/react/24/solid'
-import PageTitle from "./page-title"
-import { useDocumentTitle } from "@daveyplate/use-document-title"
 
-import ThemeDropdown from "./theme-dropdown"
-import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { Link, useLocaleRouter, usePathname } from "@/i18n/routing"
 import { dynamicHref } from "@/utils/utils"
+
+import PageTitle from "@/components/page-title"
+import ThemeDropdown from "@/components/theme-dropdown"
+import UserAvatar from "@/components/user-avatar"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -110,7 +107,6 @@ export default function Header({ overrideTitle, canGoBack }) {
         if (document.referrer && !document.referrer.includes(window.location.origin)) {
             localeRouter.replace("/")
         } else if (window.history?.length) {
-            global.backPressed = true
             router.back()
         } else {
             localeRouter.replace("/")
@@ -126,33 +122,21 @@ export default function Header({ overrideTitle, canGoBack }) {
                 isMenuOpen={isMenuOpen}
                 onMenuOpenChange={setIsMenuOpen}
                 onClick={() => setIsMenuOpen(false)}
-                shouldHideOnScroll
-                disableAnimation={!isMenuOpen}
             >
                 <NavbarContent className="sm:hidden" justify="start">
-                    <AnimatePresence mode="popLayout">
-                        {canGoBack ? (
-                            <motion.div
-                                key="backButton"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.25 }}
-                            >
-                                <Button
-                                    isIconOnly
-                                    variant="light"
-                                    onPress={goBack}
-                                    className="-ms-3 focus:text-foreground-400 bg-transparent"
-                                    disableRipple
-                                >
-                                    <ChevronLeftIcon className="size-8" />
-                                </Button>
-                            </motion.div>
-                        ) : (
-                            <NavbarMenuToggle className="size-12 me-1" />
-                        )}
-                    </AnimatePresence>
+                    {canGoBack ? (
+                        <Button
+                            isIconOnly
+                            variant="light"
+                            onPress={goBack}
+                            className="-ms-4 focus:text-foreground-400 bg-transparent"
+                            disableRipple
+                        >
+                            <ChevronLeftIcon className="size-8" />
+                        </Button>
+                    ) : (
+                        <NavbarMenuToggle className="size-12 me-1" />
+                    )}
                 </NavbarContent>
 
                 <NavbarContent className="hidden sm:flex" justify="start">
@@ -179,9 +163,8 @@ export default function Header({ overrideTitle, canGoBack }) {
                     {menuItems.map((item, index) => (
                         <NavbarItem key={index}>
                             <Link
-                                className={cn("text-lg",
-                                    pathname == item.path ? "text-warning" : null)}
                                 href={item.path}
+                                className={cn("text-lg", pathname == item.path && "text-warning")}
                             >
                                 <AutoTranslate tKey={item.name} namespace="header">
                                     {item.name}
@@ -193,7 +176,7 @@ export default function Header({ overrideTitle, canGoBack }) {
 
                 <NavbarContent
                     justify="end"
-                    className={cn("transition-all gap-2", isMenuOpen ? "opacity-0 pointer-events-none" : "")}
+                    className={cn("transition-all gap-2", isMenuOpen && "opacity-0 pointer-events-none")}
                 >
                     <NavbarItem>
                         <ThemeDropdown isIconOnly variant="light" />
@@ -302,15 +285,15 @@ export default function Header({ overrideTitle, canGoBack }) {
                 </NavbarContent>
 
                 <NavbarMenu
-                    className="overflow-hidden mt-safe gap-4 z-50"
+                    className="overflow-hidden mt-safe gap-4"
                 >
                     {menuItems.map((item, index) => (
                         <NavbarMenuItem key={index}>
                             <Link
-                                className={cn("w-full flex gap-4 text-xl items-center",
-                                    pathname == item.path ? "text-warning" : "")}
                                 href={item.path}
                                 size="lg"
+                                className={cn("w-full flex gap-4 text-xl items-center",
+                                    pathname == item.path && "text-warning")}
                             >
                                 <item.icon className="size-6" />
 
