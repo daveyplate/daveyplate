@@ -13,6 +13,7 @@ import PageTransition from "@/components/page-transition"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { iOS } from "@/utils/utils"
+import MetaTags from "@/components/meta-tags"
 
 const MyApp = ({ Component, pageProps }) => {
     const router = useRouter()
@@ -34,25 +35,25 @@ const MyApp = ({ Component, pageProps }) => {
                         content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover'
                     />
 
-                    <meta name="description" content="Description" />
-
                     <link rel="icon" href="/favicon.ico" sizes="48x48" />
                     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
                 </Head>
 
+                <MetaTags description="Welcome to Daveyplate" />
+
                 <style jsx global>{`
-                html {
-                  font-family: ${DefaultFont.style.fontFamily}
-                }
-            `}</style>
+                    html {
+                    font-family: ${DefaultFont.style.fontFamily}
+                    }
+                `}</style>
 
                 <Header {...pageProps} />
 
                 <main className={`flex min-h-svh w-svh
-                pt-[calc(4rem+env(safe-area-inset-top))] 
-                pb-[calc(4rem+env(safe-area-inset-bottom))] 
-                px-safe
-            `}>
+                    pt-[calc(4rem+env(safe-area-inset-top))] 
+                    pb-[calc(4rem+env(safe-area-inset-bottom))] 
+                    px-safe
+                `}>
                     <Component {...pageProps} />
                 </main>
                 <Footer {...pageProps} />
