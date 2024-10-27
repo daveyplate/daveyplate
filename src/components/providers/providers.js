@@ -17,7 +17,6 @@ import { createClient } from '@/utils/supabase/component'
 import MetaTheme from "@/components/providers/meta-theme"
 import ToastProvider from "@/components/providers/toast-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
-import ReactivateUser from "@/components/providers/reactivate-user"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 import { usePathname, useLocaleRouter } from "@/i18n/routing"
 
@@ -50,7 +49,6 @@ export default function Providers({ children, ...pageProps }) {
 
                                 {children}
 
-                                <ReactivateUser />
                                 <CheckoutStatus />
                                 <ToastProvider />
                                 <CapacitorProvider />

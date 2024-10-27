@@ -154,6 +154,7 @@ export default function Settings() {
             toast(error.message, { color: 'danger' })
         } else {
             toast(accountDeactivated, { color: 'warning' })
+            supabase.auth.signOut({ scope: 'others' })
             localeRouter.replace('/logout')
         }
     }
