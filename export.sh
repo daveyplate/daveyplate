@@ -6,13 +6,6 @@ LOCALE_DIR="./src/pages/[locale]"
 ESCAPED_LOCALE_DIR="./src/pages/\[locale\]"
 BACKUP_DIR="./.page_backups"
 
-# Setup export config
-echo "Moving next.config.js to original.config.js before build..."
-mv "./next.config.js" "original.config.js"
-
-echo "Moving export.config.js to next.config.js before build..."
-mv "./export.config.js" "next.config.js"
-
 # Check if the [locale] directory exists, if not, create it
 if [ ! -d "$LOCALE_DIR" ]; then
     echo "Creating [locale] directory..."
@@ -69,19 +62,13 @@ echo "Renaming operation completed."
 
 # TODO run the build
 npm run build
-// npx cap sync
+# npx cap sync
 
 # Check if index.js exists and rename it back to _redirect.js after build
 if [ -f "$PAGES_DIR/index.js" ]; then
     echo "Renaming index.js back to _redirect.js after build..."
     mv "$PAGES_DIR/index.js" "$PAGES_DIR/_redirect.js"
 fi
-
-echo "Moving next.config.js back to export.config.js after build..."
-mv "./next.config.js" "export.config.js"
-
-echo "Moving original.config.js back to next.config.js after build..."
-mv "./original.config.js" "next.config.js"
 
 echo "Moving content back to the pages directory..."
 
