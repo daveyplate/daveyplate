@@ -56,22 +56,26 @@ export default function Messages() {
                 <div
                     key={index}
                     className={cn(
-                        "flex gap-4 w-full",
+                        "flex gap-3 w-full",
                         message.user_id === user?.id && "flex-row-reverse"
                     )}
                 >
                     <UserAvatar user={message.user} />
 
-                    <Card className="max-w-[70%] min-w-48">
+                    <Card className={cn("max-w-[70%]",
+                        message.user_id === user?.id && "bg-primary text-primary-foreground"
+                    )}>
                         <CardBody className="px-4 py-3 gap-2">
-                            <div className="flex">
+                            <div className="flex gap-4 items-center">
                                 <h6>{message.user?.full_name || "Unnamed"}</h6>
 
                                 <ReactTimeAgo
-                                    className="ms-auto mt-[1px] text-small font-light text-foreground/40"
+                                    className={cn("ms-auto text-tiny font-light"
+                                        , message.user_id === user?.id ? "text-primary-foreground/60" : "text-foreground/60"
+                                    )}
                                     date={message.created_at}
                                     locale={locale}
-                                    timeStyle="mini-now"
+                                    timeStyle="mini-minute-now"
                                 />
                             </div>
 
@@ -86,8 +90,9 @@ export default function Messages() {
                             size="sm"
                             variant="light"
                             isIconOnly
+                            radius="full"
                             onPress={() => deleteMessage(message.id)}
-                            className="-mx-2 self-center"
+                            className="-mx-1 self-center"
                         >
                             <TrashIcon className="size-4" />
                         </Button>
@@ -95,36 +100,36 @@ export default function Messages() {
                 </div>
             ))}
 
-            <form onSubmit={sendMessage} className="fixed bottom-16 pb-safe w-full left-0 flex bg-background/70 backdrop-blur-xl">
-                <Input
-                    fullWidth
-                    className="max-w-xl mx-auto"
-                    size="lg"
-                    variant="bordered"
-                    placeholder={
-                        session
-                            ? "Type your message..."
-                            : "Sign in to send messages"
-                    }
-                    value={content}
-                    onValueChange={setContent}
-                    isDisabled={!session}
-                    autoComplete='off'
-                    endContent={
-                        <Button
-                            type="submit"
-                            size="sm"
-                            color="primary"
-                            isIconOnly
-                            radius="full"
-                            className="-me-1"
-                            isDisabled={!content || !session}
-                        >
-                            <ArrowUpIcon className="size-4" />
-                        </Button>
-                    }
-                />
-            </form>
+            <div className="fixed bottom-16 mb-safe w-full left-0 flex bg-background/90 z-20 backdrop-blur">
+                <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
+                    <Input
+                        size="lg"
+                        variant="bordered"
+                        placeholder={
+                            session
+                                ? "Type your message..."
+                                : "Sign in to send messages"
+                        }
+                        value={content}
+                        onValueChange={setContent}
+                        isDisabled={!session}
+                        autoComplete='off'
+                        endContent={
+                            <Button
+                                type="submit"
+                                size="sm"
+                                color="primary"
+                                isIconOnly
+                                radius="full"
+                                className="-me-1"
+                                isDisabled={!content || !session}
+                            >
+                                <ArrowUpIcon className="size-4" />
+                            </Button>
+                        }
+                    />
+                </form>
+            </div>
         </div>
     )
 }

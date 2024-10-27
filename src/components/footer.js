@@ -8,7 +8,7 @@ export default function Footer() {
     const year = new Date().getFullYear()
 
     return (
-        <footer className="backdrop-blur-xl bg-background/70 fixed w-full bottom-0 z-20 pb-safe">
+        <footer className="backdrop-blur bg-background/90 fixed w-full bottom-0 z-20 pb-safe">
             <div className="flex justify-center items-center py-2 gap-2 overflow-hidden h-16">
                 <LocaleDropdown isIconOnly variant="light" />
 
