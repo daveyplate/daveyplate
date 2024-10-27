@@ -11,7 +11,7 @@ export default function CheckoutStatus() {
     // TODO FIX postAPI missing session here
     const router = useRouter()
     const session = useSession()
-    const { entity: user, mutate: mutateUser } = useEntity(session ? 'profiles' : null, 'me')
+    const { entity: user, mutateEntity: mutateUser } = useEntity(session ? 'profiles' : null, 'me')
 
     useEffect(() => {
         if (router.query.success && user) {

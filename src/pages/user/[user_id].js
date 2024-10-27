@@ -38,7 +38,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const session = useSession()
 
     const userId = user_id || router.query.user_id
-    const { entity: user, mutate: mutateUser } = useEntity(userId ? 'profiles' : null, userId, null, { fallbackData })
+    const { entity: user, mutateEntity: mutateUser } = useEntity(userId ? 'profiles' : null, userId, null, { fallbackData })
     const { updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
     const [lightboxOpen, setLightboxOpen] = useState(false)
 
