@@ -117,21 +117,20 @@ export default function Header({ canGoBack }) {
                 onMenuOpenChange={setIsMenuOpen}
                 onClick={() => setIsMenuOpen(false)}
             >
-                <NavbarContent className="sm:hidden relative" justify="start">
-                    <Button
-                        isIconOnly
-                        variant="light"
-                        onPress={goBack}
-                        className={cn("absolute focus:text-foreground-400 !bg-transparent -ms-3", canGoBack ? "opacity-1" : "opacity-0")}
-                        disableRipple
-                        isDisabled={!canGoBack}
-                    >
-                        <ChevronLeftIcon className="size-8" />
-                    </Button>
-
-                    <NavbarMenuToggle
-                        className={cn("absolute size-12 me-1", canGoBack ? "opacity-0 pointer-events-none" : "opacity-1")}
-                    />
+                <NavbarContent className="sm:hidden" justify="start">
+                    {canGoBack ? (
+                        <Button
+                            isIconOnly
+                            variant="light"
+                            onPress={goBack}
+                            className="!bg-transparent -ms-3"
+                            disableRipple
+                        >
+                            <ChevronLeftIcon className="size-8" />
+                        </Button>
+                    ) : (
+                        <NavbarMenuToggle />
+                    )}
                 </NavbarContent>
 
                 <NavbarContent className="hidden sm:flex" justify="start">
@@ -183,8 +182,8 @@ export default function Header({ canGoBack }) {
                                 isOneChar
                                 size="sm"
                                 color={(userError || !isConnected) ? "danger" : (user ? "success" : "default")}
-                                content={
-                                    <ChevronDownIcon className={cn("w-2.5 pt-0.5", (user || !isConnected || userLoading || sessionLoading) ? "hidden" : "")} />
+                                content={!user && !userLoading && !sessionLoading && isConnected &&
+                                    <ChevronDownIcon className="w-2.5 pt-0.5" />
                                 }
                                 shape="circle"
                                 placement="bottom-right"
