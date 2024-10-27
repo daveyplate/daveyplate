@@ -27,7 +27,7 @@
     "@daveyplate/next-rate-limit": "^1.0.6",
     "@daveyplate/nextui-confirm-modal": "^1.0.1",
     "@daveyplate/nextui-fixed-avatar": "^1.0.4",
-    "@daveyplate/supabase-swr-entities": "^1.1.14",
+    "@daveyplate/supabase-swr-entities": "^1.1.16",
     "@daveyplate/tailwind-drag-dropzone": "^1.0.2",
     "@daveyplate/use-scroll-restoration": "^1.0.4",
     "@daveyplate/use-window-focus-blur": "^1.0.0",

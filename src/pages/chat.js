@@ -1,14 +1,20 @@
 import { AutoTranslate } from 'next-auto-translate'
-import { useClearCache } from '@daveyplate/supabase-swr-entities/client'
+import { useClearCache, useEntities } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, Card, CardBody } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
+import { useEffect } from 'react'
 
 export default function Messages() {
     const clearCache = useClearCache()
+    const { entities: messages } = useEntities('messages')
+
+    useEffect(() => {
+        console.log(messages)
+    }, [messages])
 
     return (
         <div className="flex-container flex-center max-w-lg">

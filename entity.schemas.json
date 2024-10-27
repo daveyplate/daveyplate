@@ -9,5 +9,38 @@
         "requiredParams": {
             "deactivated": false
         }
+    },
+    {
+        "table": "messages",
+        "select": [
+            "*",
+            "sender:user_id!inner(*)"
+        ],
+        "requiredParams": {
+            "sender.deactivated": false
+        }
+    },
+    {
+        "table": "whispers",
+        "authenticate": true,
+        "authColumns": {
+            "select": [
+                "user_id",
+                "recipient_id"
+            ],
+            "delete": [
+                "user_id",
+                "recipient_id"
+            ]
+        },
+        "select": [
+            "*",
+            "sender:user_id!inner(id, full_name, avatar_url)",
+            "recipient:recipient_id!inner(id, full_name, avatar_url)"
+        ],
+        "requiredParams": {
+            "sender.deactivated": false,
+            "recipient.deactivated": false
+        }
     }
 ]
