@@ -34,7 +34,7 @@ export default function Providers({ children, ...pageProps }) {
         <PageTitleProvider>
             <SessionContextProvider supabaseClient={supabase}>
                 <SWRConfig value={{ provider: cacheProvider }}>
-                    <NextUIProvider navigate={localeRouter.push} >
+                    <NextUIProvider navigate={localeRouter.push}>
                         <ThemeProvider attribute="class" disableTransitionOnChange>
                             <AutoTranslateProvider
                                 pathname={pathname}
