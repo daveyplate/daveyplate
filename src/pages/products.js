@@ -1,20 +1,17 @@
 import { useState } from "react"
 import { useRouter } from "next/router"
-
 import axios from 'axios'
-
 import { useSession } from '@supabase/auth-helpers-react'
 
 import { AutoTranslate } from 'next-auto-translate'
+import { useEntity } from "@daveyplate/supabase-swr-entities/client"
+
+import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-
-import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react"
-
 import { toast } from '@/components/providers/toast-provider'
-import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 export default function Products({ products, prices }) {
     const router = useRouter()

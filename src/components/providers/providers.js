@@ -1,14 +1,13 @@
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
-
 import { ThemeProvider } from "next-themes"
 import { NextUIProvider } from "@nextui-org/react"
 import { SWRConfig } from "swr"
 import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
 
-import { AutoTranslateProvider } from 'next-auto-translate'
-
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
+
+import { AutoTranslateProvider } from 'next-auto-translate'
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
 import { PageTitleProvider } from '@daveyplate/next-page-title'
 

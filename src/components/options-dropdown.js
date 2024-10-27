@@ -1,9 +1,12 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+
+import { useAutoTranslate } from "next-auto-translate"
+
 import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react"
 import { EllipsisHorizontalIcon, ExclamationTriangleIcon, ShareIcon } from '@heroicons/react/24/solid'
-import { useAutoTranslate } from "next-auto-translate"
-import { toast } from './providers/toast-provider'
-import { useRouter } from 'next/router'
+
+import { toast } from '@/components/providers/toast-provider'
 
 const OptionsDropdown = () => {
     const { autoTranslate } = useAutoTranslate()

@@ -1,5 +1,6 @@
 import React from "react"
 import { motion } from "framer-motion"
+
 import LocaleDropdown from "@/components/locale-dropdown"
 
 export default function Footer() {
