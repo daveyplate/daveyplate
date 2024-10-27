@@ -10,6 +10,7 @@ import { AutoTranslateProvider } from 'next-auto-translate'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
+import { PageTitleProvider } from '@daveyplate/next-page-title'
 
 import i18nConfig from 'i18n.config'
 import { createClient } from '@/utils/supabase/component'
@@ -20,7 +21,6 @@ import CheckoutStatus from "@/components/providers/checkout-status"
 import ReactivateUser from "@/components/providers/reactivate-user"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 import { usePathname, useLocaleRouter } from "@/i18n/routing"
-import { PageTitleProvider } from './page-title-provider'
 
 export default function Providers({ children, ...pageProps }) {
     useWindowFocusBlur()

@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { Capacitor, CapacitorCookies } from '@capacitor/core'
 
 import { useClearCache } from "@daveyplate/supabase-swr-entities/client"
+import { PageTitle } from "@daveyplate/next-page-title"
 
 import { Spinner } from "@nextui-org/react"
 
@@ -11,7 +12,6 @@ import { createClient } from "@/utils/supabase/component"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-import PageTitle from "@/components/providers/page-title-provider"
 
 export default () => {
     const supabase = createClient()

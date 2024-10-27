@@ -9,6 +9,7 @@ import { Capacitor } from "@capacitor/core"
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
+import { usePageTitle } from "@daveyplate/next-page-title"
 
 import {
     cn,
@@ -49,7 +50,6 @@ import { dynamicHref } from "@/utils/utils"
 
 import ThemeDropdown from "@/components/theme-dropdown"
 import UserAvatar from "@/components/user-avatar"
-import { usePageTitle } from "./providers/page-title-provider"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 

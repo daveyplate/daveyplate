@@ -1,11 +1,13 @@
 import { useRef, useState } from "react"
 import { useRouter } from "next/router"
+import { useSession } from "@supabase/auth-helpers-react"
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
-
-import { getTranslationProps } from "@/i18n/translation-props"
-import { getLocalePaths } from "@/i18n/locale-paths"
+import { PageTitle } from "@daveyplate/next-page-title"
+import { OpenGraph } from "@daveyplate/next-open-graph"
+import { getEntity } from "@daveyplate/supabase-swr-entities/server"
+import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
 
 import {
     Badge,
@@ -17,19 +19,18 @@ import {
     Skeleton
 } from "@nextui-org/react"
 
-import UserAvatar from "@/components/user-avatar"
-import { isExport } from "@/utils/utils"
-import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
-import { toast } from "@/components/providers/toast-provider"
 import { PencilIcon } from "@heroicons/react/24/solid"
-import UploadAvatarModal from "@/components/upload-avatar-modal"
-import { useSession } from "@supabase/auth-helpers-react"
-import LightboxModal from "@/components/lightbox-modal"
+
+import { getTranslationProps } from "@/i18n/translation-props"
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { isExport } from "@/utils/utils"
 import { createClient } from "@/utils/supabase/component"
-import { getEntity } from "@daveyplate/supabase-swr-entities/server"
+
+import UserAvatar from "@/components/user-avatar"
+import { toast } from "@/components/providers/toast-provider"
+import UploadAvatarModal from "@/components/upload-avatar-modal"
+import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
-import PageTitle from "@/components/providers/page-title-provider"
-import { OpenGraph } from "@daveyplate/next-open-graph"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
