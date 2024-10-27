@@ -73,6 +73,7 @@ export default function UsersPage() {
                         isPressable
                         fullWidth
                         shallow={true}
+                        prefetch={false}
                     >
                         <CardBody className="p-4 flex-row items-center gap-4">
                             <UserAvatar user={user} size="lg" />
