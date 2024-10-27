@@ -292,9 +292,8 @@ export default function Header({ canGoBack }) {
                                 startContent={
                                     <item.icon className="size-6 -ms-1" />
                                 }
-                                onPress={() => setIsMenuOpen(false)}
+                                onClick={() => setIsMenuOpen(false)}
                             >
-
                                 <AutoTranslate tKey={item.name} namespace="header">
                                     {item.name}
                                 </AutoTranslate>
