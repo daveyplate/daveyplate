@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
 import { useSession } from "@supabase/auth-helpers-react"
 
@@ -39,7 +39,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const session = useSession()
 
     const userId = user_id || router.query.user_id
-    const { entity: user, mutateEntity: mutateUser } = useEntity(userId ? 'profiles' : null, userId, null, { fallbackData })
+    const { entity: user, mutateEntity: mutateUser, isLoading: userLoading } = useEntity(userId ? 'profiles' : null, userId, null, { fallbackData })
     const { updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
     const [lightboxOpen, setLightboxOpen] = useState(false)
 
@@ -47,6 +47,12 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const uploadRef = useRef(null)
 
     const isMe = session && userId == session.user.id
+
+    useEffect(() => {
+        if (!userLoading && !user) {
+            router.replace('/404')
+        }
+    }, [user, userLoading])
 
     return (
         <div className="flex-center max-w-lg">

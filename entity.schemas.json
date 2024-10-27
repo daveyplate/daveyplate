@@ -1,14 +1,13 @@
 [
     {
         "table": "profiles",
-        "disableList": false,
+        "usersSchema": true,
         "select": [
             "*"
         ],
         "defaultOrder": "-created_at",
-        "requiredParams": {
-            "deactivated": false
-        }
+        "hasDeactivated": true,
+        "disableList": false
     },
     {
         "table": "messages",
@@ -22,11 +21,19 @@
     },
     {
         "table": "whispers",
-        "authenticate": true,
+        "authMethods": [
+            "*"
+        ],
         "authColumns": {
             "select": [
                 "user_id",
                 "recipient_id"
+            ],
+            "update": [
+                "user_id"
+            ],
+            "upsert": [
+                "user_id"
             ],
             "delete": [
                 "user_id",

@@ -51,7 +51,7 @@ export default function Messages() {
     }
 
     return (
-        <div className="flex-container max-w-xl mx-auto justify-end relative">
+        <div className="flex-container max-w-xl mx-auto justify-end !pb-16">
             {messages?.map((message, index) => (
                 <div
                     key={index}
@@ -95,9 +95,10 @@ export default function Messages() {
                 </div>
             ))}
 
-            <form onSubmit={sendMessage} className="sticky bottom-16 w-full">
+            <form onSubmit={sendMessage} className="fixed bottom-16 pb-safe w-full left-0 flex bg-background/70 backdrop-blur-xl">
                 <Input
-                    className="bg-background/70 backdrop-blur-xl"
+                    fullWidth
+                    className="max-w-xl mx-auto"
                     size="lg"
                     variant="bordered"
                     placeholder={
