@@ -135,22 +135,22 @@ export default function Header({ canGoBack }) {
                 </NavbarContent>
 
                 <NavbarContent className="hidden sm:flex" justify="start">
-                    <NavbarBrand className="gap-2" as={Link} href="/">
+                    <NavbarBrand className="gap-2 mb-0.5" as={Link} href="/">
                         {logo}
 
-                        <p className="font-bold text-lg">
+                        <h4>
                             {siteName}
-                        </p>
+                        </h4>
                     </NavbarBrand>
                 </NavbarContent>
 
                 <NavbarContent className="sm:hidden me-1" justify="center">
-                    <NavbarBrand className="gap-2 text-foreground text-xl">
+                    <NavbarBrand className="gap-2">
                         {pathname == "/" && logo}
 
-                        <p className="font-bold truncate max-w-[160px]" suppressHydrationWarning>
+                        <h4 className="truncate max-w-[160px]" suppressHydrationWarning>
                             {pageTitle}
-                        </p>
+                        </h4>
                     </NavbarBrand>
                 </NavbarContent>
 
