@@ -83,7 +83,7 @@ export default function Products({ products, prices }) {
                                     color="primary"
                                     size="lg"
                                     disabled={priceIdLoading == price.id}
-                                    onClick={() => handleCheckout(product, price)}
+                                    onPress={() => handleCheckout(product, price)}
                                     isLoading={priceIdLoading == price.id}
                                 >
                                     {(price.unit_amount / 100).toLocaleString('en-US', {
