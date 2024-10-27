@@ -277,9 +277,7 @@ export default function Header({ canGoBack }) {
                     </NavbarItem>
                 </NavbarContent>
 
-                <NavbarMenu
-                    className="overflow-hidden mt-safe gap-0 pt-0"
-                >
+                <NavbarMenu className="overflow-hidden mt-safe gap-0 pt-0">
                     {menuItems.map((item, index) => (
                         <NavbarMenuItem key={index}>
                             <Button
@@ -288,7 +286,10 @@ export default function Header({ canGoBack }) {
                                 size="lg"
                                 variant="light"
                                 fullWidth
-                                className={cn("justify-start text-xl gap-4", pathname == item.path && "text-warning")}
+                                className={
+                                    cn("justify-start text-xl gap-4",
+                                        pathname == item.path && "text-warning")
+                                }
                                 startContent={
                                     <item.icon className="size-6 -ms-1" />
                                 }
