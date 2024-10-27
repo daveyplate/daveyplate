@@ -36,7 +36,7 @@ export default function UsersPage() {
                     <SearchIcon className="size-5 me-0.5 pointer-events-none" />
                 }
                 value={search}
-                onValueChange={(value) => setSearch(value)}
+                onValueChange={setSearch}
             />
 
             <div className="flex flex-col gap-4 transition-all w-full">

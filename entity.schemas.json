@@ -14,10 +14,10 @@
         "table": "messages",
         "select": [
             "*",
-            "sender:user_id!inner(*)"
+            "user:user_id!inner(id, full_name, avatar_url)"
         ],
         "requiredParams": {
-            "sender.deactivated": false
+            "user.deactivated": false
         }
     },
     {
@@ -35,7 +35,7 @@
         },
         "select": [
             "*",
-            "sender:user_id!inner(id, full_name, avatar_url)",
+            "user:user_id!inner(id, full_name, avatar_url)",
             "recipient:recipient_id!inner(id, full_name, avatar_url)"
         ],
         "requiredParams": {

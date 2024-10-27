@@ -210,7 +210,7 @@ export default function Settings() {
                                 labelPlacement="outside"
                                 placeholder={autoTranslate('email_address', 'Email Address')}
                                 value={email}
-                                onValueChange={(value) => setEmail(value)}
+                                onValueChange={setEmail}
                                 isDisabled={updatingEmail}
                             />
 
@@ -250,7 +250,7 @@ export default function Settings() {
                                 type={passwordVisible ? "text" : "password"}
                                 name="password"
                                 value={password}
-                                onValueChange={(value) => setPassword(value)}
+                                onValueChange={setPassword}
                                 label={
                                     <div className="flex gap-2.5 items-center">
                                         <KeyIcon className="size-4 text-primary" />
@@ -285,7 +285,7 @@ export default function Settings() {
                                     variant="bordered"
                                     type="text"
                                     value={nonce}
-                                    onValueChange={(value) => setNonce(value)}
+                                    onValueChange={setNonce}
                                     label={
                                         <div className="flex gap-2 items-center">
                                             <HashtagIcon className="size-4 text-primary" />

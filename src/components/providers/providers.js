@@ -7,6 +7,12 @@ import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+import de from 'javascript-time-ago/locale/de'
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(de)
+
 import { AutoTranslateProvider } from 'next-auto-translate'
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
 import { PageTitleProvider } from '@daveyplate/next-page-title'

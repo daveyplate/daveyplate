@@ -70,7 +70,7 @@ export default function ResetPassword() {
                         placeholder={autoTranslate("password", "Password")}
                         label={autoTranslate("new_password", "New Password")}
                         labelPlacement="outside"
-                        onValueChange={(value) => setPassword(value)}
+                        onValueChange={setPassword}
                         disabled={updatingPassword}
                         endContent={
                             <Button
