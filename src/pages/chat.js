@@ -9,7 +9,7 @@ import { isExport } from "@/utils/utils"
 import { useEffect, useState } from 'react'
 import UserAvatar from '@/components/user-avatar'
 import ReactTimeAgo from 'react-time-ago'
-import { ArrowUpIcon } from '@heroicons/react/24/solid'
+import { ArrowUpIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { useSession } from '@supabase/auth-helpers-react'
 import { v4 } from 'uuid'
 import { useLocale } from 'next-intl'
@@ -22,6 +22,7 @@ export default function Messages() {
     const {
         entities: messages,
         createEntity: createMessage,
+        deleteEntity: deleteMessage,
         mutateEntities: mutateMessages
     } = useEntities('messages')
 
@@ -61,15 +62,16 @@ export default function Messages() {
                 >
                     <UserAvatar user={message.user} />
 
-                    <Card className="grow max-w-[75%]">
+                    <Card className="max-w-[70%] min-w-48">
                         <CardBody className="px-4 py-3 gap-2">
                             <div className="flex">
                                 <h6>{message.user?.full_name || "Unnamed"}</h6>
 
                                 <ReactTimeAgo
-                                    className="ms-auto text-small font-light text-foreground/60"
+                                    className="ms-auto mt-[1px] text-small font-light text-foreground/40"
                                     date={message.created_at}
                                     locale={locale}
+                                    timeStyle="mini-now"
                                 />
                             </div>
 
@@ -78,6 +80,18 @@ export default function Messages() {
                             </p>
                         </CardBody>
                     </Card>
+
+                    {message.user_id === user?.id && (
+                        <Button
+                            size="sm"
+                            variant="light"
+                            isIconOnly
+                            onPress={() => deleteMessage(message.id)}
+                            className="-mx-2 self-center"
+                        >
+                            <TrashIcon className="size-4" />
+                        </Button>
+                    )}
                 </div>
             ))}
 
