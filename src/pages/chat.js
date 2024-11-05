@@ -25,6 +25,7 @@ export default function Messages() {
         deleteEntity: deleteMessage,
         mutateEntities: mutateMessages
     } = useEntities('messages', { limit: 20 })
+    messages?.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
 
     const { send: sendData } = usePeers({
         enabled: !!session,
@@ -86,7 +87,7 @@ export default function Messages() {
         }
 
         createMessage(newMessage).then(() => {
-            sendData("message")
+            sendData("create_message")
         })
 
         mutateMessages([...messages, { ...newMessage, user }], false)
@@ -96,7 +97,7 @@ export default function Messages() {
 
     return (
         <div className="flex-container max-w-xl mx-auto justify-end !pb-16">
-            {messages?.sort((a, b) => new Date(a.created_at) - new Date(b.created_at)).map((message, index) => (
+            {messages?.map((message, index) => (
                 <div
                     key={message.id}
                     className={cn(
@@ -135,7 +136,10 @@ export default function Messages() {
                             variant="light"
                             isIconOnly
                             radius="full"
-                            onPress={() => deleteMessage(message.id)}
+                            onPress={async () => {
+                                const { error } = await deleteMessage(message.id)
+                                !error && sendData("delete_message")
+                            }}
                             className="-mx-1 self-center"
                         >
                             <TrashIcon className="size-4" />
