@@ -1,4 +1,3 @@
-import { AutoTranslate } from 'next-auto-translate'
 import { useEntities, useEntity } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, Card, CardBody, Input, cn } from "@nextui-org/react"
@@ -6,7 +5,7 @@ import { Button, Card, CardBody, Input, cn } from "@nextui-org/react"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserAvatar from '@/components/user-avatar'
 import ReactTimeAgo from 'react-time-ago'
 import { ArrowUpIcon, TrashIcon } from '@heroicons/react/24/solid'
