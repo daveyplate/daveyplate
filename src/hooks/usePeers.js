@@ -4,78 +4,102 @@ import { useEffect, useRef, useState } from "react"
 import { v4 } from "uuid"
 
 export const usePeers = ({ enabled = false, onMessage = null }) => {
-    const { entities: peers, createEntity: createPeer, updateEntity: updatePeer, deleteEntity: deletePeer, isLoading: peersLoading } = useEntities(enabled && 'peers')
-    const peerId = useRef(null)
+    const {
+        entities: peers,
+        createEntity: createPeer,
+        updateEntity: updatePeer,
+        deleteEntity: deletePeer,
+        isLoading: peersLoading
+    } = useEntities(enabled && 'peers')
+
     const [peer, setPeer] = useState(null)
-    const [connections, setConnections] = useState([])
+    const connections = useRef([])
 
     const handleConnection = (conn) => {
-        if (!conn) return
+        onMessage && conn?.on("data", onMessage)
 
-        conn.on("data", (data) => {
-            // Will print 'hi!'
-            console.log(data);
-            onMessage && onMessage(data)
+        conn?.on("open", () => {
+            connections.current = connections.current.filter(c => c.peer != conn.peer)
+            connections.current.push(conn)
         })
 
-        conn.on("open", () => {
-            console.log('Connection opened')
-            setConnections([...connections, conn])
-            conn.send("hello!")
-        })
-
-        conn.on('close', () => {
-            setConnections(connections.filter(c => c.peer !== conn.peer))
-            console.log('Connection closed')
+        conn?.on('close', () => {
+            connections.current = connections.current.filter(c => c.peer != conn.peer)
         })
     }
 
     useEffect(() => {
-        if (!enabled) return
-        if (!peers && peersLoading) return
-        if (!peerId.current) {
-            peerId.current = v4()
+        console.log("connections", connections?.current)
+    }, [connections?.current])
+
+    // Clean up the peer on unmount
+    useEffect(() => {
+        if (!peer?.id) return
+
+        return () => {
+            deletePeer(peer.id)
+            peer.destroy()
+            connections.current = []
+        }
+    }, [peer])
+
+    useEffect(() => {
+        if (!peer?.id || !peers) return
+
+        const keepPeerCurrent = () => {
+            const currentPeer = peers.find(p => p.id == peer.id)
+            if (currentPeer) {
+                console.log("Update Peer Entity")
+                updatePeer(currentPeer, { updated_at: new Date() })
+            } else {
+                console.log("Create a Peer Entity")
+                createPeer({ id: peer.id })
+            }
         }
 
+        const interval = setInterval(keepPeerCurrent, 60000)
+
+        if (!peers.find(p => p.id == peer.id)) {
+            console.log("Create a Peer Entity")
+            createPeer({ id: peer.id })
+        }
+
+        peer.on("connection", handleConnection)
+
+        peers.forEach(p => {
+            if (p.id == peer.id) return
+            if (connections.current.some(c => c.peer == p.id)) return
+
+            const conn = peer.connect(p.id)
+            handleConnection(conn)
+        })
+
+        return () => {
+            clearInterval(interval)
+            peer.off("connection", handleConnection)
+        }
+    }, [peers, peer])
+
+
+    useEffect(() => {
+        if (!enabled) return
+
         // Create a new Peer instance
-        const newPeer = new Peer(peerId.current)
+        const newPeer = new Peer()
         newPeer.on('open', function (id) {
             console.log('My peer ID is: ' + id)
-            if (peers.some(p => p.id === id)) return
-
-            createPeer({ id })
             setPeer(newPeer)
         })
 
         // newPeer.on('error', console.error)
 
-        newPeer.on("connection", handleConnection)
-
-        // Clean up the peer instance on component unmount
         return () => {
-            setConnections([])
-            setPeer(null)
-            deletePeer(newPeer.id)
             newPeer.destroy()
         }
-    }, [enabled, peersLoading])
-
-    useEffect(() => {
-        if (!peer) return
-        console.log('peers', peers)
-
-        peers?.forEach(p => {
-            if (p.id == peer.id) return
-            if (connections.some(c => c.peer == p.id)) return
-
-            console.log("attempt to connect to", p.id)
-            const conn = peer.connect(p.id)
-            handleConnection(conn)
-        })
-    }, [peers, peer])
+    }, [enabled])
 
     const send = (data) => {
-        connections.forEach(c => c.send(data))
+        connections.current.forEach(c => c.send(data))
     }
 
     return { peers, send }

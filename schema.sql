@@ -1,5 +1,6 @@
 -- Extension to handle updated_at column
 create extension if not exists moddatetime schema extensions;
+CREATE EXTENSION IF NOT EXISTS pg_cron;
 
 -- Profiles table
 create table public.profiles (
@@ -37,6 +38,14 @@ create policy none_shall_pass on public.peers
     for select
     using (false);
 
+SELECT cron.schedule(
+ 'delete_old_peers',   -- name of the job
+ '*/5 * * * *',       -- cron schedule: every 5 minutes
+ $$
+ DELETE FROM peers
+ WHERE updated_at < (NOW() - INTERVAL '5 minutes');
+ $$ -- here document syntax for the SQL statement
+);
 
 -- inserts a row into public.profiles
 create function public.handle_new_user()
