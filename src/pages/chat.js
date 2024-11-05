@@ -56,6 +56,9 @@ export default function Messages() {
         setContent('')
     }
 
+    // Sort messages
+    messages?.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+
     return (
         <div className="flex-container max-w-xl mx-auto justify-end !pb-16">
             {messages?.map((message, index) => (

@@ -17,7 +17,8 @@
         ],
         "requiredParams": {
             "user.deactivated": false
-        }
+        },
+        "defaultOrder": "-created_at"
     },
     {
         "table": "peers"
