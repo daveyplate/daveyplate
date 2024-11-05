@@ -13,9 +13,14 @@ import { ArrowUpIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { useSession } from '@supabase/auth-helpers-react'
 import { v4 } from 'uuid'
 import { useLocale } from 'next-intl'
+import { createClient } from '@/utils/supabase/component'
+import { REALTIME_CHANNEL_STATES } from '@supabase/supabase-js'
 
 export default function Messages() {
     const session = useSession()
+    const supabase = createClient()
+    const [channel, setChannel] = useState(null)
+
     const locale = useLocale()
     const { entity: user } = useEntity(session && 'profiles', 'me')
 
@@ -27,6 +32,30 @@ export default function Messages() {
     } = useEntities('messages')
 
     const [content, setContent] = useState('')
+
+    useEffect(() => {
+        const channel = supabase.channel('realtime-messages')
+        setChannel(channel)
+
+        // Simple function to log any messages we receive
+        function messageReceived(payload) {
+            console.log(payload)
+        }
+
+        // Subscribe to the Channel
+        channel
+            .on(
+                'broadcast',
+                { event: 'create' },
+                (payload) => messageReceived(payload)
+            )
+            .subscribe()
+
+        return () => {
+            console.log('Leaving channel')
+            supabase.removeChannel(channel)
+        }
+    }, [])
 
     useEffect(() => {
         // scroll to bottom
@@ -44,6 +73,16 @@ export default function Messages() {
             content,
             created_at: new Date()
         }
+
+        if (channel.state == REALTIME_CHANNEL_STATES.joined) {
+            channel.send({
+                type: 'broadcast',
+                event: 'create',
+                payload: newMessage,
+            })
+        }
+
+
         createMessage(newMessage)
         mutateMessages([...messages, { ...newMessage, user }], false)
 
@@ -73,7 +112,7 @@ export default function Messages() {
                                     className={cn("ms-auto text-tiny font-light"
                                         , message.user_id === user?.id ? "text-primary-foreground/60" : "text-foreground/60"
                                     )}
-                                    date={message.created_at}
+                                    date={new Date(message.created_at)}
                                     locale={locale}
                                     timeStyle="mini-minute-now"
                                 />
