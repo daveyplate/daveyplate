@@ -24,14 +24,53 @@ export default function Messages() {
         createEntity: createMessage,
         deleteEntity: deleteMessage,
         mutateEntities: mutateMessages
-    } = useEntities('messages')
-    const { send: sendData } = usePeers({ enabled: !!session, onMessage: () => mutateMessages() })
+    } = useEntities('messages', { limit: 20 })
+
+    const { send: sendData } = usePeers({
+        enabled: !!session,
+        onMessage: () => mutateMessages(),
+        room: "chat"
+    })
 
     const [content, setContent] = useState('')
+    const [shouldScrollDown, setShouldScrollDown] = useState(true)
+    const [prevScrollHeight, setPrevScrollHeight] = useState(null)
+
+    const handleScroll = () => {
+        const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
+
+        if (scrollTop == 0) {
+            console.log("scrollTop", scrollTop)
+            // setVisibleMessagesCount(prevCount => prevCount + 10)
+            setPrevScrollHeight(scrollHeight)
+        }
+
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight
+
+        setShouldScrollDown(isAtBottom)
+    }
+
+    useEffect(() => {
+        document.addEventListener("scroll", handleScroll, true)
+
+        return () => {
+            document.removeEventListener("scroll", handleScroll, true)
+        }
+    }, [])
 
     useEffect(() => {
         // scroll to bottom
-        window.scrollTo(0, document.body.scrollHeight)
+        if (shouldScrollDown) {
+            window.scrollTo(0, document.body.scrollHeight)
+        } else if (prevScrollHeight) {
+            console.log("prevScrollHeight", prevScrollHeight)
+            const { scrollTop, scrollHeight } = document.scrollingElement
+            console.log("scrollTop", scrollTop)
+            console.log("scrollHeight", scrollHeight)
+            window.scrollTo(0, scrollTop + (scrollHeight - prevScrollHeight))
+
+            setPrevScrollHeight(null)
+        }
     }, [messages])
 
     const sendMessage = (e) => {
@@ -59,7 +98,7 @@ export default function Messages() {
         <div className="flex-container max-w-xl mx-auto justify-end !pb-16">
             {messages?.sort((a, b) => new Date(a.created_at) - new Date(b.created_at)).map((message, index) => (
                 <div
-                    key={index}
+                    key={message.id}
                     className={cn(
                         "flex gap-3 w-full",
                         message.user_id === user?.id && "flex-row-reverse"

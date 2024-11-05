@@ -3,14 +3,14 @@ import Peer from "peerjs"
 import { useEffect, useRef, useState } from "react"
 import { v4 } from "uuid"
 
-export const usePeers = ({ enabled = false, onMessage = null }) => {
+export const usePeers = ({ enabled = false, onMessage = null, room = null }) => {
     const {
         entities: peers,
         createEntity: createPeer,
         updateEntity: updatePeer,
         deleteEntity: deletePeer,
         isLoading: peersLoading
-    } = useEntities(enabled && 'peers')
+    } = useEntities(enabled && 'peers', { room })
 
     const [peer, setPeer] = useState(null)
     const connections = useRef([])
@@ -53,7 +53,7 @@ export const usePeers = ({ enabled = false, onMessage = null }) => {
                 updatePeer(currentPeer, { updated_at: new Date() })
             } else {
                 console.log("Create a Peer Entity")
-                createPeer({ id: peer.id })
+                createPeer({ id: peer.id, room })
             }
         }
 
@@ -61,7 +61,7 @@ export const usePeers = ({ enabled = false, onMessage = null }) => {
 
         if (!peers.find(p => p.id == peer.id)) {
             console.log("Create a Peer Entity")
-            createPeer({ id: peer.id })
+            createPeer({ id: peer.id, room })
         }
 
         peer.on("connection", handleConnection)
