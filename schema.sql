@@ -27,6 +27,17 @@ create policy none_shall_pass on public.profiles
     for select
     using (false);
 
+create trigger handle_updated_at before
+  update on public.peers for each row
+  execute function moddatetime ('updated_at');
+
+alter table public.peers enable row level security;
+
+create policy none_shall_pass on public.peers
+    for select
+    using (false);
+
+
 -- inserts a row into public.profiles
 create function public.handle_new_user()
 returns trigger

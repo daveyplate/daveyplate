@@ -6,21 +6,17 @@ import { Button, Card, CardBody, Input, cn } from "@nextui-org/react"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import UserAvatar from '@/components/user-avatar'
 import ReactTimeAgo from 'react-time-ago'
 import { ArrowUpIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { useSession } from '@supabase/auth-helpers-react'
 import { v4 } from 'uuid'
 import { useLocale } from 'next-intl'
-import { createClient } from '@/utils/supabase/component'
-import { REALTIME_CHANNEL_STATES } from '@supabase/supabase-js'
+import { usePeers } from '@/hooks/usePeers'
 
 export default function Messages() {
     const session = useSession()
-    const supabase = createClient()
-    const [channel, setChannel] = useState(null)
-
     const locale = useLocale()
     const { entity: user } = useEntity(session && 'profiles', 'me')
 
@@ -30,32 +26,9 @@ export default function Messages() {
         deleteEntity: deleteMessage,
         mutateEntities: mutateMessages
     } = useEntities('messages')
+    const { send: sendData } = usePeers({ enabled: !!session, onMessage: () => mutateMessages() })
 
     const [content, setContent] = useState('')
-
-    useEffect(() => {
-        const channel = supabase.channel('realtime-messages')
-        setChannel(channel)
-
-        // Simple function to log any messages we receive
-        function messageReceived(payload) {
-            console.log(payload)
-        }
-
-        // Subscribe to the Channel
-        channel
-            .on(
-                'broadcast',
-                { event: 'create' },
-                (payload) => messageReceived(payload)
-            )
-            .subscribe()
-
-        return () => {
-            console.log('Leaving channel')
-            supabase.removeChannel(channel)
-        }
-    }, [])
 
     useEffect(() => {
         // scroll to bottom
@@ -74,16 +47,10 @@ export default function Messages() {
             created_at: new Date()
         }
 
-        if (channel.state == REALTIME_CHANNEL_STATES.joined) {
-            channel.send({
-                type: 'broadcast',
-                event: 'create',
-                payload: newMessage,
-            })
-        }
+        createMessage(newMessage).then(() => {
+            sendData("message")
+        })
 
-
-        createMessage(newMessage)
         mutateMessages([...messages, { ...newMessage, user }], false)
 
         setContent('')

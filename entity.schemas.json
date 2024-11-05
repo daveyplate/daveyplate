@@ -20,6 +20,9 @@
         }
     },
     {
+        "table": "peers"
+    },
+    {
         "table": "whispers",
         "authMethods": [
             "*"
