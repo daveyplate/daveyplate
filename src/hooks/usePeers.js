@@ -34,9 +34,9 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
 
         conn?.on("open", () => {
             console.log("connection opened")
-            connectionsRef.current = connectionsRef.current.filter(c => c.peer != conn.peer)
+            connectionsRef.current = connectionsRef.current.filter((c) => c.peer != conn.peer)
             connectionsRef.current.push(conn)
-            connectionAttempts.current = connectionAttempts.current.filter(id => id != conn.peer)
+            connectionAttempts.current = connectionAttempts.current.filter((id) => id != conn.peer)
             setConnections(connectionsRef.current)
 
             if (inbound) {
@@ -46,15 +46,15 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
 
         conn?.on('close', () => {
             console.log("connection closed")
-            connectionsRef.current = connectionsRef.current.filter(c => c.peer != conn.peer)
-            connectionAttempts.current = connectionAttempts.current.filter(id => id != conn.peer)
+            connectionsRef.current = connectionsRef.current.filter((c) => c.peer != conn.peer)
+            connectionAttempts.current = connectionAttempts.current.filter((id) => id != conn.peer)
             setConnections(connectionsRef.current)
         })
 
         conn?.on('error', (err) => {
             console.error("connection error", err)
-            connectionsRef.current = connectionsRef.current.filter(c => c.peer != conn.peer)
-            connectionAttempts.current = connectionAttempts.current.filter(id => id != conn.peer)
+            connectionsRef.current = connectionsRef.current.filter((c) => c.peer != conn.peer)
+            connectionAttempts.current = connectionAttempts.current.filter((id) => id != conn.peer)
             setConnections(connectionsRef.current)
         })
     }
@@ -64,7 +64,7 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
         if (!enabled) return
 
         const deletePeerOnUnload = () => {
-            connectionsRef.current.forEach(c => c.close())
+            connectionsRef.current.forEach((conn) => conn.close())
             setConnections([])
             connectionsRef.current = []
             connectionAttempts.current = []
@@ -92,7 +92,7 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
         if (!peer?.id || !peers || !enabled) return
 
         const keepPeerCurrent = () => {
-            const currentPeer = peers.find(p => p.id == peer.id)
+            const currentPeer = peers.find((p) => p.id == peer.id)
             if (currentPeer) {
                 console.log("Update Peer Entity")
                 updatePeer(currentPeer, { updated_at: new Date() })
@@ -117,7 +117,7 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
 
         peers.forEach(p => {
             if (p.id == peer.id) return
-            if (connectionsRef.current.some(c => c.peer == p.id)) return
+            if (connectionsRef.current.some((c) => c.peer == p.id)) return
             if (connectionAttempts.current.includes(p.id)) return
 
             console.log("connection attempt", p.id)
@@ -138,7 +138,7 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
 
         // Create a new Peer instance
         const newPeer = new Peer()
-        newPeer.on('open', function (id) {
+        newPeer.on('open', (id) => {
             console.log('Peer ID: ' + id)
             setPeer(newPeer)
         })
