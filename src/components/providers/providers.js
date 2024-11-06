@@ -10,8 +10,9 @@ import { Analytics } from '@vercel/analytics/react'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import de from 'javascript-time-ago/locale/de'
-TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(en)
 TimeAgo.addLocale(de)
+TimeAgo.setDefaultLocale('en')
 
 import { AutoTranslateProvider } from 'next-auto-translate'
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
