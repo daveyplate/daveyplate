@@ -14,7 +14,7 @@
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=daveyplate"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^0.0.71",
+    "@ai-sdk/openai": "^0.0.72",
     "@capacitor/android": "^5.7.6",
     "@capacitor/app": "^5.0.8",
     "@capacitor/browser": "^5.2.1",
