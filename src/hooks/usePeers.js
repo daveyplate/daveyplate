@@ -2,6 +2,14 @@ import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 import Peer, { DataConnection } from "peerjs"
 import { useEffect, useRef, useState } from "react"
 
+/**
+ * Peer Connections hook
+ * @param {Object} props - The hook props
+ * @param {boolean} [props.enabled=false] - Is the hook enabled
+ * @param {(data: any) => void} [props.onData=null] - The data handler
+ * @param {string} [props.room=null] - The room to connect to
+ * @returns {{ peers: any[], send: (data: any) => void, connections: DataConnection[], isOnline: (userId: string) => boolean }} The hook result
+ */
 export const usePeers = ({ enabled = false, onData = null, room = null }) => {
     const {
         entities: peers,
@@ -18,7 +26,8 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
 
     /**
      * Prepare connection handlers
-     * @param {DataConnection} conn
+     * @param {DataConnection} conn - The connection
+     * @param {boolean} [inbound=false] - Is the connection inbound
      */
     const handleConnection = (conn, inbound = false) => {
         onData && conn?.on("data", onData)
@@ -52,7 +61,9 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
 
     // Clean up the peer on unmount
     useEffect(() => {
-        return () => {
+        if (!enabled) return
+
+        const deletePeerOnUnload = () => {
             connectionsRef.current.forEach(c => c.close())
             setConnections([])
             connectionsRef.current = []
@@ -60,16 +71,25 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
             peer?.id && deletePeer(peer.id)
             peer?.destroy()
         }
+
+        window.addEventListener("beforeunload", deletePeerOnUnload)
+
+        return () => {
+            deletePeerOnUnload()
+            window.removeEventListener("beforeunload", deletePeerOnUnload)
+        }
     }, [peer])
 
     useEffect(() => {
+        if (!enabled) return
+
         setTimeout(() => {
             connectionAttempts.current = []
         }, 10000)
     }, [peers])
 
     useEffect(() => {
-        if (!peer?.id || !peers) return
+        if (!peer?.id || !peers || !enabled) return
 
         const keepPeerCurrent = () => {
             const currentPeer = peers.find(p => p.id == peer.id)
@@ -119,7 +139,7 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
         // Create a new Peer instance
         const newPeer = new Peer()
         newPeer.on('open', function (id) {
-            console.log('My peer ID is: ' + id)
+            console.log('Peer ID: ' + id)
             setPeer(newPeer)
         })
 
@@ -130,13 +150,22 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
         }
     }, [enabled])
 
+    /**
+     * Send data to all connections
+     * @param {any} data - The data to send
+     */
     const send = (data) => {
-        connectionsRef.current.forEach(c => c.send(data))
+        connectionsRef.current.forEach((conn) => conn.send(data))
     }
 
+    /** 
+     * Check if a user is online
+     * @param {string} userId - The user ID
+     * @returns {boolean} Is the user online
+     */
     const isOnline = (userId) => {
-        const connection = connections.find(conn => {
-            const connectionPeer = peers.find(p => p.id == conn.peer)
+        const connection = connections.find((conn) => {
+            const connectionPeer = peers.find((p) => p.id == conn.peer)
             return connectionPeer?.user_id == userId
         })
 
