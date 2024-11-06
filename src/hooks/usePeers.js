@@ -1,47 +1,72 @@
 import { useEntities } from "@daveyplate/supabase-swr-entities/client"
-import Peer from "peerjs"
+import Peer, { DataConnection } from "peerjs"
 import { useEffect, useRef, useState } from "react"
-import { v4 } from "uuid"
 
-export const usePeers = ({ enabled = false, onMessage = null, room = null }) => {
+export const usePeers = ({ enabled = false, onData = null, room = null }) => {
     const {
         entities: peers,
         createEntity: createPeer,
         updateEntity: updatePeer,
         deleteEntity: deletePeer,
-        isLoading: peersLoading
+        mutateEntities: mutatePeers,
     } = useEntities(enabled && 'peers', { room })
 
     const [peer, setPeer] = useState(null)
-    const connections = useRef([])
+    const [connections, setConnections] = useState([])
+    const connectionsRef = useRef([])
+    const connectionAttempts = useRef([])
 
-    const handleConnection = (conn) => {
-        onMessage && conn?.on("data", onMessage)
+    /**
+     * Prepare connection handlers
+     * @param {DataConnection} conn
+     */
+    const handleConnection = (conn, inbound = false) => {
+        onData && conn?.on("data", onData)
 
         conn?.on("open", () => {
-            connections.current = connections.current.filter(c => c.peer != conn.peer)
-            connections.current.push(conn)
+            console.log("connection opened")
+            connectionsRef.current = connectionsRef.current.filter(c => c.peer != conn.peer)
+            connectionsRef.current.push(conn)
+            connectionAttempts.current = connectionAttempts.current.filter(id => id != conn.peer)
+            setConnections(connectionsRef.current)
+
+            if (inbound) {
+                mutatePeers()
+            }
         })
 
         conn?.on('close', () => {
-            connections.current = connections.current.filter(c => c.peer != conn.peer)
+            console.log("connection closed")
+            connectionsRef.current = connectionsRef.current.filter(c => c.peer != conn.peer)
+            connectionAttempts.current = connectionAttempts.current.filter(id => id != conn.peer)
+            setConnections(connectionsRef.current)
+        })
+
+        conn?.on('error', (err) => {
+            console.error("connection error", err)
+            connectionsRef.current = connectionsRef.current.filter(c => c.peer != conn.peer)
+            connectionAttempts.current = connectionAttempts.current.filter(id => id != conn.peer)
+            setConnections(connectionsRef.current)
         })
     }
 
-    useEffect(() => {
-        console.log("connections", connections?.current)
-    }, [connections?.current])
-
     // Clean up the peer on unmount
     useEffect(() => {
-        if (!peer?.id) return
-
         return () => {
-            deletePeer(peer.id)
-            peer.destroy()
-            connections.current = []
+            connectionsRef.current.forEach(c => c.close())
+            setConnections([])
+            connectionsRef.current = []
+            connectionAttempts.current = []
+            peer?.id && deletePeer(peer.id)
+            peer?.destroy()
         }
     }, [peer])
+
+    useEffect(() => {
+        setTimeout(() => {
+            connectionAttempts.current = []
+        }, 10000)
+    }, [peers])
 
     useEffect(() => {
         if (!peer?.id || !peers) return
@@ -64,19 +89,26 @@ export const usePeers = ({ enabled = false, onMessage = null, room = null }) => 
             createPeer({ id: peer.id, room })
         }
 
-        peer.on("connection", handleConnection)
+        const inboundConnection = (conn) => {
+            handleConnection(conn, true)
+        }
+
+        peer.on("connection", inboundConnection)
 
         peers.forEach(p => {
             if (p.id == peer.id) return
-            if (connections.current.some(c => c.peer == p.id)) return
+            if (connectionsRef.current.some(c => c.peer == p.id)) return
+            if (connectionAttempts.current.includes(p.id)) return
 
+            console.log("connection attempt", p.id)
+            connectionAttempts.current.push(p.id)
             const conn = peer.connect(p.id)
             handleConnection(conn)
         })
 
         return () => {
             clearInterval(interval)
-            peer.off("connection", handleConnection)
+            peer.off("connection", inboundConnection)
         }
     }, [peers, peer])
 
@@ -99,8 +131,17 @@ export const usePeers = ({ enabled = false, onMessage = null, room = null }) => 
     }, [enabled])
 
     const send = (data) => {
-        connections.current.forEach(c => c.send(data))
+        connectionsRef.current.forEach(c => c.send(data))
     }
 
-    return { peers, send }
+    const isOnline = (userId) => {
+        const connection = connections.find(conn => {
+            const connectionPeer = peers.find(p => p.id == conn.peer)
+            return connectionPeer?.user_id == userId
+        })
+
+        return !!connection
+    }
+
+    return { peers, send, connections, isOnline }
 }

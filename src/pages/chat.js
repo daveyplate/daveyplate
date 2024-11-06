@@ -1,6 +1,6 @@
 import { useEntities, useEntity } from '@daveyplate/supabase-swr-entities/client'
 
-import { Button, Card, CardBody, Input, cn } from "@nextui-org/react"
+import { Badge, Button, Card, CardBody, Input, cn } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
@@ -27,9 +27,9 @@ export default function Messages() {
     } = useEntities('messages', { limit: 20 })
     messages?.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
 
-    const { send: sendData } = usePeers({
+    const { send: sendData, isOnline } = usePeers({
         enabled: !!session,
-        onMessage: () => mutateMessages(),
+        onData: () => mutateMessages(),
         room: "chat"
     })
 
@@ -97,7 +97,7 @@ export default function Messages() {
 
     return (
         <div className="flex-container max-w-xl mx-auto justify-end !pb-16">
-            {messages?.map((message, index) => (
+            {messages?.map((message) => (
                 <div
                     key={message.id}
                     className={cn(
@@ -105,7 +105,19 @@ export default function Messages() {
                         message.user_id === user?.id && "flex-row-reverse"
                     )}
                 >
-                    <UserAvatar user={message.user} />
+                    <div>
+                        <Badge
+                            isOneChar
+                            isInvisible={message.user_id != user?.id && !isOnline(message.user_id)}
+                            color="success"
+                            shape="circle"
+                            placement="bottom-right"
+                            size="sm"
+                        >
+                            <UserAvatar user={message.user} />
+                        </Badge>
+                    </div>
+
 
                     <Card className={cn("max-w-[70%]",
                         message.user_id === user?.id && "bg-primary text-primary-foreground"
