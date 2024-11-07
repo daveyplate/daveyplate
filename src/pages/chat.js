@@ -5,7 +5,7 @@ import { Badge, Button, Card, CardBody, Input, cn } from "@nextui-org/react"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import UserAvatar from '@/components/user-avatar'
 import ReactTimeAgo from 'react-time-ago'
 import { ArrowUpIcon, TrashIcon } from '@heroicons/react/24/solid'
@@ -36,6 +36,7 @@ export default function Messages() {
     const [content, setContent] = useState('')
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const [prevScrollHeight, setPrevScrollHeight] = useState(null)
+    const inputRef = useRef(null)
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
@@ -79,6 +80,8 @@ export default function Messages() {
 
         if (!content || !session) return
 
+        setShouldScrollDown(true)
+
         const newMessage = {
             id: v4(),
             user_id: user.id,
@@ -93,10 +96,14 @@ export default function Messages() {
         mutateMessages([...messages, { ...newMessage, user }], false)
 
         setContent('')
+
+        inputRef.current.focus()
     }
 
     return (
-        <div className="flex-container max-w-xl mx-auto justify-end !pb-16">
+        <div className={cn(messages ? "opacity-1" : "opacity-0",
+            "flex-container max-w-xl mx-auto justify-end !pb-16 transition-all"
+        )}>
             {messages?.map((message) => (
                 <div
                     key={message.id}
@@ -163,6 +170,8 @@ export default function Messages() {
             <div className="fixed bottom-16 mb-safe w-full left-0 flex bg-background/90 z-20 backdrop-blur">
                 <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
                     <Input
+                        ref={inputRef}
+                        autoFocus
                         size="lg"
                         variant="bordered"
                         placeholder={
