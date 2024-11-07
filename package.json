@@ -44,7 +44,6 @@
     "@uidotdev/usehooks": "^2.4.1",
     "@vercel/analytics": "^1.3.2",
     "@vercel/speed-insights": "^1.0.14",
-    "autoprefixer": "^10.4.19",
     "compressorjs": "^1.2.1",
     "framer-motion": "^11.11.10",
     "javascript-time-ago": "^2.5.11",

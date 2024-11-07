@@ -29,6 +29,5 @@ module.exports = {
     }),
     require("tailwindcss-animate"),
     require("tailwindcss-safe-area"),
-    require("autoprefixer"),
   ],
 }
