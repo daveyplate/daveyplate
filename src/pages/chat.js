@@ -1,18 +1,20 @@
+import { useEffect, useRef, useState } from 'react'
+import ReactTimeAgo from 'react-time-ago'
+import { useLocale } from 'next-intl'
+import { v4 } from 'uuid'
+import { useSession } from '@supabase/auth-helpers-react'
+
 import { useEntities, useEntity } from '@daveyplate/supabase-swr-entities/client'
 
 import { Badge, Button, Card, CardBody, Input, cn } from "@nextui-org/react"
+import { ArrowUpIcon, TrashIcon } from '@heroicons/react/24/solid'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-import { useEffect, useRef, useState } from 'react'
-import UserAvatar from '@/components/user-avatar'
-import ReactTimeAgo from 'react-time-ago'
-import { ArrowUpIcon, TrashIcon } from '@heroicons/react/24/solid'
-import { useSession } from '@supabase/auth-helpers-react'
-import { v4 } from 'uuid'
-import { useLocale } from 'next-intl'
+
 import { usePeers } from '@/hooks/usePeers'
+import UserAvatar from '@/components/user-avatar'
 
 export default function Messages() {
     const session = useSession()
@@ -89,7 +91,8 @@ export default function Messages() {
             created_at: new Date()
         }
 
-        createMessage(newMessage).then(() => sendData("create_message"))
+        createMessage(newMessage)
+            .then(() => sendData("create_message"))
 
         mutateMessages([...messages, { ...newMessage, user }], false)
 
@@ -189,7 +192,7 @@ export default function Messages() {
                                 radius="full"
                                 className="-me-1"
                                 isDisabled={!content || !session}
-                                onPressStart={() => sendMessage()}
+                                onPressStart={sendMessage}
                             >
                                 <ArrowUpIcon className="size-4" />
                             </Button>
