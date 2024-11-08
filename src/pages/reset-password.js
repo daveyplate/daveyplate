@@ -8,12 +8,11 @@ import { CheckIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
+import { useLocaleRouter } from '@/i18n/routing'
 import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
 import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
-import { useLocaleRouter } from '@/i18n/routing'
-
 import { toast } from '@/components/providers/toast-provider'
 
 export default function ResetPassword() {

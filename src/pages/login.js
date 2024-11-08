@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { useSessionContext } from '@supabase/auth-helpers-react'
+import { useIsClient } from '@uidotdev/usehooks'
 
 import { useAutoTranslate } from 'next-auto-translate'
 import { useClearCache } from '@daveyplate/supabase-swr-entities/client'
@@ -13,14 +14,12 @@ import { useClearCache } from '@daveyplate/supabase-swr-entities/client'
 import { Card, CardBody, cn } from "@nextui-org/react"
 
 import { useLocaleRouter } from "@/i18n/routing"
-
-import { createClient } from '@/utils/supabase/component'
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
+import { createClient } from '@/utils/supabase/component'
 
 import DefaultFont from "@/styles/fonts"
-import { useIsClient } from '@uidotdev/usehooks'
 
 export default function Login({ view }) {
     const router = useRouter()

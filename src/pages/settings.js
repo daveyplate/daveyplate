@@ -29,15 +29,15 @@ import {
     UserIcon
 } from '@heroicons/react/24/solid'
 
-import { createClient } from '@/utils/supabase/component'
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
+import { Link, useLocaleRouter } from '@/i18n/routing'
+import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
 import { toast } from '@/components/providers/toast-provider'
 import ThemeDropdown from '@/components/theme-dropdown'
 import LocaleDropdown from '@/components/locale-dropdown'
-import { Link, useLocaleRouter } from '@/i18n/routing'
 
 export default function Settings() {
     const router = useRouter()
@@ -92,10 +92,11 @@ export default function Settings() {
         if (error) {
             console.error(error)
             toast(error.message, { color: 'danger' })
-        } else {
-            setNewEmail(email)
-            toast(confirmEmail)
+            return
         }
+
+        setNewEmail(email)
+        toast(confirmEmail)
     }
 
     const updatePassword = async (e) => {
@@ -136,15 +137,16 @@ export default function Settings() {
         setUpdatingPassword(false)
 
         if (error) {
+            console.error(error)
             toast(error.message, { color: 'danger' })
-        } else {
-            setPassword('')
-
-            toast(passwordChanged, { color: 'success' })
-
-            // Sign out other devices
-            supabase.auth.signOut({ scope: 'others' })
+            return
         }
+
+        setPassword('')
+        toast(passwordChanged, { color: 'success' })
+
+        // Sign out other devices
+        supabase.auth.signOut({ scope: 'others' })
     }
 
     const deactivateAccount = async () => {
@@ -152,11 +154,12 @@ export default function Settings() {
 
         if (error) {
             toast(error.message, { color: 'danger' })
-        } else {
-            toast(accountDeactivated, { color: 'warning' })
-            supabase.auth.signOut({ scope: 'others' })
-            localeRouter.replace('/logout')
+            return
         }
+
+        toast(accountDeactivated, { color: 'warning' })
+        supabase.auth.signOut({ scope: 'others' })
+        localeRouter.replace('/logout')
     }
 
     const deleteAccount = async () => {
@@ -164,10 +167,11 @@ export default function Settings() {
 
         if (error) {
             toast(error.message, { color: 'danger' })
-        } else {
-            toast(accountDeleted, { color: 'danger' })
-            localeRouter.replace('/logout')
+            return
         }
+
+        toast(accountDeleted, { color: 'danger' })
+        localeRouter.replace('/logout')
     }
 
     const manageSubscription = () => {

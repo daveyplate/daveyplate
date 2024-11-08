@@ -1,21 +1,18 @@
 import { useState } from "react"
+import { useDebounce } from "@uidotdev/usehooks"
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
+import { useEntities } from "@daveyplate/supabase-swr-entities/client"
+
+import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
+import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
+
+import { Link } from "@/i18n/routing"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { dynamicHref, isExport } from "@/utils/utils"
 
-import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
-
 import UserAvatar from "@/components/user-avatar"
-
-import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
-import { useEntities } from "@daveyplate/supabase-swr-entities/client"
-import { useDebounce } from "@uidotdev/usehooks"
-import { Link } from "@/i18n/routing"
-
-// <div className="fixed top-0 w-screen h-safe bg-background z-40" />
-// <div className="sticky top-safe z-40 backdrop-blur-xl bg-background/70 shadow-lg sm:shadow-none w-full">
 
 export default function UsersPage() {
     const { autoTranslate } = useAutoTranslate()

@@ -7,11 +7,10 @@ import { PageTitle } from "@daveyplate/next-page-title"
 import { Spinner } from "@nextui-org/react"
 
 import { useLocaleRouter } from "@/i18n/routing"
-
-import { createClient } from "@/utils/supabase/component"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
+import { createClient } from "@/utils/supabase/component"
 
 export default () => {
     const supabase = createClient()
@@ -24,12 +23,11 @@ export default () => {
             CapacitorCookies.clearCookies()
         }
 
-        supabase.auth.signOut(
-            { scope: "local" }
-        ).finally(() => {
-            localeRouter.replace("/login")
-            clearCache()
-        })
+        supabase.auth.signOut({ scope: "local" })
+            .finally(() => {
+                localeRouter.replace("/login")
+                clearCache()
+            })
     }, [])
 
     return (
