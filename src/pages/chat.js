@@ -16,7 +16,7 @@ import { isExport } from "@/utils/utils"
 import { usePeers } from '@/hooks/usePeers'
 import UserAvatar from '@/components/user-avatar'
 
-export default function Messages() {
+export default function Chat() {
     const session = useSession()
     const locale = useLocale()
     const { entity: user } = useEntity(session && 'profiles', 'me')
