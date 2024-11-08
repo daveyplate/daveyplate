@@ -192,7 +192,7 @@ export default function Messages() {
                                 radius="full"
                                 className="-me-1"
                                 isDisabled={!content || !session}
-                                onPressStart={sendMessage}
+                                onPressStart={() => sendMessage()}
                             >
                                 <ArrowUpIcon className="size-4" />
                             </Button>
