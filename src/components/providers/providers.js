@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import { ThemeProvider } from "next-themes"
 import { NextUIProvider } from "@nextui-org/react"
@@ -19,13 +20,14 @@ import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
 import { PageTitleProvider } from '@daveyplate/next-page-title'
 
 import i18nConfig from 'i18n.config'
+import { usePathname, useLocaleRouter } from "@/i18n/routing"
 import { createClient } from '@/utils/supabase/component'
+import { iOS } from '@/utils/utils'
 
 import MetaTheme from "@/components/providers/meta-theme"
 import ToastProvider from "@/components/providers/toast-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
-import { usePathname, useLocaleRouter } from "@/i18n/routing"
 
 const localeValues = [
     'fr-FR', 'fr-CA', 'de-DE', 'en-US', 'en-GB', 'ja-JP',
@@ -49,6 +51,10 @@ export default function Providers({ children, ...pageProps }) {
     })
 
     const nextUILocale = localeValues.find((locale) => locale.startsWith(pageProps.locale))
+
+    useEffect(() => {
+        window.history.scrollRestoration = iOS() ? 'auto' : 'manual'
+    }, [localeRouter])
 
     return (
         <PageTitleProvider>

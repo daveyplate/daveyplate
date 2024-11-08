@@ -9,19 +9,9 @@ import DefaultFont from "@/styles/fonts"
 import Providers from "@/components/providers/providers"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import PageTransition from "@/components/page-transition"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
-import { iOS } from "@/utils/utils"
 import { OpenGraph } from "@daveyplate/next-open-graph"
 
 const MyApp = ({ Component, pageProps }) => {
-    const router = useRouter()
-
-    useEffect(() => {
-        window.history.scrollRestoration = iOS() ? 'auto' : 'manual'
-    }, [router])
-
     return (
         <NextIntlClientProvider
             locale={pageProps.locale || "en"}
@@ -43,7 +33,7 @@ const MyApp = ({ Component, pageProps }) => {
 
                 <style jsx global>{`
                     html {
-                    font-family: ${DefaultFont.style.fontFamily}
+                        font-family: ${DefaultFont.style.fontFamily}
                     }
                 `}</style>
 
@@ -56,6 +46,7 @@ const MyApp = ({ Component, pageProps }) => {
                 `}>
                     <Component {...pageProps} />
                 </main>
+
                 <Footer {...pageProps} />
             </Providers>
         </NextIntlClientProvider>
