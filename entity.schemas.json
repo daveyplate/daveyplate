@@ -10,6 +10,9 @@
         "disableList": false
     },
     {
+        "table": "peers"
+    },
+    {
         "table": "messages",
         "select": [
             "*",
@@ -19,9 +22,6 @@
             "user.deactivated": false
         },
         "defaultOrder": "-created_at"
-    },
-    {
-        "table": "peers"
     },
     {
         "table": "whispers",
