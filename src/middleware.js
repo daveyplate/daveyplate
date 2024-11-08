@@ -8,7 +8,7 @@ const corsOptions = {
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 }
 
-export function middleware(request) {
+function nextCors({ request, allowedOrigins, corsOptions }) {
     // Check the origin from the request
     const origin = request.headers.get('origin') ?? ''
     const isAllowedOrigin = allowedOrigins.includes(origin)
@@ -34,6 +34,13 @@ export function middleware(request) {
     Object.entries(corsOptions).forEach(([key, value]) => {
         response.headers.set(key, value)
     })
+
+    return response
+}
+
+export function middleware(request) {
+    // CORS
+    const response = nextCors({ request, allowedOrigins, corsOptions })
 
     // Rate Limiting
     if (process.env.NODE_ENV === 'production') {
