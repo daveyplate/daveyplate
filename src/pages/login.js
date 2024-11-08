@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Capacitor } from '@capacitor/core'
 import { useTheme } from 'next-themes'
@@ -18,7 +18,6 @@ import { createClient } from '@/utils/supabase/component'
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-import { getURL } from '@/utils/utils'
 
 import DefaultFont from "@/styles/fonts"
 
@@ -30,8 +29,17 @@ export default function Login({ view }) {
     const { resolvedTheme } = useTheme()
     const { session, isLoading: sessionLoading } = useSessionContext()
     const clearCache = useClearCache()
+    const [redirectTo, setRedirectTo] = useState(null)
 
     const defaultReturnTo = "/"
+
+    useEffect(() => {
+        if (Capacitor.isNativePlatform()) {
+            setRedirectTo('com.leaked.daveyplate://login-callback/?returnTo=' + (router.query.returnTo || defaultReturnTo))
+        } else {
+            setRedirectTo(window.location.origin + (router.query.returnTo || defaultReturnTo))
+        }
+    }, [])
 
     useEffect(() => {
         if (session) {
@@ -96,12 +104,6 @@ export default function Login({ view }) {
             button_label: autoTranslate('verify_otp_button_label', 'Verify token'),
             loading_button_label: autoTranslate('verify_otp_loading_button_label', 'Logging in …'),
         },
-    }
-
-    let redirectTo = getURL() + (router.query.returnTo || defaultReturnTo)
-
-    if (Capacitor.isNativePlatform()) {
-        redirectTo = 'com.leaked.daveyplate://login-callback/?returnTo=' + (router.query.returnTo || defaultReturnTo)
     }
 
     return (
