@@ -30,17 +30,14 @@ export default function ToastProvider() {
     )
 }
 
-export const toast = (message, opts = {}) => {
-    const color = opts.color
-
-    let className = 'bg-default text-default-foreground'
-
-    if (color) {
-        className = `bg-${color} text-${color}-foreground`
-    }
-
-    opts.className = cn(className, opts.className)
-    delete opts.color
-
-    sonnerToast(message, opts)
+/**
+ * Show a toast message
+ * @param {string} message The message to display
+ * @param {object} opts Options for the toast
+ * @param {string} [opts.color="default"] The color of the toast
+ * @param {string} [opts.className] The color of the toast
+ */
+export const toast = (message, { color = "default", className = null }) => {
+    className = `bg-${color} text-${color}-foreground`
+    sonnerToast(message, { className })
 }

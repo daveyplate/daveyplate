@@ -8,7 +8,6 @@ import { toast } from "@/components/providers/toast-provider"
 
 // The key purpose is to ensure that the user's subscription status is checked after a successful order
 export default function CheckoutStatus() {
-    // TODO FIX postAPI missing session here
     const router = useRouter()
     const session = useSession()
     const { entity: user, mutateEntity: mutateUser } = useEntity(session ? 'profiles' : null, 'me')
