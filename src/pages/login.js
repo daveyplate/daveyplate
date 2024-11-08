@@ -20,6 +20,7 @@ import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
 import DefaultFont from "@/styles/fonts"
+import { useIsClient } from '@uidotdev/usehooks'
 
 export default function Login({ view }) {
     const router = useRouter()
@@ -30,6 +31,7 @@ export default function Login({ view }) {
     const { session, isLoading: sessionLoading } = useSessionContext()
     const clearCache = useClearCache()
     const [redirectTo, setRedirectTo] = useState(null)
+    const isClient = useIsClient()
 
     const defaultReturnTo = "/"
 
@@ -106,7 +108,7 @@ export default function Login({ view }) {
         },
     }
 
-    return (
+    return isClient && (
         <div className={cn((!session && !sessionLoading) ? "opacity-1" : "opacity-0",
             "flex-center transition-all max-w-lg"
         )}>
