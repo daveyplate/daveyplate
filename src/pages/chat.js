@@ -16,22 +16,123 @@ import { isExport } from "@/utils/utils"
 import { usePeers } from '@/hooks/usePeers'
 import UserAvatar from '@/components/user-avatar'
 
-export default function Chat() {
-    const session = useSession()
+function MessagesPage({ user, isOnline, shouldScrollDown, page, prevScrollHeight, setPrevScrollHeight, setMessageCount, setMutateMessages, setCreateMessage, sendData, limit }) {
     const locale = useLocale()
-    const { entity: user } = useEntity(session && 'profiles', 'me')
 
     const {
         entities: messages,
         createEntity: createMessage,
         deleteEntity: deleteMessage,
-        mutateEntities: mutateMessages
-    } = useEntities('messages', { limit: 20 })
-    messages?.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+        mutateEntities: mutateMessages,
+        count
+    } = useEntities('messages', { limit, offset: page * limit })
+    // messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    const scrolled = useRef(false)
+
+    useEffect(() => {
+        if (!messages) return
+        setMessageCount(count)
+
+        if (page == 0) {
+            setCreateMessage(() => (message) => {
+                createMessage(message)
+                mutateMessages([{ ...message, user }, ...messages], false)
+            })
+
+            setMutateMessages(() => mutateMessages)
+        }
+
+        // scroll to bottom
+        if (shouldScrollDown) {
+            window.scrollTo(0, document.body.scrollHeight)
+        } else if (prevScrollHeight && !scrolled.current) {
+            scrolled.current = true
+            const { scrollTop, scrollHeight } = document.scrollingElement
+            window.scrollTo(0, scrollTop + (scrollHeight - prevScrollHeight), { behavior: 'smooth' })
+
+            setPrevScrollHeight(null)
+        }
+    }, [messages, shouldScrollDown])
+
+    return (
+        messages?.map((message) => (
+            <div
+                key={message.id}
+                className={cn(
+                    "flex gap-3 w-full",
+                    message.user_id === user?.id && "flex-row-reverse"
+                )}
+            >
+                <div>
+                    <Badge
+                        isOneChar
+                        isInvisible={message.user_id != user?.id && !isOnline(message.user_id)}
+                        color="success"
+                        shape="circle"
+                        placement="bottom-right"
+                        size="sm"
+                    >
+                        <UserAvatar user={message.user} />
+                    </Badge>
+                </div>
+
+                <Card className={cn("max-w-[70%]",
+                    message.user_id === user?.id && "bg-primary text-primary-foreground"
+                )}>
+                    <CardBody className="px-4 py-3 gap-2">
+                        <div className="flex gap-4 items-center">
+                            <h6>
+                                {message.user?.full_name || "Unnamed"}
+                            </h6>
+
+                            <ReactTimeAgo
+                                className={cn("ms-auto text-tiny font-light",
+                                    message.user_id === user?.id ? "text-primary-foreground/60" : "text-foreground/60"
+                                )}
+                                date={new Date()}
+                                locale={locale}
+                                timeStyle="mini-minute-now"
+                            />
+                        </div>
+
+                        <p className="font-light text-foreground-80">
+                            {message.content}
+                        </p>
+                    </CardBody>
+                </Card>
+
+                {message.user_id === user?.id && (
+                    <Button
+                        size="sm"
+                        variant="light"
+                        isIconOnly
+                        radius="full"
+                        onPress={() => {
+                            deleteMessage(message.id)
+                                .then(() => sendData("delete_message"))
+                        }}
+                        className="-mx-1 self-center"
+                    >
+                        <TrashIcon className="size-4" />
+                    </Button>
+                )}
+            </div>
+        ))
+    )
+}
+
+export default function Chat() {
+    const session = useSession()
+    const [pageCount, setPageCount] = useState(1)
+    const [messageCount, setMessageCount] = useState(0)
+    const [mutateMessages, setMutateMessages] = useState(null)
+    const [createMessage, setCreateMessage] = useState(null)
+    const pageLimit = 100
+    const { entity: user } = useEntity(session && 'profiles', 'me')
 
     const { send: sendData, isOnline } = usePeers({
         enabled: !!session,
-        onData: () => mutateMessages(),
+        onData: () => mutateMessages && mutateMessages(),
         room: "chat"
     })
 
@@ -43,9 +144,11 @@ export default function Chat() {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
 
         if (scrollTop == 0) {
-            console.log("scrollTop", scrollTop)
-            // setVisibleMessagesCount(prevCount => prevCount + 10)
             setPrevScrollHeight(scrollHeight)
+
+            if (messageCount > pageCount * pageLimit) {
+                setPageCount(prevCount => prevCount + 1)
+            }
         }
 
         const isAtBottom = scrollTop + clientHeight >= scrollHeight
@@ -59,22 +162,7 @@ export default function Chat() {
         return () => {
             document.removeEventListener("scroll", handleScroll, true)
         }
-    }, [])
-
-    useEffect(() => {
-        // scroll to bottom
-        if (shouldScrollDown) {
-            window.scrollTo(0, document.body.scrollHeight)
-        } else if (prevScrollHeight) {
-            console.log("prevScrollHeight", prevScrollHeight)
-            const { scrollTop, scrollHeight } = document.scrollingElement
-            console.log("scrollTop", scrollTop)
-            console.log("scrollHeight", scrollHeight)
-            window.scrollTo(0, scrollTop + (scrollHeight - prevScrollHeight))
-
-            setPrevScrollHeight(null)
-        }
-    }, [messages])
+    }, [messageCount, pageCount, pageLimit])
 
     const sendMessage = (e) => {
         e?.preventDefault()
@@ -90,81 +178,37 @@ export default function Chat() {
         }
 
         createMessage(newMessage)
-            .then(() => sendData("create_message"))
+        sendData("create_message")
 
-        mutateMessages([...messages, { ...newMessage, user }], false)
         setContent('')
     }
 
+    useEffect(() => {
+        console.log(createMessage)
+    }, [createMessage])
+
     return (
-        <div className={cn(messages ? "opacity-1" : "opacity-0",
+        <div className={cn(
             "flex-container max-w-xl mx-auto justify-end !pb-16 transition-all"
         )}>
-            {messages?.map((message) => (
-                <div
-                    key={message.id}
-                    className={cn(
-                        "flex gap-3 w-full",
-                        message.user_id === user?.id && "flex-row-reverse"
-                    )}
-                >
-                    <div>
-                        <Badge
-                            isOneChar
-                            isInvisible={message.user_id != user?.id && !isOnline(message.user_id)}
-                            color="success"
-                            shape="circle"
-                            placement="bottom-right"
-                            size="sm"
-                        >
-                            <UserAvatar user={message.user} />
-                        </Badge>
-                    </div>
-
-
-                    <Card className={cn("max-w-[70%]",
-                        message.user_id === user?.id && "bg-primary text-primary-foreground"
-                    )}>
-                        <CardBody className="px-4 py-3 gap-2">
-                            <div className="flex gap-4 items-center">
-                                <h6>
-                                    {message.user?.full_name || "Unnamed"}
-                                </h6>
-
-                                <ReactTimeAgo
-                                    className={cn("ms-auto text-tiny font-light",
-                                        message.user_id === user?.id ? "text-primary-foreground/60" : "text-foreground/60"
-                                    )}
-                                    date={new Date(message.created_at)}
-                                    locale={locale}
-                                    timeStyle="mini-minute-now"
-                                />
-                            </div>
-
-                            <p className="font-light text-foreground-80">
-                                {message.content}
-                            </p>
-                        </CardBody>
-                    </Card>
-
-                    {message.user_id === user?.id && (
-                        <Button
-                            size="sm"
-                            variant="light"
-                            isIconOnly
-                            radius="full"
-                            onPress={() => {
-                                deleteMessage(message.id)
-                                    .then(() => sendData("delete_message"))
-                            }}
-                            className="-mx-1 self-center"
-                        >
-                            <TrashIcon className="size-4" />
-                        </Button>
-                    )}
-                </div>
-            ))}
-
+            <div className="flex flex-col gap-4 w-full flex-col-reverse">
+                {[...Array(pageCount).keys()].map((page) => (
+                    <MessagesPage
+                        key={page}
+                        page={page}
+                        user={user}
+                        isOnline={isOnline}
+                        shouldScrollDown={shouldScrollDown}
+                        prevScrollHeight={prevScrollHeight}
+                        setPrevScrollHeight={setPrevScrollHeight}
+                        setMessageCount={setMessageCount}
+                        setMutateMessages={setMutateMessages}
+                        setCreateMessage={setCreateMessage}
+                        sendData={sendData}
+                        limit={pageLimit}
+                    />
+                ))}
+            </div>
             <div className="fixed bottom-16 mb-safe w-full left-0 flex bg-background/90 z-20 backdrop-blur">
                 <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
                     <Input
