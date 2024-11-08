@@ -76,7 +76,7 @@ export default function Messages() {
     }, [messages])
 
     const sendMessage = (e) => {
-        e.preventDefault()
+        e?.preventDefault()
 
         if (!content || !session) return
 
@@ -89,15 +89,11 @@ export default function Messages() {
             created_at: new Date()
         }
 
-        createMessage(newMessage).then(() => {
-            sendData("create_message")
-        })
+        createMessage(newMessage).then(() => sendData("create_message"))
 
         mutateMessages([...messages, { ...newMessage, user }], false)
 
         setContent('')
-
-        inputRef.current.focus()
     }
 
     return (
@@ -131,11 +127,13 @@ export default function Messages() {
                     )}>
                         <CardBody className="px-4 py-3 gap-2">
                             <div className="flex gap-4 items-center">
-                                <h6>{message.user?.full_name || "Unnamed"}</h6>
+                                <h6>
+                                    {message.user?.full_name || "Unnamed"}
+                                </h6>
 
                                 <ReactTimeAgo
-                                    className={cn("ms-auto text-tiny font-light"
-                                        , message.user_id === user?.id ? "text-primary-foreground/60" : "text-foreground/60"
+                                    className={cn("ms-auto text-tiny font-light",
+                                        message.user_id === user?.id ? "text-primary-foreground/60" : "text-foreground/60"
                                     )}
                                     date={new Date(message.created_at)}
                                     locale={locale}
@@ -155,9 +153,9 @@ export default function Messages() {
                             variant="light"
                             isIconOnly
                             radius="full"
-                            onPress={async () => {
-                                const { error } = await deleteMessage(message.id)
-                                !error && sendData("delete_message")
+                            onPress={() => {
+                                deleteMessage(message.id)
+                                    .then(() => sendData("delete_message"))
                             }}
                             className="-mx-1 self-center"
                         >
@@ -185,13 +183,13 @@ export default function Messages() {
                         autoComplete='off'
                         endContent={
                             <Button
-                                type="submit"
                                 size="sm"
                                 color="primary"
                                 isIconOnly
                                 radius="full"
                                 className="-me-1"
                                 isDisabled={!content || !session}
+                                onPressStart={() => sendMessage()}
                             >
                                 <ArrowUpIcon className="size-4" />
                             </Button>
