@@ -38,7 +38,6 @@ export default function Messages() {
     const [content, setContent] = useState('')
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const [prevScrollHeight, setPrevScrollHeight] = useState(null)
-    const inputRef = useRef(null)
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
@@ -79,7 +78,6 @@ export default function Messages() {
 
     const sendMessage = (e) => {
         e?.preventDefault()
-
         if (!content || !session) return
 
         setShouldScrollDown(true)
@@ -95,7 +93,6 @@ export default function Messages() {
             .then(() => sendData("create_message"))
 
         mutateMessages([...messages, { ...newMessage, user }], false)
-
         setContent('')
     }
 
@@ -171,7 +168,6 @@ export default function Messages() {
             <div className="fixed bottom-16 mb-safe w-full left-0 flex bg-background/90 z-20 backdrop-blur">
                 <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
                     <Input
-                        ref={inputRef}
                         autoFocus
                         size="lg"
                         variant="bordered"
