@@ -9,7 +9,18 @@ import { TrashIcon } from '@heroicons/react/24/solid'
 
 import UserAvatar from '@/components/user-avatar'
 
-export default function MessagesPage({ user, isOnline, shouldScrollDown, page, prevScrollHeight, setMessageCount, setCreateMessage, setInsertMessage, sendData, limit }) {
+export default function MessagesPage({
+    user,
+    isOnline,
+    shouldScrollDown,
+    page,
+    prevScrollHeight,
+    setMessageCount,
+    setCreateMessage,
+    setInsertMessage,
+    sendData,
+    limit
+}) {
     const locale = useLocale()
 
     const {
@@ -19,7 +30,6 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
         mutateEntities: mutateMessages,
         count
     } = useEntities('messages', { limit, offset: page * limit })
-    // messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
     useEffect(() => {
         if (!messages) return
@@ -36,7 +46,6 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
             })
         }
 
-        // scroll to bottom
         if (shouldScrollDown) {
             window.scrollTo(0, document.body.scrollHeight)
         } else if (prevScrollHeight.current) {
@@ -52,7 +61,7 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
                 key={message.id}
                 className={cn(
                     "flex gap-3 w-full",
-                    message.user_id === user?.id && "flex-row-reverse"
+                    message.user_id == user?.id && "flex-row-reverse"
                 )}
             >
                 <div>
@@ -69,7 +78,7 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
                 </div>
 
                 <Card className={cn("max-w-[70%]",
-                    message.user_id === user?.id && "bg-primary text-primary-foreground"
+                    message.user_id == user?.id && "bg-primary text-primary-foreground"
                 )}>
                     <CardBody className="px-4 py-3 gap-2">
                         <div className="flex gap-4 items-center">
@@ -79,7 +88,7 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
 
                             <ReactTimeAgo
                                 className={cn("ms-auto text-tiny font-light",
-                                    message.user_id === user?.id ? "text-primary-foreground/60" : "text-foreground/60"
+                                    message.user_id == user?.id ? "text-primary-foreground/60" : "text-foreground/60"
                                 )}
                                 date={new Date()}
                                 locale={locale}
@@ -93,7 +102,7 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
                     </CardBody>
                 </Card>
 
-                {message.user_id === user?.id && (
+                {message.user_id == user?.id && (
                     <Button
                         size="sm"
                         variant="light"
