@@ -21,7 +21,7 @@ export default function Chat() {
     const [createMessage, setCreateMessage] = useState(null)
     const [insertMessage, setInsertMessage] = useState(null)
     const mutateEntities = useMutateEntities()
-    const pageLimit = 100
+    const pageLimit = 20
     const { entity: user } = useEntity(session && 'profiles', 'me')
     const onData = useRef(null)
 
