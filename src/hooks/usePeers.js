@@ -134,7 +134,7 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
             clearInterval(interval)
             peer.off("connection", inboundConnection)
         }
-    }, [peers, peer, connections])
+    }, [peers, peer, connections, onData])
 
 
     useEffect(() => {

@@ -27,15 +27,7 @@ export default function Chat() {
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const prevScrollHeight = useRef(null)
 
-    const onData = useRef(null)
-
-    const { sendData, isOnline, peers } = usePeers({
-        enabled: !!session,
-        onData: (data) => onData.current(data),
-        room: "chat"
-    })
-
-    onData.current = (data) => {
+    const onData = (data) => {
         const reloadMessages = () => {
             for (let page = 0; page < pageCount; page++) {
                 mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit })
@@ -55,6 +47,12 @@ export default function Chat() {
             }
         }
     }
+
+    const { sendData, isOnline, peers } = usePeers({
+        enabled: !!session,
+        onData: (data) => onData(data),
+        room: "chat"
+    })
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
@@ -121,6 +119,7 @@ export default function Chat() {
                     />
                 ))}
             </div>
+
             <div className="fixed bottom-16 mb-safe w-full left-0 flex bg-background/90 z-20 backdrop-blur">
                 <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
                     <Input
