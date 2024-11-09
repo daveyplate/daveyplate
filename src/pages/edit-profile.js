@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocale } from 'use-intl'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { getLocaleValue, useEntity } from '@daveyplate/supabase-swr-entities/client'
 import { DragDropzone } from '@daveyplate/tailwind-drag-dropzone'
 import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
 
@@ -32,12 +33,14 @@ import UploadAvatarModal from '@/components/upload-avatar-modal'
 
 export default function EditProfile() {
     const supabase = createClient()
+    const locale = useLocale()
     const { autoTranslate } = useAutoTranslate()
     const { session } = useAuthenticatedPage()
     const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
+    const localizedBio = getLocaleValue(user?.bio, locale)
 
     const [name, setName] = useState(user?.full_name || '')
-    const [bio, setBio] = useState(user?.bio || '')
+    const [bio, setBio] = useState(localizedBio || '')
     const [nameError, setNameError] = useState(null)
     const [bioError, setBioError] = useState(null)
     const [avatarFile, setAvatarFile] = useState(null)
@@ -47,7 +50,7 @@ export default function EditProfile() {
 
     const maxBioLength = 500
 
-    const formChanged = bio != user?.bio || name != user?.full_name
+    const formChanged = bio != localizedBio || name != user?.full_name
 
     const nameRequired = autoTranslate('name_required', "Name is required")
     const minName = autoTranslate('min_name', "Name must be at least 2 characters")
@@ -76,7 +79,7 @@ export default function EditProfile() {
         if (!formChanged) return
 
         // Only send the fields that have changed
-        const params = {}
+        const params = { locale }
 
         if (name != user.full_name) {
             params.full_name = name
@@ -84,8 +87,8 @@ export default function EditProfile() {
             supabase.auth.updateUser({ data: { full_name: name } })
         }
 
-        if (bio != user.bio) {
-            params.bio = bio
+        if (bio != localizedBio) {
+            params.bio = { [locale]: bio }
         }
 
         const { error } = await updateUser(params)
@@ -94,11 +97,15 @@ export default function EditProfile() {
 
     // Set the form values when the user initially loads
     useEffect(() => {
-        if (name || bio) return
+        if ((name || bio) && formChanged) return
 
         setName(user?.full_name || '')
-        setBio(user?.bio || '')
+        setBio(localizedBio || '')
     }, [user])
+
+    useEffect(() => {
+        setBio(localizedBio || '')
+    }, [locale])
 
     // Validate the form when the user changes the name or bio
     useEffect(() => {

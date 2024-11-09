@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
+import { useLocale } from "next-intl"
 import { useSession } from "@supabase/auth-helpers-react"
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { useEntity } from "@daveyplate/supabase-swr-entities/client"
+import { getLocaleValue, useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { PageTitle } from "@daveyplate/next-page-title"
 import { OpenGraph } from "@daveyplate/next-open-graph"
 import { getEntity } from "@daveyplate/supabase-swr-entities/server"
@@ -34,12 +35,13 @@ import OptionsDropdown from "@/components/options-dropdown"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
+    const locale = useLocale()
     const router = useRouter()
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()
 
     const userId = user_id || router.query.user_id
-    const { entity: user, mutateEntity: mutateUser, isLoading: userLoading } = useEntity(userId ? 'profiles' : null, userId, null, { fallbackData })
+    const { entity: user, mutateEntity: mutateUser, isLoading: userLoading } = useEntity(userId ? 'profiles' : null, userId, { lang: locale }, { fallbackData })
     const { updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
     const [lightboxOpen, setLightboxOpen] = useState(false)
 
@@ -47,6 +49,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const uploadRef = useRef(null)
 
     const isMe = session && userId == session.user.id
+    const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
 
     useEffect(() => {
         if (!userLoading && !user) {
@@ -60,7 +63,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
             <OpenGraph
                 title={user?.full_name || "Profile"}
-                description={user?.bio || `User Profile: ${user?.full_name}`}
+                description={localizedBio || `User Profile: ${user?.full_name}`}
                 image={user?.avatar_url}
                 ogType="profile"
             />
@@ -134,12 +137,12 @@ export default function UserPage({ user_id, user: fallbackData }) {
                             </div>
                         </div>
 
-                        {user?.bio && (
+                        {localizedBio && (
                             <>
                                 <Divider />
 
                                 <p className="font-light text-small">
-                                    {user?.bio}
+                                    {localizedBio}
                                 </p>
                             </>
                         )}

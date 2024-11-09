@@ -13,15 +13,17 @@ import { isExport } from "@/utils/utils"
 
 import { usePeers } from '@/hooks/usePeers'
 import MessagesPage from '@/components/chat/messages-page'
+import { useLocale } from 'next-intl'
 
 export default function Chat() {
     const session = useSession()
+    const locale = useLocale()
     const [pageCount, setPageCount] = useState(1)
     const [messageCount, setMessageCount] = useState(0)
     const [createMessage, setCreateMessage] = useState(null)
     const [insertMessage, setInsertMessage] = useState(null)
     const mutateEntities = useMutateEntities()
-    const pageLimit = 20
+    const pageLimit = 10
     const { entity: user } = useEntity(session && 'profiles', 'me')
     const [content, setContent] = useState('')
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
@@ -90,8 +92,9 @@ export default function Chat() {
         const newMessage = {
             id: v4(),
             user_id: user.id,
-            content,
-            created_at: new Date()
+            content: { [locale]: content },
+            created_at: new Date(),
+            locale
         }
 
         createMessage(newMessage)

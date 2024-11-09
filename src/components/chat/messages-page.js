@@ -1,8 +1,9 @@
+
 import { useEffect } from 'react'
 import ReactTimeAgo from 'react-time-ago'
 import { useLocale } from 'next-intl'
 
-import { useEntities } from '@daveyplate/supabase-swr-entities/client'
+import { getLocaleValue, useEntities } from '@daveyplate/supabase-swr-entities/client'
 
 import { Badge, Button, Card, CardBody, cn } from "@nextui-org/react"
 import { TrashIcon } from '@heroicons/react/24/solid'
@@ -29,7 +30,7 @@ export default function MessagesPage({
         deleteEntity: deleteMessage,
         mutateEntities: mutateMessages,
         count
-    } = useEntities('messages', { limit, offset: page * limit })
+    } = useEntities('messages', { limit, offset: page * limit, lang: locale })
 
     useEffect(() => {
         if (!messages) return
@@ -97,7 +98,7 @@ export default function MessagesPage({
                         </div>
 
                         <p className="font-light text-foreground-80">
-                            {message.content}
+                            {getLocaleValue(message.content, locale, message.locale)}
                         </p>
                     </CardBody>
                 </Card>

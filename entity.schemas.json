@@ -5,6 +5,9 @@
         "select": [
             "*"
         ],
+        "localizedColumns": [
+            "bio"
+        ],
         "defaultOrder": "-created_at",
         "hasDeactivated": true,
         "disableList": false
@@ -21,6 +24,9 @@
         "select": [
             "*",
             "user:user_id!inner(full_name, avatar_url)"
+        ],
+        "localizedColumns": [
+            "content"
         ],
         "requiredParams": {
             "user.deactivated": false
