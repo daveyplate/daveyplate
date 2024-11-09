@@ -4,7 +4,7 @@ import { useLocale } from 'next-intl'
 
 import { useEntities } from '@daveyplate/supabase-swr-entities/client'
 
-import { Badge, Button, Card, CardBody, Input, cn } from "@nextui-org/react"
+import { Badge, Button, Card, CardBody, cn } from "@nextui-org/react"
 import { TrashIcon } from '@heroicons/react/24/solid'
 
 import UserAvatar from '@/components/user-avatar'
