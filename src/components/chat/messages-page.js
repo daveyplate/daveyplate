@@ -83,7 +83,7 @@ export default function MessagesPage({
             sendData({ action: "like_message", data: { message_id: message.id } })
         })
 
-        mutateMessage({ ...message, likes: [...message.likes, { ...messageLike, user }] })
+        mutateMessage({ ...message, likes: [...(message.likes || []), { ...messageLike, user }] })
     }
 
     const unlikeMessage = (message) => {
@@ -96,7 +96,7 @@ export default function MessagesPage({
         deleteEntity("message_likes", null, { message_id: message.id, user_id: user.id }).then(({ error }) => {
             if (error) {
                 toast(error.message, { color: "danger" })
-                return mutateMessage({ ...message, likes: [...message.likes, messageLike] })
+                return mutateMessage({ ...message, likes: [...(message.likes || []), messageLike] })
             }
 
             sendData({ action: "unlike_message", data: { message_id: message.id } })
@@ -193,7 +193,7 @@ export default function MessagesPage({
                                         deleteMessage(message.id)
                                             .then(() => sendData({ action: "delete_message", data: { id: message.id } }))
                                     }}
-                                    className="-me-2 -my-1 self-center"
+                                    className="-me-2 -ms-1 -my-1 self-center"
                                 >
                                     <TrashIcon className="size-3 text-primary-foreground" />
                                 </Button>
@@ -231,7 +231,7 @@ export default function MessagesPage({
                     >
                         <HeartIcon
                             className={cn(isMessageLiked(message) ? "text-danger" : "text-default",
-                                "size-4"
+                                "size-5"
                             )}
                         />
                     </Button>
