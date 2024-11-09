@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { v4 } from 'uuid'
 import { useSession } from '@supabase/auth-helpers-react'
 
-import { useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { useEntity, useMutateEntities } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, Input, cn } from "@nextui-org/react"
 import { ArrowUpIcon } from '@heroicons/react/24/solid'
@@ -18,14 +18,19 @@ export default function Chat() {
     const session = useSession()
     const [pageCount, setPageCount] = useState(1)
     const [messageCount, setMessageCount] = useState(0)
-    const [mutateMessages, setMutateMessages] = useState(null)
     const [createMessage, setCreateMessage] = useState(null)
+    const mutateEntities = useMutateEntities()
     const pageLimit = 100
     const { entity: user } = useEntity(session && 'profiles', 'me')
 
     const { send: sendData, isOnline } = usePeers({
         enabled: !!session,
-        onData: () => mutateMessages && mutateMessages(),
+        onData: () => {
+            [...Array(pageCount).keys()].map((page) => {
+                console.log({ limit: pageLimit, offset: page * pageLimit })
+                mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit })
+            })
+        },
         room: "chat"
     })
 
@@ -91,7 +96,6 @@ export default function Chat() {
                         shouldScrollDown={shouldScrollDown}
                         prevScrollHeight={prevScrollHeight}
                         setMessageCount={setMessageCount}
-                        setMutateMessages={setMutateMessages}
                         setCreateMessage={setCreateMessage}
                         sendData={sendData}
                         limit={pageLimit}

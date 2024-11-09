@@ -9,7 +9,7 @@ import { TrashIcon } from '@heroicons/react/24/solid'
 
 import UserAvatar from '@/components/user-avatar'
 
-export default function MessagesPage({ user, isOnline, shouldScrollDown, page, prevScrollHeight, setMessageCount, setMutateMessages, setCreateMessage, sendData, limit }) {
+export default function MessagesPage({ user, isOnline, shouldScrollDown, page, prevScrollHeight, setMessageCount, setCreateMessage, sendData, limit }) {
     const locale = useLocale()
 
     const {
@@ -30,8 +30,6 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
                 createMessage(message).then(() => sendData("create_message"))
                 mutateMessages([{ ...message, user }, ...messages], false)
             })
-
-            setMutateMessages(() => mutateMessages)
         }
 
         // scroll to bottom
