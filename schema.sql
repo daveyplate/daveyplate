@@ -81,7 +81,7 @@ create table
     created_at timestamp with time zone not null default now(),
     updated_at timestamp without time zone not null default now(),
     constraint peers_pkey primary key (id),
-    constraint peers_user_id_fkey foreign key (user_id) references auth.users (id) on delete cascade
+    constraint peers_user_id_fkey foreign key (user_id) references profiles (id) on delete cascade
   );
 
 create trigger handle_updated_at before
