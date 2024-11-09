@@ -72,6 +72,26 @@ create policy none_shall_pass on public.messages
     for select
     using (false);
 
+create table
+  public.message_likes (
+    id uuid not null default gen_random_uuid (),
+    message_id uuid not null,
+    user_id uuid not null,
+    created_at timestamp with time zone not null default now(),
+    updated_at timestamp with time zone not null default now(),
+    constraint message_likes_pkey primary key (id)
+  );
+
+create trigger handle_updated_at before
+  update on public.message_likes for each row
+  execute function moddatetime ('updated_at');
+
+alter table public.message_likes enable row level security;
+
+create policy none_shall_pass on public.message_likes
+    for select
+    using (false);
+
 -- Peers table
 create table
   public.peers (

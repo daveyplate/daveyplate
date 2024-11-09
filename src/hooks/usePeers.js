@@ -6,9 +6,9 @@ import { useEffect, useRef, useState } from "react"
  * Peer Connections hook
  * @param {Object} props - The hook props
  * @param {boolean} [props.enabled=false] - Is the hook enabled
- * @param {(data: any) => void} [props.onData=null] - The data handler
+ * @param {(data: any, connection: DataConnection) => void} [props.onData=null] - The data handler
  * @param {string} [props.room=null] - The room to connect to
- * @returns {{ peers: any[], sendData: (data: any) => void, connections: DataConnection[], isOnline: (userId: string) => boolean }} The hook result
+ * @returns {{ peers: any[], sendData: (data: any) => void, connections: DataConnection[], isOnline: (userId: string) => boolean, getPeer: (connection: DataConnection) => any, getConnection: (userId: string) => DataConnection}} The hook result
  */
 export const usePeers = ({ enabled = false, onData = null, room = null }) => {
     const {
@@ -26,19 +26,21 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
 
     /**
      * Prepare connection handlers
-     * @param {DataConnection} conn - The connection
+     * @param {DataConnection} connection - The connection
      * @param {boolean} [inbound=false] - Is the connection inbound
      */
-    const handleConnection = (conn, inbound = false) => {
-        conn?.removeAllListeners()
+    const handleConnection = (connection, inbound = false) => {
+        connection?.removeAllListeners()
 
-        onData && conn?.on("data", onData)
+        onData && connection?.on("data", (data) => {
+            onData(data, connection)
+        })
 
-        conn?.on("open", () => {
+        connection?.on("open", () => {
             console.log("connection opened")
-            connectionsRef.current = connectionsRef.current.filter((c) => c.peer != conn.peer)
-            connectionsRef.current.push(conn)
-            connectionAttempts.current = connectionAttempts.current.filter((id) => id != conn.peer)
+            connectionsRef.current = connectionsRef.current.filter((conn) => conn.peer != connection.peer)
+            connectionsRef.current.push(connection)
+            connectionAttempts.current = connectionAttempts.current.filter((id) => id != connection.peer)
             setConnections(connectionsRef.current)
 
             if (inbound) {
@@ -46,17 +48,17 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
             }
         })
 
-        conn?.on('close', () => {
+        connection?.on('close', () => {
             console.log("connection closed")
-            connectionsRef.current = connectionsRef.current.filter((c) => c.peer != conn.peer)
-            connectionAttempts.current = connectionAttempts.current.filter((id) => id != conn.peer)
+            connectionsRef.current = connectionsRef.current.filter((conn) => conn.peer != connection.peer)
+            connectionAttempts.current = connectionAttempts.current.filter((id) => id != connection.peer)
             setConnections(connectionsRef.current)
         })
 
-        conn?.on('error', (err) => {
-            console.error("connection error", err)
-            connectionsRef.current = connectionsRef.current.filter((c) => c.peer != conn.peer)
-            connectionAttempts.current = connectionAttempts.current.filter((id) => id != conn.peer)
+        connection?.on('error', (error) => {
+            console.error("connection error", error)
+            connectionsRef.current = connectionsRef.current.filter((conn) => conn.peer != connection.peer)
+            connectionAttempts.current = connectionAttempts.current.filter((id) => id != connection.peer)
             setConnections(connectionsRef.current)
         })
     }
@@ -168,13 +170,31 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
      * @returns {boolean} Is the user online
      */
     const isOnline = (userId) => {
-        const connection = connections.find((conn) => {
-            const connectionPeer = peers.find((p) => p.id == conn.peer)
+        return !!getConnection(userId)
+    }
+
+    /**
+     * Get the peer for a connection
+     * @param {DataConnection} connection - The connection
+     * @returns {any} The peer
+     */
+    const getPeer = (connection) => {
+        return peers.find((peer) => peer.id == connection?.peer)
+    }
+
+    /**
+     * Get the connection for a user
+     * @param {string} userId - The user ID
+     * @returns {DataConnection} The connection
+     */
+    const getConnection = (userId) => {
+        const connection = connections.find((connection) => {
+            const connectionPeer = peers.find((peer) => peer.id == connection.peer)
             return connectionPeer?.user_id == userId
         })
 
-        return !!connection
+        return connection
     }
 
-    return { peers, sendData, connections, isOnline }
+    return { peers, sendData, connections, isOnline, getPeer, getConnection }
 }

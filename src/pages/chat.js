@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { v4 } from 'uuid'
 import { useSession } from '@supabase/auth-helpers-react'
 
@@ -13,15 +14,15 @@ import { isExport } from "@/utils/utils"
 
 import { usePeers } from '@/hooks/usePeers'
 import MessagesPage from '@/components/chat/messages-page'
-import { useLocale } from 'next-intl'
 
 export default function Chat() {
     const session = useSession()
     const locale = useLocale()
     const [pageCount, setPageCount] = useState(1)
+    const onDataCallbacks = useRef({})
+
     const [messageCount, setMessageCount] = useState(0)
     const [createMessage, setCreateMessage] = useState(null)
-    const [insertMessage, setInsertMessage] = useState(null)
     const mutateEntities = useMutateEntities()
     const pageLimit = 10
     const { entity: user } = useEntity(session && 'profiles', 'me')
@@ -29,36 +30,24 @@ export default function Chat() {
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const prevScrollHeight = useRef(null)
 
-    const onData = (data) => {
+    const onData = (data, connection) => {
         const reloadMessages = () => {
             for (let page = 0; page < pageCount; page++) {
                 mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit, lang: locale })
             }
         }
 
-        if (data.action == "delete_message") {
-            reloadMessages()
-        } else if (data.action == "create_message") {
-            const message = data.data
+        const peer = getPeer(connection)
+        if (!peer) return
 
-            if (!message.content[locale]) {
-                reloadMessages()
-                return
-            }
-
-            const peer = peers?.find((peer) => peer.user_id == message?.user_id)
-
-            if (peer) {
-                insertMessage({ ...message, user: peer.user })
-            } else {
-                reloadMessages()
-            }
-        }
+        Object.values(onDataCallbacks.current).forEach(callback => {
+            callback(data, connection, peer)
+        })
     }
 
-    const { sendData, isOnline, peers } = usePeers({
+    const { sendData, isOnline, getPeer } = usePeers({
         enabled: !!session,
-        onData: (data) => onData(data),
+        onData,
         room: "chat"
     })
 
@@ -122,7 +111,7 @@ export default function Chat() {
                         prevScrollHeight={prevScrollHeight}
                         setMessageCount={setMessageCount}
                         setCreateMessage={setCreateMessage}
-                        setInsertMessage={setInsertMessage}
+                        onDataCallbacks={onDataCallbacks}
                         sendData={sendData}
                         limit={pageLimit}
                     />

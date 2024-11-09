@@ -23,7 +23,8 @@
         "table": "messages",
         "select": [
             "*",
-            "user:user_id!inner(full_name, avatar_url)"
+            "user:user_id!inner(full_name, avatar_url)",
+            "likes:message_likes(user_id, user:profiles(full_name, avatar_url))"
         ],
         "localizedColumns": [
             "content"
@@ -32,6 +33,9 @@
             "user.deactivated": false
         },
         "defaultOrder": "-created_at"
+    },
+    {
+        "table": "message_likes"
     },
     {
         "table": "whispers",
