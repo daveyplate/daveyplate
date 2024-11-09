@@ -32,7 +32,7 @@ export default function Chat() {
     const onData = (data) => {
         const reloadMessages = () => {
             for (let page = 0; page < pageCount; page++) {
-                mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit })
+                mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit, lang: locale })
             }
         }
 
@@ -40,6 +40,12 @@ export default function Chat() {
             reloadMessages()
         } else if (data.action == "create_message") {
             const message = data.data
+
+            if (!message.content[locale]) {
+                reloadMessages()
+                return
+            }
+
             const peer = peers?.find((peer) => peer.user_id == message?.user_id)
 
             if (peer) {
