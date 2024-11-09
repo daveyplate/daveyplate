@@ -39,7 +39,7 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
             window.scrollTo(0, document.body.scrollHeight)
         } else if (prevScrollHeight.current) {
             const { scrollTop, scrollHeight } = document.scrollingElement
-            window.scrollTo(0, scrollTop + (scrollHeight - prevScrollHeight.current), { behavior: 'smooth' })
+            window.scrollTo(0, scrollTop + (scrollHeight - prevScrollHeight.current))
             prevScrollHeight.current = null
         }
     }, [messages, shouldScrollDown])

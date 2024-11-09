@@ -20,7 +20,7 @@ export default function Chat() {
     const [messageCount, setMessageCount] = useState(0)
     const [mutateMessages, setMutateMessages] = useState(null)
     const [createMessage, setCreateMessage] = useState(null)
-    const pageLimit = 20
+    const pageLimit = 100
     const { entity: user } = useEntity(session && 'profiles', 'me')
 
     const { send: sendData, isOnline } = usePeers({
