@@ -70,7 +70,7 @@ export default function MessagesPage({
         }
     }
 
-    const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user.id)
+    const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user?.id)
 
     const likeMessage = (message) => {
         const messageLike = { message_id: message.id, user_id: user.id }
@@ -228,6 +228,7 @@ export default function MessagesPage({
                                 : likeMessage(message)
                         }}
                         className="-mx-1 self-center"
+                        isDisabled={!user}
                     >
                         <HeartIcon
                             className={cn(isMessageLiked(message) ? "text-danger" : "text-default",
