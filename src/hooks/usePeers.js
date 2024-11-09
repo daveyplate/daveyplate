@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react"
  * @param {boolean} [props.enabled=false] - Is the hook enabled
  * @param {(data: any) => void} [props.onData=null] - The data handler
  * @param {string} [props.room=null] - The room to connect to
- * @returns {{ peers: any[], send: (data: any) => void, connections: DataConnection[], isOnline: (userId: string) => boolean }} The hook result
+ * @returns {{ peers: any[], sendData: (data: any) => void, connections: DataConnection[], isOnline: (userId: string) => boolean }} The hook result
  */
 export const usePeers = ({ enabled = false, onData = null, room = null }) => {
     const {
