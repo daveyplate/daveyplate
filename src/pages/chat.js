@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { v4 } from 'uuid'
 import { useSession } from '@supabase/auth-helpers-react'
 
@@ -31,13 +31,13 @@ export default function Chat() {
 
     const [content, setContent] = useState('')
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
-    const [prevScrollHeight, setPrevScrollHeight] = useState(null)
+    const prevScrollHeight = useRef(null)
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
 
         if (scrollTop == 0) {
-            setPrevScrollHeight(scrollHeight)
+            prevScrollHeight.current = scrollHeight
 
             if (messageCount > pageCount * pageLimit) {
                 setPageCount(prevCount => prevCount + 1)
@@ -45,7 +45,6 @@ export default function Chat() {
         }
 
         const isAtBottom = scrollTop + clientHeight >= scrollHeight
-
         setShouldScrollDown(isAtBottom)
     }
 
@@ -71,17 +70,11 @@ export default function Chat() {
         }
 
         createMessage(newMessage)
-        sendData("create_message")
-
         setContent('')
     }
 
-    useEffect(() => {
-        console.log(createMessage)
-    }, [createMessage])
-
     return (
-        <div className={cn(
+        <div className={cn(messageCount == 0 ? "opacity-0" : "opacity-1",
             "flex-container max-w-xl mx-auto justify-end !pb-16 transition-all"
         )}>
             <div className="flex flex-col gap-4 w-full flex-col-reverse">
@@ -93,7 +86,6 @@ export default function Chat() {
                         isOnline={isOnline}
                         shouldScrollDown={shouldScrollDown}
                         prevScrollHeight={prevScrollHeight}
-                        setPrevScrollHeight={setPrevScrollHeight}
                         setMessageCount={setMessageCount}
                         setMutateMessages={setMutateMessages}
                         setCreateMessage={setCreateMessage}

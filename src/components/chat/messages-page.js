@@ -1,22 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import ReactTimeAgo from 'react-time-ago'
 import { useLocale } from 'next-intl'
-import { v4 } from 'uuid'
-import { useSession } from '@supabase/auth-helpers-react'
 
-import { useEntities, useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { useEntities } from '@daveyplate/supabase-swr-entities/client'
 
 import { Badge, Button, Card, CardBody, Input, cn } from "@nextui-org/react"
-import { ArrowUpIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { TrashIcon } from '@heroicons/react/24/solid'
 
-import { getLocalePaths } from "@/i18n/locale-paths"
-import { getTranslationProps } from '@/i18n/translation-props'
-import { isExport } from "@/utils/utils"
-
-import { usePeers } from '@/hooks/usePeers'
 import UserAvatar from '@/components/user-avatar'
 
-export default function MessagesPage({ user, isOnline, shouldScrollDown, page, prevScrollHeight, setPrevScrollHeight, setMessageCount, setMutateMessages, setCreateMessage, sendData, limit }) {
+export default function MessagesPage({ user, isOnline, shouldScrollDown, page, prevScrollHeight, setMessageCount, setMutateMessages, setCreateMessage, sendData, limit }) {
     const locale = useLocale()
 
     const {
@@ -27,7 +20,6 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
         count
     } = useEntities('messages', { limit, offset: page * limit })
     // messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-    const scrolled = useRef(false)
 
     useEffect(() => {
         if (!messages) return
@@ -35,7 +27,7 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
 
         if (page == 0) {
             setCreateMessage(() => (message) => {
-                createMessage(message)
+                createMessage(message).then(() => sendData("create_message"))
                 mutateMessages([{ ...message, user }, ...messages], false)
             })
 
@@ -45,12 +37,10 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
         // scroll to bottom
         if (shouldScrollDown) {
             window.scrollTo(0, document.body.scrollHeight)
-        } else if (prevScrollHeight && !scrolled.current) {
-            scrolled.current = true
+        } else if (prevScrollHeight.current) {
             const { scrollTop, scrollHeight } = document.scrollingElement
-            window.scrollTo(0, scrollTop + (scrollHeight - prevScrollHeight), { behavior: 'smooth' })
-
-            setPrevScrollHeight(null)
+            window.scrollTo(0, scrollTop + (scrollHeight - prevScrollHeight.current), { behavior: 'smooth' })
+            prevScrollHeight.current = null
         }
     }, [messages, shouldScrollDown])
 
