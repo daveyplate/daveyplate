@@ -2,11 +2,10 @@
 import { useEffect } from 'react'
 import ReactTimeAgo from 'react-time-ago'
 import { useLocale } from 'next-intl'
-import { v4 } from 'uuid'
 
 import { getLocaleValue, useCreateEntity, useDeleteEntity, useEntities } from '@daveyplate/supabase-swr-entities/client'
 
-import { Badge, Button, Card, CardBody, cn } from "@nextui-org/react"
+import { AvatarGroup, Badge, Button, Card, CardBody, cn } from "@nextui-org/react"
 import { HeartIcon, TrashIcon } from '@heroicons/react/24/solid'
 
 import UserAvatar from '@/components/user-avatar'
@@ -36,13 +35,11 @@ export default function MessagesPage({
     const createEntity = useCreateEntity()
     const deleteEntity = useDeleteEntity()
 
-    const onData = (data, connection, peer) => {
+    const onData = (data, _, peer) => {
         switch (data.action) {
             case "like_message": {
                 const message = messages.find((message) => message.id == data.data.message_id)
                 if (!message) return
-
-                console.log("found the message")
 
                 mutateMessage({ ...message, likes: [...message.likes, { user_id: peer.user_id, user: peer.user }] })
                 break
@@ -202,32 +199,31 @@ export default function MessagesPage({
                         <TrashIcon className="size-4" />
                     </Button>
                 ) : (
-                    <div className="flex gap-2 items-center">
-                        <Button
-                            size="sm"
-                            variant="light"
-                            isIconOnly
-                            radius="full"
-                            onPress={() => {
-                                isMessageLiked(message)
-                                    ? unlikeMessage(message)
-                                    : likeMessage(message)
-                            }}
-                            className="-mx-1 self-center"
-                        >
-                            <HeartIcon
-                                className={cn(isMessageLiked(message) ? "text-danger" : "text-default",
-                                    "size-4"
-                                )}
-                            />
-                        </Button>
-
-                        <p className="text-foreground/60 text-tiny font-light">
-                            {message.likes?.length}
-                        </p>
-                    </div>
-
+                    <Button
+                        size="sm"
+                        variant="light"
+                        isIconOnly
+                        radius="full"
+                        onPress={() => {
+                            isMessageLiked(message)
+                                ? unlikeMessage(message)
+                                : likeMessage(message)
+                        }}
+                        className="-mx-1 self-center"
+                    >
+                        <HeartIcon
+                            className={cn(isMessageLiked(message) ? "text-danger" : "text-default",
+                                "size-4"
+                            )}
+                        />
+                    </Button>
                 )}
+
+                <AvatarGroup max={1} size="sm">
+                    {message.likes?.map((like) => (
+                        <UserAvatar key={like.user_id} user={like.user} size="sm" />
+                    ))}
+                </AvatarGroup>
             </div>
         ))
     )

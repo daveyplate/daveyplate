@@ -31,11 +31,13 @@ export default function Chat() {
     const prevScrollHeight = useRef(null)
 
     const onData = (data, connection) => {
+        /*
         const reloadMessages = () => {
             for (let page = 0; page < pageCount; page++) {
                 mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit, lang: locale })
             }
         }
+        */
 
         const peer = getPeer(connection)
         if (!peer) return
