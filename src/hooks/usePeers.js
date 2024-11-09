@@ -158,7 +158,7 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
      * Send data to all connections
      * @param {any} data - The data to send
      */
-    const send = (data) => {
+    const sendData = (data) => {
         connectionsRef.current.forEach((conn) => conn.send(data))
     }
 
@@ -176,5 +176,5 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
         return !!connection
     }
 
-    return { peers, send, connections, isOnline }
+    return { peers, sendData, connections, isOnline }
 }

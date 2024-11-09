@@ -23,9 +23,13 @@ export default function Chat() {
     const mutateEntities = useMutateEntities()
     const pageLimit = 20
     const { entity: user } = useEntity(session && 'profiles', 'me')
+    const [content, setContent] = useState('')
+    const [shouldScrollDown, setShouldScrollDown] = useState(true)
+    const prevScrollHeight = useRef(null)
+
     const onData = useRef(null)
 
-    const { send: sendData, isOnline, peers } = usePeers({
+    const { sendData, isOnline, peers } = usePeers({
         enabled: !!session,
         onData: (data) => onData.current(data),
         room: "chat"
@@ -51,10 +55,6 @@ export default function Chat() {
             }
         }
     }
-
-    const [content, setContent] = useState('')
-    const [shouldScrollDown, setShouldScrollDown] = useState(true)
-    const prevScrollHeight = useRef(null)
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
