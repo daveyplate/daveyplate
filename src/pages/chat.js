@@ -50,9 +50,11 @@ export default function Chat() {
 
     useEffect(() => {
         document.addEventListener("scroll", handleScroll, true)
+        document.addEventListener("touchmove", handleScroll, true)
 
         return () => {
             document.removeEventListener("scroll", handleScroll, true)
+            document.removeEventListener("touchmove", handleScroll, true)
         }
     }, [messageCount, pageCount, pageLimit])
 
