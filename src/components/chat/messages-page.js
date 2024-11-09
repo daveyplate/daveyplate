@@ -41,14 +41,14 @@ export default function MessagesPage({
                 const message = messages.find((message) => message.id == data.data.message_id)
                 if (!message) return
 
-                mutateMessage({ ...message, likes: [...message.likes, { user_id: peer.user_id, user: peer.user }] })
+                mutateMessage({ ...message, likes: [...(message.likes || []), { user_id: peer.user_id, user: peer.user }] })
                 break
             }
             case "unlike_message": {
                 const message = messages.find((message) => message.id == data.data.message_id)
                 if (!message) return
 
-                mutateMessage({ ...message, likes: message.likes.filter((like) => like.user_id != peer.user_id) })
+                mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != peer.user_id) })
                 break
             }
             case "delete_message": {
@@ -77,7 +77,7 @@ export default function MessagesPage({
         createEntity("message_likes", messageLike).then(({ error }) => {
             if (error) {
                 toast(error.message, { color: "danger" })
-                return mutateMessage({ ...message, likes: message.likes.filter((like) => like.user_id != user.id) })
+                return mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
             }
 
             sendData({ action: "like_message", data: { message_id: message.id } })
@@ -102,7 +102,7 @@ export default function MessagesPage({
             sendData({ action: "unlike_message", data: { message_id: message.id } })
         })
 
-        mutateMessage({ ...message, likes: message.likes.filter((like) => like.user_id != user.id) })
+        mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
     }
 
     const mutateMessage = (message) => {
