@@ -90,7 +90,7 @@ export default function MessagesPage({
                                 className={cn("ms-auto text-tiny font-light",
                                     message.user_id == user?.id ? "text-primary-foreground/60" : "text-foreground/60"
                                 )}
-                                date={new Date()}
+                                date={new Date(message.created_at)}
                                 locale={locale}
                                 timeStyle="mini-minute-now"
                             />
