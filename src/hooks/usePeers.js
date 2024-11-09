@@ -30,6 +30,8 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
      * @param {boolean} [inbound=false] - Is the connection inbound
      */
     const handleConnection = (conn, inbound = false) => {
+        conn?.removeAllListeners()
+
         onData && conn?.on("data", onData)
 
         conn?.on("open", () => {
@@ -94,10 +96,8 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
         const keepPeerCurrent = () => {
             const currentPeer = peers.find((p) => p.id == peer.id)
             if (currentPeer) {
-                console.log("Update Peer Entity")
                 updatePeer(currentPeer, { updated_at: new Date() })
             } else {
-                console.log("Create a Peer Entity")
                 createPeer({ id: peer.id, room })
             }
         }
@@ -126,11 +126,15 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
             handleConnection(conn)
         })
 
+        connectionsRef.current.forEach((conn) => {
+            handleConnection(conn)
+        })
+
         return () => {
             clearInterval(interval)
             peer.off("connection", inboundConnection)
         }
-    }, [peers, peer])
+    }, [peers, peer, connections])
 
 
     useEffect(() => {

@@ -9,7 +9,7 @@ import { TrashIcon } from '@heroicons/react/24/solid'
 
 import UserAvatar from '@/components/user-avatar'
 
-export default function MessagesPage({ user, isOnline, shouldScrollDown, page, prevScrollHeight, setMessageCount, setCreateMessage, sendData, limit }) {
+export default function MessagesPage({ user, isOnline, shouldScrollDown, page, prevScrollHeight, setMessageCount, setCreateMessage, setInsertMessage, sendData, limit }) {
     const locale = useLocale()
 
     const {
@@ -27,8 +27,12 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
 
         if (page == 0) {
             setCreateMessage(() => (message) => {
-                createMessage(message).then(() => sendData("create_message"))
+                createMessage(message).then(() => sendData({ action: "create_message", data: message }))
                 mutateMessages([{ ...message, user }, ...messages], false)
+            })
+
+            setInsertMessage(() => (message) => {
+                mutateMessages([{ ...message }, ...messages], false)
             })
         }
 
@@ -97,7 +101,7 @@ export default function MessagesPage({ user, isOnline, shouldScrollDown, page, p
                         radius="full"
                         onPress={() => {
                             deleteMessage(message.id)
-                                .then(() => sendData("delete_message"))
+                                .then(() => sendData({ action: "delete_message", data: { id: message.id } }))
                         }}
                         className="-mx-1 self-center"
                     >

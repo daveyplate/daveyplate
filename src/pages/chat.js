@@ -19,20 +19,38 @@ export default function Chat() {
     const [pageCount, setPageCount] = useState(1)
     const [messageCount, setMessageCount] = useState(0)
     const [createMessage, setCreateMessage] = useState(null)
+    const [insertMessage, setInsertMessage] = useState(null)
     const mutateEntities = useMutateEntities()
     const pageLimit = 100
     const { entity: user } = useEntity(session && 'profiles', 'me')
+    const onData = useRef(null)
 
-    const { send: sendData, isOnline } = usePeers({
+    const { send: sendData, isOnline, peers } = usePeers({
         enabled: !!session,
-        onData: () => {
-            [...Array(pageCount).keys()].map((page) => {
-                console.log({ limit: pageLimit, offset: page * pageLimit })
-                mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit })
-            })
-        },
+        onData: (data) => onData.current(data),
         room: "chat"
     })
+
+    onData.current = (data) => {
+        const reloadMessages = () => {
+            for (let page = 0; page < pageCount; page++) {
+                mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit })
+            }
+        }
+
+        if (data.action == "delete_message") {
+            reloadMessages()
+        } else if (data.action == "create_message") {
+            const message = data.data
+            const peer = peers?.find((peer) => peer.user_id == message?.user_id)
+
+            if (peer) {
+                insertMessage({ ...message, user: peer.user })
+            } else {
+                reloadMessages()
+            }
+        }
+    }
 
     const [content, setContent] = useState('')
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
@@ -97,6 +115,7 @@ export default function Chat() {
                         prevScrollHeight={prevScrollHeight}
                         setMessageCount={setMessageCount}
                         setCreateMessage={setCreateMessage}
+                        setInsertMessage={setInsertMessage}
                         sendData={sendData}
                         limit={pageLimit}
                     />

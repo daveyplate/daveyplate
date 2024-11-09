@@ -10,13 +10,17 @@
         "disableList": false
     },
     {
-        "table": "peers"
+        "table": "peers",
+        "select": [
+            "*",
+            "user:user_id!inner(full_name, avatar_url)"
+        ]
     },
     {
         "table": "messages",
         "select": [
             "*",
-            "user:user_id!inner(id, full_name, avatar_url)"
+            "user:user_id!inner(full_name, avatar_url)"
         ],
         "requiredParams": {
             "user.deactivated": false
@@ -46,8 +50,8 @@
         },
         "select": [
             "*",
-            "user:user_id!inner(id, full_name, avatar_url)",
-            "recipient:recipient_id!inner(id, full_name, avatar_url)"
+            "user:user_id!inner(full_name, avatar_url)",
+            "recipient:recipient_id!inner(full_name, avatar_url)"
         ],
         "requiredParams": {
             "sender.deactivated": false,
