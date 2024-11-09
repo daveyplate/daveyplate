@@ -6,7 +6,7 @@ import { useLocale } from 'next-intl'
 import { getLocaleValue, useCreateEntity, useDeleteEntity, useEntities } from '@daveyplate/supabase-swr-entities/client'
 
 import { AvatarGroup, Badge, Button, Card, CardBody, cn } from "@nextui-org/react"
-import { HeartIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { HeartIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 
 import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
@@ -178,9 +178,27 @@ export default function MessagesPage({
                             />
                         </div>
 
-                        <p className="font-light text-foreground-80">
-                            {getLocaleValue(message.content, locale, message.locale)}
-                        </p>
+                        <div className="flex justify-between gap-4">
+                            <p className="font-light text-foreground-80">
+                                {getLocaleValue(message.content, locale, message.locale)}
+                            </p>
+
+                            {message.user_id == user?.id && (
+                                <Button
+                                    size="sm"
+                                    variant="light"
+                                    isIconOnly
+                                    radius="full"
+                                    onPress={() => {
+                                        deleteMessage(message.id)
+                                            .then(() => sendData({ action: "delete_message", data: { id: message.id } }))
+                                    }}
+                                    className="-me-2 -my-1 self-center"
+                                >
+                                    <TrashIcon className="size-3 text-primary-foreground" />
+                                </Button>
+                            )}
+                        </div>
                     </CardBody>
                 </Card>
 
@@ -219,7 +237,7 @@ export default function MessagesPage({
                     </Button>
                 )}
 
-                <AvatarGroup max={1} size="sm">
+                <AvatarGroup max={3} size="sm">
                     {message.likes?.map((like) => (
                         <UserAvatar key={like.user_id} user={like.user} size="sm" />
                     ))}
