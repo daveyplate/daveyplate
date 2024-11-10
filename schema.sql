@@ -105,10 +105,6 @@ create table
   );
 
 create trigger handle_updated_at before
-update on peers for each row
-execute function extensions.moddatetime ('updated_at');
-
-create trigger handle_updated_at before
   update on public.peers for each row
   execute function moddatetime ('updated_at');
 
