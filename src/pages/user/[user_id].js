@@ -52,10 +52,10 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
 
     useEffect(() => {
-        if (!userLoading && !user) {
+        if (userId && !userLoading && !user) {
             router.replace('/404')
         }
-    }, [user, userLoading])
+    }, [userId, user, userLoading])
 
     return (
         <div className="flex-center max-w-lg">

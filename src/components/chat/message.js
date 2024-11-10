@@ -11,9 +11,51 @@ import { HeartIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
 
-export default function Message({ message, user, isOnline }) {
+export default function Message({
+    message,
+    user,
+    isOnline,
+    mutateMessage,
+    deleteMessage,
+    sendData
+}) {
     const locale = useLocale()
     const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user?.id)
+    const createEntity = useCreateEntity()
+    const deleteEntity = useDeleteEntity()
+
+    const likeMessage = (message) => {
+        const messageLike = { message_id: message.id, user_id: user.id }
+        createEntity("message_likes", messageLike).then(({ error }) => {
+            if (error) {
+                toast(error.message, { color: "danger" })
+                return mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
+            }
+
+            sendData({ action: "like_message", data: { message_id: message.id } })
+        })
+
+        mutateMessage({ ...message, likes: [...(message.likes || []), { ...messageLike, user }] })
+    }
+
+    const unlikeMessage = (message) => {
+        const messageLike = message.likes?.find((like) => like.user_id == user.id)
+        if (!messageLike) {
+            toast("Message like not found", { color: "danger" })
+            return
+        }
+
+        deleteEntity("message_likes", null, { message_id: message.id, user_id: user.id }).then(({ error }) => {
+            if (error) {
+                toast(error.message, { color: "danger" })
+                return mutateMessage({ ...message, likes: [...(message.likes || []), messageLike] })
+            }
+
+            sendData({ action: "unlike_message", data: { message_id: message.id } })
+        })
+
+        mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
+    }
 
     return (
         <div

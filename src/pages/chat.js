@@ -3,7 +3,7 @@ import { useLocale } from 'next-intl'
 import { v4 } from 'uuid'
 import { useSession } from '@supabase/auth-helpers-react'
 
-import { useEntity, useInfiniteEntities, useMutateEntities } from '@daveyplate/supabase-swr-entities/client'
+import { useEntity, useInfiniteEntities } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, Input, cn } from "@nextui-org/react"
 import { ArrowUpIcon } from '@heroicons/react/24/solid'
@@ -22,20 +22,22 @@ export default function Chat() {
 
     const {
         entities: messages,
+        isValidating: messagesValidating,
         size,
         setSize,
         hasMore,
-        mutate: mutatePages,
         createEntity: createMessage,
+        deleteEntity: deleteMessage,
         insertEntity: insertMessage,
         mutateEntity: mutateMessage,
-    } = useInfiniteEntities("messages", { lang: locale, limit: 10 })
+        removeEntity: removeMessage
+    } = useInfiniteEntities("messages", { lang: locale, limit: 20 })
     messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-
 
     const [content, setContent] = useState('')
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const prevScrollHeight = useRef(null)
+    const prevScrollTop = useRef(null)
 
     const onData = (data, connection) => {
         const peer = getPeer(connection)
@@ -58,8 +60,10 @@ export default function Chat() {
             }
             case "delete_message": {
                 const { id } = data.data
+                const message = messages.find((message) => message.id == id)
+                if (message?.user_id != peer.user_id) return
 
-                mutateMessages(messages.filter((message) => message.id != id || message.user_id != peer.user_id), false)
+                removeMessage(id)
                 break
             }
             case "create_message": {
@@ -69,7 +73,7 @@ export default function Chat() {
                 // Don't allow invalid messages from invalid peers
                 if (message.user_id != peer.user_id) return
 
-                mutateMessages([{ ...message, user: peer.user }, ...messages], false)
+                insertMessage({ ...message, user: peer.user })
                 break
             }
         }
@@ -84,10 +88,11 @@ export default function Chat() {
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
 
-        if (scrollTop == 0) {
+        if (scrollTop < 320) {
             prevScrollHeight.current = scrollHeight
+            prevScrollTop.current = scrollTop
 
-            if (hasMore) {
+            if (hasMore && !messagesValidating) {
                 setSize(size + 1)
             }
         }
@@ -106,15 +111,20 @@ export default function Chat() {
             document.removeEventListener("touchmove", handleScroll, true)
             document.removeEventListener("gesturechange", handleScroll, true)
         }
-    }, [size])
+    }, [size, hasMore, messagesValidating])
 
     useEffect(() => {
         if (shouldScrollDown) {
             window.scrollTo(0, document.body.scrollHeight)
+        } else if (prevScrollHeight.current && !messagesValidating) {
+            const { scrollHeight } = document.scrollingElement
+            window.scrollTo(0, prevScrollTop.current + (scrollHeight - prevScrollHeight.current))
+            prevScrollHeight.current = null
+            prevScrollTop.current = null
         }
-    }, [messages])
+    }, [messages, messagesValidating])
 
-    const sendMessage = (e) => {
+    const sendMessage = async (e) => {
         e?.preventDefault()
         if (!content || !session) return
 
@@ -128,8 +138,7 @@ export default function Chat() {
             locale
         }
 
-        // createMessage(newMessage)
-
+        createMessage(newMessage).then(() => sendData({ action: "create_message", data: newMessage }))
         insertMessage({ ...newMessage, user })
         setContent('')
     }
@@ -140,13 +149,17 @@ export default function Chat() {
         )}>
             <div className="flex flex-col gap-4 w-full flex-col-reverse">
                 {messages?.map((message) => (
-                    <Message key={message.id} message={message} user={user} isOnline={isOnline} />
+                    <Message
+                        key={message.id}
+                        message={message}
+                        user={user}
+                        isOnline={isOnline}
+                        mutateMessage={mutateMessage}
+                        deleteMessage={deleteMessage}
+                        sendData={sendData}
+                    />
                 ))}
             </div>
-
-            <Button onPress={() => mutatePages()}>
-                Mutate
-            </Button>
 
             <div className="fixed bottom-16 mb-safe w-full left-0 flex bg-background/90 z-20 backdrop-blur">
                 <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
@@ -190,22 +203,3 @@ export async function getStaticProps({ locale, params }) {
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined
-
-
-/*
-                {[...Array(pageCount).keys()].map((page) => (
-                    <MessagesPage
-                        key={page}
-                        page={page}
-                        user={user}
-                        isOnline={isOnline}
-                        shouldScrollDown={shouldScrollDown}
-                        prevScrollHeight={prevScrollHeight}
-                        setMessageCount={setMessageCount}
-                        setCreateMessage={setCreateMessage}
-                        onDataCallbacks={onDataCallbacks}
-                        sendData={sendData}
-                        limit={pageLimit}
-                    />
-                ))}
-                */
