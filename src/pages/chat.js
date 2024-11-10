@@ -31,7 +31,7 @@ export default function Chat() {
         insertEntity: insertMessage,
         mutateEntity: mutateMessage,
         removeEntity: removeMessage
-    } = useInfiniteEntities("messages", { lang: locale }, { revalidateAll: true })
+    } = useInfiniteEntities("messages", { lang: locale })
     messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
     const [content, setContent] = useState('')
@@ -89,7 +89,7 @@ export default function Chat() {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
         prevScrollTop.current = scrollTop
 
-        if (scrollTop < 420) {
+        if (scrollTop < 512) {
             prevScrollHeight.current = scrollHeight
 
             if (hasMore && !messagesValidating) {

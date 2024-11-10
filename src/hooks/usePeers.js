@@ -1,6 +1,6 @@
 import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 import Peer, { DataConnection } from "peerjs"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 /**
  * Peer Connections hook
@@ -160,41 +160,41 @@ export const usePeers = ({ enabled = false, onData = null, room = null }) => {
      * Send data to all connections
      * @param {any} data - The data to send
      */
-    const sendData = (data) => {
+    const sendData = useCallback((data) => {
         connectionsRef.current.forEach((conn) => conn.send(data))
-    }
-
-    /** 
-     * Check if a user is online
-     * @param {string} userId - The user ID
-     * @returns {boolean} Is the user online
-     */
-    const isOnline = (userId) => {
-        return !!getConnection(userId)
-    }
+    }, [])
 
     /**
      * Get the peer for a connection
      * @param {DataConnection} connection - The connection
      * @returns {any} The peer
      */
-    const getPeer = (connection) => {
+    const getPeer = useCallback((connection) => {
         return peers.find((peer) => peer.id == connection?.peer)
-    }
+    }, [peers])
 
     /**
      * Get the connection for a user
      * @param {string} userId - The user ID
      * @returns {DataConnection} The connection
      */
-    const getConnection = (userId) => {
+    const getConnection = useCallback((userId) => {
         const connection = connections.find((connection) => {
             const connectionPeer = peers.find((peer) => peer.id == connection.peer)
             return connectionPeer?.user_id == userId
         })
 
         return connection
-    }
+    }, [connections, peers])
+
+    /** 
+     * Check if a user is online
+     * @param {string} userId - The user ID
+     * @returns {boolean} Is the user online
+     */
+    const isOnline = useCallback((userId) => {
+        return !!getConnection(userId)
+    }, [getConnection])
 
     return { peers, sendData, connections, isOnline, getPeer, getConnection }
 }

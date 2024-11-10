@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import ReactTimeAgo from 'react-time-ago'
 import { useLocale } from 'next-intl'
 
@@ -11,14 +11,14 @@ import { HeartIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
 
-export default function Message({
+export default memo(({
     message,
     user,
     isOnline,
     mutateMessage,
     deleteMessage,
     sendData
-}) {
+}) => {
     const locale = useLocale()
     const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user?.id)
     const createEntity = useCreateEntity()
@@ -164,4 +164,4 @@ export default function Message({
             </AvatarGroup>
         </div>
     )
-}
+})
