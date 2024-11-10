@@ -7,7 +7,7 @@ import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { getLocaleValue, useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { PageTitle } from "@daveyplate/next-page-title"
 import { OpenGraph } from "@daveyplate/next-open-graph"
-import { getEntity } from "@daveyplate/supabase-swr-entities/server"
+// import { getEntity } from "@daveyplate/supabase-swr-entities/server"
 import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
 
 import {
@@ -50,6 +50,10 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
     const isMe = session && userId == session.user.id
     const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
+
+    useEffect(() => {
+        console.log("user", user)
+    }, [user])
 
     useEffect(() => {
         if (userId && !userLoading && !user) {
@@ -186,13 +190,13 @@ export async function getStaticProps({ locale, params }) {
     if (isExport()) return { props: { ...translationProps, canGoBack: true } }
 
     const { user_id } = params
-    const { entity: user } = await getEntity('profiles', user_id)
+    //const { entity: user } = await getEntity('profiles', user_id)
 
     return {
         props: {
             ...translationProps,
             user_id,
-            user,
+            //user,
             canGoBack: true
         },
         revalidate: 60

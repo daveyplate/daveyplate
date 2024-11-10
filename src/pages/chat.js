@@ -31,7 +31,7 @@ export default function Chat() {
         insertEntity: insertMessage,
         mutateEntity: mutateMessage,
         removeEntity: removeMessage
-    } = useInfiniteEntities("messages", { lang: locale })
+    } = useInfiniteEntities("messages", { lang: locale, limit: 10 })
     messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
     const [content, setContent] = useState('')

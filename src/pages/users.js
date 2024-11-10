@@ -13,13 +13,15 @@ import { getTranslationProps } from "@/i18n/translation-props"
 import { dynamicHref, isExport } from "@/utils/utils"
 
 import UserAvatar from "@/components/user-avatar"
+import { useLocale } from "next-intl"
 
 export default function UsersPage() {
+    const locale = useLocale()
     const { autoTranslate } = useAutoTranslate()
     const [search, setSearch] = useState('')
-    const debouncedSearch = useDebounce(search, 300);
+    const debouncedSearch = useDebounce(search, 300)
 
-    const { entities, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch } : null, { keepPreviousData: true })
+    const { entities, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch, lang: locale } : null, { keepPreviousData: true })
     const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
     return (

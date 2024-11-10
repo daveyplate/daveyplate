@@ -1,15 +1,18 @@
 
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 import ReactTimeAgo from 'react-time-ago'
 import { useLocale } from 'next-intl'
 
-import { getLocaleValue, useCreateEntity, useDeleteEntity, useEntities } from '@daveyplate/supabase-swr-entities/client'
+import { getLocaleValue, useCreateEntity, useDeleteEntity, useEntity } from '@daveyplate/supabase-swr-entities/client'
 
-import { AvatarGroup, Badge, Button, Card, CardBody, cn } from "@nextui-org/react"
+import { AvatarGroup, Badge, Button, Card, CardBody, cn, Divider } from "@nextui-org/react"
 import { HeartIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 
 import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
+import Image from 'next/image'
+import Flag from 'react-flagpack'
+import { localeToCountry } from '../locale-dropdown'
 
 export default memo(({
     message,
@@ -23,6 +26,9 @@ export default memo(({
     const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user?.id)
     const createEntity = useCreateEntity()
     const deleteEntity = useDeleteEntity()
+    const translateMessage = message && !message.content[locale]
+    const { entity: translatedMessage, isLoading: translationLoading } = useEntity(translateMessage ? "messages" : null, message.id, { lang: locale })
+    message = translatedMessage || message
 
     const likeMessage = (message) => {
         const messageLike = { message_id: message.id, user_id: user.id }
@@ -56,6 +62,11 @@ export default memo(({
 
         mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
     }
+
+    if (translationLoading) return null
+
+    const localizedMessage = getLocaleValue(message.content, locale, message.locale)
+    const originalMessage = getLocaleValue(message.content, message.locale)
 
     return (
         <div
@@ -99,7 +110,7 @@ export default memo(({
 
                     <div className="flex justify-between gap-4">
                         <p className="font-light text-foreground-80">
-                            {getLocaleValue(message.content, locale, message.locale)}
+                            {localizedMessage}
                         </p>
 
                         {message.user_id == user?.id && (
@@ -118,6 +129,28 @@ export default memo(({
                             </Button>
                         )}
                     </div>
+
+                    {localizedMessage != originalMessage && (
+                        <>
+                            <Divider className={cn(message.user_id == user?.id && "invert dark:invert-0")} />
+
+                            <div className="flex justify-start gap-3">
+                                <Flag
+                                    code={localeToCountry[message.locale]}
+                                    gradient="real-linear"
+                                    size="m"
+                                    hasDropShadow
+                                />
+
+                                {message.user_id == user?.id ? (
+                                    <Image alt="Google Translate" src="/logos/translated-by-google-white.svg" width={122} height={16} className="dark:hidden" />
+                                ) : (
+                                    <Image alt="Google Translate" src="/logos/translated-by-google-color.svg" width={122} height={16} className="dark:hidden" />
+                                )}
+                                <Image alt="Google Translate" src="/logos/translated-by-google-white.svg" width={122} height={16} className="hidden dark:block" />
+                            </div>
+                        </>
+                    )}
                 </CardBody>
             </Card>
 
