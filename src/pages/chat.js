@@ -3,7 +3,7 @@ import { useLocale } from 'next-intl'
 import { v4 } from 'uuid'
 import { useSession } from '@supabase/auth-helpers-react'
 
-import { useEntity, useMutateEntities } from '@daveyplate/supabase-swr-entities/client'
+import { useEntity, useInfiniteEntities, useMutateEntities } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, Input, cn } from "@nextui-org/react"
 import { ArrowUpIcon } from '@heroicons/react/24/solid'
@@ -13,38 +13,66 @@ import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
 import { usePeers } from '@/hooks/usePeers'
-import MessagesPage from '@/components/chat/messages-page'
+import Message from '@/components/chat/message'
 
 export default function Chat() {
     const session = useSession()
     const locale = useLocale()
-    const [pageCount, setPageCount] = useState(1)
-    const onDataCallbacks = useRef({})
-
-    const [messageCount, setMessageCount] = useState(0)
-    const [createMessage, setCreateMessage] = useState(null)
-    const mutateEntities = useMutateEntities()
-    const pageLimit = 10
     const { entity: user } = useEntity(session && 'profiles', 'me')
+
+    const {
+        entities: messages,
+        size,
+        setSize,
+        hasMore,
+        mutate: mutatePages,
+        createEntity: createMessage,
+        insertEntity: insertMessage,
+        mutateEntity: mutateMessage,
+    } = useInfiniteEntities("messages", { lang: locale, limit: 10 })
+    messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+
+
     const [content, setContent] = useState('')
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const prevScrollHeight = useRef(null)
 
     const onData = (data, connection) => {
-        /*
-        const reloadMessages = () => {
-            for (let page = 0; page < pageCount; page++) {
-                mutateEntities("messages", { limit: pageLimit, offset: page * pageLimit, lang: locale })
-            }
-        }
-        */
-
         const peer = getPeer(connection)
         if (!peer) return
 
-        Object.values(onDataCallbacks.current).forEach(callback => {
-            callback(data, connection, peer)
-        })
+        switch (data.action) {
+            case "like_message": {
+                const message = messages.find((message) => message.id == data.data.message_id)
+                if (!message) return
+
+                mutateMessage({ ...message, likes: [...(message.likes || []), { user_id: peer.user_id, user: peer.user }] })
+                break
+            }
+            case "unlike_message": {
+                const message = messages.find((message) => message.id == data.data.message_id)
+                if (!message) return
+
+                mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != peer.user_id) })
+                break
+            }
+            case "delete_message": {
+                const { id } = data.data
+
+                mutateMessages(messages.filter((message) => message.id != id || message.user_id != peer.user_id), false)
+                break
+            }
+            case "create_message": {
+                const message = data.data
+                if (!message) return
+
+                // Don't allow invalid messages from invalid peers
+                if (message.user_id != peer.user_id) return
+
+                mutateMessages([{ ...message, user: peer.user }, ...messages], false)
+                break
+            }
+        }
     }
 
     const { sendData, isOnline, getPeer } = usePeers({
@@ -59,8 +87,8 @@ export default function Chat() {
         if (scrollTop == 0) {
             prevScrollHeight.current = scrollHeight
 
-            if (messageCount > pageCount * pageLimit) {
-                setPageCount(prevCount => prevCount + 1)
+            if (hasMore) {
+                setSize(size + 1)
             }
         }
 
@@ -78,7 +106,13 @@ export default function Chat() {
             document.removeEventListener("touchmove", handleScroll, true)
             document.removeEventListener("gesturechange", handleScroll, true)
         }
-    }, [messageCount, pageCount, pageLimit])
+    }, [size])
+
+    useEffect(() => {
+        if (shouldScrollDown) {
+            window.scrollTo(0, document.body.scrollHeight)
+        }
+    }, [messages])
 
     const sendMessage = (e) => {
         e?.preventDefault()
@@ -94,31 +128,25 @@ export default function Chat() {
             locale
         }
 
-        createMessage(newMessage)
+        // createMessage(newMessage)
+
+        insertMessage({ ...newMessage, user })
         setContent('')
     }
 
     return (
-        <div className={cn(messageCount == 0 ? "opacity-0" : "opacity-1",
+        <div className={cn(messages ? "opacity-1" : "opacity-0",
             "flex-container max-w-xl mx-auto justify-end !pb-16 transition-all"
         )}>
             <div className="flex flex-col gap-4 w-full flex-col-reverse">
-                {[...Array(pageCount).keys()].map((page) => (
-                    <MessagesPage
-                        key={page}
-                        page={page}
-                        user={user}
-                        isOnline={isOnline}
-                        shouldScrollDown={shouldScrollDown}
-                        prevScrollHeight={prevScrollHeight}
-                        setMessageCount={setMessageCount}
-                        setCreateMessage={setCreateMessage}
-                        onDataCallbacks={onDataCallbacks}
-                        sendData={sendData}
-                        limit={pageLimit}
-                    />
+                {messages?.map((message) => (
+                    <Message key={message.id} message={message} user={user} isOnline={isOnline} />
                 ))}
             </div>
+
+            <Button onPress={() => mutatePages()}>
+                Mutate
+            </Button>
 
             <div className="fixed bottom-16 mb-safe w-full left-0 flex bg-background/90 z-20 backdrop-blur">
                 <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
@@ -162,3 +190,22 @@ export async function getStaticProps({ locale, params }) {
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined
+
+
+/*
+                {[...Array(pageCount).keys()].map((page) => (
+                    <MessagesPage
+                        key={page}
+                        page={page}
+                        user={user}
+                        isOnline={isOnline}
+                        shouldScrollDown={shouldScrollDown}
+                        prevScrollHeight={prevScrollHeight}
+                        setMessageCount={setMessageCount}
+                        setCreateMessage={setCreateMessage}
+                        onDataCallbacks={onDataCallbacks}
+                        sendData={sendData}
+                        limit={pageLimit}
+                    />
+                ))}
+                */
