@@ -87,10 +87,10 @@ export default function Chat() {
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
+        prevScrollTop.current = scrollTop
 
         if (scrollTop < 420) {
             prevScrollHeight.current = scrollHeight
-            prevScrollTop.current = scrollTop
 
             if (hasMore && !messagesValidating) {
                 setSize(size + 1)
@@ -120,7 +120,6 @@ export default function Chat() {
             const { scrollHeight } = document.scrollingElement
             window.scrollTo(0, prevScrollTop.current + (scrollHeight - prevScrollHeight.current))
             prevScrollHeight.current = null
-            prevScrollTop.current = null
         }
     }, [messages, messagesValidating])
 
@@ -138,7 +137,9 @@ export default function Chat() {
             locale
         }
 
-        createMessage(newMessage).then(() => sendData({ action: "create_message", data: newMessage }))
+        createMessage(newMessage)
+            .then(() => sendData({ action: "create_message", data: newMessage }))
+
         insertMessage({ ...newMessage, user })
         setContent('')
     }
