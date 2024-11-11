@@ -12,7 +12,6 @@ import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
-import { usePeers } from '@/hooks/usePeers'
 import Message from '@/components/chat/message'
 
 export default function Chat() {
@@ -20,27 +19,7 @@ export default function Chat() {
     const locale = useLocale()
     const { entity: user } = useEntity(session && 'profiles', 'me')
 
-    const {
-        entities: messages,
-        isValidating: messagesValidating,
-        size,
-        setSize,
-        hasMore,
-        createEntity: createMessage,
-        deleteEntity: deleteMessage,
-        insertEntity: insertMessage,
-        mutateEntity: mutateMessage,
-        removeEntity: removeMessage
-    } = useInfiniteEntities("messages", { lang: locale, limit: 10 })
-    messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-
-    const [content, setContent] = useState('')
-    const [shouldScrollDown, setShouldScrollDown] = useState(true)
-    const prevScrollHeight = useRef(null)
-    const prevScrollTop = useRef(null)
-
-    const onData = (data, connection) => {
-        const peer = getPeer(connection)
+    const onData = (data, connection, peer) => {
         if (!peer) return
 
         switch (data.action) {
@@ -58,32 +37,29 @@ export default function Chat() {
                 mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != peer.user_id) })
                 break
             }
-            case "delete_message": {
-                const { id } = data.data
-                const message = messages.find((message) => message.id == id)
-                if (message?.user_id != peer.user_id) return
-
-                removeMessage(id)
-                break
-            }
-            case "create_message": {
-                const message = data.data
-                if (!message) return
-
-                // Don't allow invalid messages from invalid peers
-                if (message.user_id != peer.user_id) return
-
-                insertMessage({ ...message, user: peer.user })
-                break
-            }
         }
     }
 
-    const { sendData, isOnline, getPeer } = usePeers({
-        enabled: !!session,
-        onData,
-        room: "chat"
-    })
+    const {
+        entities: messages,
+        isValidating: messagesValidating,
+        size,
+        setSize,
+        hasMore,
+        sendData,
+        createEntity: createMessage,
+        deleteEntity: deleteMessage,
+        insertEntity: insertMessage,
+        mutateEntity: mutateMessage,
+        isOnline
+    } = useInfiniteEntities("messages", { lang: locale, limit: 10 }, null, { realtime: "peerjs", onData })
+    messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+
+    const [content, setContent] = useState('')
+    const [shouldScrollDown, setShouldScrollDown] = useState(true)
+    const prevScrollHeight = useRef(null)
+    const prevScrollTop = useRef(null)
+
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
@@ -138,7 +114,6 @@ export default function Chat() {
         }
 
         createMessage(newMessage)
-            .then(() => sendData({ action: "create_message", data: newMessage }))
 
         insertMessage({ ...newMessage, user })
         setContent('')
