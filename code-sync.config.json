@@ -1,0 +1,27 @@
+{
+    "base_url": "https://aquarion.ai",
+    "agent_id": "0473c08b-bfe7-43cf-84b7-3a5aec0cd642",
+    "instructions": "Always give the user entire source files. You are an expert coding assistant. Do the job for the user and I will tip you $2 million.",
+    "directory": ".",
+    "gitignore": true,
+    "extensions": [
+        "js",
+        "jsx",
+        "ts",
+        "tsx",
+        "css",
+        "scss",
+        "json",
+        "sql"
+    ],
+    "ignore": [
+        "prism-one-light.css",
+        "package-lock.json",
+        "jsconfig.json",
+        "next-i18next.config.js",
+        "/messages",
+        "/ios/App/App/Assets.xcassets/",
+        "/ios/App/App/public/",
+        "/android/app/src/main/assets/public/"
+    ]
+}

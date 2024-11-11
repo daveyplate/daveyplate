@@ -48,6 +48,7 @@ export default function Chat() {
         hasMore,
         sendData,
         createEntity: createMessage,
+        updateEntity: updateMessage,
         deleteEntity: deleteMessage,
         insertEntity: insertMessage,
         mutateEntity: mutateMessage,
@@ -131,7 +132,9 @@ export default function Chat() {
                         user={user}
                         isOnline={isOnline}
                         mutateMessage={mutateMessage}
+                        updateMessage={updateMessage}
                         deleteMessage={deleteMessage}
+                        shouldScrollDown={shouldScrollDown}
                         sendData={sendData}
                     />
                 ))}
