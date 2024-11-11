@@ -178,26 +178,28 @@ export default function Header({ canGoBack }) {
 
                     <NavbarItem className="mt-1 -me-1">
                         <Dropdown>
-                            <Badge
-                                isOneChar
-                                size="sm"
-                                color={(userError || !isConnected) ? "danger" : (user ? "success" : "default")}
-                                content={!user && !userLoading && !sessionLoading && isConnected &&
-                                    <ChevronDownIcon className="w-2.5 pt-0.5" />
-                                }
-                                shape="circle"
-                                placement="bottom-right"
-                            >
-                                <Skeleton className="rounded-full" isLoaded={!userLoading && !sessionLoading}>
-                                    <DropdownTrigger>
-                                        <UserAvatar
-                                            as={Button}
-                                            user={user}
-                                            isIconOnly
-                                        />
-                                    </DropdownTrigger>
-                                </Skeleton>
-                            </Badge>
+                            <DropdownTrigger>
+                                <div className="cursor-pointer">
+                                    <Badge
+                                        isOneChar
+                                        size="sm"
+                                        color={(userError || !isConnected) ? "danger" : (user ? "success" : "default")}
+                                        content={!user && !userLoading && !sessionLoading && isConnected &&
+                                            <ChevronDownIcon className="w-2.5 pt-0.5" />
+                                        }
+                                        shape="circle"
+                                        placement="bottom-right"
+                                    >
+                                        <Skeleton className="rounded-full" isLoaded={!userLoading && !sessionLoading}>
+                                            <UserAvatar
+                                                user={user}
+                                                isIconOnly
+                                            />
+                                        </Skeleton>
+                                    </Badge>
+                                </div>
+
+                            </DropdownTrigger>
 
                             <DropdownMenu
                                 aria-label={autoTranslate("profile_actions", "Profile actions")}

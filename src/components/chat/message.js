@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react'
-import { Button, Card, CardBody, Badge, AvatarGroup, cn, Divider, Textarea } from "@nextui-org/react"
-import { HeartIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { Button, Card, CardBody, Badge, AvatarGroup, cn, Divider, Textarea, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger, DropdownSection } from "@nextui-org/react"
+import { HeartIcon, PencilIcon, TrashIcon, UserIcon } from '@heroicons/react/24/solid'
 import ReactTimeAgo from 'react-time-ago'
 import { useLocale } from 'next-intl'
 import Image from 'next/image'
@@ -10,6 +10,8 @@ import { getLocaleValue, useCreateEntity, useDeleteEntity, useEntity } from '@da
 import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
 import { localeToCountry } from '../locale-dropdown'
+import { Link } from "@/i18n/routing"
+import { dynamicHref } from "@/utils/utils"
 
 export default memo(({
     message,
@@ -81,18 +83,32 @@ export default memo(({
                 message.user_id == user?.id && "flex-row-reverse"
             )}
         >
-            <div>
-                <Badge
-                    isOneChar
-                    isInvisible={message.user_id != user?.id && !isOnline(message.user_id)}
-                    color="success"
-                    shape="circle"
-                    placement="bottom-right"
-                    size="sm"
-                >
-                    <UserAvatar user={message.user} />
-                </Badge>
-            </div>
+            <Dropdown>
+                <DropdownTrigger>
+                    <div className="mb-auto cursor-pointer">
+                        <Badge
+                            isOneChar
+                            isInvisible={message.user_id != user?.id && !isOnline(message.user_id)}
+                            color="success"
+                            shape="circle"
+                            placement="bottom-right"
+                            size="sm"
+                        >
+                            <UserAvatar user={message.user} />
+                        </Badge>
+                    </div>
+                </DropdownTrigger>
+
+                <DropdownMenu itemClasses={{ title: "!text-base", base: "gap-3 px-3" }}>
+                    <DropdownItem
+                        as={Link}
+                        href={dynamicHref({ pathname: `/user/[user_id]`, query: { user_id: message.user_id } })}
+                        startContent={<UserIcon className="size-5" />}
+                    >
+                        View Profile
+                    </DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
 
             {isEditing ? (
                 <div className="flex flex-col gap-2 w-64">
