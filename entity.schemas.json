@@ -16,15 +16,15 @@
         "table": "peers",
         "select": [
             "*",
-            "user:user_id!inner(full_name, avatar_url)"
+            "user:user_id!inner(id, full_name, avatar_url)"
         ]
     },
     {
         "table": "messages",
         "select": [
             "*",
-            "user:user_id!inner(full_name, avatar_url)",
-            "likes:message_likes(user_id, user:profiles(full_name, avatar_url))"
+            "user:user_id!inner(id, full_name, avatar_url)",
+            "likes:message_likes(user_id, user:profiles(id, full_name, avatar_url))"
         ],
         "localizedColumns": [
             "content"
@@ -60,11 +60,11 @@
         },
         "select": [
             "*",
-            "user:user_id!inner(full_name, avatar_url)",
-            "recipient:recipient_id!inner(full_name, avatar_url)"
+            "user:user_id!inner(id, full_name, avatar_url)",
+            "recipient:recipient_id!inner(id, full_name, avatar_url)"
         ],
         "requiredParams": {
-            "sender.deactivated": false,
+            "user.deactivated": false,
             "recipient.deactivated": false
         }
     }

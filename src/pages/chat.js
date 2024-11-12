@@ -5,19 +5,25 @@ import { useSession } from '@supabase/auth-helpers-react'
 
 import { useEntity, useInfiniteEntities } from '@daveyplate/supabase-swr-entities/client'
 
-import { Button, Input, cn } from "@nextui-org/react"
-import { ArrowUpIcon } from '@heroicons/react/24/solid'
+import { Button, Chip, Input, cn } from "@nextui-org/react"
+import { ArrowUpIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
 import Message from '@/components/chat/message'
+import UserAvatar from '@/components/user-avatar'
 
 export default function Chat() {
     const session = useSession()
     const locale = useLocale()
     const { entity: user } = useEntity(session && 'profiles', 'me')
+    const [content, setContent] = useState('')
+    const [shouldScrollDown, setShouldScrollDown] = useState(true)
+    const [whisperTo, setWhisperTo] = useState(null)
+    const prevScrollHeight = useRef(null)
+    const prevScrollTop = useRef(null)
 
     const onData = (data, connection, peer) => {
         if (!peer) return
@@ -46,21 +52,29 @@ export default function Chat() {
         size,
         setSize,
         hasMore,
-        sendData,
+        sendData: sendMessageData,
         createEntity: createMessage,
         updateEntity: updateMessage,
         deleteEntity: deleteMessage,
         insertEntity: insertMessage,
         mutateEntity: mutateMessage,
-        isOnline
-    } = useInfiniteEntities("messages", { lang: locale, limit: 10 }, null, { realtime: "peerjs", onData })
-    messages?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        isLoading: messagesLoading
+    } = useInfiniteEntities("messages", { lang: locale, limit: 10 }, null, { /*realtime: "peerjs", onData*/ })
 
-    const [content, setContent] = useState('')
-    const [shouldScrollDown, setShouldScrollDown] = useState(true)
-    const prevScrollHeight = useRef(null)
-    const prevScrollTop = useRef(null)
+    const {
+        entities: whispers,
+        sendData: sendWhisperData,
+        createEntity: createWhisper,
+        updateEntity: updateWhisper,
+        deleteEntity: deleteWhisper,
+        insertEntity: insertWhisper,
+        mutateEntity: mutateWhisper,
+        isOnline,
+        isLoading: whispersLoading
+    } = useInfiniteEntities("whispers", { lang: locale, limit: 10 }, null, { realtime: "peerjs", onData, peerLimiter: "recipient_id" })
 
+    const messagesAndWhispers = (!messagesLoading && !whispersLoading) ? [...(messages || []), ...(whispers || [])] : null
+    messagesAndWhispers?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
@@ -106,36 +120,52 @@ export default function Chat() {
 
         setShouldScrollDown(true)
 
-        const newMessage = {
-            id: v4(),
-            user_id: user.id,
-            content: { [locale]: content },
-            created_at: new Date(),
-            locale
+        if (whisperTo) {
+            const newWhisper = {
+                id: v4(),
+                user_id: user.id,
+                recipient_id: whisperTo.id,
+                content: { [locale]: content },
+                created_at: new Date(),
+                locale
+            }
+
+            createWhisper(newWhisper)
+            insertWhisper({ ...newWhisper, user, recipient: whisperTo })
+        } else {
+            const newMessage = {
+                id: v4(),
+                user_id: user.id,
+                content: { [locale]: content },
+                created_at: new Date(),
+                locale
+            }
+
+            createMessage(newMessage)
+            insertMessage({ ...newMessage, user })
         }
 
-        createMessage(newMessage)
-
-        insertMessage({ ...newMessage, user })
         setContent('')
+        setWhisperTo(null)
     }
 
     return (
-        <div className={cn(messages ? "opacity-1" : "opacity-0",
+        <div className={cn(messagesAndWhispers ? "opacity-1" : "opacity-0",
             "flex-container max-w-xl mx-auto justify-end !pb-16 transition-all"
         )}>
             <div className="flex flex-col gap-4 w-full flex-col-reverse">
-                {messages?.map((message) => (
+                {messagesAndWhispers?.map((message) => (
                     <Message
                         key={message.id}
                         message={message}
                         user={user}
                         isOnline={isOnline}
-                        mutateMessage={mutateMessage}
-                        updateMessage={updateMessage}
-                        deleteMessage={deleteMessage}
+                        mutateMessage={message.recipient_id ? mutateWhisper : mutateMessage}
+                        updateMessage={message.recipient_id ? updateWhisper : updateMessage}
+                        deleteMessage={message.recipient_id ? deleteWhisper : deleteMessage}
                         shouldScrollDown={shouldScrollDown}
-                        sendData={sendData}
+                        sendData={message.recipient_id ? sendWhisperData : sendMessageData}
+                        setWhisperTo={setWhisperTo}
                     />
                 ))}
             </div>
@@ -148,13 +178,33 @@ export default function Chat() {
                         variant="bordered"
                         placeholder={
                             session
-                                ? "Type your message..."
+                                ? whisperTo
+                                    ? `Whisper...`
+                                    : "Message..."
                                 : "Sign in to send messages"
                         }
                         value={content}
                         onValueChange={setContent}
                         isDisabled={!session}
                         autoComplete='off'
+                        startContent={
+                            whisperTo && (
+                                <Chip
+                                    size="lg"
+                                    variant="flat"
+                                    color="secondary"
+                                    className="-ms-1 gap-1"
+                                    avatar={
+                                        <UserAvatar user={whisperTo} />
+                                    }
+                                    onClose={() => setWhisperTo(null)}
+                                >
+                                    <div className="max-w-20 overflow-hidden truncate">
+                                        {whisperTo.full_name}
+                                    </div>
+                                </Chip>
+                            )
+                        }
                         endContent={
                             <Button
                                 size="sm"

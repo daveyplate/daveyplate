@@ -1,11 +1,12 @@
 import { memo, useEffect, useState } from 'react'
 import { Button, Card, CardBody, Badge, AvatarGroup, cn, Divider, Textarea, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger, DropdownSection } from "@nextui-org/react"
-import { HeartIcon, PencilIcon, TrashIcon, UserIcon } from '@heroicons/react/24/solid'
+import { ArrowRightIcon, ChatBubbleOvalLeftIcon, HeartIcon, PencilIcon, TrashIcon, UserIcon } from '@heroicons/react/24/solid'
 import ReactTimeAgo from 'react-time-ago'
 import { useLocale } from 'next-intl'
 import Image from 'next/image'
 import Flag from 'react-flagpack'
 import { getLocaleValue, useCreateEntity, useDeleteEntity, useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
 import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
@@ -21,9 +22,13 @@ export default memo(({
     deleteMessage,
     sendData,
     updateMessage,
-    shouldScrollDown
+    shouldScrollDown,
+    setWhisperTo
 }) => {
+    const { autoTranslate } = useAutoTranslate("message")
     const locale = useLocale()
+    const isWhisper = !!message.recipient_id
+    const isOutgoing = message.user_id == user?.id
     const [isEditing, setIsEditing] = useState(false)
     const [editedContent, setEditedContent] = useState(getLocaleValue(message.content, locale))
 
@@ -88,7 +93,7 @@ export default memo(({
                     <div className="mb-auto cursor-pointer">
                         <Badge
                             isOneChar
-                            isInvisible={message.user_id != user?.id && !isOnline(message.user_id)}
+                            isInvisible={!isOutgoing && !isOnline(message.user_id)}
                             color="success"
                             shape="circle"
                             placement="bottom-right"
@@ -105,8 +110,18 @@ export default memo(({
                         href={dynamicHref({ pathname: `/user/[user_id]`, query: { user_id: message.user_id } })}
                         startContent={<UserIcon className="size-5" />}
                     >
-                        View Profile
+                        {autoTranslate('view_profile', 'View Profile')}
                     </DropdownItem>
+
+                    {message.user_id !== user?.id && (
+                        <DropdownItem
+                            key="whisper"
+                            startContent={<ChatBubbleOvalLeftIcon className="size-5" />}
+                            onPress={() => setWhisperTo(message.user)}
+                        >
+                            {autoTranslate('whisper', 'Whisper')}
+                        </DropdownItem>
+                    )}
                 </DropdownMenu>
             </Dropdown>
 
@@ -157,7 +172,8 @@ export default memo(({
             ) : (
                 <>
                     <Card className={cn("max-w-[70%]",
-                        message.user_id == user?.id && "bg-primary text-primary-foreground"
+                        isWhisper ? "bg-secondary text-secondary-foreground" :
+                            isOutgoing && "bg-primary text-primary-foreground"
                     )}>
                         <CardBody className="px-4 py-3 gap-2">
                             <div className="flex gap-4 items-center">
@@ -167,13 +183,23 @@ export default memo(({
 
                                 <ReactTimeAgo
                                     className={cn("ms-auto text-tiny font-light",
-                                        message.user_id == user?.id ? "text-primary-foreground/60" : "text-foreground/60"
+                                        (isOutgoing || isWhisper) ? "text-primary-foreground/60" : "text-foreground/60"
                                     )}
                                     date={new Date(message.created_at)}
                                     locale={locale}
                                     timeStyle="mini-minute-now"
                                 />
                             </div>
+
+                            {message.recipient_id && (
+                                <div className="flex items-center gap-2">
+                                    <ArrowRightIcon className="size-4 -mx-1" />
+
+                                    <UserAvatar user={message.recipient} size="sm" className="ms-1 w-6 h-6" />
+
+                                    {message.recipient.full_name}
+                                </div>
+                            )}
 
                             <div className="flex justify-between gap-4">
                                 <p className="font-light text-foreground-80">
@@ -196,7 +222,7 @@ export default memo(({
 
                             {localizedMessage != originalMessage && (
                                 <>
-                                    <Divider className={cn(message.user_id == user?.id && "invert dark:invert-0")} />
+                                    <Divider className={cn((isOutgoing || isWhisper) && "invert dark:invert-0")} />
 
                                     <div className="flex justify-start gap-3">
                                         <Flag
@@ -206,7 +232,7 @@ export default memo(({
                                             hasDropShadow
                                         />
 
-                                        {message.user_id == user?.id ? (
+                                        {(isOutgoing || isWhisper) ? (
                                             <Image alt="Google Translate" src="/logos/translated-by-google-white.svg" width={122} height={16} className="dark:hidden" />
                                         ) : (
                                             <Image alt="Google Translate" src="/logos/translated-by-google-color.svg" width={122} height={16} className="dark:hidden" />

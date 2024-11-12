@@ -193,12 +193,10 @@ export default function Header({ canGoBack }) {
                                         <Skeleton className="rounded-full" isLoaded={!userLoading && !sessionLoading}>
                                             <UserAvatar
                                                 user={user}
-                                                isIconOnly
                                             />
                                         </Skeleton>
                                     </Badge>
                                 </div>
-
                             </DropdownTrigger>
 
                             <DropdownMenu
