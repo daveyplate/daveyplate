@@ -52,6 +52,7 @@ export default function Chat() {
         size,
         setSize,
         hasMore,
+        isOnline,
         sendData: sendMessageData,
         createEntity: createMessage,
         updateEntity: updateMessage,
@@ -59,17 +60,20 @@ export default function Chat() {
         insertEntity: insertMessage,
         mutateEntity: mutateMessage,
         isLoading: messagesLoading
-    } = useInfiniteEntities("messages", { lang: locale, limit: 10 }, null, { /*realtime: "peerjs", onData*/ })
+    } = useInfiniteEntities("messages", { lang: locale, limit: 10 }, null, { realtime: "peerjs", onData })
 
     const {
         entities: whispers,
+        isValidating: whispersValidating,
+        whispersSize,
+        setWhispersSize,
+        hasMore: hasMoreWhispers,
         sendData: sendWhisperData,
         createEntity: createWhisper,
         updateEntity: updateWhisper,
         deleteEntity: deleteWhisper,
         insertEntity: insertWhisper,
         mutateEntity: mutateWhisper,
-        isOnline,
         isLoading: whispersLoading
     } = useInfiniteEntities("whispers", { lang: locale, limit: 10 }, null, { realtime: "peerjs", onData, peerLimiter: "recipient_id" })
 
@@ -85,6 +89,10 @@ export default function Chat() {
 
             if (hasMore && !messagesValidating) {
                 setSize(size + 1)
+            }
+
+            if (hasMoreWhispers && !whispersValidating) {
+                setWhispersSize(whispersSize + 1)
             }
         }
 

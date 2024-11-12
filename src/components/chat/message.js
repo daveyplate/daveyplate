@@ -244,25 +244,43 @@ export default memo(({
                         </CardBody>
                     </Card>
 
-                    <Button
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        radius="full"
-                        onPress={() => {
-                            isMessageLiked(message)
-                                ? unlikeMessage(message)
-                                : likeMessage(message)
-                        }}
-                        className="-mx-1 self-center"
-                        isDisabled={!user}
-                    >
-                        <HeartIcon
-                            className={cn(isMessageLiked(message) ? "text-danger" : "text-default",
-                                "size-5"
-                            )}
-                        />
-                    </Button>
+                    {isWhisper ? !isOutgoing && (
+                        <Button
+                            size="sm"
+                            variant="light"
+                            isIconOnly
+                            radius="full"
+                            onPress={() => setWhisperTo(message.user)}
+                            className="-mx-1 self-center"
+                            isDisabled={!user}
+                        >
+                            <ChatBubbleOvalLeftIcon
+                                className="size-5 text-default"
+                            />
+                        </Button>
+                    ) : (
+                        <Button
+                            size="sm"
+                            variant="light"
+                            isIconOnly
+                            radius="full"
+                            onPress={
+                                () => {
+                                    isMessageLiked(message)
+                                        ? unlikeMessage(message)
+                                        : likeMessage(message)
+                                }}
+                            className="-mx-1 self-center"
+                            isDisabled={!user}
+                        >
+                            <HeartIcon
+                                className={cn(isMessageLiked(message) ? "text-danger" : "text-default",
+                                    "size-5"
+                                )}
+                            />
+                        </Button>
+                    )}
+
 
                     <AvatarGroup max={3} size="sm">
                         {message.likes?.map((like) => (
