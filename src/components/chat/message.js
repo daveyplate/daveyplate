@@ -6,13 +6,14 @@ import { useLocale } from 'next-intl'
 import Image from 'next/image'
 import Flag from 'react-flagpack'
 import { getLocaleValue, useCreateEntity, useDeleteEntity, useEntity } from '@daveyplate/supabase-swr-entities/client'
-import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
+import { useAutoTranslate } from 'next-auto-translate'
 
 import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
 import { localeToCountry } from '../locale-dropdown'
 import { Link } from "@/i18n/routing"
 import { dynamicHref } from "@/utils/utils"
+import { useSession } from '@supabase/auth-helpers-react'
 
 export default memo(({
     message,
@@ -23,12 +24,13 @@ export default memo(({
     sendData,
     updateMessage,
     shouldScrollDown,
-    setWhisperTo
+    setWhisperUser
 }) => {
+    const session = useSession()
     const { autoTranslate } = useAutoTranslate("message")
     const locale = useLocale()
     const isWhisper = !!message.recipient_id
-    const isOutgoing = message.user_id == user?.id
+    const isOutgoing = message.user_id == session?.user.id
     const [isEditing, setIsEditing] = useState(false)
     const [editedContent, setEditedContent] = useState(getLocaleValue(message.content, locale))
 
@@ -85,7 +87,7 @@ export default memo(({
             key={message.id}
             className={cn(
                 "flex gap-3 w-full",
-                message.user_id == user?.id && "flex-row-reverse"
+                isOutgoing && "flex-row-reverse"
             )}
         >
             <Dropdown>
@@ -117,7 +119,7 @@ export default memo(({
                         <DropdownItem
                             key="whisper"
                             startContent={<ChatBubbleOvalLeftIcon className="size-5" />}
-                            onPress={() => setWhisperTo(message.user)}
+                            onPress={() => setWhisperUser(message.user)}
                         >
                             {autoTranslate('whisper', 'Whisper')}
                         </DropdownItem>
@@ -195,9 +197,9 @@ export default memo(({
                                 <div className="flex items-center gap-2">
                                     <ArrowRightIcon className="size-4 -mx-1" />
 
-                                    <UserAvatar user={message.recipient} size="sm" className="ms-1 w-6 h-6" />
+                                    <UserAvatar user={isOutgoing ? message.recipient : user} size="sm" className="ms-1 w-6 h-6" />
 
-                                    {message.recipient.full_name}
+                                    {isOutgoing ? message.recipient?.full_name : user.full_name}
                                 </div>
                             )}
 
@@ -250,7 +252,7 @@ export default memo(({
                             variant="light"
                             isIconOnly
                             radius="full"
-                            onPress={() => setWhisperTo(message.user)}
+                            onPress={() => setWhisperUser(message.user)}
                             className="-mx-1 self-center"
                             isDisabled={!user}
                         >

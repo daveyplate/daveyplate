@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocale } from 'next-intl'
 import { v4 } from 'uuid'
-import { useSession } from '@supabase/auth-helpers-react'
+import { useSession, useSessionContext } from '@supabase/auth-helpers-react'
 
-import { useEntity, useInfiniteEntities } from '@daveyplate/supabase-swr-entities/client'
+import { useCreateEntity, useEntity, useInfiniteEntities, usePeers } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, Chip, Input, cn } from "@nextui-org/react"
 import { ArrowUpIcon, XMarkIcon } from '@heroicons/react/24/solid'
@@ -16,18 +16,24 @@ import Message from '@/components/chat/message'
 import UserAvatar from '@/components/user-avatar'
 
 export default function Chat() {
-    const session = useSession()
+    const { session, isLoading: sessionLoading } = useSessionContext()
     const locale = useLocale()
     const { entity: user } = useEntity(session && 'profiles', 'me')
     const [content, setContent] = useState('')
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
-    const [whisperTo, setWhisperTo] = useState(null)
+    const [lastWhisperUser, setLastWhisperUser] = useState(null)
+    const [whisperUser, setWhisperUser] = useState(null)
+
+    useEffect(() => {
+        if (whisperUser) {
+            setLastWhisperUser(whisperUser)
+        }
+    }, [whisperUser])
+
     const prevScrollHeight = useRef(null)
     const prevScrollTop = useRef(null)
 
     const onData = (data, connection, peer) => {
-        if (!peer) return
-
         switch (data.action) {
             case "like_message": {
                 const message = messages.find((message) => message.id == data.data.message_id)
@@ -68,14 +74,24 @@ export default function Chat() {
         whispersSize,
         setWhispersSize,
         hasMore: hasMoreWhispers,
-        sendData: sendWhisperData,
         createEntity: createWhisper,
         updateEntity: updateWhisper,
         deleteEntity: deleteWhisper,
         insertEntity: insertWhisper,
         mutateEntity: mutateWhisper,
         isLoading: whispersLoading
-    } = useInfiniteEntities("whispers", { lang: locale, limit: 10 }, null, { realtime: "peerjs", onData, peerLimiter: "recipient_id" })
+    } = useInfiniteEntities(session &&
+        "whispers",
+        { lang: locale, limit: 10 },
+        null,
+        { realtime: session && "peerjs", onData, peerLimiter: "recipient_id", room: `whispers_${session?.user.id}`, listenOnly: true }
+    )
+
+    const { sendData } = usePeers({
+        enabled: !!lastWhisperUser,
+        room: `whispers_${lastWhisperUser?.id}`,
+        allowedUsers: [lastWhisperUser?.id],
+    })
 
     const messagesAndWhispers = (!messagesLoading && !whispersLoading) ? [...(messages || []), ...(whispers || [])] : null
     messagesAndWhispers?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -128,18 +144,18 @@ export default function Chat() {
 
         setShouldScrollDown(true)
 
-        if (whisperTo) {
+        if (whisperUser) {
             const newWhisper = {
                 id: v4(),
                 user_id: user.id,
-                recipient_id: whisperTo.id,
+                recipient_id: whisperUser.id,
                 content: { [locale]: content },
                 created_at: new Date(),
                 locale
             }
 
-            createWhisper(newWhisper)
-            insertWhisper({ ...newWhisper, user, recipient: whisperTo })
+            createWhisper(newWhisper).then(() => sendData({ action: "create_entity", data: newWhisper }))
+            insertWhisper({ ...newWhisper, user, recipient: whisperUser })
         } else {
             const newMessage = {
                 id: v4(),
@@ -154,11 +170,11 @@ export default function Chat() {
         }
 
         setContent('')
-        setWhisperTo(null)
+        setWhisperUser(null)
     }
 
     return (
-        <div className={cn(messagesAndWhispers ? "opacity-1" : "opacity-0",
+        <div className={cn((!sessionLoading && messagesAndWhispers) ? "opacity-1" : "opacity-0",
             "flex-container max-w-xl mx-auto justify-end !pb-16 transition-all"
         )}>
             <div className="flex flex-col gap-4 w-full flex-col-reverse">
@@ -172,8 +188,8 @@ export default function Chat() {
                         updateMessage={message.recipient_id ? updateWhisper : updateMessage}
                         deleteMessage={message.recipient_id ? deleteWhisper : deleteMessage}
                         shouldScrollDown={shouldScrollDown}
-                        sendData={message.recipient_id ? sendWhisperData : sendMessageData}
-                        setWhisperTo={setWhisperTo}
+                        sendData={sendMessageData}
+                        setWhisperUser={setWhisperUser}
                     />
                 ))}
             </div>
@@ -186,7 +202,7 @@ export default function Chat() {
                         variant="bordered"
                         placeholder={
                             session
-                                ? whisperTo
+                                ? whisperUser
                                     ? `Whisper...`
                                     : "Message..."
                                 : "Sign in to send messages"
@@ -196,19 +212,19 @@ export default function Chat() {
                         isDisabled={!session}
                         autoComplete='off'
                         startContent={
-                            whisperTo && (
+                            whisperUser && (
                                 <Chip
                                     size="lg"
                                     variant="flat"
                                     color="secondary"
                                     className="-ms-1 gap-1"
                                     avatar={
-                                        <UserAvatar user={whisperTo} />
+                                        <UserAvatar user={whisperUser} />
                                     }
-                                    onClose={() => setWhisperTo(null)}
+                                    onClose={() => setWhisperUser(null)}
                                 >
                                     <div className="max-w-20 overflow-hidden truncate">
-                                        {whisperTo.full_name}
+                                        {whisperUser.full_name}
                                     </div>
                                 </Chip>
                             )
