@@ -66,6 +66,7 @@
         "requiredParams": {
             "user.deactivated": false,
             "recipient.deactivated": false
-        }
+        },
+        "defaultOrder": "-created_at"
     }
 ]

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocale } from 'next-intl'
 import { v4 } from 'uuid'
-import { useSession, useSessionContext } from '@supabase/auth-helpers-react'
+import { useSessionContext } from '@supabase/auth-helpers-react'
 
-import { useCreateEntity, useEntity, useInfiniteEntities, usePeers } from '@daveyplate/supabase-swr-entities/client'
+import { useEntity, useInfiniteEntities, usePeers } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, Chip, Input, cn } from "@nextui-org/react"
-import { ArrowUpIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { ArrowUpIcon } from '@heroicons/react/24/solid'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
@@ -66,13 +66,18 @@ export default function Chat() {
         insertEntity: insertMessage,
         mutateEntity: mutateMessage,
         isLoading: messagesLoading
-    } = useInfiniteEntities("messages", { lang: locale, limit: 10 }, null, { realtime: "peerjs", onData })
+    } = useInfiniteEntities(
+        "messages",
+        { lang: locale, limit: 10 },
+        null,
+        { realtime: session && "peerjs", onData }
+    )
 
     const {
         entities: whispers,
         isValidating: whispersValidating,
-        whispersSize,
-        setWhispersSize,
+        size: whispersSize,
+        setSize: setWhispersSize,
         hasMore: hasMoreWhispers,
         createEntity: createWhisper,
         updateEntity: updateWhisper,
@@ -84,10 +89,15 @@ export default function Chat() {
         "whispers",
         { lang: locale, limit: 10 },
         null,
-        { realtime: session && "peerjs", onData, peerLimiter: "recipient_id", room: `whispers_${session?.user.id}`, listenOnly: true }
+        {
+            realtime: session && "peerjs",
+            onData,
+            room: `whispers_${session?.user.id}`,
+            listenOnly: true
+        }
     )
 
-    const { sendData } = usePeers({
+    const { sendData: sendWhisperData } = usePeers({
         enabled: !!lastWhisperUser,
         room: `whispers_${lastWhisperUser?.id}`,
         allowedUsers: [lastWhisperUser?.id],
@@ -118,13 +128,13 @@ export default function Chat() {
 
     useEffect(() => {
         document.addEventListener("scroll", handleScroll, true)
-        document.addEventListener("touchmove", handleScroll, true)
-        document.addEventListener("gesturechange", handleScroll, true)
+        // document.addEventListener("touchmove", handleScroll, true)
+        // document.addEventListener("gesturechange", handleScroll, true)
 
         return () => {
             document.removeEventListener("scroll", handleScroll, true)
-            document.removeEventListener("touchmove", handleScroll, true)
-            document.removeEventListener("gesturechange", handleScroll, true)
+            // document.removeEventListener("touchmove", handleScroll, true)
+            // document.removeEventListener("gesturechange", handleScroll, true)
         }
     }, [size, hasMore, messagesValidating])
 
@@ -154,7 +164,7 @@ export default function Chat() {
                 locale
             }
 
-            createWhisper(newWhisper).then(() => sendData({ action: "create_entity", data: newWhisper }))
+            createWhisper(newWhisper).then(() => sendWhisperData({ action: "create_entity", data: newWhisper }))
             insertWhisper({ ...newWhisper, user, recipient: whisperUser })
         } else {
             const newMessage = {
@@ -189,6 +199,7 @@ export default function Chat() {
                         deleteMessage={message.recipient_id ? deleteWhisper : deleteMessage}
                         shouldScrollDown={shouldScrollDown}
                         sendData={sendMessageData}
+                        sendWhisperData={sendWhisperData}
                         setWhisperUser={setWhisperUser}
                     />
                 ))}

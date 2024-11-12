@@ -1,11 +1,11 @@
 import { memo, useEffect, useState } from 'react'
-import { Button, Card, CardBody, Badge, AvatarGroup, cn, Divider, Textarea, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger, DropdownSection } from "@nextui-org/react"
+import { Button, Card, CardBody, Badge, AvatarGroup, cn, Divider, Textarea, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger } from "@nextui-org/react"
 import { ArrowRightIcon, ChatBubbleOvalLeftIcon, HeartIcon, PencilIcon, TrashIcon, UserIcon } from '@heroicons/react/24/solid'
 import ReactTimeAgo from 'react-time-ago'
 import { useLocale } from 'next-intl'
 import Image from 'next/image'
 import Flag from 'react-flagpack'
-import { getLocaleValue, useCreateEntity, useDeleteEntity, useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { getLocaleValue, useCreateEntity, useDeleteEntity } from '@daveyplate/supabase-swr-entities/client'
 import { useAutoTranslate } from 'next-auto-translate'
 
 import UserAvatar from '@/components/user-avatar'
@@ -22,13 +22,14 @@ export default memo(({
     mutateMessage,
     deleteMessage,
     sendData,
+    sendWhisperData,
     updateMessage,
     shouldScrollDown,
     setWhisperUser
 }) => {
     const session = useSession()
-    const { autoTranslate } = useAutoTranslate("message")
     const locale = useLocale()
+    const { autoTranslate } = useAutoTranslate("message")
     const isWhisper = !!message.recipient_id
     const isOutgoing = message.user_id == session?.user.id
     const [isEditing, setIsEditing] = useState(false)
@@ -37,9 +38,6 @@ export default memo(({
     const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user?.id)
     const createEntity = useCreateEntity()
     const deleteEntity = useDeleteEntity()
-    const translateMessage = message && !message.content[locale]
-    const { entity: translatedMessage, isLoading: translationLoading } = useEntity(translateMessage ? "messages" : null, message.id, { lang: locale })
-    message = translatedMessage || message
 
     const likeMessage = (message) => {
         const messageLike = { message_id: message.id, user_id: user.id }
@@ -48,8 +46,10 @@ export default memo(({
                 toast(error.message, { color: "danger" })
                 return mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
             }
-            sendData({ action: "like_message", data: { message_id: message.id } })
+
+            sendData({ action: "like_message" })
         })
+
         mutateMessage({ ...message, likes: [...(message.likes || []), { ...messageLike, user }] })
     }
 
@@ -65,7 +65,8 @@ export default memo(({
                 toast(error.message, { color: "danger" })
                 return mutateMessage({ ...message, likes: [...(message.likes || []), messageLike] })
             }
-            sendData({ action: "unlike_message", data: { message_id: message.id } })
+
+            sendData({ action: "unlike_message" })
         })
 
         mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
@@ -76,8 +77,6 @@ export default memo(({
             window.scrollTo(0, document.body.scrollHeight)
         }
     }, [isEditing])
-
-    if (translationLoading) return null
 
     const localizedMessage = getLocaleValue(message.content, locale, message.locale)
     const originalMessage = getLocaleValue(message.content, message.locale)
@@ -145,6 +144,7 @@ export default memo(({
                                 setIsEditing(false)
                                 const { error } = await updateMessage(message, { content: { [locale]: editedContent } })
                                 error && toast(error.message, { color: "danger" })
+                                isWhisper && !error && sendWhisperData({ action: "update_entity" })
                             }}
                         >
                             Save
@@ -165,6 +165,7 @@ export default memo(({
                                 setIsEditing(false)
                                 const { error } = await deleteMessage(message.id) || {}
                                 error && toast(error.message, { color: "danger" })
+                                isWhisper && !error && sendWhisperData({ action: "delete_entity" })
                             }}
                         >
                             <TrashIcon className="size-4" />
@@ -199,7 +200,7 @@ export default memo(({
 
                                     <UserAvatar user={isOutgoing ? message.recipient : user} size="sm" className="ms-1 w-6 h-6" />
 
-                                    {isOutgoing ? message.recipient?.full_name : user.full_name}
+                                    {message.recipient?.full_name || (!isOutgoing && user?.full_name)}
                                 </div>
                             )}
 
@@ -283,7 +284,6 @@ export default memo(({
                         </Button>
                     )}
 
-
                     <AvatarGroup max={3} size="sm">
                         {message.likes?.map((like) => (
                             <UserAvatar key={like.user_id} user={like.user} size="sm" />
@@ -291,7 +291,6 @@ export default memo(({
                     </AvatarGroup>
                 </>
             )}
-
         </div>
     )
 })
