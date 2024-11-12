@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale } from 'next-intl'
 import { v4 } from 'uuid'
 import { useSessionContext } from '@supabase/auth-helpers-react'
@@ -23,6 +23,7 @@ export default function Chat() {
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const [lastWhisperUser, setLastWhisperUser] = useState(null)
     const [whisperUser, setWhisperUser] = useState(null)
+    const inputRef = useRef(null)
 
     useEffect(() => {
         if (whisperUser) {
@@ -97,14 +98,19 @@ export default function Chat() {
         }
     )
 
+    const isValidating = messagesValidating || whispersValidating
+
     const { sendData: sendWhisperData } = usePeers({
         enabled: !!lastWhisperUser,
         room: `whispers_${lastWhisperUser?.id}`,
         allowedUsers: [lastWhisperUser?.id],
     })
 
-    const messagesAndWhispers = (!messagesLoading && !whispersLoading) ? [...(messages || []), ...(whispers || [])] : null
-    messagesAndWhispers?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    const messagesAndWhispers = useMemo(() =>
+        (!messagesLoading && !whispersLoading)
+            ? [...(messages || []), ...(whispers || [])]?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            : null
+        , [messages, whispers, messagesLoading, whispersLoading])
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
@@ -113,11 +119,12 @@ export default function Chat() {
         if (scrollTop < 512) {
             prevScrollHeight.current = scrollHeight
 
-            if (hasMore && !messagesValidating) {
+            console.log("scrollTop", scrollTop)
+            if (hasMore && !isValidating) {
                 setSize(size + 1)
             }
 
-            if (hasMoreWhispers && !whispersValidating) {
+            if (hasMoreWhispers && !isValidating) {
                 setWhispersSize(whispersSize + 1)
             }
         }
@@ -136,17 +143,17 @@ export default function Chat() {
             // document.removeEventListener("touchmove", handleScroll, true)
             // document.removeEventListener("gesturechange", handleScroll, true)
         }
-    }, [size, hasMore, messagesValidating])
+    }, [size, whispersSize, hasMore, hasMoreWhispers, isValidating])
 
     useEffect(() => {
         if (shouldScrollDown) {
             window.scrollTo(0, document.body.scrollHeight)
-        } else if (prevScrollHeight.current && !messagesValidating) {
+        } else if (prevScrollHeight.current && !messagesValidating && !whispersValidating) {
             const { scrollHeight } = document.scrollingElement
             window.scrollTo(0, prevScrollTop.current + (scrollHeight - prevScrollHeight.current))
             prevScrollHeight.current = null
         }
-    }, [messages, messagesValidating])
+    }, [messagesAndWhispers, isValidating])
 
     const sendMessage = async (e) => {
         e?.preventDefault()
@@ -183,6 +190,10 @@ export default function Chat() {
         setWhisperUser(null)
     }
 
+    useEffect(() => {
+        whisperUser && inputRef.current?.focus()
+    }, [whisperUser])
+
     return (
         <div className={cn((!sessionLoading && messagesAndWhispers) ? "opacity-1" : "opacity-0",
             "flex-container max-w-xl mx-auto justify-end !pb-16 transition-all"
@@ -209,6 +220,7 @@ export default function Chat() {
                 <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
                     <Input
                         autoFocus
+                        ref={inputRef}
                         size="lg"
                         variant="bordered"
                         placeholder={

@@ -118,7 +118,7 @@ export default memo(({
                         <DropdownItem
                             key="whisper"
                             startContent={<ChatBubbleOvalLeftIcon className="size-5" />}
-                            onPress={() => setWhisperUser(message.user)}
+                            onPress={() => setTimeout(() => setWhisperUser(message.user), 200)}
                         >
                             {autoTranslate('whisper', 'Whisper')}
                         </DropdownItem>
