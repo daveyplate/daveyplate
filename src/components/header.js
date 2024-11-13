@@ -42,7 +42,8 @@ import {
     UsersIcon,
     ShoppingBagIcon,
     ChatBubbleLeftRightIcon,
-    ChevronLeftIcon
+    ChevronLeftIcon,
+    NewspaperIcon
 } from '@heroicons/react/24/solid'
 
 import { Link, useLocaleRouter, usePathname } from "@/i18n/routing"
@@ -78,6 +79,7 @@ export default function Header({ canGoBack }) {
     const menuItems = [
         { icon: HomeIcon, name: "Home", path: "/" },
         { icon: UsersIcon, name: "Users", path: "/users" },
+        { icon: NewspaperIcon, name: "Blog", path: "/blog" }, // Blog item added here
         { icon: ShoppingBagIcon, name: "Products", path: "/products" },
         { icon: ChatBubbleLeftRightIcon, name: "Chat", path: "/chat" },
     ]

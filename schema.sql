@@ -123,3 +123,33 @@ SELECT cron.schedule(
  WHERE updated_at < (NOW() - INTERVAL '5 minutes');
  $$
 );
+
+create table
+  public.articles (
+    id uuid not null default gen_random_uuid (),
+    user_id uuid null,
+    title jsonb not null,
+    slug jsonb not null,
+    thumbnail_url text null,
+    summary jsonb null,
+    content jsonb not null,
+    tags text[] null default '{}'::text[],
+    locale text not null default 'en'::text,
+    published boolean null default false,
+    published_at timestamp with time zone null,
+    created_at timestamp with time zone null default now(),
+    updated_at timestamp with time zone null default now(),
+    constraint articles_pkey primary key (id),
+    constraint articles_slug_key unique (slug),
+    constraint articles_user_id_fkey foreign key (user_id) references profiles (id) on delete set null
+  );
+
+create trigger handle_updated_at before
+update on articles for each row
+execute function extensions.moddatetime ('updated_at');
+
+alter table public.articles enable row level security;
+
+create policy none_shall_pass on public.articles
+    for select
+    using (false);

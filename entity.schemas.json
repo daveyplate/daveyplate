@@ -68,5 +68,19 @@
             "recipient.deactivated": false
         },
         "defaultOrder": "-created_at"
+    },
+    {
+        "table": "articles",
+        "select": [
+            "*",
+            "user:user_id!inner(id, full_name, avatar_url)"
+        ],
+        "localizedColumns": [
+            "title",
+            "slug",
+            "summary",
+            "content"
+        ],
+        "defaultOrder": "-created_at"
     }
 ]
