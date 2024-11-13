@@ -1,5 +1,5 @@
 import { useEntity } from '@daveyplate/supabase-swr-entities/client'
-import { Card, CardBody, Divider, Skeleton, Image } from "@nextui-org/react"
+import { Card, CardBody, Image, Skeleton } from "@nextui-org/react"
 import UserAvatar from "@/components/user-avatar"
 import { AutoTranslate } from 'next-auto-translate'
 import { useLocale } from 'next-intl'
@@ -8,47 +8,66 @@ import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
 import { getTranslationProps } from "@/i18n/translation-props"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { isExport } from "@/utils/utils"
-import { createClient } from "@/utils/supabase/component"
 import { getEntity } from '@daveyplate/supabase-swr-entities/server'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 export default function ArticlePage({ article_id }) {
     const locale = useLocale()
-    const { entity: article, isLoading } = useEntity('articles', article_id)
+    const router = useRouter()
+    const articleId = article_id || router.query.article_id
+    const { entity: article } = useEntity(articleId && 'articles', article_id, { lang: locale })
 
     return (
-        <div className="max-w-xl mx-auto container flex flex-col items-start gap-4 p-4">
-            <Skeleton isLoaded={!isLoading} className="w-full">
-                <Card className="w-full">
-                    <CardBody className="p-4 flex flex-col gap-4">
-                        <div className="flex items-center gap-4">
-                            <UserAvatar user={article?.user} size="lg" />
-                            <div className="flex flex-col gap-1">
-                                <h2 className="text-xl font-semibold">
-                                    {getLocaleValue(article?.title, locale)}
-                                </h2>
-
-                                <p className="text-sm opacity-80">
-                                    <AutoTranslate tKey="written_by">Written By</AutoTranslate> {article?.user?.full_name}
-                                </p>
-                            </div>
-                        </div>
+        <div className="flex-container max-w-xl mx-auto">
+            {!article ? (
+                <Card fullWidth>
+                    <CardBody className="flex flex-col items-start p-4 gap-4">
+                        <Skeleton className="text-lg h-8 w-1/2 rounded-lg" />
+                        <Skeleton className="h-20 w-full rounded-lg" />
+                        <Skeleton className="text-sm h-7 w-1/3 rounded-lg" />
+                    </CardBody>
+                </Card>
+            ) : (
+                <Card fullWidth>
+                    <CardBody className="flex flex-col items-start p-4 gap-4">
+                        <h5 className="flex items-center">
+                            {article?.thumbnail_url && (
+                                <Image
+                                    src={article.thumbnail_url}
+                                    alt={getLocaleValue(article.title, locale)}
+                                    className="w-12 h-12 mr-4"
+                                    objectFit="cover"
+                                />
+                            )}
+                            {getLocaleValue(article?.title, locale)}
+                        </h5>
 
                         {article?.thumbnail_url && (
-                            <Image src={article.thumbnail_url} alt={getLocaleValue(article.title, locale)} />
+                            <Image
+                                src={article.thumbnail_url}
+                                alt={getLocaleValue(article.title, locale)}
+                                className="w-full"
+                            />
                         )}
 
-                        <Divider />
-
-                        <div>
+                        <p>
                             {getLocaleValue(article?.content, locale)}
+                        </p>
+
+                        <div className="flex items-center">
+                            <span className="text-gray-600 font-medium mr-2">
+                                <AutoTranslate tKey="written_by">Written By</AutoTranslate> {article?.user?.full_name}
+                            </span>
+
+                            <UserAvatar user={article?.user} size="sm" />
                         </div>
                     </CardBody>
                 </Card>
-            </Skeleton>
+            )}
         </div>
     )
 }
-
 
 export async function getStaticPaths() {
     if (isExport()) return getLocalePaths()

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
 import { useLocale } from 'next-intl'
 import { getTranslationProps } from "@/i18n/translation-props"
+import { AutoTranslate } from 'next-auto-translate'
 
 export default function BlogPage() {
     const locale = useLocale()
@@ -44,11 +45,11 @@ export default function BlogPage() {
                         </p>
 
                         <div className="flex items-center">
-                            <span className="text-base text-gray-600 font-medium mr-2">
-                                {`By ${article.user.full_name}`}
+                            <span className="text-gray-600 font-medium mr-2">
+                                <AutoTranslate tKey="written_by">Written By</AutoTranslate> {article?.user?.full_name}
                             </span>
 
-                            <UserAvatar user={article.user} size="sm" />
+                            <UserAvatar user={article?.user} size="sm" />
                         </div>
                     </CardBody>
                 </Card>
