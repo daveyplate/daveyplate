@@ -1,38 +1,79 @@
-import { useRouter } from 'next/router'
 import { useEntity } from '@daveyplate/supabase-swr-entities/client'
-import { Card, CardBody, Divider, Skeleton } from "@nextui-org/react"
+import { Card, CardBody, Divider, Skeleton, Image } from "@nextui-org/react"
 import UserAvatar from "@/components/user-avatar"
-import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { Spinner } from '@nextui-org/react'
+import { AutoTranslate } from 'next-auto-translate'
+import { useLocale } from 'next-intl'
+import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
 
-export default function ArticlePage() {
-    const { autoTranslate } = useAutoTranslate()
-    const router = useRouter()
-    const { article_id } = router.query
-    const { entity: article, isLoading } = useEntity(article_id ? 'articles' : null, article_id)
+import { getTranslationProps } from "@/i18n/translation-props"
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { isExport } from "@/utils/utils"
+import { createClient } from "@/utils/supabase/component"
+import { getEntity } from '@daveyplate/supabase-swr-entities/server'
 
-    if (isLoading) return <Spinner />
+export default function ArticlePage({ article_id }) {
+    const locale = useLocale()
+    const { entity: article, isLoading } = useEntity('articles', article_id)
 
     return (
-        <div className="flex-container max-w-3xl mx-auto p-4">
-            <Skeleton isLoaded={!!article} className="mb-4">
-                <Card>
-                    <CardBody className="p-8">
-                        <div className="flex gap-4 items-center mb-4">
-                            <UserAvatar user={{ avatar_url: article?.user.avatar_url }} size="lg" />
-                            <h1 className="text-4xl font-bold">
-                                {article?.title && article?.title.en}
-                            </h1>
+        <div className="max-w-xl mx-auto container flex flex-col items-start gap-4 p-4">
+            <Skeleton isLoaded={!isLoading} className="w-full">
+                <Card className="w-full">
+                    <CardBody className="p-4 flex flex-col gap-4">
+                        <div className="flex items-center gap-4">
+                            <UserAvatar user={article?.user} size="lg" />
+                            <div className="flex flex-col gap-1">
+                                <h2 className="text-xl font-semibold">
+                                    {getLocaleValue(article?.title, locale)}
+                                </h2>
+
+                                <p className="text-sm opacity-80">
+                                    <AutoTranslate tKey="written_by">Written By</AutoTranslate> {article?.user?.full_name}
+                                </p>
+                            </div>
                         </div>
+
+                        {article?.thumbnail_url && (
+                            <Image src={article.thumbnail_url} alt={getLocaleValue(article.title, locale)} />
+                        )}
+
                         <Divider />
-                        <div className="mt-6 mb-4">
-                            <AutoTranslate>
-                                <p>{article?.content && article?.content.en}</p>
-                            </AutoTranslate>
+
+                        <div>
+                            {getLocaleValue(article?.content, locale)}
                         </div>
                     </CardBody>
                 </Card>
             </Skeleton>
         </div>
     )
+}
+
+
+export async function getStaticPaths() {
+    if (isExport()) return getLocalePaths()
+
+    return {
+        paths: [],
+        fallback: true
+    }
+}
+
+export async function getStaticProps({ locale, params }) {
+    const translationProps = await getTranslationProps({ locale, params })
+
+    if (isExport()) return { props: { ...translationProps, canGoBack: true } }
+
+    const { article_id } = params
+    const { entity: article } = await getEntity('articles', article_id, { lang: locale })
+
+    return {
+        props: {
+            ...translationProps,
+            article_id,
+            article,
+            canGoBack: true
+        },
+        revalidate: 60
+    }
 }

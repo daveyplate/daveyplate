@@ -7,7 +7,7 @@ import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { getLocaleValue, useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { PageTitle } from "@daveyplate/next-page-title"
 import { OpenGraph } from "@daveyplate/next-open-graph"
-// import { getEntity } from "@daveyplate/supabase-swr-entities/server"
+import { getEntity } from "@daveyplate/supabase-swr-entities/server"
 import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
 
 import {
@@ -190,13 +190,13 @@ export async function getStaticProps({ locale, params }) {
     if (isExport()) return { props: { ...translationProps, canGoBack: true } }
 
     const { user_id } = params
-    //const { entity: user } = await getEntity('profiles', user_id)
+    const { entity: user } = await getEntity('profiles', user_id, { lang: locale })
 
     return {
         props: {
             ...translationProps,
             user_id,
-            //user,
+            user,
             canGoBack: true
         },
         revalidate: 60
