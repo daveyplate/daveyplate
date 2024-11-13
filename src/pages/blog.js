@@ -26,20 +26,18 @@ export default function BlogPage() {
             {!isLoading && articles?.map((article) => (
                 <Card key={article.id} as={Link} href={`/article/${article.id}`} isPressable fullWidth>
                     <CardBody className="flex flex-col items-start p-4 gap-4">
-                        {article.thumbnail_url && (
-                            <Image
-                                src={article.thumbnail_url}
-                                alt="Article thumbnail"
-                                className="mb-2"
-                                objectFit="cover"
-                                width="100%"
-                                height="150px"
-                            />
-                        )}
+                        <h5 className="flex items-center">
+                            {article.thumbnail_url && (
+                                <Image
+                                    src={article.thumbnail_url}
+                                    alt={getLocaleValue(article.title, locale)}
+                                    className="w-12 h-12"
+                                    objectFit="cover"
+                                />
+                            )}
 
-                        <p className="flex items-center text-lg font-bold">
                             {getLocaleValue(article.title, locale)}
-                        </p>
+                        </h5>
 
                         <p className="text-sm opacity-80">
                             {getLocaleValue(article.summary, locale)}
