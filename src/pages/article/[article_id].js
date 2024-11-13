@@ -11,6 +11,8 @@ import { isExport } from "@/utils/utils"
 import { getEntity } from '@daveyplate/supabase-swr-entities/server'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { PageTitle } from "@daveyplate/next-page-title"
+import { OpenGraph } from "@daveyplate/next-open-graph"
 
 export default function ArticlePage({ article_id }) {
     const locale = useLocale()
@@ -18,8 +20,20 @@ export default function ArticlePage({ article_id }) {
     const articleId = article_id || router.query.article_id
     const { entity: article } = useEntity(articleId && 'articles', article_id, { lang: locale })
 
+    const localizedTitle = getLocaleValue(article?.title, locale)
+    const localizedSummary = getLocaleValue(article?.summary, locale)
+    const localizedContent = getLocaleValue(article?.content, locale)
+
     return (
         <div className="flex-container max-w-xl mx-auto">
+            <PageTitle title={localizedTitle} />
+            <OpenGraph
+                title={localizedTitle}
+                description={localizedSummary || localizedContent?.substring(0, 200)}
+                image={article?.thumbnail_url}
+                ogType="article"
+            />
+
             {!article ? (
                 <Card fullWidth>
                     <CardBody className="flex flex-col items-start p-4 gap-4">
@@ -35,24 +49,24 @@ export default function ArticlePage({ article_id }) {
                             {article?.thumbnail_url && (
                                 <Image
                                     src={article.thumbnail_url}
-                                    alt={getLocaleValue(article.title, locale)}
+                                    alt={localizedTitle}
                                     className="w-12 h-12 mr-4"
                                     objectFit="cover"
                                 />
                             )}
-                            {getLocaleValue(article?.title, locale)}
+                            {localizedTitle}
                         </h5>
 
                         {article?.thumbnail_url && (
                             <Image
                                 src={article.thumbnail_url}
-                                alt={getLocaleValue(article.title, locale)}
+                                alt={localizedTitle}
                                 className="w-full"
                             />
                         )}
 
                         <p>
-                            {getLocaleValue(article?.content, locale)}
+                            {localizedContent}
                         </p>
 
                         <div className="flex items-center">
