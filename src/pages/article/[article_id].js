@@ -14,11 +14,11 @@ import { useRouter } from 'next/router'
 import { PageTitle } from "@daveyplate/next-page-title"
 import { OpenGraph } from "@daveyplate/next-open-graph"
 
-export default function ArticlePage({ article_id }) {
+export default function ArticlePage({ article_id, article: fallbackData }) {
     const locale = useLocale()
     const router = useRouter()
     const articleId = article_id || router.query.article_id
-    const { entity: article } = useEntity(articleId && 'articles', article_id, { lang: locale })
+    const { entity: article } = useEntity(articleId && 'articles', article_id, { lang: locale }, { fallbackData })
 
     const localizedTitle = getLocaleValue(article?.title, locale)
     const localizedSummary = getLocaleValue(article?.summary, locale)
@@ -27,6 +27,7 @@ export default function ArticlePage({ article_id }) {
     return (
         <div className="flex-container max-w-xl mx-auto">
             <PageTitle title={localizedTitle} />
+
             <OpenGraph
                 title={localizedTitle}
                 description={localizedSummary || localizedContent?.substring(0, 200)}
