@@ -36,7 +36,7 @@ const ArticleComment = ({ comment, updateComment, deleteComment }) => {
                             {comment.user.full_name}
                         </h6>
 
-                        <p className="text-tiny text-foreground/60">
+                        <p className="text-default-500">
                             {new Date(comment.created_at).toLocaleDateString()}
                         </p>
                     </div>
