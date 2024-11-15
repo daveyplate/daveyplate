@@ -4,33 +4,25 @@ import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
 import { useLocale } from 'next-intl'
 import UserAvatar from '@/components/user-avatar'
-import { useDeleteEntity, useUpdateEntity } from '@daveyplate/supabase-swr-entities/client'
 import { toast } from '@/components/providers/toast-provider'
 import { useSession } from '@supabase/auth-helpers-react'
 
-const ArticleComment = ({ comment }) => {
+const ArticleComment = ({ comment, updateComment, deleteComment }) => {
     const locale = useLocale()
     const session = useSession()
     const [isEditing, setIsEditing] = useState(false)
     const [editedContent, setEditedContent] = useState(getLocaleValue(comment.content, locale))
 
-    const updateEntity = useUpdateEntity()
-    const deleteEntity = useDeleteEntity()
-
     const handleEdit = async () => {
-        const { error } = await updateEntity('article_comments', comment.id, { content: { [locale]: editedContent } })
-        if (error) {
-            toast(error.message, { color: 'danger' })
-        } else {
-            setIsEditing(false)
-        }
+        setIsEditing(false)
+
+        const { error } = await updateComment(comment, { content: { [locale]: editedContent } })
+        error && toast(error.message, { color: 'danger' })
     }
 
     const handleDelete = async () => {
-        const { error } = await deleteEntity('article_comments', comment.id)
-        if (error) {
-            toast(error.message, { color: 'danger' })
-        }
+        const { error } = await deleteComment(comment.id)
+        error && toast(error.message, { color: 'danger' })
     }
 
     return (
@@ -85,6 +77,7 @@ const ArticleComment = ({ comment }) => {
                         >
                             Save
                         </Button>
+
                         <Button
                             size="lg"
                             onPress={() => setIsEditing(false)}

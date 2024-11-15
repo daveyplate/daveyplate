@@ -24,7 +24,13 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
     const { entity: user } = useEntity(session && 'profiles', 'me')
     const articleId = article_id || router.query.article_id
     const { entity: article } = useEntity(articleId && 'articles', article_id, { lang: locale }, { fallbackData })
-    const { entities: comments, createEntity: createComment, mutateEntities: mutateComments } = useEntities(articleId && 'article_comments', { article_id: articleId, lang: locale })
+    const {
+        entities: comments,
+        createEntity: createComment,
+        updateEntity: updateComment,
+        deleteEntity: deleteComment,
+        mutateEntities: mutateComments,
+    } = useEntities(articleId && 'article_comments', { article_id: articleId, lang: locale })
 
     const [commentContent, setCommentContent] = useState('')
 
@@ -132,7 +138,12 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
                     )}
 
                     {comments && comments.map(comment => (
-                        <ArticleComment key={comment.id} comment={comment} />
+                        <ArticleComment
+                            key={comment.id}
+                            comment={comment}
+                            updateComment={updateComment}
+                            deleteComment={deleteComment}
+                        />
                     ))}
                 </>
             )}
