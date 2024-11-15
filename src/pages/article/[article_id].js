@@ -128,6 +128,7 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
                                     color="primary"
                                     onPress={handleCommentSubmit}
                                     size="lg"
+                                    isDisabled={!commentContent}
                                 >
                                     <AutoTranslate tKey="submit">
                                         Submit
@@ -137,7 +138,7 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
                         </Card>
                     )}
 
-                    {comments && comments.map(comment => (
+                    {comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(comment => (
                         <ArticleComment
                             key={comment.id}
                             comment={comment}
