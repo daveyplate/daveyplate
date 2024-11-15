@@ -82,5 +82,19 @@
             "content"
         ],
         "defaultOrder": "-created_at"
+    },
+    {
+        "table": "article_comments",
+        "select": [
+            "*",
+            "user:user_id!inner(id, full_name, avatar_url)"
+        ],
+        "localizedColumns": [
+            "content"
+        ],
+        "defaultOrder": "-created_at",
+        "requiredParams": {
+            "user.deactivated": false
+        }
     }
 ]
