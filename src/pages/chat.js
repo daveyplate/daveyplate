@@ -120,7 +120,6 @@ export default function Chat() {
         if (scrollTop < 512) {
             prevScrollHeight.current = scrollHeight
 
-            console.log("scrollTop", scrollTop)
             if (hasMore && !isValidating) {
                 setSize(size + 1)
             }
