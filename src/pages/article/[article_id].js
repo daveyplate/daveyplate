@@ -29,8 +29,16 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
         createEntity: createComment,
         updateEntity: updateComment,
         deleteEntity: deleteComment,
-        mutateEntities: mutateComments,
-    } = useEntities(articleId && 'article_comments', { article_id: articleId, lang: locale })
+        insertEntity: insertComment,
+    } = useEntities(
+        articleId && 'article_comments',
+        { article_id: articleId, lang: locale },
+        null,
+        {
+            provider: "peerjs",
+            enabled: !!session
+        }
+    )
 
     const [commentContent, setCommentContent] = useState('')
 
@@ -42,7 +50,7 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
         }
 
         createComment(newComment)
-        mutateComments([{ ...newComment, user, created_at: new Date() }, ...comments], false)
+        insertComment({ ...newComment, user, created_at: new Date() })
         setCommentContent('')
     }
 

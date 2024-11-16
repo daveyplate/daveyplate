@@ -33,7 +33,7 @@ const ArticleComment = ({ comment, updateComment, deleteComment }) => {
 
                     <div>
                         <h6>
-                            {comment.user.full_name}
+                            {comment.user?.full_name}
                         </h6>
 
                         <p className="text-default-500 text-small">
@@ -41,7 +41,7 @@ const ArticleComment = ({ comment, updateComment, deleteComment }) => {
                         </p>
                     </div>
 
-                    {!isEditing && comment.user.id == session?.user.id && (
+                    {!isEditing && session && comment.user?.id == session?.user.id && (
                         <Button
                             isIconOnly
                             radius="full"

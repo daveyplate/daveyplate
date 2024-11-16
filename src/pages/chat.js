@@ -71,7 +71,7 @@ export default function Chat() {
         "messages",
         { lang: locale, limit: 10 },
         null,
-        { realtime: session && "peerjs", onData }
+        { provider: "peerjs", enabled: !!session, onData }
     )
 
     const {
@@ -91,7 +91,8 @@ export default function Chat() {
         { lang: locale, limit: 10 },
         null,
         {
-            realtime: session && "peerjs",
+            provider: "peerjs",
+            enabled: !!session,
             onData,
             room: `whispers_${session?.user.id}`,
             listenOnly: true
