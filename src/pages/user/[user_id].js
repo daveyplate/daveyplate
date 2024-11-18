@@ -194,6 +194,6 @@ export async function getStaticProps({ locale, params }) {
             user: user || null,
             canGoBack: true
         },
-        revalidate: 60
+        // revalidate: 60
     }
 }
