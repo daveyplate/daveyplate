@@ -29,6 +29,7 @@ import { toast } from "@/components/providers/toast-provider"
 import UploadAvatarModal from "@/components/upload-avatar-modal"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
+import { getLocalePaths } from "@/i18n/locale-paths"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
