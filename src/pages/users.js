@@ -71,6 +71,8 @@ export default function UsersPage() {
                         href={dynamicHref({ pathname: "/user/[user_id]", query: { user_id: user.id } })}
                         isPressable
                         fullWidth
+                        shallow={true}
+                        prefetch={false}
                     >
                         <CardBody className="p-4 flex-row items-center gap-4">
                             <UserAvatar user={user} size="lg" />
