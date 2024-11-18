@@ -32,10 +32,15 @@
         "requiredParams": {
             "user.deactivated": false
         },
+        "realtime": true,
         "defaultOrder": "-created_at"
     },
     {
-        "table": "message_likes"
+        "table": "message_likes",
+        "realtimeParent": {
+            "table": "messages",
+            "column": "message_id"
+        }
     },
     {
         "table": "whispers",
@@ -95,6 +100,8 @@
         "defaultOrder": "-created_at",
         "requiredParams": {
             "user.deactivated": false
-        }
+        },
+        "realtime": true,
+        "realtimeIdentifier": "article_id"
     }
 ]

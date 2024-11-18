@@ -34,6 +34,7 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
         null,
         {
             provider: "peerjs",
+            room: `article_comments:${articleId}`,
             enabled: !!session
         }
     )

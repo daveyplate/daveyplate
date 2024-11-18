@@ -70,7 +70,7 @@ export default function Chat() {
         "messages",
         { lang: locale, limit: 10 },
         null,
-        { provider: "peerjs", enabled: !!session, onData }
+        { provider: "supabase", enabled: !!session, onData }
     )
 
     const {

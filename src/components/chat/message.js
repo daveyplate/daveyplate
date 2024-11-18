@@ -43,11 +43,10 @@ export default memo(({
         const messageLike = { message_id: message.id, user_id: user.id }
         createEntity("message_likes", messageLike).then(({ error }) => {
             if (error) {
-                toast(error.message, { color: "danger" })
                 return mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
             }
 
-            sendData({ action: "like_message" })
+            !error && sendData && sendData({ action: "like_message" })
         })
 
         mutateMessage({ ...message, likes: [...(message.likes || []), { ...messageLike, user }] })
@@ -62,11 +61,10 @@ export default memo(({
 
         deleteEntity("message_likes", null, { message_id: message.id, user_id: user.id }).then(({ error }) => {
             if (error) {
-                toast(error.message, { color: "danger" })
                 return mutateMessage({ ...message, likes: [...(message.likes || []), messageLike] })
             }
 
-            sendData({ action: "unlike_message" })
+            !error && sendData && sendData({ action: "like_message" })
         })
 
         mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
@@ -94,7 +92,7 @@ export default memo(({
                     <div className="mb-auto cursor-pointer">
                         <Badge
                             isOneChar
-                            isInvisible={!isOutgoing && !isOnline(message.user_id)}
+                            isInvisible={!isOutgoing && (!isOnline || !isOnline(message.user_id))}
                             color="success"
                             shape="circle"
                             placement="bottom-right"

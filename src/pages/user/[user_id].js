@@ -41,7 +41,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const session = useSession()
 
     const userId = user_id || router.query.user_id
-    const { entity: user, mutate: mutateUser, isLoading: userLoading } = useEntity(userId ? 'profiles' : null, userId, { lang: locale }, { fallbackData })
+    const { entity: user, isLoading: userLoading } = useEntity(userId && 'profiles', userId, { lang: locale }, { fallbackData })
     const { updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
     const [lightboxOpen, setLightboxOpen] = useState(false)
 
@@ -50,10 +50,6 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
     const isMe = session && userId == session.user.id
     const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
-
-    useEffect(() => {
-        console.log("user", user)
-    }, [user])
 
     useEffect(() => {
         if (userId && !userLoading && !user) {

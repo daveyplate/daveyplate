@@ -4,7 +4,6 @@ import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
 import { useLocale } from 'next-intl'
 import UserAvatar from '@/components/user-avatar'
-import { toast } from '@/components/providers/toast-provider'
 import { useSession } from '@supabase/auth-helpers-react'
 
 const ArticleComment = memo(({ comment, updateComment, deleteComment }) => {
@@ -14,19 +13,12 @@ const ArticleComment = memo(({ comment, updateComment, deleteComment }) => {
     const [editedContent, setEditedContent] = useState(getLocaleValue(comment.content, locale))
 
     const handleEdit = async () => {
+        updateComment(comment.id, { content: { [locale]: editedContent } })
         setIsEditing(false)
-
-        console.log("try to update")
-        const result = await updateComment(comment.id, { content: { [locale]: editedContent } })
-
-        console.log("update result", result)
-        // error && toast(error.message, { color: 'danger' })
     }
 
     const handleDelete = async () => {
-        const result = await deleteComment(comment.id)
-        console.log("delete result", result)
-        // error && toast(error.message, { color: 'danger' })
+        deleteComment(comment.id)
     }
 
     return (
