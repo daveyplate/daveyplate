@@ -172,8 +172,10 @@ export default function UserPage({ user_id, user: fallbackData }) {
 export async function getStaticPaths() {
     if (isExport()) return getLocalePaths()
 
+    const { paths } = getLocalePaths()
+
     return {
-        paths: [],
+        paths: paths.map(({ params }) => ({ params: { user_id: '', ...params } })),
         fallback: true
     }
 }
@@ -190,7 +192,7 @@ export async function getStaticProps({ locale, params }) {
         props: {
             ...translationProps,
             user_id,
-            user,
+            user: user || null,
             canGoBack: true
         },
         revalidate: 60

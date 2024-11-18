@@ -4,9 +4,10 @@ import { useDebounce } from "@uidotdev/usehooks"
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 
-import { Card, CardBody, Input, Link, Skeleton, cn } from "@nextui-org/react"
+import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
 
+import { Link } from "@/i18n/routing"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { dynamicHref, isExport } from "@/utils/utils"
@@ -67,7 +68,7 @@ export default function UsersPage() {
                     <Card
                         key={index}
                         as={Link}
-                        href={`/user/${user.id}`}
+                        href={dynamicHref({ pathname: "/user/[user_id]", query: { user_id: user.id } })}
                         isPressable
                         fullWidth
                     >
