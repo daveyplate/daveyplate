@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { postAPI, useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { useAPI, useEntity } from '@daveyplate/supabase-swr-entities/client'
 import { ConfirmModal } from "@daveyplate/nextui-confirm-modal"
 
 import {
@@ -45,6 +45,7 @@ export default function Settings() {
     const supabase = createClient()
     const { autoTranslate } = useAutoTranslate()
     const { session, isLoading: sessionLoading } = useSessionContext()
+    const { postAPI } = useAPI()
 
     const { entity: user, updateEntity: updateUser, deleteEntity: deleteUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
     const [confirm, setConfirm] = useState(null)
@@ -178,7 +179,7 @@ export default function Settings() {
         setLoadingPortal(true)
 
         // Redirect user to Stripe Portal for subscription management
-        postAPI(session, '/api/stripe/portal-session').then((res) => {
+        postAPI('/api/stripe/portal-session').then((res) => {
             router.push(res.data.url)
         }).catch((error) => {
             console.error(error)

@@ -64,7 +64,6 @@ export default function Chat() {
         createEntity: createMessage,
         updateEntity: updateMessage,
         deleteEntity: deleteMessage,
-        insertEntity: insertMessage,
         mutateEntity: mutateMessage,
         isLoading: messagesLoading
     } = useInfiniteEntities(
@@ -83,7 +82,6 @@ export default function Chat() {
         createEntity: createWhisper,
         updateEntity: updateWhisper,
         deleteEntity: deleteWhisper,
-        insertEntity: insertWhisper,
         mutateEntity: mutateWhisper,
         isLoading: whispersLoading
     } = useInfiniteEntities(session &&
@@ -172,18 +170,10 @@ export default function Chat() {
             }
 
             createWhisper(newWhisper).then(() => sendWhisperData({ action: "create_entity", data: newWhisper }))
-            insertWhisper({ ...newWhisper, user, recipient: whisperUser })
         } else {
-            const newMessage = {
-                id: v4(),
-                user_id: user.id,
-                content: { [locale]: content },
-                created_at: new Date(),
-                locale
-            }
+            const newMessage = { content: { [locale]: content } }
 
-            createMessage(newMessage)
-            insertMessage({ ...newMessage, user })
+            createMessage(newMessage, { user })
         }
 
         setContent('')
