@@ -44,21 +44,6 @@ export const isExport = () => {
 }
 
 /**
- * Generate a dynamic href based on the pathname and query object
- * Supports custom static export behavior for dynamic routing
- *
- * @param {Object} href - An object containing pathname and query.
- * @param {string} href.pathname - The path of the URL (can contain dynamic segments).
- * @param {Object} href.query - An object containing query parameters.
- * @returns {Object} The constructed href
- */
-export const dynamicHref = ({ pathname, query }) => {
-  if (!isExport()) return { pathname, query }
-
-  return { pathname: pathname.replace("[", "").replace("]", ""), query }
-}
-
-/**
  * Check if the current device is running iOS.
  * @returns {boolean} True if the device is running iOS, false otherwise.
  */

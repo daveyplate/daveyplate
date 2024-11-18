@@ -12,7 +12,6 @@ import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
 import { localeToCountry } from '../locale-dropdown'
 import { Link } from "@/i18n/routing"
-import { dynamicHref } from "@/utils/utils"
 import { useSession } from '@supabase/auth-helpers-react'
 
 export default memo(({
@@ -106,7 +105,8 @@ export default memo(({
                 <DropdownMenu itemClasses={{ title: "!text-base", base: "gap-3 px-3" }}>
                     <DropdownItem
                         as={Link}
-                        href={dynamicHref({ pathname: `/user/[user_id]`, query: { user_id: message.user_id } })}
+                        href={`/user?user_id=${message.user_id}`}
+                        linkAs={`/user/${message.user_id}`}
                         startContent={<UserIcon className="size-5" />}
                     >
                         {autoTranslate('view_profile', 'View Profile')}

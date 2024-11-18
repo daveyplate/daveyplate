@@ -10,7 +10,7 @@ import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
 import { Link } from "@/i18n/routing"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from "@/i18n/translation-props"
-import { dynamicHref, isExport } from "@/utils/utils"
+import { isExport } from "@/utils/utils"
 
 import UserAvatar from "@/components/user-avatar"
 import { useLocale } from "next-intl"

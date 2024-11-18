@@ -22,7 +22,7 @@ export const { Link: NextIntlLink, redirect, usePathname, useRouter: useLocaleRo
 export const Link = forwardRef(({ ...props }, ref) => {
     if (isExport()) return <NextIntlLink ref={ref} {...props} />
 
-    const linkAs = props.linkAs
+    const { linkAs } = props
     delete props.linkAs
 
     return <NextLink ref={ref} as={linkAs} {...props} />

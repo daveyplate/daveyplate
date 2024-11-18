@@ -47,7 +47,6 @@ import {
 } from '@heroicons/react/24/solid'
 
 import { Link, useLocaleRouter, usePathname } from "@/i18n/routing"
-import { dynamicHref } from "@/utils/utils"
 
 import ThemeDropdown from "@/components/theme-dropdown"
 import UserAvatar from "@/components/user-avatar"
@@ -218,8 +217,10 @@ export default function Header({ canGoBack }) {
                                 {user?.id &&
                                     <DropdownItem
                                         as={Link}
-                                        href={dynamicHref({ pathname: `/user/[user_id]`, query: { user_id: user.id } })}
+                                        href={`/user?user_id=${user.id}`}
+                                        linkAs={`/user/${user.id}`}
                                         startContent={<UserIcon className="size-5" />}
+                                        onPress={(e) => { console.log("onPress") }}
                                     >
                                         {autoTranslate('view_profile', 'View Profile')}
                                     </DropdownItem>

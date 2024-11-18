@@ -26,7 +26,14 @@ export default function BlogPage() {
             ))}
 
             {!isLoading && articles?.map((article) => (
-                <Card key={article.id} as={Link} href={`/article/${article.id}`} isPressable fullWidth>
+                <Card
+                    key={article.id}
+                    as={Link}
+                    href={`/article?article_id=${article.id}`}
+                    linkAs={`/article/${article.id}`}
+                    isPressable
+                    fullWidth
+                >
                     <CardBody className="flex flex-col items-start p-4 gap-4">
                         <h5 className="flex items-center">
                             {article.thumbnail_url && (
