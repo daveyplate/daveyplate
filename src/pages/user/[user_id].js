@@ -173,10 +173,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
 export async function getStaticPaths() {
     if (isExport()) return getLocalePaths()
 
-    const { paths } = getLocalePaths()
-
     return {
-        paths: paths.map(({ params }) => ({ params: { user_id: v4(), ...params } })),
+        paths: [{ params: { user_id: v4() } }],
         fallback: true
     }
 }
