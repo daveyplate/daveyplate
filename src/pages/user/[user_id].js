@@ -32,6 +32,7 @@ import { toast } from "@/components/providers/toast-provider"
 import UploadAvatarModal from "@/components/upload-avatar-modal"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
+import { v4 } from "uuid"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -175,7 +176,7 @@ export async function getStaticPaths() {
     const { paths } = getLocalePaths()
 
     return {
-        paths: paths.map(({ params }) => ({ params: { user_id: '', ...params } })),
+        paths: paths.map(({ params }) => ({ params: { user_id: v4(), ...params } })),
         fallback: true
     }
 }
