@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import { Card, CardBody, Button, Textarea } from "@nextui-org/react"
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
@@ -7,7 +7,7 @@ import UserAvatar from '@/components/user-avatar'
 import { toast } from '@/components/providers/toast-provider'
 import { useSession } from '@supabase/auth-helpers-react'
 
-const ArticleComment = ({ comment, updateComment, deleteComment }) => {
+const ArticleComment = memo(({ comment, updateComment, deleteComment }) => {
     const locale = useLocale()
     const session = useSession()
     const [isEditing, setIsEditing] = useState(false)
@@ -16,13 +16,17 @@ const ArticleComment = ({ comment, updateComment, deleteComment }) => {
     const handleEdit = async () => {
         setIsEditing(false)
 
-        const { error } = await updateComment(comment, { content: { [locale]: editedContent } })
-        error && toast(error.message, { color: 'danger' })
+        console.log("try to update")
+        const result = await updateComment(comment.id, { content: { [locale]: editedContent } })
+
+        console.log("update result", result)
+        // error && toast(error.message, { color: 'danger' })
     }
 
     const handleDelete = async () => {
-        const { error } = await deleteComment(comment.id)
-        error && toast(error.message, { color: 'danger' })
+        const result = await deleteComment(comment.id)
+        console.log("delete result", result)
+        // error && toast(error.message, { color: 'danger' })
     }
 
     return (
@@ -98,6 +102,6 @@ const ArticleComment = ({ comment, updateComment, deleteComment }) => {
             </CardBody>
         </Card>
     )
-}
+})
 
 export default ArticleComment

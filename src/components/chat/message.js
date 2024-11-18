@@ -142,7 +142,7 @@ export default memo(({
                             color="primary"
                             onPress={async () => {
                                 setIsEditing(false)
-                                const { error } = await updateMessage(message, { content: { [locale]: editedContent } })
+                                const { error } = await updateMessage(message.id, { content: { [locale]: editedContent } })
                                 error && toast(error.message, { color: "danger" })
                                 isWhisper && !error && sendWhisperData({ action: "update_entity" })
                             }}

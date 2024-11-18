@@ -4,10 +4,10 @@ import { createClient } from '@/utils/supabase/api'
 export default async (req, res) => {
     const supabase = createClient(req, res)
 
-    const response = await entitiesRoute({
+    const { status, body } = await entitiesRoute({
         supabase,
         ...req
     })
 
-    res.status(response.status).json(response.body)
+    res.status(status).json(body)
 }

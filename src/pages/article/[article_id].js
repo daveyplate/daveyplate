@@ -9,13 +9,12 @@ import { getTranslationProps } from "@/i18n/translation-props"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { isExport } from "@/utils/utils"
 import { getEntity } from '@daveyplate/supabase-swr-entities/server'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { PageTitle } from "@daveyplate/next-page-title"
 import { OpenGraph } from "@daveyplate/next-open-graph"
 import ArticleComment from '@/components/blog/article-comment'
 import { useSession } from '@supabase/auth-helpers-react'
-import { v4 } from 'uuid'
 
 export default function ArticlePage({ article_id, article: fallbackData }) {
     const locale = useLocale()
@@ -29,7 +28,6 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
         createEntity: createComment,
         updateEntity: updateComment,
         deleteEntity: deleteComment,
-        insertEntity: insertComment,
     } = useEntities(
         articleId && 'article_comments',
         { article_id: articleId, lang: locale },
@@ -46,11 +44,10 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
         if (!commentContent || !user) return
 
         const newComment = {
-            id: v4(), article_id: articleId, content: { [locale]: commentContent }
+            article_id: articleId, content: { [locale]: commentContent }
         }
 
-        createComment(newComment)
-        insertComment({ ...newComment, user, created_at: new Date() })
+        createComment(newComment, { user })
         setCommentContent('')
     }
 
