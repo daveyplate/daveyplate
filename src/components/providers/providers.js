@@ -25,7 +25,7 @@ import { createClient } from '@/utils/supabase/component'
 import { iOS } from '@/utils/utils'
 
 import MetaTheme from "@/components/providers/meta-theme"
-import ToastProvider from "@/components/providers/toast-provider"
+import ToastProvider, { toast } from "@/components/providers/toast-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 
@@ -59,7 +59,16 @@ export default function Providers({ children, ...pageProps }) {
     return (
         <PageTitleProvider>
             <SessionContextProvider supabaseClient={supabase}>
-                <SWRConfig>
+                <SWRConfig value={{
+                    onError: (error, key) => {
+                        if (error.status !== 403 && error.status !== 404) {
+                            // We can send the error to Sentry,
+                            // or show a notification UI.
+                        }
+
+                        toast(error.message, { color: "danger" })
+                    }
+                }}>
                     <NextUIProvider navigate={localeRouter.push} locale={nextUILocale}>
                         <ThemeProvider attribute="class" disableTransitionOnChange>
                             <AutoTranslateProvider
