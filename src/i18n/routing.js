@@ -22,5 +22,5 @@ export const { Link: NextIntlLink, redirect, usePathname, useRouter: useLocaleRo
 export const Link = forwardRef(({ ...props }, ref) => {
     if (isExport()) return <NextIntlLink ref={ref} {...props} />
 
-    return <NextLink ref={ref} {...props} />
+    return <NextLink ref={ref} as={props.linkAs} {...props} />
 })

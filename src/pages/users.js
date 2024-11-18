@@ -69,6 +69,7 @@ export default function UsersPage() {
                         key={index}
                         as={Link}
                         href={`/user?user_id=${user.id}`}
+                        linkAs={`/user/${user.id}`}
                         isPressable
                         fullWidth
                     >
