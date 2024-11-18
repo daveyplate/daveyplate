@@ -1,40 +1,13 @@
-import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/router"
-import { useLocale } from "next-intl"
-import { useSession } from "@supabase/auth-helpers-react"
 
-import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { getLocaleValue, useEntity } from "@daveyplate/supabase-swr-entities/client"
-import { PageTitle } from "@daveyplate/next-page-title"
-import { OpenGraph } from "@daveyplate/next-open-graph"
-import { getEntity } from "@daveyplate/supabase-swr-entities/server"
-import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
-
-import {
-    Badge,
-    Button,
-    Card,
-    CardBody,
-    cn,
-    Divider,
-    Skeleton
-} from "@nextui-org/react"
-
-import { PencilIcon } from "@heroicons/react/24/solid"
 
 import { getTranslationProps } from "@/i18n/translation-props"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { isExport } from "@/utils/utils"
-import { createClient } from "@/utils/supabase/component"
 
-import UserAvatar from "@/components/user-avatar"
-import { toast } from "@/components/providers/toast-provider"
-import UploadAvatarModal from "@/components/upload-avatar-modal"
-import LightboxModal from "@/components/lightbox-modal"
-import OptionsDropdown from "@/components/options-dropdown"
-import { v4 } from "uuid"
 
 export default function UserPage({ user_id, user: fallbackData }) {
+    return <div>hi i am a user</div>
+    /*
     const supabase = createClient()
     const locale = useLocale()
     const router = useRouter()
@@ -168,14 +141,15 @@ export default function UserPage({ user_id, user: fallbackData }) {
             />
         </div>
     )
+    */
 }
 
 export async function getStaticPaths() {
     if (isExport()) return getLocalePaths()
 
     return {
-        paths: [{ params: { user_id: v4() } }],
-        fallback: true
+        paths: [],
+        fallback: 'blocking'
     }
 }
 
@@ -185,13 +159,13 @@ export async function getStaticProps({ locale, params }) {
     if (isExport()) return { props: { ...translationProps, canGoBack: true } }
 
     const { user_id } = params
-    const { entity: user } = await getEntity('profiles', user_id, { lang: locale })
+    // const { entity: user } = await getEntity('profiles', user_id, { lang: locale })
 
     return {
         props: {
             ...translationProps,
             user_id,
-            user: user || null,
+            // user: user || null,
             canGoBack: true
         },
         // revalidate: 60

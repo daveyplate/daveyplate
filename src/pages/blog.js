@@ -1,4 +1,4 @@
-import { useEntities } from '@daveyplate/supabase-swr-entities/client'
+import { isExport, useEntities } from '@daveyplate/supabase-swr-entities/client'
 import { Card, CardBody, Image, Skeleton } from "@nextui-org/react"
 import UserAvatar from "@/components/user-avatar"
 import { Link } from "@/i18n/routing"
@@ -7,6 +7,7 @@ import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
 import { useLocale } from 'next-intl'
 import { getTranslationProps } from "@/i18n/translation-props"
 import { AutoTranslate } from 'next-auto-translate'
+import { getLocalePaths } from '@/i18n/locale-paths'
 
 export default function BlogPage() {
     const locale = useLocale()
@@ -63,3 +64,5 @@ export async function getStaticProps({ locale, params }) {
 
     return { props: { ...translationProps } }
 }
+
+export const getStaticPaths = isExport() ? getLocalePaths : undefined
