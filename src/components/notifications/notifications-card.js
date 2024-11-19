@@ -11,11 +11,10 @@ import {
 } from "@nextui-org/react"
 
 import NotificationItem from "./notification-item"
-import { BellSlashIcon } from "@heroicons/react/24/solid"
+import { BellSlashIcon, TrashIcon } from "@heroicons/react/24/solid"
 import { useState } from "react"
 import { Link } from "@/i18n/routing"
 import SwipeToDelete from "react-swipe-to-delete-ios"
-import { isMobile } from "react-device-detect"
 
 export default function NotificationsCard({ notifications, setIsOpen, ...props }) {
     const [activeTab, setActiveTab] = useState("all")
@@ -91,7 +90,14 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
                 <ScrollShadow className="h-[420px] w-full flex flex-col">
                     {activeNotifications?.length ? (
                         activeNotifications.map((notification) => (
-                            <SwipeToDelete key={notification.id} className="!w-full !min-h-fit" disabled={!isMobile}>
+                            <SwipeToDelete
+                                key={notification.id}
+                                className="!w-full"
+                                height="fit"
+                                deleteComponent={
+                                    <TrashIcon className="size-5 mx-auto" />
+                                }
+                            >
                                 <NotificationItem key={notification.id} notification={notification} setIsOpen={setIsOpen} />
                             </SwipeToDelete>
                         ))
