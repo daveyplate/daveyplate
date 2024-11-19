@@ -172,7 +172,7 @@ export default function Header({ canGoBack }) {
 
                 <NavbarContent
                     justify="end"
-                    className={cn("transition-all gap-2", isMenuOpen && "opacity-0 pointer-events-none")}
+                    className={cn("transition-all gap-3", isMenuOpen && "opacity-0 pointer-events-none")}
                 >
                     <NavbarItem>
                         {session ? (
