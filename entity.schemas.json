@@ -40,7 +40,8 @@
         "realtimeParent": {
             "table": "messages",
             "column": "message_id"
-        }
+        },
+        "onConflict": "user_id,message_id"
     },
     {
         "table": "whispers",
