@@ -32,6 +32,7 @@ const NotificationItem = forwardRef(
 
         // localizedContent can contain {sender} which is replaced with the sender's full name. Let's do that below, but make it dynamic. Like if it said sender.username it would do sender.username.
 
+        const contentParts = localizedContent.split('{sender}')
         localizedContent = localizedContent.replaceAll("{sender}", sender?.full_name)
 
         /**
@@ -91,14 +92,36 @@ const NotificationItem = forwardRef(
 
                 <div className="flex flex-col gap-0.5">
                     <p className="text-base text-foreground">
-                        {localizedContent}
+                        {contentParts.length > 1 ? (
+                            <>
+                                <span className="text-foreground/90">
+                                    {contentParts[0]}
+                                </span>
+                                <Link
+                                    href={`/user?user_id=${sender.id}`}
+                                    linkAs={`/user/${sender.id}`}
+                                    className="font-semibold"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        setIsOpen(false)
+                                    }}
+                                >
+                                    {sender.full_name}
+                                </Link>
+                                <span className="text-foreground/90">
+                                    {contentParts[1]}
+                                </span>
+                            </>
+                        ) : (
+                            localizedContent
+                        )}
                     </p>
 
                     <ReactTimeAgo date={new Date(created_at)} locale={locale} className="text-small text-default-400" />
                 </div>
 
                 <Button
-                    className="ms-auto hidden sm:flex opacity-0 group-hover:opacity-100"
+                    className="ms-auto -me-1 hidden sm:flex opacity-0 group-hover:opacity-100"
                     variant="light"
                     radius="full"
                     disableRipple
