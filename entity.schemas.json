@@ -107,5 +107,21 @@
         },
         "realtime": true,
         "realtimeIdentifier": "article_id"
+    },
+    {
+        "table": "notifications",
+        "authMethods": [
+            "*"
+        ],
+        "select": [
+            "*",
+            "sender:sender_id(id, full_name, avatar_url)"
+        ],
+        "localizedColumns": [
+            "content",
+            "primary_label",
+            "secondary_label"
+        ],
+        "defaultOrder": "-created_at"
     }
 ]

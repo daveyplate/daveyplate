@@ -64,7 +64,7 @@ export default function Chat() {
         isLoading: messagesLoading
     } = useInfiniteEntities(
         "messages",
-        { lang: locale },
+        { lang: locale, limit: 20 },
         null,
         { provider: "supabase", enabled: !!session, onData }
     )
@@ -82,7 +82,7 @@ export default function Chat() {
         isLoading: whispersLoading
     } = useInfiniteEntities(session &&
         "whispers",
-        { lang: locale },
+        { lang: locale, limit: 20 },
         null,
         {
             provider: "peerjs",
