@@ -23,7 +23,6 @@ export default memo(({
     sendData,
     sendWhisperData,
     updateMessage,
-    shouldScrollDown,
     setWhisperUser
 }) => {
     const session = useSession()
@@ -70,8 +69,12 @@ export default memo(({
     }
 
     useEffect(() => {
-        if (shouldScrollDown) {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+        if (isEditing) {
+            const distanceToBottom = document.body.scrollHeight - window.scrollY - window.innerHeight
+
+            if (distanceToBottom < 200) {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+            }
         }
     }, [isEditing])
 

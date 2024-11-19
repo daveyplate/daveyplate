@@ -25,26 +25,22 @@ export default function Chat() {
     const [whisperUser, setWhisperUser] = useState(null)
     const inputRef = useRef(null)
 
-    useEffect(() => {
-        if (whisperUser) {
-            setLastWhisperUser(whisperUser)
-        }
-    }, [whisperUser])
+    useEffect(() => { whisperUser && setLastWhisperUser(whisperUser) }, [whisperUser])
 
     const prevScrollHeight = useRef(null)
     const prevScrollTop = useRef(null)
 
-    const onData = (data, connection, peer) => {
-        switch (data.action) {
+    const onData = ({ event, payload }, connection, peer) => {
+        switch (event) {
             case "like_message": {
-                const message = messages.find((message) => message.id == data.data.message_id)
+                const message = messages.find((message) => message.id == payload.message_id)
                 if (!message) return
 
                 mutateMessage({ ...message, likes: [...(message.likes || []), { user_id: peer.user_id, user: peer.user }] })
                 break
             }
             case "unlike_message": {
-                const message = messages.find((message) => message.id == data.data.message_id)
+                const message = messages.find((message) => message.id == payload.message_id)
                 if (!message) return
 
                 mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != peer.user_id) })
@@ -145,7 +141,8 @@ export default function Chat() {
 
     useEffect(() => {
         if (shouldScrollDown) {
-            window.scrollTo({ top: document.scrollingElement.scrollHeight, behavior: 'smooth' })
+            const scrollDistane = document.scrollingElement.scrollHeight - document.scrollingElement.scrollTop
+            window.scrollTo({ top: document.scrollingElement.scrollHeight, behavior: scrollDistane < 1024 ? "smooth" : "auto" })
             size > 1 && setSize(1)
             whispersSize > 1 && setWhispersSize(1)
         } else if (prevScrollHeight.current && !messagesValidating && !whispersValidating) {
@@ -196,7 +193,6 @@ export default function Chat() {
                         mutateMessage={message.recipient_id ? mutateWhisper : mutateMessage}
                         updateMessage={message.recipient_id ? updateWhisper : updateMessage}
                         deleteMessage={message.recipient_id ? deleteWhisper : deleteMessage}
-                        shouldScrollDown={shouldScrollDown}
                         sendData={sendMessageData}
                         sendWhisperData={sendWhisperData}
                         setWhisperUser={setWhisperUser}
