@@ -185,7 +185,7 @@ export default memo(({
                                 </h6>
 
                                 <ReactTimeAgo
-                                    className={cn("ms-auto text-tiny font-light",
+                                    className={cn("ms-auto text-tiny",
                                         (isOutgoing || isWhisper) ? "text-primary-foreground/60" : "text-foreground/60"
                                     )}
                                     date={new Date(message.created_at)}
@@ -205,7 +205,7 @@ export default memo(({
                             )}
 
                             <div className="flex justify-between gap-4">
-                                <p className="font-light text-foreground-80">
+                                <p className="text-foreground/90">
                                     {localizedMessage}
                                 </p>
 
