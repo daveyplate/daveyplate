@@ -71,7 +71,7 @@ export default memo(({
 
     useEffect(() => {
         if (shouldScrollDown) {
-            window.scrollTo(0, document.body.scrollHeight)
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
         }
     }, [isEditing])
 

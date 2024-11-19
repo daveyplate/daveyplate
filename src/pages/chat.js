@@ -145,7 +145,7 @@ export default function Chat() {
 
     useEffect(() => {
         if (shouldScrollDown) {
-            window.scrollTo(0, document.body.scrollHeight)
+            window.scrollTo({ top: document.scrollingElement.scrollHeight, behavior: 'smooth' })
             size > 1 && setSize(1)
             whispersSize > 1 && setWhispersSize(1)
         } else if (prevScrollHeight.current && !messagesValidating && !whispersValidating) {
