@@ -87,19 +87,20 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
                 </Tabs>
             </CardHeader>
             <CardBody className="w-full gap-0 p-0">
-                <ScrollShadow className="h-[420px] w-full flex flex-col">
+                <ScrollShadow className="max-h-[420px] w-full flex flex-col">
                     {activeNotifications?.length ? (
                         activeNotifications.map((notification) => (
                             <SwipeToDelete
                                 key={notification.id}
                                 className="!w-full !bg-danger"
+                                onDelete={() => console.log("Deleted")}
                                 height="fit"
                                 deleteColor="transparent"
                                 deleteComponent={
                                     <TrashIcon className="size-5 mx-auto" />
                                 }
                             >
-                                <NotificationItem key={notification.id} notification={notification} setIsOpen={setIsOpen} />
+                                <NotificationItem notification={notification} setIsOpen={setIsOpen} />
                             </SwipeToDelete>
                         ))
                     ) : (
