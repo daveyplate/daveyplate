@@ -14,6 +14,8 @@ import NotificationItem from "./notification-item"
 import { BellSlashIcon } from "@heroicons/react/24/solid"
 import { useState } from "react"
 import { Link } from "@/i18n/routing"
+import SwipeToDelete from "react-swipe-to-delete-ios"
+import { isMobile } from "react-device-detect"
 
 export default function NotificationsCard({ notifications, setIsOpen, ...props }) {
     const [activeTab, setActiveTab] = useState("all")
@@ -46,7 +48,7 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
                     aria-label="Notifications"
                     classNames={{
                         base: "w-full",
-                        tabList: "gap-6 px-6 py-0 w-full relative rounded-none border-b border-divider",
+                        tabList: "gap-6 px-6 py-0 w-full relative rounded-none border-b border-default",
                         cursor: "w-full",
                         tab: "max-w-fit px-2 h-12",
                     }}
@@ -86,10 +88,12 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
                 </Tabs>
             </CardHeader>
             <CardBody className="w-full gap-0 p-0">
-                <ScrollShadow className="h-[500px] w-full">
+                <ScrollShadow className="h-[420px] w-full flex flex-col">
                     {activeNotifications?.length ? (
                         activeNotifications.map((notification) => (
-                            <NotificationItem key={notification.id} notification={notification} setIsOpen={setIsOpen} />
+                            <SwipeToDelete key={notification.id} className="!w-full !min-h-fit" disabled={!isMobile}>
+                                <NotificationItem key={notification.id} notification={notification} setIsOpen={setIsOpen} />
+                            </SwipeToDelete>
                         ))
                     ) : (
                         <div className="flex h-full w-full flex-col items-center justify-center gap-2">

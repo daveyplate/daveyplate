@@ -3,10 +3,11 @@ import { cn } from "@nextui-org/react"
 import { getLocaleValue } from "@daveyplate/supabase-swr-entities/client"
 import { useLocale } from "next-intl"
 import ReactTimeAgo from "react-time-ago"
-import { getPathname } from "@/i18n/routing"
+import { getPathname, Link } from "@/i18n/routing"
 import { useRouter } from "next/router"
 import UserAvatar from "../user-avatar"
 import { forwardRef } from "react"
+import { TrashIcon } from "@heroicons/react/24/solid"
 
 const NotificationItem = forwardRef(
     ({
@@ -54,8 +55,8 @@ const NotificationItem = forwardRef(
             <div
                 ref={ref}
                 className={cn(
-                    "flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer",
-                    !is_read && "bg-primary-50/50",
+                    "group w-full !min-h-fit flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer",
+                    !is_read ? "bg-primary-50" : "bg-content1",
                 )}
                 {...props}
                 onClick={(e) => {
@@ -64,18 +65,14 @@ const NotificationItem = forwardRef(
                 }}
             >
                 <Button
+                    as={Link}
+                    href={sender ? `/user?user_id=${sender.id}` : url}
+                    linkAs={sender ? `/user/${sender.id}` : link_as}
                     className="relative flex-none overflow-visible"
                     isIconOnly
                     radius="full"
                     disableRipple
-                    onClick={(e) => {
-                        if (!sender) return
-
-                        e.stopPropagation()
-                        router.push(`/user?user_id=${sender.id}`,
-                            `/user/${sender.id}`)
-                        setIsOpen(false)
-                    }}
+                    onPress={() => setIsOpen(false)}
                 >
                     <Badge
                         color="primary"
@@ -99,6 +96,16 @@ const NotificationItem = forwardRef(
 
                     <ReactTimeAgo date={new Date(created_at)} locale={locale} className="text-small text-default-400" />
                 </div>
+
+                <Button
+                    className="ms-auto hidden sm:flex opacity-0 group-hover:opacity-100"
+                    variant="light"
+                    radius="full"
+                    disableRipple
+                    isIconOnly
+                >
+                    <TrashIcon className="size-5" />
+                </Button>
             </div>
         );
     },

@@ -14,7 +14,12 @@ export default function NotificationsPopover() {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
-        <Popover placement="bottom-end" isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+        <Popover
+            placement="bottom-end"
+            isOpen={isOpen}
+            onOpenChange={(open) => setIsOpen(open)}
+            shouldBlockScroll
+        >
             <PopoverTrigger>
                 <Button
                     disableRipple
