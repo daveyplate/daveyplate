@@ -88,7 +88,7 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
             </CardHeader>
             <CardBody className="w-full gap-0 p-0">
                 <ScrollShadow className="h-[420px] w-full flex flex-col">
-                    {!activeNotifications?.length ? (
+                    {activeNotifications?.length ? (
                         activeNotifications.map((notification) => (
                             <SwipeToDelete
                                 key={notification.id}
