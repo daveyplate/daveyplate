@@ -44,7 +44,7 @@ export default memo(({
                 return mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
             }
 
-            !error && sendData && sendData({ action: "like_message" })
+            !error && sendData && sendData({ event: "like_message" })
         })
 
         mutateMessage({ ...message, likes: [...(message.likes || []), { ...messageLike, user }] })
@@ -62,7 +62,7 @@ export default memo(({
                 return mutateMessage({ ...message, likes: [...(message.likes || []), messageLike] })
             }
 
-            !error && sendData && sendData({ action: "like_message" })
+            !error && sendData && sendData({ event: "like_message" })
         })
 
         mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
@@ -144,8 +144,7 @@ export default memo(({
                             onPress={async () => {
                                 setIsEditing(false)
                                 const { error } = await updateMessage(message.id, { content: { [locale]: editedContent } })
-                                error && toast(error.message, { color: "danger" })
-                                isWhisper && !error && sendWhisperData({ action: "update_entity" })
+                                isWhisper && !error && sendWhisperData({ event: "update_entity" })
                             }}
                         >
                             Save
@@ -166,7 +165,7 @@ export default memo(({
                                 setIsEditing(false)
                                 const { error } = await deleteMessage(message.id) || {}
                                 error && toast(error.message, { color: "danger" })
-                                isWhisper && !error && sendWhisperData({ action: "delete_entity" })
+                                isWhisper && !error && sendWhisperData({ event: "delete_entity" })
                             }}
                         >
                             <TrashIcon className="size-4" />

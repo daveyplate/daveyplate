@@ -152,11 +152,7 @@ export default function Settings() {
 
     const deactivateAccount = async () => {
         const { error } = await updateUser({ deactivated: true })
-
-        if (error) {
-            toast(error.message, { color: 'danger' })
-            return
-        }
+        if (error) return
 
         toast(accountDeactivated, { color: 'warning' })
         supabase.auth.signOut({ scope: 'others' })

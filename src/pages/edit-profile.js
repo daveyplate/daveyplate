@@ -91,8 +91,7 @@ export default function EditProfile() {
             params.bio = { [locale]: bio }
         }
 
-        const { error } = await updateUser(params)
-        error && toast(error.message, { color: "danger" })
+        updateUser(params)
     }
 
     // Set the form values when the user initially loads
@@ -183,8 +182,7 @@ export default function EditProfile() {
                                     icon: <TrashIcon className="size-5 -ms-1" />,
                                     action: async () => {
                                         supabase.auth.updateUser({ data: { avatar_url: null } })
-                                        const { error } = await updateUser({ avatar_url: null })
-                                        error && toast(error.message, { color: "danger" })
+                                        updateUser({ avatar_url: null })
                                     }
                                 })}
                                 isDisabled={!user?.avatar_url}
@@ -265,8 +263,7 @@ export default function EditProfile() {
                 setAvatarFile={setAvatarFile}
                 onUpload={async (url) => {
                     supabase.auth.updateUser({ data: { avatar_url: url } })
-                    const { error } = await updateUser({ avatar_url: url })
-                    error && toast(error.message, { color: "danger" })
+                    updateUser({ avatar_url: url })
                 }}
                 onError={(error) => toast(error.message, { color: 'danger' })}
             />

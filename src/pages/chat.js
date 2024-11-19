@@ -164,7 +164,7 @@ export default function Chat() {
                 content: { [locale]: content }
             }
 
-            createWhisper(newWhisper, { user, recipient: whisperUser }).then(() => sendWhisperData({ action: "create_entity", data: newWhisper }))
+            createWhisper(newWhisper, { user, recipient: whisperUser }).then(() => sendWhisperData({ event: "create_entity", data: newWhisper }))
         } else {
             const newMessage = { content: { [locale]: content } }
 
