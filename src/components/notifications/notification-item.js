@@ -9,6 +9,7 @@ import UserAvatar from "../user-avatar"
 import { forwardRef, useCallback, useRef } from "react"
 import { TrashIcon } from "@heroicons/react/24/solid"
 import { Avatar } from "@daveyplate/nextui-fixed-avatar"
+import SwipeToDelete from "react-swipe-to-delete-ios"
 
 const NotificationItem = forwardRef(
     ({
@@ -63,81 +64,91 @@ const NotificationItem = forwardRef(
         }
 
         return (
-            <div
+            <SwipeToDelete
                 ref={ref}
-                className={cn(
-                    "group w-full !min-h-fit flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer",
-                    !is_read ? "bg-primary-50" : "bg-content1",
-                )}
-                {...props}
-                onMouseDown={onMouseDown}
-                onClick={onClick}
+                className={cn("!w-full !bg-danger", className)}
+                onDelete={() => console.log("Deleted")}
+                height="fit"
+                deleteColor="transparent"
+                deleteComponent={
+                    <TrashIcon className="size-5 mx-auto" />
+                }
             >
-                <Button
-                    as={Link}
-                    href={sender ? `/user?user_id=${sender.id}` : url}
-                    linkAs={sender ? `/user/${sender.id}` : link_as}
-                    className="relative flex-none overflow-visible"
-                    isIconOnly
-                    radius="full"
-                    disableRipple
-                    onPress={() => setIsOpen(false)}
+                <div
+                    className={cn(
+                        "group w-full !min-h-fit flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer",
+                        !is_read ? "bg-primary-50" : "bg-content1",
+                    )}
+                    {...props}
+                    onMouseDown={onMouseDown}
+                    onClick={onClick}
                 >
-                    <Badge
-                        color="primary"
-                        content=""
-                        isInvisible={is_read}
-                        placement="bottom-right"
-                        shape="circle"
+                    <Button
+                        as={Link}
+                        href={sender ? `/user?user_id=${sender.id}` : url}
+                        linkAs={sender ? `/user/${sender.id}` : link_as}
+                        className="relative flex-none overflow-visible"
+                        isIconOnly
+                        radius="full"
+                        disableRipple
+                        onPress={() => setIsOpen(false)}
                     >
-                        {sender ? (
-                            <UserAvatar user={sender} />
-                        ) : (
-                            <Avatar src={avatar_url} />
-                        )}
-                    </Badge>
-                </Button>
+                        <Badge
+                            color="primary"
+                            content=""
+                            isInvisible={is_read}
+                            placement="bottom-right"
+                            shape="circle"
+                        >
+                            {sender ? (
+                                <UserAvatar user={sender} />
+                            ) : (
+                                <Avatar src={avatar_url} />
+                            )}
+                        </Badge>
+                    </Button>
 
-                <div className="flex flex-col gap-0.5">
-                    <p className="text-base text-foreground">
-                        {contentParts.length > 1 ? (
-                            <>
-                                <span className="text-foreground/90">
-                                    {contentParts[0]}
-                                </span>
-                                <Link
-                                    href={`/user?user_id=${sender.id}`}
-                                    linkAs={`/user/${sender.id}`}
-                                    className="font-semibold"
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-                                        setIsOpen(false)
-                                    }}
-                                >
-                                    {sender.full_name}
-                                </Link>
-                                <span className="text-foreground/90">
-                                    {contentParts[1]}
-                                </span>
-                            </>
-                        ) : (
-                            localizedContent
-                        )}
-                    </p>
+                    <div className="flex flex-col gap-0.5">
+                        <p className="text-base text-foreground select-none">
+                            {contentParts.length > 1 ? (
+                                <>
+                                    <span className="text-foreground/90">
+                                        {contentParts[0]}
+                                    </span>
+                                    <Link
+                                        href={`/user?user_id=${sender.id}`}
+                                        linkAs={`/user/${sender.id}`}
+                                        className="font-semibold"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            setIsOpen(false)
+                                        }}
+                                    >
+                                        {sender.full_name}
+                                    </Link>
+                                    <span className="text-foreground/90">
+                                        {contentParts[1]}
+                                    </span>
+                                </>
+                            ) : (
+                                localizedContent
+                            )}
+                        </p>
 
-                    <ReactTimeAgo date={new Date(created_at)} locale={locale} className="text-small text-default-400" />
+                        <ReactTimeAgo date={new Date(created_at)} locale={locale} className="text-small text-default-400" />
+                    </div>
+
+                    <Button
+                        className="ms-auto -me-1 hidden sm:flex opacity-0 group-hover:opacity-100"
+                        variant="light"
+                        radius="full"
+                        disableRipple
+                        isIconOnly
+                    >
+                        <TrashIcon className="size-5" />
+                    </Button>
                 </div>
-
-                <Button
-                    className="ms-auto -me-1 hidden sm:flex opacity-0 group-hover:opacity-100"
-                    variant="light"
-                    radius="full"
-                    disableRipple
-                    isIconOnly
-                >
-                    <TrashIcon className="size-5" />
-                </Button>
-            </div>
+            </SwipeToDelete>
         );
     },
 );

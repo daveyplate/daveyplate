@@ -39,7 +39,7 @@ export default function NotificationsPopover() {
                 </Button>
             </PopoverTrigger>
 
-            <PopoverContent className="max-w-[94svw] p-0 sm:max-w-[420px] w-svw">
+            <PopoverContent className="max-w-[94svw] p-0 sm:max-w-[480px] w-svw">
                 <NotificationsContainer notifications={notifications} setIsOpen={setIsOpen} />
             </PopoverContent>
         </Popover>
