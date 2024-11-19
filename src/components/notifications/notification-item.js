@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Card, CardBody } from "@nextui-org/react"
+import { Badge, Button } from "@nextui-org/react"
 import { cn } from "@nextui-org/react"
 import { getLocaleValue } from "@daveyplate/supabase-swr-entities/client"
 import { useLocale } from "next-intl"
@@ -8,6 +8,7 @@ import { useRouter } from "next/router"
 import UserAvatar from "../user-avatar"
 import { forwardRef } from "react"
 import { TrashIcon } from "@heroicons/react/24/solid"
+import { Avatar } from "@daveyplate/nextui-fixed-avatar"
 
 const NotificationItem = forwardRef(
     ({
