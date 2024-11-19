@@ -64,6 +64,9 @@
                 "recipient_id"
             ]
         },
+        "localizedColumns": [
+            "content"
+        ],
         "select": [
             "*",
             "user:user_id!inner(id, full_name, avatar_url)",
