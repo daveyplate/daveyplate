@@ -6,7 +6,7 @@ import ReactTimeAgo from "react-time-ago"
 import { getPathname, Link } from "@/i18n/routing"
 import { useRouter } from "next/router"
 import UserAvatar from "../user-avatar"
-import { forwardRef } from "react"
+import { forwardRef, useCallback, useRef } from "react"
 import { TrashIcon } from "@heroicons/react/24/solid"
 import { Avatar } from "@daveyplate/nextui-fixed-avatar"
 
@@ -27,14 +27,23 @@ const NotificationItem = forwardRef(
     }, ref) => {
         const router = useRouter()
         const locale = useLocale()
-        let localizedContent = getLocaleValue(content, locale)
+        const localizedContent = getLocaleValue(content, locale)
+        const contentParts = localizedContent.split('{sender}')
         const localeUrl = getPathname({ href: url, locale })
         const localeLinkAs = link_as && getPathname({ href: link_as, locale })
+        const pointer = useRef({ x: 0, y: 0 })
 
-        // localizedContent can contain {sender} which is replaced with the sender's full name. Let's do that below, but make it dynamic. Like if it said sender.username it would do sender.username.
+        const onMouseDown = useCallback((e) => {
+            pointer.current = { x: e.clientX, y: e.clientY }
+        }, [])
 
-        const contentParts = localizedContent.split('{sender}')
-        localizedContent = localizedContent.replaceAll("{sender}", sender?.full_name)
+        const onClick = useCallback((e) => {
+            const { x, y } = pointer.current
+            if (Math.abs(e.clientX - x) > 10 || Math.abs(e.clientY - y) > 10) return
+
+            router.push(localeUrl, localeLinkAs)
+            setIsOpen(false)
+        }, [router, localeUrl, localeLinkAs])
 
         /**
          * Defines the content for different types of notifications.
@@ -51,7 +60,7 @@ const NotificationItem = forwardRef(
                     </Button>
                 </div>
             )
-        };
+        }
 
         return (
             <div
@@ -61,10 +70,8 @@ const NotificationItem = forwardRef(
                     !is_read ? "bg-primary-50" : "bg-content1",
                 )}
                 {...props}
-                onClick={(e) => {
-                    router.push(localeUrl, localeLinkAs)
-                    setIsOpen(false)
-                }}
+                onMouseDown={onMouseDown}
+                onClick={onClick}
             >
                 <Button
                     as={Link}

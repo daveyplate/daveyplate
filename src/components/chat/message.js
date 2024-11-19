@@ -205,7 +205,8 @@ export default memo(({
                             )}
 
                             <div className="flex justify-between gap-4">
-                                <p className="text-foreground/90">
+                                <p className={cn(isWhisper ? "text-secondary-foreground/95" :
+                                    isOutgoing ? "text-primary-foreground/95" : "text-foreground/95")}>
                                     {localizedMessage}
                                 </p>
 
