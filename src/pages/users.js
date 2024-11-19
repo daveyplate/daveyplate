@@ -86,7 +86,7 @@ export default function UsersPage() {
                                         Subscription:
                                     </AutoTranslate>
 
-                                    <span className={cn('ml-1.5', user.claims?.premium ? "text-success font-semibold" : "text-foreground font-light")}>
+                                    <span className={cn('ml-1.5', user.claims?.premium ? "text-success font-semibold" : "text-foreground")}>
                                         {user.claims?.premium ?
                                             <AutoTranslate tKey="active">
                                                 Active

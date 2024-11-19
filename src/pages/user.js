@@ -139,7 +139,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                             <>
                                 <Divider />
 
-                                <p className="font-light text-small">
+                                <p className="text-foreground/90">
                                     {localizedBio}
                                 </p>
                             </>

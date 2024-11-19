@@ -215,7 +215,7 @@ export default function Header({ canGoBack }) {
                                 <DropdownSection
                                     className="truncate pt-1"
                                     title={session?.user.email || autoTranslate("account", "Account")}
-                                    classNames={{ heading: "text-small" }}
+                                    classNames={{ heading: "text-base" }}
                                     showDivider
                                 />
 

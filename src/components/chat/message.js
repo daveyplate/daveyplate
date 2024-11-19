@@ -185,8 +185,8 @@ export default memo(({
                                 </h6>
 
                                 <ReactTimeAgo
-                                    className={cn("ms-auto text-tiny",
-                                        (isOutgoing || isWhisper) ? "text-primary-foreground/60" : "text-foreground/60"
+                                    className={cn("ms-auto text-small",
+                                        (isOutgoing || isWhisper) ? "text-primary-foreground/60" : "text-default-400"
                                     )}
                                     date={new Date(message.created_at)}
                                     locale={locale}

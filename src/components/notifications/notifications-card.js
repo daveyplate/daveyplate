@@ -88,7 +88,7 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
             </CardHeader>
             <CardBody className="w-full gap-0 p-0">
                 <ScrollShadow className="h-[420px] w-full flex flex-col">
-                    {activeNotifications?.length ? (
+                    {!activeNotifications?.length ? (
                         activeNotifications.map((notification) => (
                             <SwipeToDelete
                                 key={notification.id}
@@ -103,9 +103,9 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
                         ))
                     ) : (
                         <div className="flex h-full w-full flex-col items-center justify-center gap-2">
-                            <BellSlashIcon className="text-default-400 size-12" />
+                            <BellSlashIcon className="text-default-400 size-16" />
 
-                            <p className="text-small text-default-400">
+                            <p className="text-base text-default-400">
                                 No notifications yet.
                             </p>
                         </div>

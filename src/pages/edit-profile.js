@@ -235,7 +235,7 @@ export default function EditProfile() {
                         />
 
                         <Skeleton isLoaded={!!user} className="self-end rounded-2xl min-w-10 me-2 -mt-2 -mb-1">
-                            <p className="text-right text-tiny text-foreground/60">
+                            <p className="text-right text-small text-foreground/60">
                                 {bio.length}/{maxBioLength}
                             </p>
                         </Skeleton>
