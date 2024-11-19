@@ -50,6 +50,7 @@ import { Link, useLocaleRouter, usePathname } from "@/i18n/routing"
 
 import ThemeDropdown from "@/components/theme-dropdown"
 import UserAvatar from "@/components/user-avatar"
+import NotificationsPopover from "./notifications/notifications-popover"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -174,7 +175,11 @@ export default function Header({ canGoBack }) {
                     className={cn("transition-all gap-2", isMenuOpen && "opacity-0 pointer-events-none")}
                 >
                     <NavbarItem>
-                        <ThemeDropdown isIconOnly variant="light" />
+                        {session ? (
+                            <NotificationsPopover />
+                        ) : (
+                            <ThemeDropdown isIconOnly variant="light" />
+                        )}
                     </NavbarItem>
 
                     <NavbarItem className="mt-1 -me-1">
