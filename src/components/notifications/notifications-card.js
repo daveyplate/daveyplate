@@ -92,8 +92,9 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
                         activeNotifications.map((notification) => (
                             <SwipeToDelete
                                 key={notification.id}
-                                className="!w-full"
+                                className="!w-full !bg-danger"
                                 height="fit"
+                                deleteColor="transparent"
                                 deleteComponent={
                                     <TrashIcon className="size-5 mx-auto" />
                                 }
