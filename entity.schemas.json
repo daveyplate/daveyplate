@@ -107,7 +107,8 @@
         "table": "article_comments",
         "select": [
             "*",
-            "user:user_id!inner(*)"
+            "user:user_id!inner(*)",
+            "article:article_id!inner(id, user_id, title, thumbnail_url)"
         ],
         "localizedColumns": [
             "content"
@@ -116,8 +117,36 @@
         "requiredParams": {
             "user.deactivated": false
         },
-        "realtime": true,
-        "realtimeIdentifier": "article_id"
+        "realtimeIdentifier": "article_id",
+        "notificationMethods": [
+            "create"
+        ],
+        "notificationTemplate": {
+            "userIdColumn": "article.user_id",
+            "senderIdColumn": "user_id",
+            "imageUrlColumn": "article.thumbnail_url",
+            "contentTemplate": {
+                "en": "{sender} commented on {{article.title.en}}: {{content.en}}"
+            },
+            "urlTemplate": "/article?article_id={{article_id}}",
+            "linkAsTemplate": "/article/{{article_id}}",
+            "primaryLabel": {
+                "en": "View Article"
+            },
+            "primaryAction": {
+                "color": "primary",
+                "action": "navigate",
+                "urlTemplate": "/article?article_id={{article_id}}",
+                "linkAsTemplate": "/article/{{article_id}}"
+            },
+            "secondaryLabel": {
+                "en": "Ignore"
+            },
+            "secondaryAction": {
+                "color": "default",
+                "deleteNotification": true
+            }
+        }
     },
     {
         "table": "notifications",
