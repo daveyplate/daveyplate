@@ -19,6 +19,7 @@ export default function NotificationsPopover() {
             isOpen={isOpen}
             onOpenChange={(open) => setIsOpen(open)}
             shouldBlockScroll
+            backdrop="opaque"
         >
             <PopoverTrigger>
                 <Button
