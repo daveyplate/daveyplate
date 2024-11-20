@@ -27,6 +27,30 @@ alter table public.profiles enable row level security;
 create policy none_shall_pass on public.profiles
     for select
     using (false);
+    
+-- Metadata table
+create table public.metadata (
+  id uuid not null references auth.users on delete cascade,
+  notifications_enabled boolean not null default true,
+  notifications_badge_enabled boolean not null default true,
+  notifications_badge integer not null default 0,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  primary key (id)
+);
+
+-- Add a trigger to update the updated_at column
+create trigger handle_updated_at before
+  update on public.metadata for each row
+  execute function moddatetime ('updated_at');
+
+-- Enable row level security
+alter table public.metadata enable row level security;
+
+-- Note that some users may enable RLS with no policies intentionally to restrict access over APIs. In those cases we recommend making that intent explicit with a rejection policy.
+create policy none_shall_pass on public.metadata
+    for select
+    using (false);
 
 -- inserts a row into public.profiles
 create function public.handle_new_user()
@@ -41,6 +65,10 @@ begin
     new.raw_user_meta_data->>'avatar_url',
     COALESCE(NULLIF(new.raw_user_meta_data->>'full_name', ''), split_part(new.email, '@', 1))
   );
+  insert into public.metadata (id)
+  values (
+    new.id
+  );
   return new;
 end;
 $$;
@@ -49,6 +77,42 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- Notifcations table
+create table
+  public.notifications (
+    id uuid not null default gen_random_uuid (),
+    user_id uuid not null,
+    sender_id uuid null,
+    avatar_url text null,
+    content jsonb not null,
+    image_url text null,
+    primary_label jsonb null,
+    primary_action jsonb null,
+    secondary_label jsonb null,
+    secondary_action jsonb null,
+    is_read boolean not null default false,
+    url text null,
+    link_as text null,
+    locale text not null default 'en'::text,
+    created_at timestamp with time zone not null default now(),
+    updated_at timestamp with time zone not null default now(),
+    constraint notifications_pkey primary key (id),
+    constraint notifications_sender_id_fkey foreign key (sender_id) references profiles (id),
+    constraint notifications_user_id_fkey foreign key (user_id) references profiles (id)
+  );
+
+create trigger handle_updated_at before
+update on notifications for each row
+execute function extensions.moddatetime ('updated_at');
+
+-- Enable row level security
+alter table public.notifications enable row level security;
+
+-- Note that some users may enable RLS with no policies intentionally to restrict access over APIs. In those cases we recommend making that intent explicit with a rejection policy.
+create policy none_shall_pass on public.notifications
+    for select
+    using (false);
 
 -- Messages table
 create table
@@ -125,6 +189,30 @@ SELECT cron.schedule(
 );
 
 create table
+  public.whispers (
+    id uuid not null default gen_random_uuid (),
+    user_id uuid not null,
+    recipient_id uuid not null,
+    content jsonb not null default '{}'::jsonb,
+    locale text not null default 'en'::text,
+    created_at timestamp with time zone not null default now(),
+    updated_at timestamp with time zone not null default now(),
+    constraint whispers_pkey primary key (id),
+    constraint whispers_recipient_id_fkey foreign key (recipient_id) references profiles (id) on delete cascade,
+    constraint whispers_user_id_fkey foreign key (user_id) references profiles (id) on delete cascade
+  );
+
+create trigger handle_updated_at before
+update on whispers for each row
+execute function extensions.moddatetime ('updated_at');
+
+alter table public.whispers enable row level security;
+
+create policy none_shall_pass on public.whispers
+    for select
+    using (false);
+
+create table
   public.articles (
     id uuid not null default gen_random_uuid (),
     user_id uuid null,
@@ -151,5 +239,30 @@ execute function extensions.moddatetime ('updated_at');
 alter table public.articles enable row level security;
 
 create policy none_shall_pass on public.articles
+    for select
+    using (false);
+
+create table
+  public.article_comments (
+    id uuid not null default gen_random_uuid (),
+    article_id uuid not null,
+    user_id uuid not null,
+    content jsonb not null,
+    locale text not null default 'en'::text,
+    created_at timestamp with time zone not null default now(),
+    updated_at timestamp with time zone not null default now(),
+    constraint article_comments_pkey primary key (id),
+    constraint article_comments_article_id_fkey foreign key (article_id) references articles (id) on delete cascade,
+    constraint article_comments_user_id_fkey foreign key (user_id) references profiles (id) on delete cascade
+  );
+
+create trigger handle_updated_at before
+update on article_comments for each row
+execute function extensions.moddatetime ('updated_at');
+
+
+alter table public.article_comments enable row level security;
+
+create policy none_shall_pass on public.article_comments
     for select
     using (false);
