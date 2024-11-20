@@ -1,10 +1,12 @@
 import { BellIcon } from "@heroicons/react/24/solid"
-import { Popover, PopoverTrigger, PopoverContent, Button, Badge } from "@nextui-org/react"
+import { Popover, PopoverTrigger, PopoverContent, Button, Badge, Card } from "@nextui-org/react"
 import { useEntities, useEntity, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
 import { useSession } from "@supabase/auth-helpers-react"
 import NotificationsContainer from "./notifications-card"
 import { useLocale } from "next-intl"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
+import NotificationItem from "./notification-item"
 
 export default function NotificationsPopover() {
     const session = useSession()
@@ -24,6 +26,24 @@ export default function NotificationsPopover() {
             mutate()
         })
     }, [isOpen, notifications, mutate])
+
+    useEffect(() => {
+        if (isOpen) return
+        if (!notifications?.length) return
+
+        toast(() => (
+            <div
+                className="pointer-events-auto sm:w-[512px] sm:-ms-[96px] -ms-8 -me-8 -mt-8 sm:-mt-12 sm:border-l sm:border-r border-divider"
+            >
+                <NotificationItem notification={notifications[0]} setIsOpen={setIsOpen} />
+            </div>
+        ), {
+            position: "top-center",
+            className: "!text-left",
+            unstyled: true,
+            dismissible: true,
+        })
+    }, [isOpen])
 
     return (
         <Popover

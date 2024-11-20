@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion'
 import { AutoTranslate } from 'next-auto-translate'
 
-import { Card, CardHeader, CardBody, Divider } from "@nextui-org/react"
+import { Card, CardHeader, CardBody, Divider, Button } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
+import { toast } from 'sonner'
 
 const PulseGreen = ({ children, className }) => {
     return (

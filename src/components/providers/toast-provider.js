@@ -37,7 +37,7 @@ export default function ToastProvider() {
  * @param {string} [opts.color="default"] The color of the toast
  * @param {string} [opts.className] The color of the toast
  */
-export const toast = (message, { color = "default", className = null }) => {
+export const toast = (message, { color = "default", className = null } = {}) => {
     className = cn(`bg-${color} text-${color}-foreground`, className)
     sonnerToast(message, { className })
 }
