@@ -76,7 +76,7 @@ const NotificationItem = forwardRef(
             >
                 <div
                     className={cn(
-                        "group w-full !min-h-fit flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer",
+                        "group w-full !min-h-fit flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer select-none",
                         !is_read ? "bg-primary-50" : "bg-content1",
                     )}
                     {...props}
@@ -109,7 +109,7 @@ const NotificationItem = forwardRef(
                     </Button>
 
                     <div className="flex flex-col gap-0.5">
-                        <p className="text-base text-foreground select-none">
+                        <p className="text-base text-foreground">
                             {contentParts.length > 1 ? (
                                 <>
                                     <span className="text-foreground/90">
