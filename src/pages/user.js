@@ -71,7 +71,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
             <Card fullWidth>
                 <CardHeader
-                    className="flex h-[100px] flex-col justify-end bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400 z-0"
+                    className="flex h-24 flex-col justify-end bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400 z-0"
                 >
                     <OptionsDropdown
                         className={cn(!isMe ? "opacity-100" : "opacity-0",
