@@ -87,7 +87,18 @@
             "user.deactivated": false,
             "recipient.deactivated": false
         },
-        "defaultOrder": "-created_at"
+        "defaultOrder": "-created_at",
+        "notificationMethods": [
+            "upsert"
+        ],
+        "notificationTemplate": {
+            "userIdColumn": "recipient_id",
+            "senderIdColumn": "user_id",
+            "content": {
+                "en": "{sender} sent you a whisper: {{content.en}}"
+            },
+            "url": "/chat"
+        }
     },
     {
         "table": "articles",
@@ -119,25 +130,25 @@
         },
         "realtimeIdentifier": "article_id",
         "notificationMethods": [
-            "create"
+            "upsert"
         ],
         "notificationTemplate": {
             "userIdColumn": "article.user_id",
             "senderIdColumn": "user_id",
-            "imageUrlColumn": "article.thumbnail_url",
-            "contentTemplate": {
+            "content": {
                 "en": "{sender} commented on {{article.title.en}}: {{content.en}}"
             },
-            "urlTemplate": "/article?article_id={{article_id}}",
-            "linkAsTemplate": "/article/{{article_id}}",
+            "imageUrlColumn": "article.thumbnail_url",
+            "url": "/article?article_id={{article_id}}",
+            "linkAs": "/article/{{article_id}}",
             "primaryLabel": {
                 "en": "View Article"
             },
             "primaryAction": {
                 "color": "primary",
                 "action": "navigate",
-                "urlTemplate": "/article?article_id={{article_id}}",
-                "linkAsTemplate": "/article/{{article_id}}"
+                "url": "/article?article_id={{article_id}}",
+                "linkAs": "/article/{{article_id}}"
             },
             "secondaryLabel": {
                 "en": "Ignore"

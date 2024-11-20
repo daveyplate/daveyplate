@@ -32,7 +32,6 @@ import {
 
 import {
     HomeIcon,
-    ChevronDownIcon,
     ArrowRightEndOnRectangleIcon as LogInIcon,
     ArrowLeftStartOnRectangleIcon as LogOutIcon,
     UserIcon,
@@ -46,11 +45,12 @@ import {
     NewspaperIcon
 } from '@heroicons/react/24/solid'
 
-import { Link, useLocaleRouter, usePathname } from "@/i18n/routing"
+import { getPathname, Link, useLocaleRouter, usePathname } from "@/i18n/routing"
 
 import ThemeDropdown from "@/components/theme-dropdown"
 import UserAvatar from "@/components/user-avatar"
 import NotificationsPopover from "./notifications/notifications-popover"
+import { useLocale } from "next-intl"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -65,13 +65,14 @@ const logo = (
 )
 
 export default function Header({ canGoBack }) {
+    const locale = useLocale()
     const { pageTitle } = usePageTitle()
     const router = useRouter()
     const localeRouter = useLocaleRouter()
     const pathname = usePathname()
     const { autoTranslate } = useAutoTranslate("header")
     const { session, isLoading: sessionLoading } = useSessionContext()
-    const { entity: user, isLoading: userLoading, error: userError } = useEntity(session ? 'profiles' : null, 'me')
+    const { entity: user, isLoading: userLoading, error: userError } = useEntity(session ? 'profiles' : null, 'me', { lang: locale })
 
     const [isConnected, setIsConnected] = useState(true)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -208,11 +209,12 @@ export default function Header({ canGoBack }) {
 
                                 {user?.id &&
                                     <DropdownItem
-                                        as={Link}
-                                        href={`/user?user_id=${user.id}`}
-                                        linkAs={`/user/${user.id}`}
                                         startContent={<UserIcon className="size-5" />}
-                                        onPress={(e) => { console.log("onPress") }}
+                                        onPress={() => {
+                                            const url = getPathname({ href: `/user?user_id=${user.id}`, locale })
+                                            const urlAs = getPathname({ href: `/user/${user.id}`, locale })
+                                            router.push(url, urlAs)
+                                        }}
                                     >
                                         {autoTranslate('view_profile', 'View Profile')}
                                     </DropdownItem>
@@ -220,7 +222,6 @@ export default function Header({ canGoBack }) {
 
                                 {user &&
                                     <DropdownItem
-                                        as={Link}
                                         href={"/edit-profile"}
                                         startContent={<PencilIcon className="size-4 mx-0.5" />}
                                     >
@@ -230,7 +231,6 @@ export default function Header({ canGoBack }) {
 
                                 {!session &&
                                     <DropdownItem
-                                        as={Link}
                                         href={"/login"}
                                         startContent={<LogInIcon className="size-5" />}
                                     >
@@ -240,7 +240,6 @@ export default function Header({ canGoBack }) {
 
                                 {!session &&
                                     <DropdownItem
-                                        as={Link}
                                         href={"/signup"}
                                         startContent={<UserPlusIcon className="size-5" />}
                                     >
@@ -249,7 +248,6 @@ export default function Header({ canGoBack }) {
                                 }
 
                                 <DropdownItem
-                                    as={Link}
                                     href={"/settings"}
                                     startContent={<CogIcon className="size-5" />}
                                 >
@@ -258,7 +256,6 @@ export default function Header({ canGoBack }) {
 
                                 {session &&
                                     <DropdownItem
-                                        as={Link}
                                         href={"/logout"}
                                         color="danger"
                                         startContent={<LogOutIcon className="size-5" />}

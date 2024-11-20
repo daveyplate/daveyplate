@@ -69,7 +69,7 @@ export default function Providers({ children, ...pageProps }) {
                         toast(error.message, { color: "danger" })
                     }
                 }}>
-                    <NextUIProvider locale={nextUILocale}>
+                    <NextUIProvider locale={nextUILocale} navigate={localeRouter.push}>
                         <ThemeProvider attribute="class" disableTransitionOnChange>
                             <AutoTranslateProvider
                                 pathname={pathname}

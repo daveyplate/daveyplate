@@ -1,6 +1,6 @@
 import { BellIcon } from "@heroicons/react/24/solid"
 import { Popover, PopoverTrigger, PopoverContent, Button, Badge } from "@nextui-org/react"
-import { useEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useEntities, useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { useSession } from "@supabase/auth-helpers-react"
 import NotificationsContainer from "./notifications-card"
 import { useLocale } from "next-intl"
@@ -11,6 +11,7 @@ export default function NotificationsPopover() {
     const locale = useLocale()
     const { entities: notifications } = useEntities(session && "notifications", { lang: locale })
     const unreadNotifications = notifications?.filter((notification) => !notification.is_read)
+    const { entity: metadata } = useEntity(session && "metadata", "me")
     const [isOpen, setIsOpen] = useState(false)
 
     return (
@@ -32,7 +33,7 @@ export default function NotificationsPopover() {
                     <Badge
                         color="danger"
                         content={unreadNotifications?.length}
-                        isInvisible={!unreadNotifications?.length}
+                        isInvisible={!unreadNotifications?.length || !metadata?.notifications_badge_enabled}
                         showOutline={false}
                     >
                         <BellIcon className="size-7" />
