@@ -94,7 +94,7 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
                             <NotificationItem key={notification.id} notification={notification} setIsOpen={setIsOpen} />
                         ))
                     ) : (
-                        <div className="flex flex-col items-center justify-center grow gap-2">
+                        <div className="flex flex-col items-center justify-center h-full gap-2">
                             <BellSlashIcon className="text-default-400 size-16" />
 
                             <p className="text-base text-default-400">
