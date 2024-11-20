@@ -8,7 +8,7 @@ import { EllipsisHorizontalIcon, ExclamationTriangleIcon, ShareIcon } from '@her
 
 import { toast } from '@/components/providers/toast-provider'
 
-const OptionsDropdown = () => {
+const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
     const { autoTranslate } = useAutoTranslate()
     const linkCopiedText = autoTranslate('link_copied', 'Link copied to clipboard')
     const router = useRouter()
@@ -47,10 +47,13 @@ const OptionsDropdown = () => {
             <DropdownTrigger>
                 <Button
                     isIconOnly
-                    variant="light"
+                    variant={variant}
                     aria-label="More options"
                     disableRipple
                     radius="full"
+                    className={className}
+                    isDisabled={isDisabled}
+                    size="sm"
                 >
                     <EllipsisHorizontalIcon className="size-7" />
                 </Button>

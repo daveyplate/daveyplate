@@ -14,8 +14,9 @@ import {
     Button,
     Card,
     CardBody,
+    CardHeader,
+    Chip,
     cn,
-    Divider,
     Skeleton
 } from "@nextui-org/react"
 
@@ -30,6 +31,7 @@ import UploadAvatarModal from "@/components/upload-avatar-modal"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
 import { getLocalePaths } from "@/i18n/locale-paths"
+import { Link } from "@/i18n/routing"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -49,6 +51,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const isMe = session && userId == session.user.id
     const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
 
+
     useEffect(() => {
         if (userId && !userLoading && !user) {
             router.replace('/404')
@@ -67,83 +70,112 @@ export default function UserPage({ user_id, user: fallbackData }) {
             />
 
             <Card fullWidth>
-                <CardBody className="p-4">
+                <CardHeader
+                    className="flex h-[100px] flex-col justify-end bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400"
+                >
+                    <OptionsDropdown
+                        className={cn(!isMe ? "opacity-100" : "opacity-0",
+                            "absolute right-3 top-3 transition-all text-white bg-background/20"
+                        )}
+                        variant="light"
+                        isDisabled={isMe}
+                    />
+
+                    <Button
+                        as={Link}
+                        href="/edit-profile"
+                        className={cn(isMe ? "opacity-100 " : "opacity-0",
+                            "absolute right-3 top-3 bg-background/20"
+                        )}
+                        radius="full"
+                        variant="light"
+                        startContent={<PencilIcon className="size-3.5" />}
+                        isDisabled={!isMe}
+                    >
+                        <AutoTranslate tKey="edit_profile">
+                            Edit Profile
+                        </AutoTranslate>
+                    </Button>
+
+
+                </CardHeader>
+
+                <CardBody className="px-4 pt-9 overflow-visible">
                     <DragDropzone
                         size="lg"
                         label={autoTranslate("upload_avatar", "Upload Avatar")}
                         openRef={uploadRef}
                         onFiles={(files) => setAvatarFile(files[0])}
                         onError={(error) => toast(error.message, { color: 'danger' })}
-                        className="gap-4 flex flex-col"
+                        className="flex flex-col"
                     >
-                        <div className="flex gap-4 items-center">
-                            <Skeleton isLoaded={!!user} className="rounded-full -mb-1">
-                                <Badge
-                                    isOneChar
+                        <Skeleton isLoaded={!!user} className="rounded-full -mt-20 -mb-1 mx-auto z-10">
+                            <Badge
+                                as={Button}
+                                isOneChar
+                                content={
+                                    <PencilIcon className="size-2.5" />
+                                }
+                                placement="bottom-right"
+                                shape="circle"
+                                variant="faded"
+                                size="lg"
+                                className="bg-background"
+                                isInvisible={!isMe}
+                                onPress={() => uploadRef.current()}
+                            >
+                                <UserAvatar
                                     as={Button}
-                                    className={!isMe ? "hidden" : "!size-7"}
+                                    isIconOnly
+                                    className="h-20 w-20"
                                     size="lg"
-                                    onPress={() => uploadRef.current()}
-                                    shape="circle"
-                                    placement="bottom-right"
-                                    content={
-                                        <PencilIcon className="size-3" />
-                                    }
-                                >
-                                    <UserAvatar
-                                        as={Button}
-                                        isIconOnly
-                                        disabled={!user?.avatar_url && !isMe}
-                                        user={user}
-                                        size="lg"
-                                        className="!size-20 text-3xl"
-                                        onPress={() => isMe ? uploadRef.current() : setLightboxOpen(true)}
-                                    />
-                                </Badge>
+                                    user={user}
+                                    onPress={() => setLightboxOpen(true)}
+                                />
+                            </Badge>
+                        </Skeleton>
+
+                        <h5>
+                            <Skeleton isLoaded={!!user} className="rounded-full size-fit h-6 my-0.5 min-w-32">
+                                {user && (user?.full_name || "Unnamed")}
                             </Skeleton>
+                        </h5>
 
-                            <div className="flex flex-col gap-1 items-start">
-                                <Skeleton isLoaded={!!user} className="rounded-xl">
-                                    <p className="font-semibold">
-                                        {user?.full_name || "Unnamed"}
-                                    </p>
-                                </Skeleton>
+                        <Skeleton isLoaded={!!user} className="rounded-full size-fit h-6 my-0.5">
+                            <p className="text-default-400">
+                                <AutoTranslate tKey="subscription">
+                                    Subscription:
+                                </AutoTranslate>
 
-                                <Skeleton isLoaded={!!user} className="rounded-xl">
-                                    <p className="text-foreground-400 text-small">
-                                        <AutoTranslate tKey="subscription">
-                                            Subscription:
+                                <span className={cn('ml-1.5', user?.claims?.premium ? "text-success" : "text-foreground")}>
+                                    {user?.claims?.premium ?
+                                        <AutoTranslate tKey="active">
+                                            Active
                                         </AutoTranslate>
+                                        :
+                                        <AutoTranslate tKey="inactive">
+                                            Inactive
+                                        </AutoTranslate>
+                                    }
+                                </span>
+                            </p>
+                        </Skeleton>
 
-                                        <span className={cn('ml-1.5', user?.claims?.premium ? "text-success font-semibold" : "text-foreground font-light")}>
-                                            {user?.claims?.premium ?
-                                                <AutoTranslate tKey="active">
-                                                    Active
-                                                </AutoTranslate>
-                                                :
-                                                <AutoTranslate tKey="inactive">
-                                                    Inactive
-                                                </AutoTranslate>
-                                            }
-                                        </span>
-                                    </p>
-                                </Skeleton>
-                            </div>
 
-                            <div className="self-start ms-auto -mt-2 -me-1.5">
-                                <OptionsDropdown />
-                            </div>
+                        <div className="flex gap-2 pb-1 pt-2 hidden">
+                            <Chip variant="flat" size="lg"></Chip>
                         </div>
 
-                        {localizedBio && (
-                            <>
-                                <Divider />
-
-                                <p className="text-foreground/90">
+                        <Skeleton
+                            isLoaded={!!user}
+                            className={cn("rounded-full size-fit my-0.5 min-w-64", (!user || localizedBio) && "h-6 mt-2.5")}
+                        >
+                            {localizedBio && (
+                                <p>
                                     {localizedBio}
                                 </p>
-                            </>
-                        )}
+                            )}
+                        </Skeleton>
                     </DragDropzone>
                 </CardBody>
             </Card>
