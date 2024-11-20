@@ -96,8 +96,6 @@ export default function UserPage({ user_id, user: fallbackData }) {
                             Edit Profile
                         </AutoTranslate>
                     </Button>
-
-
                 </CardHeader>
 
                 <CardBody className="px-4 pt-9 overflow-visible">
@@ -168,7 +166,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
                         <Skeleton
                             isLoaded={!!user}
-                            className={cn("rounded-full size-fit my-0.5 min-w-64", (!user || localizedBio) && "h-6 mt-2.5")}
+                            className={cn("rounded-full size-fit my-0.5 min-w-64", (!user || localizedBio) && "min-h-6 mt-2.5")}
                         >
                             {localizedBio && (
                                 <p>
