@@ -1,10 +1,10 @@
-import { BellIcon } from "@heroicons/react/24/solid";
+import { BellIcon } from "@heroicons/react/24/solid"
 import { Popover, PopoverTrigger, PopoverContent, Button, Badge } from "@nextui-org/react"
-import { useEntities } from "@daveyplate/supabase-swr-entities/client";
-import { useSession } from "@supabase/auth-helpers-react";
-import NotificationsContainer from "./notifications-card";
-import { useLocale } from "next-intl";
-import { useState } from "react";
+import { useEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useSession } from "@supabase/auth-helpers-react"
+import NotificationsContainer from "./notifications-card"
+import { useLocale } from "next-intl"
+import { useState } from "react"
 
 export default function NotificationsPopover() {
     const session = useSession()

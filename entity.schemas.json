@@ -16,14 +16,14 @@
         "table": "peers",
         "select": [
             "*",
-            "user:user_id!inner(id, full_name, avatar_url)"
+            "user:user_id(*)"
         ]
     },
     {
         "table": "messages",
         "select": [
             "*",
-            "user:user_id!inner(id, full_name, avatar_url)",
+            "user:user_id!inner(*)",
             "likes:message_likes(user_id, user:profiles(id, full_name, avatar_url))"
         ],
         "localizedColumns": [
@@ -69,8 +69,8 @@
         ],
         "select": [
             "*",
-            "user:user_id!inner(id, full_name, avatar_url)",
-            "recipient:recipient_id!inner(id, full_name, avatar_url)"
+            "user:user_id!inner(*)",
+            "recipient:recipient_id!inner(*)"
         ],
         "requiredParams": {
             "user.deactivated": false,
@@ -82,7 +82,7 @@
         "table": "articles",
         "select": [
             "*",
-            "user:user_id!inner(id, full_name, avatar_url)"
+            "user:user_id!inner(*)"
         ],
         "localizedColumns": [
             "title",
@@ -96,7 +96,7 @@
         "table": "article_comments",
         "select": [
             "*",
-            "user:user_id!inner(id, full_name, avatar_url)"
+            "user:user_id!inner(*)"
         ],
         "localizedColumns": [
             "content"
@@ -115,7 +115,7 @@
         ],
         "select": [
             "*",
-            "sender:sender_id(id, full_name, avatar_url)"
+            "sender:sender_id(*)"
         ],
         "localizedColumns": [
             "content",

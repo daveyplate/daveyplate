@@ -21,7 +21,7 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
     const session = useSession()
     const { entity: user } = useEntity(session && 'profiles', 'me')
     const articleId = article_id || router.query.article_id
-    const { entity: article } = useEntity(articleId && 'articles', article_id, { lang: locale }, { fallbackData })
+    const { entity: article } = useEntity(articleId && 'articles', articleId, { lang: locale }, { fallbackData })
     const {
         entities: comments,
         createEntity: createComment,

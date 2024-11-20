@@ -14,7 +14,6 @@ import NotificationItem from "./notification-item"
 import { BellSlashIcon, Cog6ToothIcon, TrashIcon } from "@heroicons/react/24/solid"
 import { useState } from "react"
 import { Link } from "@/i18n/routing"
-import SwipeToDelete from "react-swipe-to-delete-ios"
 
 export default function NotificationsCard({ notifications, setIsOpen, ...props }) {
     const [activeTab, setActiveTab] = useState("all")
