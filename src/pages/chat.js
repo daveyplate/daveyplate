@@ -142,7 +142,7 @@ export default function Chat() {
     useEffect(() => {
         if (shouldScrollDown) {
             const scrollDistane = document.scrollingElement.scrollHeight - document.scrollingElement.scrollTop
-            window.scrollTo({ top: document.scrollingElement.scrollHeight, behavior: scrollDistane < 1024 ? "smooth" : "auto" })
+            window.scrollTo({ top: document.scrollingElement.scrollHeight, behavior: scrollDistane < 1024 ? "auto" : "auto" })
             size > 1 && setSize(1)
             whispersSize > 1 && setWhispersSize(1)
         } else if (prevScrollHeight.current && !messagesValidating && !whispersValidating) {
@@ -164,11 +164,11 @@ export default function Chat() {
                 content: { [locale]: content }
             }
 
-            createWhisper(newWhisper, { user, recipient: whisperUser }).then(() => sendWhisperData({ event: "create_entity", data: newWhisper }))
+            createWhisper(newWhisper, { user, recipient: whisperUser, user_id: user.id }).then(() => sendWhisperData({ event: "create_entity", data: newWhisper }))
         } else {
             const newMessage = { content: { [locale]: content } }
 
-            createMessage(newMessage, { user })
+            createMessage(newMessage, { user, user_id: user.id })
         }
 
         setContent('')

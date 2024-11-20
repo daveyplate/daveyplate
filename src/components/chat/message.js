@@ -73,7 +73,7 @@ export default memo(({
             const distanceToBottom = document.body.scrollHeight - window.scrollY - window.innerHeight
 
             if (distanceToBottom < 200) {
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' })
             }
         }
     }, [isEditing])
