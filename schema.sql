@@ -2,6 +2,23 @@
 create extension if not exists moddatetime schema extensions;
 CREATE EXTENSION IF NOT EXISTS pg_cron;
 
+/*
+CREATE OR REPLACE FUNCTION increment(table_name TEXT, row_id INT, x INT, field_name TEXT) 
+RETURNS INT AS
+$func$
+DECLARE
+  updated_value INT;
+BEGIN
+  EXECUTE format('UPDATE %I SET %I = %I + $1 WHERE id = $2 RETURNING %I', 
+         table_name, field_name, field_name, field_name)
+  INTO updated_value
+  USING x, row_id;
+
+  RETURN updated_value;
+END
+$func$ LANGUAGE plpgsql;
+*/
+
 -- Profiles table
 create table public.profiles (
   id uuid not null references auth.users on delete cascade,

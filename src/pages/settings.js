@@ -13,11 +13,13 @@ import {
     cn,
     Input,
     Spinner,
+    Switch,
 } from "@nextui-org/react"
 
 import {
     ArrowLeftStartOnRectangleIcon,
     ArrowRightEndOnRectangleIcon,
+    BellIcon,
     CheckIcon,
     EnvelopeIcon,
     EyeIcon,
@@ -48,6 +50,7 @@ export default function Settings() {
     const { postAPI } = useAPI()
 
     const { entity: user, updateEntity: updateUser, deleteEntity: deleteUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
+    const { entity: metadata, updateEntity: updateMetadata } = useEntity(session ? 'metadata' : null, 'me', null, { revalidateOnFocus: false })
     const [confirm, setConfirm] = useState(null)
 
     const [email, setEmail] = useState('')
@@ -190,6 +193,71 @@ export default function Settings() {
                 "flex-center max-w-lg transition-all"
             )}
         >
+            {/* Notifcation Settings */}
+            {session && (
+
+                <Card fullWidth>
+                    <CardBody className="gap-4 p-4 items-start">
+                        <div className="flex gap-2 items-center -my-1">
+                            <BellIcon className="size-5 text-primary" />
+
+                            <AutoTranslate tKey="notification_settings">
+                                Notifications
+                            </AutoTranslate>
+                        </div>
+
+                        <Switch
+                            size="lg"
+                            isSelected={metadata?.notifications_enabled}
+                            onValueChange={(value) => updateMetadata({ notifications_enabled: value })}
+                            classNames={{ label: "text-base" }}
+                            isDisabled={!metadata}
+                        >
+                            <AutoTranslate tKey="enable_notifications">
+                                Enable Notifications
+                            </AutoTranslate>
+                        </Switch>
+
+                        <Switch
+                            size="lg"
+                            isSelected={metadata?.notifications_badge_enabled}
+                            onValueChange={(value) => updateMetadata({ notifications_badge_enabled: value })}
+                            classNames={{ label: "text-base" }}
+                            isDisabled={!metadata}
+                        >
+                            <AutoTranslate tKey="enable_notifications">
+                                Notifications Badge
+                            </AutoTranslate>
+                        </Switch>
+                    </CardBody>
+                </Card>
+            )}
+
+            {/* Theme & Language */}
+            <Card fullWidth>
+                <CardBody className="gap-4 p-4 items-start">
+                    <div className="flex gap-2 items-center -mt-1.5 -mb-2">
+                        <EyeIcon className="size-4 text-primary" />
+
+                        <AutoTranslate tKey="theme">
+                            Theme
+                        </AutoTranslate>
+                    </div>
+
+                    <ThemeDropdown size="lg" />
+
+                    <div className="flex gap-2 items-center -mt-1 -mb-2">
+                        <LanguageIcon className="size-4 text-primary" />
+
+                        <AutoTranslate tKey="language">
+                            Language
+                        </AutoTranslate>
+                    </div>
+
+                    <LocaleDropdown size="lg" />
+                </CardBody>
+            </Card>
+
             {/* Change Email */}
             {session && (
                 <>
@@ -324,30 +392,6 @@ export default function Settings() {
                     </Card>
                 </>
             )}
-
-            <Card fullWidth>
-                <CardBody className="gap-4 p-4 items-start">
-                    <div className="flex gap-2 items-center -mt-1.5 -mb-2">
-                        <EyeIcon className="size-4 text-primary" />
-
-                        <AutoTranslate tKey="theme">
-                            Theme
-                        </AutoTranslate>
-                    </div>
-
-                    <ThemeDropdown size="lg" />
-
-                    <div className="flex gap-2 items-center -mt-1 -mb-2">
-                        <LanguageIcon className="size-4 text-primary" />
-
-                        <AutoTranslate tKey="language">
-                            Language
-                        </AutoTranslate>
-                    </div>
-
-                    <LocaleDropdown size="lg" />
-                </CardBody>
-            </Card>
 
             {/* Account Management */}
             <Card fullWidth>

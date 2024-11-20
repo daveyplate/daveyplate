@@ -13,6 +13,17 @@
         "disableList": false
     },
     {
+        "table": "metadata",
+        "usersSchema": true,
+        "select": [
+            "*"
+        ],
+        "authMethods": [
+            "*"
+        ],
+        "hasDeactivated": false
+    },
+    {
         "table": "peers",
         "select": [
             "*",
