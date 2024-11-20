@@ -132,31 +132,33 @@ export default function EditProfile() {
                         </div>
 
                         <div className="flex items-center gap-4 mb-1">
-                            <Badge
-                                isOneChar
-                                as={Button}
-                                size="lg"
-                                onPress={() => uploadRef.current()}
-                                shape="circle"
-                                placement="bottom-right"
-                                content={
-                                    <PencilIcon className="size-2.5" />
-                                }
-                            >
-                                <Skeleton isLoaded={!!user} className="rounded-full">
+                            <Skeleton isLoaded={!!user} className="rounded-full">
+                                <Badge
+                                    as={Button}
+                                    isOneChar
+                                    content={
+                                        <PencilIcon className="size-2.5" />
+                                    }
+                                    placement="bottom-right"
+                                    shape="circle"
+                                    variant="faded"
+                                    className="bg-background"
+                                    onPress={() => uploadRef.current()}
+                                    size="lg"
+                                >
                                     <UserAvatar
                                         as={Button}
                                         isIconOnly
-                                        onPress={() => uploadRef.current()}
-                                        user={user}
                                         size="lg"
+                                        user={user}
+                                        onPress={() => setLightboxOpen(true)}
+                                        className="w-16 h-16"
                                     />
-                                </Skeleton>
-                            </Badge>
+                                </Badge>
+                            </Skeleton>
 
                             <Button
                                 size="lg"
-                                className="mt-1 ms-1"
                                 color="primary"
                                 startContent={
                                     <CloudArrowUpIcon className="size-6 -ms-1" />
@@ -171,7 +173,6 @@ export default function EditProfile() {
 
                             <Button
                                 isIconOnly
-                                className="mt-1"
                                 size="lg"
                                 color="danger"
                                 onPress={() => setConfirm({
