@@ -161,14 +161,15 @@ export default function Chat() {
         if (whisperUser) {
             const newWhisper = {
                 recipient_id: whisperUser.id,
-                content: { [locale]: content }
+                content: { [locale]: content },
+                user_id: user.id,
             }
 
-            createWhisper(newWhisper, { user, recipient: whisperUser, user_id: user.id }).then(() => sendWhisperData({ event: "create_entity", data: newWhisper }))
+            createWhisper(newWhisper, { user, recipient: whisperUser }).then(() => sendWhisperData({ event: "create_entity", data: newWhisper }))
         } else {
-            const newMessage = { content: { [locale]: content } }
+            const newMessage = { content: { [locale]: content }, user_id: user.id }
 
-            createMessage(newMessage, { user, user_id: user.id })
+            createMessage(newMessage, { user })
         }
 
         setContent('')
