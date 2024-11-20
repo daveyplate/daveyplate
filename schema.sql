@@ -53,6 +53,7 @@ create policy none_shall_pass on public.metadata
     using (false);
 
 -- inserts a row into public.profiles
+drop function if exists public.handle_new_user () CASCADE;
 create function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -78,7 +79,7 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
--- Notifcations table
+-- Notifications table
 create table
   public.notifications (
     id uuid not null default gen_random_uuid (),
@@ -136,6 +137,7 @@ create policy none_shall_pass on public.messages
     for select
     using (false);
 
+-- Message Likes table
 create table
   public.message_likes (
     id uuid not null default gen_random_uuid (),
@@ -188,6 +190,7 @@ SELECT cron.schedule(
  $$
 );
 
+-- Whispers table
 create table
   public.whispers (
     id uuid not null default gen_random_uuid (),
@@ -212,6 +215,7 @@ create policy none_shall_pass on public.whispers
     for select
     using (false);
 
+-- Articles table
 create table
   public.articles (
     id uuid not null default gen_random_uuid (),
@@ -242,6 +246,7 @@ create policy none_shall_pass on public.articles
     for select
     using (false);
 
+-- Article Comments table
 create table
   public.article_comments (
     id uuid not null default gen_random_uuid (),
@@ -259,7 +264,6 @@ create table
 create trigger handle_updated_at before
 update on article_comments for each row
 execute function extensions.moddatetime ('updated_at');
-
 
 alter table public.article_comments enable row level security;
 
