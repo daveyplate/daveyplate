@@ -91,18 +91,7 @@ export default memo(({
         >
             <Dropdown>
                 <DropdownTrigger>
-                    <div className="mb-auto cursor-pointer">
-                        <Badge
-                            isOneChar
-                            isInvisible={!isOutgoing && (!isOnline || !isOnline(message.user_id))}
-                            color="success"
-                            shape="circle"
-                            placement="bottom-right"
-                            size="sm"
-                        >
-                            <UserAvatar user={message.user} />
-                        </Badge>
-                    </div>
+                    <UserAvatar as={Button} isIconOnly user={message.user} />
                 </DropdownTrigger>
 
                 <DropdownMenu itemClasses={{ title: "!text-base", base: "gap-3 px-3" }}>
@@ -176,7 +165,7 @@ export default memo(({
                 <>
                     <Card className={cn("max-w-[70%]",
                         isWhisper ? "bg-secondary text-secondary-foreground" :
-                            isOutgoing && "bg-primary text-primary-foreground"
+                            isOutgoing ? "bg-primary text-primary-foreground" : "bg-content2 text-default-foreground"
                     )}>
                         <CardBody className="px-4 py-3 gap-2">
                             <div className="flex gap-4 items-center">
