@@ -43,8 +43,8 @@ const MyApp = ({ Component, pageProps }) => {
                     }
                 `}</style>
 
-                <div className={cn(
-                    "relative flex min-h-dvh w-full flex-col bg-gradient-to-br from-background via-primary-50 to-secondary-50"
+                <div className={cn(router.pathname == "/" && "bg-gradient-to-br from-background via-primary-50 to-secondary-50",
+                    "relative flex min-h-dvh w-full flex-col"
                 )}>
                     <NewHeader {...pageProps} />
                     <Component {...pageProps} />
