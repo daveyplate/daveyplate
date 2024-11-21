@@ -31,7 +31,7 @@ export default function ToastProvider() {
                     warning: "!bg-warning-50 !text-warning-700",
                     info: "!bg-primary-50 !text-primary-700",
                 },
-                className: "justify-center rounded-large !mb-safe"
+                className: "justify-center rounded-large !my-safe"
             }}
             position="bottom-center"
         />
