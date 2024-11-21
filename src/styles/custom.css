@@ -31,11 +31,7 @@ h5 {
 h6 {
     @apply text-base font-semibold;
 }
-
-html {
-  overscroll-behavior: auto;
-}
-  */
+*/
 
 .flex-container {
     @apply flex flex-col p-4 gap-4 grow items-start w-full;

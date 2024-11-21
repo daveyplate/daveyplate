@@ -35,27 +35,27 @@ export default function NewHeader() {
     return (
         <Navbar
             classNames={{
-                base: "sm:py-2 bg-transparent",
+                base: "md:py-2 bg-transparent",
                 item: "data-[active=true]:text-primary",
-                wrapper: "px-4 sm:px-6",
+                wrapper: "ps-4 pe-2 md:ps-6 md:pe-6",
             }}
             height="60px"
             position="sticky"
         >
             <NavbarBrand>
-                <NavbarMenuToggle className="ms-1 me-4 h-6 sm:hidden" />
+                <NavbarMenuToggle className="ms-1 me-3.5 h-6 md:hidden" />
 
                 <Link href="/" className="text-foreground">
                     <Logo />
 
-                    <p className="ms-3 font-bold text-inherit">
+                    <p className="ms-2.5 font-bold text-inherit">
                         {siteName}
                     </p>
                 </Link>
             </NavbarBrand>
 
             <NavbarContent
-                className="ml-4 hidden h-12 w-full max-w-fit gap-4 rounded-full bg-content2 px-4 dark:bg-content1 sm:flex"
+                className="ml-4 hidden h-12 w-full max-w-fit gap-4 rounded-full bg-content2 px-4 dark:bg-content1 md:flex"
                 justify="end"
             >
                 <NavbarItem>
@@ -90,7 +90,7 @@ export default function NewHeader() {
             </NavbarContent>
 
             <NavbarContent
-                className="ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 lg:bg-content2 lg:px-1 lg:dark:bg-content1"
+                className="ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 md:bg-content2 md:px-1 md:dark:bg-content1"
                 justify="end"
             >
                 <NavbarItem className="hidden">
@@ -99,13 +99,13 @@ export default function NewHeader() {
                     </Button>
                 </NavbarItem>
 
-                <NavbarItem className="hidden sm:flex">
+                <NavbarItem className="hidden md:flex">
                     <Button isIconOnly radius="full" variant="light">
                         <SunIcon className="text-default-500 size-6" />
                     </Button>
                 </NavbarItem>
 
-                <NavbarItem className="hidden sm:flex">
+                <NavbarItem className="hidden md:flex">
                     <Button
                         as={Link}
                         href="/settings"
@@ -133,7 +133,7 @@ export default function NewHeader() {
                             </Button>
                         </PopoverTrigger>
 
-                        <PopoverContent className="max-w-[90vw] p-0 sm:max-w-[380px]">
+                        <PopoverContent className="max-w-[90vw] p-0 md:max-w-[380px]">
                             <NotificationsCard className="w-full shadow-none" />
                         </PopoverContent>
                     </Popover>

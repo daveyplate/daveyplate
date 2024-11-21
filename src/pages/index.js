@@ -1,42 +1,44 @@
-import React from "react";
-import { Button } from "@nextui-org/react";
-import { Icon } from "@iconify/react";
-import Image from "next/image";
-import NewFooter from "@/components/new-footer";
+import { toast } from "sonner"
+import { Button } from "@nextui-org/react"
+import { ArrowRightIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 
-// import FadeInImage from "./fade-in-image";
+import NewFooter from "@/components/new-footer"
 
 export default function IndexPage() {
     return (
         <>
-            <main className="container mx-auto flex flex-1 flex-col items-center justify-center overflow-hidden px-8">
-                <section className="z-20 flex flex-col items-center justify-center gap-[18px] sm:gap-6">
-                    <div className="text-center text-[clamp(40px,10vw,44px)] font-bold leading-[1.2] tracking-tight sm:text-[64px]">
+            <main className="container mx-auto flex flex-col grow items-center justify-center px-8 py-4">
+                <section className="flex flex-col items-center justify-center gap-5 md:gap-6">
+                    <div className="text-center font-bold leading-[1.2] tracking-tight text-5xl md:text-6xl">
                         <div className="bg-gradient-to-r from-foreground to-foreground-400 bg-clip-text text-transparent">
                             Welcome to <br /> Daveyplate.
                         </div>
                     </div>
 
-                    <p className="text-center font-normal leading-7 text-default-500 sm:w-[466px] sm:text-[18px]">
-                        Daveyplate is a boilerplate project with a full-featured user management system built with Next.js, NextUI, and Supabase, deployed on Vercel.
+                    <p className="text-center leading-7 text-default-500 max-w-sm">
+                        Daveyplate is a boilerplate project with a full-featured user management system - built with Next.js, NextUI, and Supabase.
                     </p>
 
-                    <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+                    <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
                         <Button
-                            className="h-10 w-[163px] bg-default-foreground px-[16px] py-[10px] text-small font-medium leading-5 text-background"
+                            className="bg-default-foreground px-6 text-background"
                             radius="full"
+                            startContent={
+                                <ExclamationTriangleIcon className="size-5" />
+                            }
+                            onPress={() => {
+                                toast.info("Have a slice!")
+                            }}
                         >
-                            Get Started
+                            Show Toast
                         </Button>
 
                         <Button
-                            className="h-10 w-[163px] border-1 border-default-100 px-[16px] py-[10px] text-small font-medium leading-5"
+                            className="border-1 border-default-100 px-6 hidden"
                             endContent={
-                                <span className="pointer-events-none flex h-[22px] w-[22px] items-center justify-center rounded-full bg-default-100">
-                                    <Icon
-                                        className="text-default-500 [&>path]:stroke-[1.5]"
-                                        icon="solar:arrow-right-linear"
-                                        width={16}
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-default-100">
+                                    <ArrowRightIcon
+                                        className="text-default-500 size-3.5"
                                     />
                                 </span>
                             }
