@@ -140,7 +140,7 @@
             },
             "imageUrlColumn": "article.thumbnail_url",
             "url": "/article?article_id={{article_id}}",
-            "linkAs": "/article/{{article_id}}",
+            "urlAs": "/article/{{article_id}}",
             "primaryLabel": {
                 "en": "View Article"
             },
@@ -148,7 +148,7 @@
                 "color": "primary",
                 "action": "navigate",
                 "url": "/article?article_id={{article_id}}",
-                "linkAs": "/article/{{article_id}}"
+                "urlAs": "/article/{{article_id}}"
             },
             "secondaryLabel": {
                 "en": "Ignore"

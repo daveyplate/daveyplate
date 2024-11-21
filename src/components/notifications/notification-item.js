@@ -15,9 +15,10 @@ import { toast } from "sonner"
 const NotificationItem = forwardRef(
     ({
         notification: {
+            id: notification_id,
             avatar_url,
             url,
-            link_as,
+            url_as,
             content,
             created_at,
             is_read,
@@ -26,6 +27,8 @@ const NotificationItem = forwardRef(
         setIsOpen,
         className,
         disableSwipe,
+        updateNotification,
+        deleteNotification,
         ...props
     }, ref) => {
         const router = useRouter()
@@ -33,7 +36,7 @@ const NotificationItem = forwardRef(
         const localizedContent = getLocaleValue(content, locale)
         const contentParts = localizedContent.split('{sender}')
         const localeUrl = getPathname({ href: url, locale })
-        const localeLinkAs = link_as && getPathname({ href: link_as, locale })
+        const localeLinkAs = url_as && getPathname({ href: url_as, locale })
         const pointer = useRef({ x: 0, y: 0 })
 
         const onMouseDown = useCallback((e) => {
@@ -45,9 +48,15 @@ const NotificationItem = forwardRef(
             if (Math.abs(e.clientX - x) > 10 || Math.abs(e.clientY - y) > 10) return
 
             router.push(localeUrl, localeLinkAs)
-            setIsOpen && setIsOpen(false)
-            toast.dismiss()
+            notificationPressed()
         }, [router, localeUrl, localeLinkAs])
+
+        const notificationPressed = useCallback(() => {
+            toast.dismiss()
+            setIsOpen && setIsOpen(false)
+
+            !is_read && updateNotification(notification_id, { is_read: true })
+        }, [updateNotification, setIsOpen])
 
         /**
          * Defines the content for different types of notifications.
@@ -70,7 +79,7 @@ const NotificationItem = forwardRef(
             <SwipeToDelete
                 ref={ref}
                 className={cn(disableSwipe ? "!bg-transparent" : "!bg-danger")}
-                onDelete={() => console.log("Deleted")}
+                onDelete={() => deleteNotification(notification_id)}
                 height="fit"
                 deleteColor="transparent"
                 deleteComponent={
@@ -89,7 +98,7 @@ const NotificationItem = forwardRef(
                 >
                     <Link
                         href={sender ? `/user?user_id=${sender.id}` : url}
-                        as={sender ? `/user/${sender.id}` : link_as}
+                        as={sender ? `/user/${sender.id}` : url_as}
                         legacyBehavior
                     >
                         <Button
@@ -97,10 +106,7 @@ const NotificationItem = forwardRef(
                             disableRipple
                             isIconOnly
                             radius="full"
-                            onPress={() => {
-                                setIsOpen && setIsOpen(false)
-                                toast.dismiss()
-                            }}
+                            onPress={notificationPressed}
                         >
                             <Badge
                                 color="primary"
@@ -133,10 +139,7 @@ const NotificationItem = forwardRef(
                                     >
                                         <NextUILink
                                             className="font-semibold text-foreground"
-                                            onPress={() => {
-                                                setIsOpen && setIsOpen(false)
-                                                toast.dismiss()
-                                            }}
+                                            onPress={notificationPressed}
                                         >
                                             {sender.full_name}
                                         </NextUILink>
@@ -160,6 +163,10 @@ const NotificationItem = forwardRef(
                         radius="full"
                         disableRipple
                         isIconOnly
+                        onPress={() => {
+                            console.log("delete")
+                            deleteNotification(notification_id)
+                        }}
                     >
                         <TrashIcon className="size-5" />
                     </Button>

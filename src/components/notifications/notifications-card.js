@@ -15,7 +15,7 @@ import { BellSlashIcon, Cog6ToothIcon, TrashIcon } from "@heroicons/react/24/sol
 import { useState } from "react"
 import { Link } from "@/i18n/routing"
 
-export default function NotificationsCard({ notifications, setIsOpen, ...props }) {
+export default function NotificationsCard({ notifications, setIsOpen, updateNotification, deleteNotification, ...props }) {
     const [activeTab, setActiveTab] = useState("all")
     let activeNotifications = notifications?.filter((notification) => {
         return activeTab == "all" || !notification.is_read
@@ -90,8 +90,14 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
             <CardBody className="w-full gap-0 p-0">
                 <ScrollShadow className="h-[420px]">
                     {activeNotifications?.length ? (
-                        activeNotifications.map((notification) => (
-                            <NotificationItem key={notification.id} notification={notification} setIsOpen={setIsOpen} />
+                        activeNotifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((notification) => (
+                            <NotificationItem
+                                key={notification.id}
+                                notification={notification}
+                                setIsOpen={setIsOpen}
+                                updateNotification={updateNotification}
+                                deleteNotification={deleteNotification}
+                            />
                         ))
                     ) : (
                         <div className="flex flex-col items-center justify-center h-full gap-2">

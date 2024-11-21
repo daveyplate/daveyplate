@@ -2,16 +2,22 @@ import { BellIcon } from "@heroicons/react/24/solid"
 import { Popover, PopoverTrigger, PopoverContent, Button, Badge, Card } from "@nextui-org/react"
 import { useEntities, useEntity, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
 import { useSession } from "@supabase/auth-helpers-react"
-import NotificationsContainer from "./notifications-card"
 import { useLocale } from "next-intl"
 import { useEffect, useState } from "react"
 import NotificationItem from "./notification-item"
 import { toast } from "sonner"
+import NotificationsCard from "./notifications-card"
 
 export default function NotificationsPopover() {
     const session = useSession()
     const locale = useLocale()
-    const { entities: notifications, mutate } = useEntities(session && "notifications", { lang: locale })
+    const [previousNotifications, setPreviousNotifications] = useState([])
+    const {
+        entities: notifications,
+        mutate: mutateNotifications,
+        updateEntity: updateNotification,
+        deleteEntity: deleteNotification
+    } = useEntities(session && "notifications", { lang: locale })
     const unseenNotifications = notifications?.filter((notification) => !notification.is_seen)
     const { entity: metadata } = useEntity(session && "metadata", "me")
     const updateEntities = useUpdateEntities()
@@ -23,12 +29,20 @@ export default function NotificationsPopover() {
         if (!unseenNotifications?.length) return
 
         updateEntities("notifications", null, { is_seen: true }).then(() => {
-            mutate()
+            mutateNotifications()
         })
-    }, [isOpen, notifications, mutate])
+    }, [isOpen, notifications, mutateNotifications])
 
     useEffect(() => {
-        if (!notifications?.length) return
+        setPreviousNotifications(notifications)
+        if (!previousNotifications) return
+
+        // Compare the notifications to see if any new one exists that wasn't here before based on notification.id
+        const newNotifications = notifications?.filter((notification) => {
+            return !previousNotifications?.some((previousNotification) => previousNotification.id == notification.id)
+        })
+
+        if (!newNotifications?.length) return
 
         toast((
             <div
@@ -41,6 +55,8 @@ export default function NotificationsPopover() {
             >
                 <NotificationItem
                     notification={notifications[0]}
+                    updateNotification={updateNotification}
+                    deleteNotification={updateNotification}
                     setIsOpen={setIsOpen}
                     disableSwipe={true}
                     className="rounded-xl border"
@@ -82,7 +98,12 @@ export default function NotificationsPopover() {
             </PopoverTrigger>
 
             <PopoverContent className="max-w-[94svw] p-0 sm:max-w-[480px] w-svw">
-                <NotificationsContainer notifications={notifications} setIsOpen={setIsOpen} />
+                <NotificationsCard
+                    notifications={notifications}
+                    setIsOpen={setIsOpen}
+                    updateNotification={updateNotification}
+                    deleteNotification={deleteNotification}
+                />
             </PopoverContent>
         </Popover>
     )
