@@ -5,8 +5,9 @@ import { useSession } from "@supabase/auth-helpers-react"
 import NotificationsContainer from "./notifications-card"
 import { useLocale } from "next-intl"
 import { useEffect, useState } from "react"
-import { toast } from "sonner"
 import NotificationItem from "./notification-item"
+import { toast } from "sonner"
+import { toast as myToast } from "../providers/toast-provider"
 
 export default function NotificationsPopover() {
     const session = useSession()
@@ -28,22 +29,42 @@ export default function NotificationsPopover() {
     }, [isOpen, notifications, mutate])
 
     useEffect(() => {
+        return
         if (isOpen) return
         if (!notifications?.length) return
 
-        toast(() => (
-            <div
-                className="pointer-events-auto sm:w-[512px] sm:-ms-[96px] -ms-8 -me-8 -mt-8 sm:-mt-12 sm:border-l sm:border-r border-divider"
-            >
-                <NotificationItem notification={notifications[0]} setIsOpen={setIsOpen} />
-            </div>
-        ), {
-            position: "top-center",
-            className: "!text-left",
-            unstyled: true,
-            dismissible: true,
-        })
+
     }, [isOpen])
+
+    /*
+    return (
+        <Button onPress={() => {
+            toast((
+                <div
+                    draggable
+                    onDragStart={(event) => {
+                        event.preventDefault()
+                        toast.dismiss()
+                    }}
+                    onTouchEnd={() => toast.dismiss()}
+                >
+                    <NotificationItem
+                        notification={notifications[0]}
+                        setIsOpen={setIsOpen}
+                        disableSwipe={true}
+                        className="sm:rounded-xl border !h-[50px]"
+                    />
+                </div>
+            ), {
+                position: "top-center",
+                unstyled: true,
+                dismissible: false,
+            })
+        }}>
+            toast
+        </Button>
+    )
+    */
 
     return (
         <Popover
@@ -52,6 +73,7 @@ export default function NotificationsPopover() {
             onOpenChange={(open) => setIsOpen(open)}
             shouldBlockScroll
             backdrop="opaque"
+            size="lg"
         >
             <PopoverTrigger>
                 <Button

@@ -129,5 +129,5 @@ export default function NotificationsCard({ notifications, setIsOpen, ...props }
                 </Button>
             </CardFooter>
         </Card>
-    );
+    )
 }

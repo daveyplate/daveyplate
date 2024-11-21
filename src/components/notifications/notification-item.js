@@ -1,4 +1,4 @@
-import { Badge, Button } from "@nextui-org/react"
+import { Badge, Button, Link as NextUILink } from "@nextui-org/react"
 import { cn } from "@nextui-org/react"
 import { getLocaleValue } from "@daveyplate/supabase-swr-entities/client"
 import { useLocale } from "next-intl"
@@ -24,6 +24,7 @@ const NotificationItem = forwardRef(
         },
         setIsOpen,
         className,
+        disableSwipe,
         ...props
     }, ref) => {
         const router = useRouter()
@@ -43,7 +44,7 @@ const NotificationItem = forwardRef(
             if (Math.abs(e.clientX - x) > 10 || Math.abs(e.clientY - y) > 10) return
 
             router.push(localeUrl, localeLinkAs)
-            setIsOpen(false)
+            setIsOpen && setIsOpen(false)
         }, [router, localeUrl, localeLinkAs])
 
         /**
@@ -66,66 +67,76 @@ const NotificationItem = forwardRef(
         return (
             <SwipeToDelete
                 ref={ref}
-                className={cn("!w-full !bg-danger", className)}
+                className={cn(disableSwipe ? "!bg-transparent" : "!bg-danger")}
                 onDelete={() => console.log("Deleted")}
                 height="fit"
                 deleteColor="transparent"
                 deleteComponent={
                     <TrashIcon className="size-5 mx-auto" />
                 }
+                disabled={disableSwipe}
             >
                 <div
                     className={cn(
-                        "group w-full !min-h-fit flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer select-none",
-                        !is_read ? "bg-primary-50" : "bg-content1",
+                        "group flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer select-none",
+                        !is_read ? "bg-primary-50" : "bg-content1", className,
                     )}
                     {...props}
                     onMouseDown={onMouseDown}
                     onClick={onClick}
                 >
-                    <Button
-                        as={Link}
+                    <Link
                         href={sender ? `/user?user_id=${sender.id}` : url}
-                        linkAs={sender ? `/user/${sender.id}` : link_as}
-                        className="relative flex-none overflow-visible"
-                        isIconOnly
-                        radius="full"
-                        disableRipple
-                        onPress={() => setIsOpen(false)}
+                        as={sender ? `/user/${sender.id}` : link_as}
+                        legacyBehavior
                     >
-                        <Badge
-                            color="primary"
-                            content=""
-                            isInvisible={is_read}
-                            placement="bottom-right"
-                            shape="circle"
+                        <Button
+                            className="overflow-visible"
+                            isIconOnly
+                            radius="full"
+                            onPress={() => {
+                                setIsOpen && setIsOpen(false)
+                            }}
                         >
-                            {sender ? (
-                                <UserAvatar user={sender} />
-                            ) : (
-                                <Avatar src={avatar_url} />
-                            )}
-                        </Badge>
-                    </Button>
+                            <Badge
+                                color="primary"
+                                content=""
+                                isInvisible={is_read}
+                                placement="bottom-right"
+                                shape="circle"
+                            >
+                                {sender ? (
+                                    <UserAvatar user={sender} />
+                                ) : (
+                                    <Avatar src={avatar_url} />
+                                )}
+                            </Badge>
+                        </Button>
+                    </Link>
 
-                    <div className="flex flex-col gap-0.5">
-                        <p className="text-base text-foreground">
+                    <div className="flex flex-col gap-0.5 sm:-me-2">
+                        <p>
                             {contentParts.length > 1 ? (
                                 <>
                                     <span className="text-foreground/90">
                                         {contentParts[0]}
                                     </span>
+
                                     <Link
                                         href={`/user?user_id=${sender.id}`}
-                                        linkAs={`/user/${sender.id}`}
-                                        className="font-semibold"
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            setIsOpen(false)
-                                        }}
+                                        as={`/user/${sender.id}`}
+                                        legacyBehavior
                                     >
-                                        {sender.full_name}
+                                        <NextUILink
+                                            className="font-semibold text-foreground"
+                                            onPress={() => {
+                                                setIsOpen && setIsOpen(false)
+                                            }}
+                                        >
+                                            {sender.full_name}
+                                        </NextUILink>
                                     </Link>
+
                                     <span className="text-foreground/90">
                                         {contentParts[1]}
                                     </span>
@@ -149,10 +160,10 @@ const NotificationItem = forwardRef(
                     </Button>
                 </div>
             </SwipeToDelete>
-        );
-    },
-);
+        )
+    }
+)
 
-NotificationItem.displayName = "NotificationItem";
+NotificationItem.displayName = "NotificationItem"
 
-export default NotificationItem;
+export default NotificationItem
