@@ -10,7 +10,7 @@ export default function IndexPage() {
             <main className="container mx-auto flex flex-col grow items-center justify-center px-8 py-4">
                 <section className="flex flex-col items-center justify-center gap-5 md:gap-6">
                     <div className="text-center font-bold leading-[1.2] tracking-tight text-5xl md:text-6xl">
-                        <div className="bg-gradient-to-r from-foreground to-foreground-400 bg-clip-text text-transparent">
+                        <div className="bg-gradient-to-r from-foreground to-foreground-500 bg-clip-text text-transparent">
                             Welcome to <br /> Daveyplate.
                         </div>
                     </div>
