@@ -1,90 +1,55 @@
-import { motion } from 'framer-motion'
-import { AutoTranslate } from 'next-auto-translate'
+import React from "react";
+import { Button } from "@nextui-org/react";
+import { Icon } from "@iconify/react";
+import Image from "next/image";
+import NewFooter from "@/components/new-footer";
 
-import { Card, CardHeader, CardBody, Divider, Button } from "@nextui-org/react"
-import { toast } from 'sonner'
+// import FadeInImage from "./fade-in-image";
 
-import { getLocalePaths } from "@/i18n/locale-paths"
-import { getTranslationProps } from '@/i18n/translation-props'
-import { isExport } from "@/utils/utils"
-
-const PulseGreen = ({ children, className }) => {
+export default function IndexPage() {
     return (
-        <motion.div
-            className={className}
-            initial={{ scale: 0.99 }}
-            animate={{ scale: 1.01 }}
-            transition={{
-                repeat: Infinity,
-                repeatType: "reverse",
-                duration: 0.6 * 2,
-                ease: "easeInOut"
-            }}
-            style={{
-                display: 'inline-block',
-                background: 'rgba(0, 255, 0, 0.2)',
-                boxShadow: '0 0 8px rgba(0, 255, 0, 0.5)',
-            }}
-        >
-            {children}
-        </motion.div>
-    )
+        <>
+            <main className="container mx-auto flex flex-1 flex-col items-center justify-center overflow-hidden px-8">
+                <section className="z-20 flex flex-col items-center justify-center gap-[18px] sm:gap-6">
+                    <div className="text-center text-[clamp(40px,10vw,44px)] font-bold leading-[1.2] tracking-tight sm:text-[64px]">
+                        <div className="bg-gradient-to-r from-foreground to-foreground-400 bg-clip-text text-transparent">
+                            Welcome to <br /> Daveyplate.
+                        </div>
+                    </div>
+
+                    <p className="text-center font-normal leading-7 text-default-500 sm:w-[466px] sm:text-[18px]">
+                        Daveyplate is a boilerplate project with a full-featured user management system built with Next.js, NextUI, and Supabase, deployed on Vercel.
+                    </p>
+
+                    <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+                        <Button
+                            className="h-10 w-[163px] bg-default-foreground px-[16px] py-[10px] text-small font-medium leading-5 text-background"
+                            radius="full"
+                        >
+                            Get Started
+                        </Button>
+
+                        <Button
+                            className="h-10 w-[163px] border-1 border-default-100 px-[16px] py-[10px] text-small font-medium leading-5"
+                            endContent={
+                                <span className="pointer-events-none flex h-[22px] w-[22px] items-center justify-center rounded-full bg-default-100">
+                                    <Icon
+                                        className="text-default-500 [&>path]:stroke-[1.5]"
+                                        icon="solar:arrow-right-linear"
+                                        width={16}
+                                    />
+                                </span>
+                            }
+                            radius="full"
+                            variant="bordered"
+                        >
+                            See our plans
+                        </Button>
+                    </div>
+                </section>
+            </main>
+
+            <NewFooter />
+        </>
+    );
 }
-
-export default function Home() {
-    return (
-        <div className="flex-center max-w-2xl">
-            <h1>
-                <AutoTranslate tKey="title">
-                    Welcome to Daveyplate
-                </AutoTranslate>
-            </h1>
-            <Button
-                onPress={() => {
-                    toast("Tee hee")
-                }}
-            >
-                <AutoTranslate tKey="toast">
-                    Toast
-                </AutoTranslate>
-            </Button>
-
-            <PulseGreen className="rounded-2xl">
-                <Card className="bg-opacity-90">
-                    <CardHeader className="p-5">
-                        <h3>
-                            <AutoTranslate tKey="heading">
-                                Next.js Boilerplate
-                            </AutoTranslate>
-                        </h3>
-                    </CardHeader>
-
-                    <Divider />
-
-                    <CardBody className="gap-4 p-5">
-                        <p>
-                            <AutoTranslate tKey="description_1">
-                                Simple user management system built with Next.js, NextUI, and Supabase.
-                            </AutoTranslate>
-                        </p>
-
-                        <p>
-                            <AutoTranslate tKey="description_2">
-                                NextJS Page Router to create a simple navigation system.
-                                Stripe to accept payments and synchronize subscriptions & products.
-                            </AutoTranslate>
-                        </p>
-                    </CardBody>
-                </Card>
-            </PulseGreen>
-        </div>
-    )
-}
-
-export async function getStaticProps({ locale, params }) {
-    const translationProps = await getTranslationProps({ locale, params })
-
-    return { props: { ...translationProps } }
-}
-
-export const getStaticPaths = isExport() ? getLocalePaths : undefined

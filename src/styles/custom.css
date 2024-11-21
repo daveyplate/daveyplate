@@ -1,3 +1,4 @@
+/*
 h1,
 h2,
 h3,
@@ -28,12 +29,13 @@ h5 {
 }
 
 h6 {
-    @apply font-semibold;
+    @apply text-base font-semibold;
 }
 
 html {
   overscroll-behavior: auto;
 }
+  */
 
 .flex-container {
     @apply flex flex-col p-4 gap-4 grow items-start w-full;

@@ -10,8 +10,14 @@ import Providers from "@/components/providers/providers"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { OpenGraph } from "@daveyplate/next-open-graph"
+import NewHeader from "@/components/new-header"
+import NewFooter from "@/components/new-footer"
+import { useRouter } from "next/router"
+import { cn } from "@nextui-org/react"
 
 const MyApp = ({ Component, pageProps }) => {
+    const router = useRouter()
+
     return (
         <NextIntlClientProvider
             locale={pageProps.locale || "en"}
@@ -37,7 +43,21 @@ const MyApp = ({ Component, pageProps }) => {
                     }
                 `}</style>
 
-                <Header {...pageProps} />
+                <div className={cn(
+                    "relative flex min-h-dvh w-full flex-col bg-gradient-to-br from-background via-primary-50 to-secondary-50"
+                )}>
+                    <NewHeader {...pageProps} />
+                    <Component {...pageProps} />
+                </div>
+            </Providers>
+        </NextIntlClientProvider>
+    )
+}
+
+export default MyApp
+
+/*
+
 
                 <main className={`flex min-h-svh w-svh
                     pt-[calc(4rem+env(safe-area-inset-top))] 
@@ -47,10 +67,5 @@ const MyApp = ({ Component, pageProps }) => {
                     <Component {...pageProps} />
                 </main>
 
-                <Footer {...pageProps} />
-            </Providers>
-        </NextIntlClientProvider>
-    )
-}
 
-export default MyApp
+                */
