@@ -25,7 +25,6 @@ export default function ToastProvider() {
                 loading: <Spinner size="sm" color="current" className="me-1 mt-1" />,
             }}
             toastOptions={{
-                unstyled: false,
                 classNames: {
                     error: "!bg-danger-50",
                     success: "!bg-success-50",
