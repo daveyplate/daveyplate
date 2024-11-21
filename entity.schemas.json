@@ -66,6 +66,9 @@
             "content": {
                 "en": "{sender} liked your message: {{message.content.en}}"
             },
+            "groupedContent": {
+                "en": "{senders} liked your message: {{message.content.en}}"
+            },
             "url": "/chat",
             "defaultLocale": "en"
         }
