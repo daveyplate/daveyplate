@@ -44,7 +44,7 @@ const MyApp = ({ Component, pageProps }) => {
                 `}</style>
 
                 <div className={cn(router.pathname == "/" && "bg-gradient-to-br from-background via-primary-50 to-secondary-50",
-                    "relative flex min-h-dvh w-full flex-col"
+                    "relative flex min-h-dvh w-full flex-col p-safe"
                 )}>
                     <NewHeader {...pageProps} />
                     <Component {...pageProps} />
