@@ -15,7 +15,6 @@ import {
     Spinner,
     Switch,
 } from "@nextui-org/react"
-
 import {
     ArrowLeftStartOnRectangleIcon,
     ArrowRightEndOnRectangleIcon,
@@ -30,6 +29,7 @@ import {
     TrashIcon,
     UserIcon
 } from '@heroicons/react/24/solid'
+import { toast } from 'sonner'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
@@ -37,7 +37,6 @@ import { Link, useLocaleRouter } from '@/i18n/routing'
 import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
-import { toast } from '@/components/providers/toast-provider'
 import ThemeDropdown from '@/components/theme-dropdown'
 import LocaleDropdown from '@/components/locale-dropdown'
 
@@ -95,12 +94,12 @@ export default function Settings() {
 
         if (error) {
             console.error(error)
-            toast(error.message, { color: 'danger' })
+            toast.error(error.message)
             return
         }
 
         setNewEmail(email)
-        toast(confirmEmail)
+        toast.success(confirmEmail)
     }
 
     const updatePassword = async (e) => {
@@ -126,11 +125,11 @@ export default function Settings() {
 
             if (error) {
                 console.error(error)
-                toast(error.message, { color: 'danger' })
+                toast.error(error.message)
                 return
             }
 
-            toast(checkEmailText, { color: 'warning' })
+            toast.info(checkEmailText)
             setRequireNonce(true)
             return
         }
@@ -142,12 +141,12 @@ export default function Settings() {
 
         if (error) {
             console.error(error)
-            toast(error.message, { color: 'danger' })
+            toast.error(error.message)
             return
         }
 
         setPassword('')
-        toast(passwordChanged, { color: 'success' })
+        toast.success(passwordChanged)
 
         // Sign out other devices
         supabase.auth.signOut({ scope: 'others' })
@@ -157,7 +156,7 @@ export default function Settings() {
         const { error } = await updateUser({ deactivated: true })
         if (error) return
 
-        toast(accountDeactivated, { color: 'warning' })
+        toast.warning(accountDeactivated)
         supabase.auth.signOut({ scope: 'others' })
         localeRouter.replace('/logout')
     }
@@ -166,11 +165,11 @@ export default function Settings() {
         const { error } = await deleteUser()
 
         if (error) {
-            toast(error.message, { color: 'danger' })
+            toast.error(error.message)
             return
         }
 
-        toast(accountDeleted, { color: 'danger' })
+        toast.error(accountDeleted)
         localeRouter.replace('/logout')
     }
 
@@ -182,7 +181,7 @@ export default function Settings() {
             router.push(res.data.url)
         }).catch((error) => {
             console.error(error)
-            toast(portalError, { color: 'danger' })
+            toast.error(portalError)
             setLoadingPortal(false)
         })
     }

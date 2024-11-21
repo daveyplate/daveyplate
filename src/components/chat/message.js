@@ -9,10 +9,10 @@ import { getLocaleValue, useCreateEntity, useDeleteEntity } from '@daveyplate/su
 import { useAutoTranslate } from 'next-auto-translate'
 
 import UserAvatar from '@/components/user-avatar'
-import { toast } from '@/components/providers/toast-provider'
 import { localeToCountry } from '../locale-dropdown'
 import { Link } from "@/i18n/routing"
 import { useSession } from '@supabase/auth-helpers-react'
+import { toast } from 'sonner'
 
 export default memo(({
     message,
@@ -53,7 +53,7 @@ export default memo(({
     const unlikeMessage = (message) => {
         const messageLike = message.likes?.find((like) => like.user_id == user.id)
         if (!messageLike) {
-            toast("Message like not found", { color: "danger" })
+            toast.error("Message like not found")
             return
         }
 
@@ -153,7 +153,6 @@ export default memo(({
                             onPress={async () => {
                                 setIsEditing(false)
                                 const { error } = await deleteMessage(message.id) || {}
-                                error && toast(error.message, { color: "danger" })
                                 isWhisper && !error && sendWhisperData({ event: "delete_entity" })
                             }}
                         >

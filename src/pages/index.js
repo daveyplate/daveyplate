@@ -2,11 +2,11 @@ import { motion } from 'framer-motion'
 import { AutoTranslate } from 'next-auto-translate'
 
 import { Card, CardHeader, CardBody, Divider, Button } from "@nextui-org/react"
+import { toast } from 'sonner'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-import { toast } from 'sonner'
 
 const PulseGreen = ({ children, className }) => {
     return (
@@ -39,6 +39,15 @@ export default function Home() {
                     Welcome to Daveyplate
                 </AutoTranslate>
             </h1>
+            <Button
+                onPress={() => {
+                    toast("Tee hee")
+                }}
+            >
+                <AutoTranslate tKey="toast">
+                    Toast
+                </AutoTranslate>
+            </Button>
 
             <PulseGreen className="rounded-2xl">
                 <Card className="bg-opacity-90">

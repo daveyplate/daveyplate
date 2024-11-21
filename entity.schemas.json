@@ -57,9 +57,7 @@
             "column": "message_id"
         },
         "onConflict": "user_id,message_id",
-        "notificationMethods": [
-            "upsert"
-        ],
+        "notifications": true,
         "notificationTemplate": {
             "userIdColumn": "message.user_id",
             "senderIdColumn": "user_id",
@@ -107,9 +105,7 @@
             "recipient.deactivated": false
         },
         "defaultOrder": "-created_at",
-        "notificationMethods": [
-            "upsert"
-        ],
+        "notifications": true,
         "notificationTemplate": {
             "userIdColumn": "recipient_id",
             "senderIdColumn": "user_id",
@@ -148,9 +144,7 @@
             "user.deactivated": false
         },
         "realtimeIdentifier": "article_id",
-        "notificationMethods": [
-            "upsert"
-        ],
+        "notifications": true,
         "notificationTemplate": {
             "userIdColumn": "article.user_id",
             "senderIdColumn": "user_id",

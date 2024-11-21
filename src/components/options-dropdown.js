@@ -5,8 +5,7 @@ import { useAutoTranslate } from "next-auto-translate"
 
 import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react"
 import { EllipsisHorizontalIcon, ExclamationTriangleIcon, ShareIcon } from '@heroicons/react/24/solid'
-
-import { toast } from '@/components/providers/toast-provider'
+import { toast } from 'sonner'
 
 const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
     const { autoTranslate } = useAutoTranslate()
@@ -35,7 +34,7 @@ const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
         } else {
             try {
                 await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${router.asPath}`)
-                toast(linkCopiedText, { color: 'secondary' })
+                toast.success(linkCopiedText)
             } catch (error) {
                 console.error(error)
             }

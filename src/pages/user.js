@@ -19,19 +19,18 @@ import {
     cn,
     Skeleton
 } from "@nextui-org/react"
-
 import { PencilIcon } from "@heroicons/react/24/solid"
+import { toast } from "sonner"
 
-import { getTranslationProps } from "@/i18n/translation-props"
 import { createClient } from "@/utils/supabase/component"
+import { getTranslationProps } from "@/i18n/translation-props"
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { Link } from "@/i18n/routing"
 
 import UserAvatar from "@/components/user-avatar"
-import { toast } from "@/components/providers/toast-provider"
 import UploadAvatarModal from "@/components/upload-avatar-modal"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
-import { getLocalePaths } from "@/i18n/locale-paths"
-import { Link } from "@/i18n/routing"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -104,7 +103,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         label={autoTranslate("upload_avatar", "Upload Avatar")}
                         openRef={uploadRef}
                         onFiles={(files) => setAvatarFile(files[0])}
-                        onError={(error) => toast(error.message, { color: 'danger' })}
+                        onError={(error) => toast.error(error.message)}
                         className="flex flex-col"
                     >
                         <Skeleton isLoaded={!!user} className="rounded-full -mt-20 -mb-1 mx-auto z-10">
@@ -191,7 +190,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                     supabase.auth.updateUser({ data: { avatar_url: url } })
                     updateUser({ avatar_url: url })
                 }}
-                onError={(error) => toast(error.message, { color: 'danger' })}
+                onError={(error) => toast.error(error.message)}
             />
         </div>
     )

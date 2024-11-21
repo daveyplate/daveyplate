@@ -16,10 +16,10 @@ import {
     cn,
     Badge
 } from "@nextui-org/react"
-
 import {
     CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon
 } from '@heroicons/react/24/solid'
+import { toast } from 'sonner'
 
 import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
 import { createClient } from '@/utils/supabase/component'
@@ -27,7 +27,6 @@ import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
-import { toast } from "@/components/providers/toast-provider"
 import UserAvatar from '@/components/user-avatar'
 import UploadAvatarModal from '@/components/upload-avatar-modal'
 
@@ -120,7 +119,7 @@ export default function EditProfile() {
                         label={autoTranslate("upload_avatar", "Upload Avatar")}
                         openRef={uploadRef}
                         onFiles={(files) => setAvatarFile(files[0])}
-                        onError={(error) => toast(error.message, { color: 'danger' })}
+                        onError={(error) => toast.error(error.message)}
                         className="gap-4 flex flex-col"
                     >
                         <div className="flex items-center gap-2 -mb-2 -mt-1">
@@ -266,7 +265,7 @@ export default function EditProfile() {
                     supabase.auth.updateUser({ data: { avatar_url: url } })
                     updateUser({ avatar_url: url })
                 }}
-                onError={(error) => toast(error.message, { color: 'danger' })}
+                onError={(error) => toast.error(error.message)}
             />
 
             <ConfirmModal

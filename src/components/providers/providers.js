@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
-import { ThemeProvider } from "next-themes"
-import { NextUIProvider } from "@nextui-org/react"
 import { SWRConfig } from "swr"
 import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
 
@@ -15,6 +13,10 @@ TimeAgo.addLocale(en)
 TimeAgo.addLocale(de)
 TimeAgo.setDefaultLocale('en')
 
+import { ThemeProvider } from "next-themes"
+import { NextUIProvider } from "@nextui-org/react"
+import { toast } from 'sonner'
+
 import { AutoTranslateProvider } from 'next-auto-translate'
 import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
 import { PageTitleProvider } from '@daveyplate/next-page-title'
@@ -25,7 +27,7 @@ import { createClient } from '@/utils/supabase/component'
 import { iOS } from '@/utils/utils'
 
 import MetaTheme from "@/components/providers/meta-theme"
-import ToastProvider, { toast } from "@/components/providers/toast-provider"
+import ToastProvider from "@/components/providers/toast-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 
@@ -66,7 +68,7 @@ export default function Providers({ children, ...pageProps }) {
                             // or show a notification UI.
                         }
 
-                        toast(error.message, { color: "danger" })
+                        toast.error(error.message)
                     }
                 }}>
                     <NextUIProvider locale={nextUILocale} navigate={localeRouter.push}>

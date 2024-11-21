@@ -2,9 +2,10 @@ import { useState } from 'react'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
-import { Button, Card, CardBody, Input, Spinner } from "@nextui-org/react"
 
+import { Button, Card, CardBody, Input, Spinner } from "@nextui-org/react"
 import { CheckIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
+import { toast } from 'sonner'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
@@ -13,7 +14,6 @@ import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
 import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
-import { toast } from '@/components/providers/toast-provider'
 
 export default function ResetPassword() {
     useAuthenticatedPage()
@@ -40,9 +40,9 @@ export default function ResetPassword() {
         setUpdatingPassword(false)
 
         if (error) {
-            toast(passwordError, { color: 'danger' })
+            toast.error(passwordError)
         } else {
-            toast(passwordChanged, { color: 'success' })
+            toast.success(passwordChanged)
 
             localeRouter.replace("/")
 

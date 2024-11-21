@@ -6,11 +6,11 @@ import { AutoTranslate } from 'next-auto-translate'
 import { useAPI, useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react"
+import { toast } from "sonner"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
-import { toast } from '@/components/providers/toast-provider'
 
 export default function Products({ products, prices }) {
     const router = useRouter()
@@ -42,7 +42,7 @@ export default function Products({ products, prices }) {
         } else {
             setPriceIdLoading(null)
 
-            toast('Error creating checkout session', { color: 'danger' })
+            toast.error('Error creating checkout session')
         }
     }
 
