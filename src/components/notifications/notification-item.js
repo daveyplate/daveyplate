@@ -10,6 +10,7 @@ import { forwardRef, useCallback, useRef } from "react"
 import { TrashIcon } from "@heroicons/react/24/solid"
 import { Avatar } from "@daveyplate/nextui-fixed-avatar"
 import SwipeToDelete from "react-swipe-to-delete-ios"
+import { toast } from "sonner"
 
 const NotificationItem = forwardRef(
     ({
@@ -45,6 +46,7 @@ const NotificationItem = forwardRef(
 
             router.push(localeUrl, localeLinkAs)
             setIsOpen && setIsOpen(false)
+            toast.dismiss()
         }, [router, localeUrl, localeLinkAs])
 
         /**
@@ -78,7 +80,7 @@ const NotificationItem = forwardRef(
             >
                 <div
                     className={cn(
-                        "group flex gap-4 border-b border-divider px-6 py-4 items-center cursor-pointer select-none",
+                        "group flex gap-4 border-b border-divider px-6 py-4 cursor-pointer select-none",
                         !is_read ? "bg-primary-50" : "bg-content1", className,
                     )}
                     {...props}
@@ -91,11 +93,13 @@ const NotificationItem = forwardRef(
                         legacyBehavior
                     >
                         <Button
-                            className="overflow-visible"
+                            className="overflow-visible mt-1"
+                            disableRipple
                             isIconOnly
                             radius="full"
                             onPress={() => {
                                 setIsOpen && setIsOpen(false)
+                                toast.dismiss()
                             }}
                         >
                             <Badge
@@ -131,6 +135,7 @@ const NotificationItem = forwardRef(
                                             className="font-semibold text-foreground"
                                             onPress={() => {
                                                 setIsOpen && setIsOpen(false)
+                                                toast.dismiss()
                                             }}
                                         >
                                             {sender.full_name}
@@ -150,7 +155,7 @@ const NotificationItem = forwardRef(
                     </div>
 
                     <Button
-                        className="ms-auto -me-1 hidden sm:flex opacity-0 group-hover:opacity-100"
+                        className={cn("ms-auto -me-1 hidden opacity-0 group-hover:opacity-100 my-auto", !disableSwipe && "sm:flex")}
                         variant="light"
                         radius="full"
                         disableRipple

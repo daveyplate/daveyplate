@@ -7,7 +7,6 @@ import { useLocale } from "next-intl"
 import { useEffect, useState } from "react"
 import NotificationItem from "./notification-item"
 import { toast } from "sonner"
-import { toast as myToast } from "../providers/toast-provider"
 
 export default function NotificationsPopover() {
     const session = useSession()
@@ -29,42 +28,30 @@ export default function NotificationsPopover() {
     }, [isOpen, notifications, mutate])
 
     useEffect(() => {
-        return
-        if (isOpen) return
         if (!notifications?.length) return
 
-
-    }, [isOpen])
-
-    /*
-    return (
-        <Button onPress={() => {
-            toast((
-                <div
-                    draggable
-                    onDragStart={(event) => {
-                        event.preventDefault()
-                        toast.dismiss()
-                    }}
-                    onTouchEnd={() => toast.dismiss()}
-                >
-                    <NotificationItem
-                        notification={notifications[0]}
-                        setIsOpen={setIsOpen}
-                        disableSwipe={true}
-                        className="sm:rounded-xl border !h-[50px]"
-                    />
-                </div>
-            ), {
-                position: "top-center",
-                unstyled: true,
-                dismissible: false,
-            })
-        }}>
-            toast
-        </Button>
-    )
-    */
+        toast((
+            <div
+                draggable
+                onDragStart={(event) => {
+                    event.preventDefault()
+                    toast.dismiss()
+                }}
+                onTouchEnd={() => toast.dismiss()}
+            >
+                <NotificationItem
+                    notification={notifications[0]}
+                    setIsOpen={setIsOpen}
+                    disableSwipe={true}
+                    className="rounded-xl border"
+                />
+            </div>
+        ), {
+            position: "top-center",
+            unstyled: true,
+            dismissible: false
+        })
+    }, [notifications])
 
     return (
         <Popover
