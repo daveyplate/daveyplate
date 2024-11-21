@@ -7,9 +7,11 @@ import { useEffect, useState } from "react"
 import NotificationItem from "./notification-item"
 import { toast } from "sonner"
 import NotificationsCard from "./notifications-card"
+import { useRouter } from "next/router"
 
 export default function NotificationsPopover() {
     const session = useSession()
+    const router = useRouter()
     const locale = useLocale()
     const [previousNotifications, setPreviousNotifications] = useState([])
     const {
@@ -32,6 +34,11 @@ export default function NotificationsPopover() {
             mutateNotifications()
         })
     }, [isOpen, notifications, mutateNotifications])
+
+    useEffect(() => {
+        if (!notifications) return
+        mutateNotifications()
+    }, [router.asPath])
 
     useEffect(() => {
         setPreviousNotifications(notifications)
