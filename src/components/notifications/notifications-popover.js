@@ -46,6 +46,15 @@ export default function NotificationsPopover() {
 
         // Compare the notifications to see if any new one exists that wasn't here before based on notification.id
         const newNotifications = notifications?.filter((notification) => {
+            // Skip read notifications
+            if (notification.is_read) return false
+            if (notification.is_seen) return false
+
+            // Skip notifications that are more than 1 minute old
+            const notificationCreatedAt = new Date(notification.created_at)
+            const now = new Date()
+            if (now - notificationCreatedAt > 60000) return false
+
             return !previousNotifications?.some((previousNotification) => previousNotification.id == notification.id)
         })
 
