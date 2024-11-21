@@ -16,7 +16,7 @@ export default function IndexPage() {
                     </div>
 
                     <p className="text-center leading-7 text-default-500 max-w-sm">
-                        Daveyplate is a boilerplate project with a full-featured user management system - built with Next.js, NextUI, and Supabase.
+                        Daveyplate is a boilerplate project with a full-featured user management system built with Next.js, NextUI, and Supabase & deployed on Vercel.
                     </p>
 
                     <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
