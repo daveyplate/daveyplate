@@ -18,10 +18,10 @@ export default function ToastProvider() {
             visibleToasts={1}
             richColors={true}
             icons={{
-                success: <CheckCircleIcon className="size-5" />,
-                info: <InformationCircleIcon className="size-5" />,
-                warning: <ExclamationTriangleIcon className="size-5" />,
-                error: <ExclamationCircleIcon className="size-5" />,
+                success: <CheckCircleIcon className="size-5 mb-[1px]" />,
+                info: <InformationCircleIcon className="size-5 mb-[1px]" />,
+                warning: <ExclamationTriangleIcon className="size-5 mb-[1px]" />,
+                error: <ExclamationCircleIcon className="size-5 mb-[1px]" />,
                 loading: <Spinner size="sm" color="current" className="me-1 mt-1" />,
             }}
             toastOptions={{
