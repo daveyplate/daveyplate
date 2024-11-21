@@ -1,9 +1,13 @@
 import { Toaster, toast as sonnerToast } from "sonner"
 import { cn } from "@nextui-org/react"
+import { useTheme } from "next-themes"
 
 export default function ToastProvider() {
+    const { theme } = useTheme()
+
     return (
         <Toaster
+            theme={theme}
             visibleToasts={1}
             duration={3000}
         />
