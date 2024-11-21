@@ -22,6 +22,7 @@ const NotificationItem = forwardRef(
             content,
             created_at,
             is_read,
+            is_seen,
             sender
         },
         setIsOpen,
@@ -55,7 +56,9 @@ const NotificationItem = forwardRef(
             toast.dismiss()
             setIsOpen && setIsOpen(false)
 
-            !is_read && updateNotification(notification_id, { is_read: true })
+            if (!is_read || !is_seen) {
+                updateNotification(notification_id, { is_read: true, is_seen: true })
+            }
         }, [updateNotification, setIsOpen])
 
         /**
@@ -175,7 +178,5 @@ const NotificationItem = forwardRef(
         )
     }
 )
-
-NotificationItem.displayName = "NotificationItem"
 
 export default NotificationItem

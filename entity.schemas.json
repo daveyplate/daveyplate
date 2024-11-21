@@ -48,11 +48,27 @@
     },
     {
         "table": "message_likes",
+        "select": [
+            "*",
+            "message:message_id(id, user_id, content)"
+        ],
         "realtimeParent": {
             "table": "messages",
             "column": "message_id"
         },
-        "onConflict": "user_id,message_id"
+        "onConflict": "user_id,message_id",
+        "notificationMethods": [
+            "upsert"
+        ],
+        "notificationTemplate": {
+            "userIdColumn": "message.user_id",
+            "senderIdColumn": "user_id",
+            "content": {
+                "en": "{sender} liked your message: {{message.content.en}}"
+            },
+            "url": "/chat",
+            "defaultLocale": "en"
+        }
     },
     {
         "table": "whispers",
