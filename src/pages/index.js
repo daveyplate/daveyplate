@@ -5,18 +5,20 @@ import { ArrowRightIcon, CheckCircleIcon, ExclamationCircleIcon, ExclamationTria
 import NewFooter from "@/components/new-footer"
 import ScrollingBanner from "@/components/scrolling-banner"
 
-import NextJSLogo from "@/../public/nextjs.svg"
-import SupabaseLogo from "@/../public/supabase.svg"
-import NextUILogo from "@/../public/nextui.svg"
-import VercelLogo from "@/../public/vercel.svg"
-import StripeLogo from "@/../public/stripe.svg"
+import NextJSLogo from "@/../public/logos/nextjs.svg"
+import SupabaseLogo from "@/../public/logos/supabase.svg"
+import NextUILogo from "@/../public/logos/nextui.svg"
+import CapacitorLogo from "@/../public/logos/capacitor.svg"
+import VercelLogo from "@/../public/logos/vercel.svg"
+import StripeLogo from "@/../public/logos/stripe.svg"
+import TailwindLogo from "@/../public/logos/tailwind.svg"
 import Image from "next/image"
 
 
 export default function IndexPage() {
     return (
         <>
-            <main className="container mx-auto flex flex-col grow items-center justify-center px-8 py-4 justify-evenly">
+            <main className="container mx-auto flex flex-col grow items-center justify-center px-8 py-4 justify-evenly gap-6">
                 <section className="flex flex-col items-center justify-center gap-5 md:gap-6">
                     <div className="text-center font-bold leading-[1.2] tracking-tight text-5xl md:text-6xl">
                         <div className="bg-gradient-to-r from-foreground to-foreground-500 bg-clip-text text-transparent">
@@ -120,13 +122,23 @@ export default function IndexPage() {
 
                 </section>
 
-                <section className="mx-auto w-full max-w-xl">
+                <section className="mx-auto w-full max-w-xl invert dark:invert-0">
                     <ScrollingBanner shouldPauseOnHover gap="2rem">
                         <Image src={NextJSLogo} className="w-32" />
                         <Image src={SupabaseLogo} className="w-32" />
                         <Image src={NextUILogo} className="w-32" />
+                        <Image src={CapacitorLogo} className="w-32 grayscale invert" />
                         <Image src={VercelLogo} className="w-32" />
                         <Image src={StripeLogo} className="w-24" />
+                        <Image src={TailwindLogo} className="w-32 grayscale invert" />
+
+                        <Image src={NextJSLogo} className="w-32" />
+                        <Image src={SupabaseLogo} className="w-32" />
+                        <Image src={NextUILogo} className="w-32" />
+                        <Image src={CapacitorLogo} className="w-32 grayscale invert" />
+                        <Image src={VercelLogo} className="w-32" />
+                        <Image src={StripeLogo} className="w-24" />
+                        <Image src={TailwindLogo} className="w-32 grayscale invert" />
                     </ScrollingBanner>
                 </section>
             </main>

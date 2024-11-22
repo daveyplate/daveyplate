@@ -136,36 +136,39 @@ export default function NewHeader() {
                     </Button>
                 </NavbarItem>
 
-                <NavbarItem className="flex">
-                    <Popover offset={12} placement="bottom-end">
-                        <PopoverTrigger>
-                            <Button
-                                disableRipple
-                                isIconOnly
-                                className="overflow-visible"
-                                radius="full"
-                                variant="light"
-                            >
-                                <Badge
-                                    color="danger"
-                                    content={unseenNotifications?.length}
-                                    showOutline={false}
-                                    size="md"
-                                    isInvisible={!metadata?.notifications_badge_enabled || !unseenNotifications?.length}
+                {session && (
+                    <NavbarItem className="flex">
+                        <Popover offset={12} placement="bottom-end">
+                            <PopoverTrigger>
+                                <Button
+                                    disableRipple
+                                    isIconOnly
+                                    className="overflow-visible"
+                                    radius="full"
+                                    variant="light"
                                 >
-                                    <BellIcon className="text-default-500 size-6" />
-                                </Badge>
-                            </Button>
-                        </PopoverTrigger>
+                                    <Badge
+                                        color="danger"
+                                        content={unseenNotifications?.length}
+                                        showOutline={false}
+                                        size="md"
+                                        isInvisible={!metadata?.notifications_badge_enabled || !unseenNotifications?.length}
+                                    >
+                                        <BellIcon className="text-default-500 size-6" />
+                                    </Badge>
+                                </Button>
+                            </PopoverTrigger>
 
-                        <PopoverContent className="max-w-[90vw] p-0 md:max-w-[380px]">
-                            <NotificationsCard
-                                notifications={notifications}
-                                className="w-full shadow-none"
-                            />
-                        </PopoverContent>
-                    </Popover>
-                </NavbarItem>
+                            <PopoverContent className="max-w-[90vw] p-0 md:max-w-[380px]">
+                                <NotificationsCard
+                                    notifications={notifications}
+                                    className="w-full shadow-none"
+                                />
+                            </PopoverContent>
+                        </Popover>
+                    </NavbarItem>
+                )}
+
 
                 <NavbarItem className="px-2">
                     <Dropdown placement="bottom-end">
