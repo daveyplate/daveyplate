@@ -3,11 +3,20 @@ import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Spinner 
 import { ArrowRightIcon, CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, PlusCircleIcon, RocketLaunchIcon } from "@heroicons/react/24/outline"
 
 import NewFooter from "@/components/new-footer"
+import ScrollingBanner from "@/components/scrolling-banner"
+
+import NextJSLogo from "@/../public/nextjs.svg"
+import SupabaseLogo from "@/../public/supabase.svg"
+import NextUILogo from "@/../public/nextui.svg"
+import VercelLogo from "@/../public/vercel.svg"
+import StripeLogo from "@/../public/stripe.svg"
+import Image from "next/image"
+
 
 export default function IndexPage() {
     return (
         <>
-            <main className="container mx-auto flex flex-col grow items-center justify-center px-8 py-4">
+            <main className="container mx-auto flex flex-col grow items-center justify-center px-8 py-4 justify-evenly">
                 <section className="flex flex-col items-center justify-center gap-5 md:gap-6">
                     <div className="text-center font-bold leading-[1.2] tracking-tight text-5xl md:text-6xl">
                         <div className="bg-gradient-to-r from-foreground to-foreground-500 bg-clip-text text-transparent">
@@ -108,6 +117,17 @@ export default function IndexPage() {
                             See our plans
                         </Button>
                     </div>
+
+                </section>
+
+                <section className="mx-auto w-full max-w-xl">
+                    <ScrollingBanner shouldPauseOnHover gap="2rem">
+                        <Image src={NextJSLogo} className="w-32" />
+                        <Image src={SupabaseLogo} className="w-32" />
+                        <Image src={NextUILogo} className="w-32" />
+                        <Image src={VercelLogo} className="w-32" />
+                        <Image src={StripeLogo} className="w-24" />
+                    </ScrollingBanner>
                 </section>
             </main>
 
