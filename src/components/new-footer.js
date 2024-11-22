@@ -69,7 +69,7 @@ const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 export default function NewFooter() {
     return (
         <footer className="flex w-full flex-col">
-            <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center p-6 md:p-8">
+            <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center pb-6 md:pb-8">
                 <motion.div
                     initial={{ scale: 1 }}
                     animate={{ scale: [1, 1.01, 1], transition: { repeat: Infinity, duration: 2 } }}
