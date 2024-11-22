@@ -130,7 +130,7 @@ export default function NewFooter() {
 
                 <Spacer y={6} />
 
-                <div className="flex justify-center gap-x-4">
+                <div className="flex justify-center gap-x-4 h-6">
                     {socialItems.map((item) => (
                         <Link key={item.name} isExternal className="text-default-400" href={item.href}>
                             <span className="sr-only">

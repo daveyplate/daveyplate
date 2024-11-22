@@ -18,14 +18,18 @@ import {
     Avatar,
     Badge,
     cn,
+    DropdownSection,
 } from "@nextui-org/react"
 import NotificationsCard from "./notifications/notifications-card"
-import { BellIcon, Cog6ToothIcon, MagnifyingGlassIcon, SunIcon } from "@heroicons/react/24/outline"
+import { BellIcon, Cog6ToothIcon, MagnifyingGlassIcon, SunIcon, MoonIcon } from "@heroicons/react/24/outline"
 import { useSession } from "@supabase/auth-helpers-react"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { useLocale } from "next-intl"
 import Logo from "./logo"
 import { useRouter } from "next/router"
+import { useTheme } from "next-themes"
+import ThemeDropdownMenu from "./theme-dropdown-menu"
+import { useIsClient } from "@uidotdev/usehooks"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -41,6 +45,8 @@ export default function NewHeader() {
     const router = useRouter()
     const session = useSession()
     const locale = useLocale()
+    const { resolvedTheme } = useTheme()
+    const isClient = useIsClient()
     const { entity: user } = useEntity(session && "profiles", session?.user.id, { lang: locale })
 
     return (
@@ -82,7 +88,9 @@ export default function NewHeader() {
             </NavbarContent>
 
             <NavbarContent
-                className="ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 md:bg-content2 md:px-1 md:dark:bg-content1"
+                className={cn(isClient ? "opacity-1" : "opacity-0",
+                    "ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 md:bg-content2 md:px-1 md:dark:bg-content1"
+                )}
                 justify="end"
             >
                 <NavbarItem className="hidden">
@@ -91,10 +99,21 @@ export default function NewHeader() {
                     </Button>
                 </NavbarItem>
 
-                <NavbarItem className="hidden md:flex">
-                    <Button isIconOnly radius="full" variant="light">
-                        <SunIcon className="text-default-500 size-6" />
-                    </Button>
+                <NavbarItem className="flex">
+                    <Dropdown className="min-w-0">
+                        <DropdownTrigger>
+                            <Button isIconOnly radius="full" variant="light">
+                                {isClient && (resolvedTheme == "dark" ? (
+                                    <MoonIcon className="text-default-500 size-6" />
+                                ) : (
+                                    <SunIcon className="text-default-500 size-6" />
+                                ))}
+                            </Button>
+                        </DropdownTrigger>
+
+                        <ThemeDropdownMenu />
+                    </Dropdown>
+
                 </NavbarItem>
 
                 <NavbarItem className="hidden md:flex">
@@ -149,19 +168,17 @@ export default function NewHeader() {
                         </DropdownTrigger>
 
                         <DropdownMenu aria-label="Profile Actions" variant="flat">
-                            <DropdownItem key="profile" className="h-14 gap-2">
-                                <p className="font-semibold">Signed in as</p>
-                                <p className="font-semibold">johndoe@example.com</p>
-                            </DropdownItem>
-                            <DropdownItem key="settings">My Settings</DropdownItem>
-                            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-                            <DropdownItem key="analytics">Analytics</DropdownItem>
-                            <DropdownItem key="system">System</DropdownItem>
-                            <DropdownItem key="configurations">Configurations</DropdownItem>
-                            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-                            <DropdownItem key="logout" color="danger">
-                                Log Out
-                            </DropdownItem>
+                            <DropdownSection title={session?.user.email || "Account"}>
+                                <DropdownItem key="settings">My Settings</DropdownItem>
+                                <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                                <DropdownItem key="analytics">Analytics</DropdownItem>
+                                <DropdownItem key="system">System</DropdownItem>
+                                <DropdownItem key="configurations">Configurations</DropdownItem>
+                                <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+                                <DropdownItem key="logout" color="danger">
+                                    Log Out
+                                </DropdownItem>
+                            </DropdownSection>
                         </DropdownMenu>
                     </Dropdown>
                 </NavbarItem>

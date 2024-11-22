@@ -3,7 +3,7 @@ import { useAutoTranslate } from "next-auto-translate"
 import { useIsClient } from "@uidotdev/usehooks"
 
 import { Button, cn, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
-import { ChevronDownIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/solid"
+import { ChevronDownIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline"
 
 /**
  * Dropdown component to switch between themes
@@ -13,7 +13,7 @@ import { ChevronDownIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroic
  * @param {("bordered"|"faded"|"flat"|"light"|"ghost"|"solid")} [props.variant="solid"] - Variant of the button
  * @returns {JSX.Element}
  */
-export default function ThemeDropdown({ isIconOnly = false, size = "md", variant = "solid" }) {
+export default function ThemeDropdown({ className, isIconOnly = false, size = "md", variant = "solid" }) {
     const { setTheme, theme: currentTheme, resolvedTheme } = useTheme()
     const { autoTranslate } = useAutoTranslate("toggle_theme")
     const isClient = useIsClient()
@@ -22,17 +22,17 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
         {
             key: 'light',
             title: autoTranslate("light", "Light"),
-            icon: <SunIcon className="size-6" />
+            icon: SunIcon
         },
         {
             key: 'dark',
             title: autoTranslate("dark", "Dark"),
-            icon: <MoonIcon className="size-5" />
+            icon: MoonIcon
         },
         {
             key: 'system',
             title: autoTranslate("system", "System"),
-            icon: <ComputerDesktopIcon className="size-5 mt-[1px]" />
+            icon: ComputerDesktopIcon
         },
     ]
 
@@ -52,13 +52,15 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
         >
             <DropdownTrigger>
                 <Button
+                    className={className}
                     size={size}
                     variant={variant}
                     isIconOnly={isIconOnly}
-                    startContent={
-                        <div className={cn(!isIconOnly && "flex w-6 justify-center -ms-1")}>
-                            {isClient && (isIconOnly ? selectedResolvedTheme?.icon : selectedTheme?.icon)}
-                        </div>
+                    radius={isIconOnly ? "full" : null}
+                    startContent={isClient &&
+                        (isIconOnly ?
+                            <selectedResolvedTheme.icon className="size-6" />
+                            : <selectedTheme.icon className="size-6" />)
                     }
                     endContent={!isIconOnly &&
                         <ChevronDownIcon className="size-5 mt-0.5 -me-1" />
@@ -68,25 +70,18 @@ export default function ThemeDropdown({ isIconOnly = false, size = "md", variant
                 </Button>
             </DropdownTrigger>
 
-            <DropdownMenu
-                itemClasses={{
-                    title: "text-base",
-                    base: "pe-3 gap-3",
-                }}
-            >
+            <DropdownMenu variant="flat">
                 {themes.map(theme => (
                     <DropdownItem
                         key={theme.key}
                         startContent={
-                            <div className="flex w-6 justify-center">
-                                {theme.icon}
-                            </div>
+                            <theme.icon className="size-5" />
                         }
                         title={theme.title}
                         onPress={() => setTheme(theme.key)}
                     />
                 ))}
             </DropdownMenu>
-        </Dropdown>
+        </Dropdown >
     )
 }

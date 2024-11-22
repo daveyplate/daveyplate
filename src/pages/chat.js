@@ -182,9 +182,17 @@ export default function Chat() {
 
     return (
         <div className={cn((!sessionLoading && messagesAndWhispers) ? "opacity-1" : "opacity-0",
-            "flex-container max-w-xl mx-auto justify-end !pb-16 transition-all"
+            "flex px-5 flex-col w-full max-w-xl mx-auto justify-end transition-all"
         )}>
-            <div className="flex flex-col gap-4 w-full flex-col-reverse">
+            <div className="sticky top-0 h-[60px] md:h-[76px] bg-background z-20" />
+
+            <div
+                className={cn(
+                    "sticky top-[60px] h-[40px] md:top-[76px] bg-gradient-to-b from-background to-transparent z-20"
+                )}
+            />
+
+            <div className="flex flex-col gap-4 w-full flex-col-reverse py-4 mb-16">
                 {messagesAndWhispers?.map((message) => (
                     <Message
                         key={message.id}
@@ -201,9 +209,16 @@ export default function Chat() {
                 ))}
             </div>
 
-            <div className="fixed bottom-16 mb-safe w-full left-0 flex bg-background/90 z-20 backdrop-blur">
-                <form onSubmit={sendMessage} className="px-4 mx-auto w-full max-w-xl">
+            <div className="fixed bottom-0 left-0 w-full flex flex-col z-20">
+                <div
+                    className={cn(shouldScrollDown ? "opacity-0" : "opacity-100",
+                        "bg-gradient-to-t from-background/90 to-transparent w-full h-[40px] transition-all"
+                    )}
+                />
+
+                <form onSubmit={sendMessage} className="mx-auto w-full max-w-xl bg-background px-4 pb-safe">
                     <Input
+                        className="mb-4"
                         autoFocus
                         ref={inputRef}
                         size="lg"

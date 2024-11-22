@@ -21,9 +21,7 @@ export default function IndexPage() {
 
                     <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
                         <Button
-                            className="px-6"
                             color="primary"
-                            radius="full"
                             startContent={
                                 <ExclamationTriangleIcon className="size-5" />
                             }
@@ -35,7 +33,7 @@ export default function IndexPage() {
                         </Button>
 
                         <Button
-                            className="border-1 px-6 hidden"
+                            className="border-1 hidden"
                             endContent={
                                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-default">
                                     <ArrowRightIcon
@@ -43,7 +41,6 @@ export default function IndexPage() {
                                     />
                                 </span>
                             }
-                            radius="full"
                             variant="bordered"
                         >
                             See our plans
