@@ -11,7 +11,7 @@ import { useIsClient } from '@uidotdev/usehooks'
 import { useAutoTranslate } from 'next-auto-translate'
 import { useClearCache } from '@daveyplate/supabase-swr-entities/client'
 
-import { Card, CardBody, cn } from "@nextui-org/react"
+import { Card, CardBody, cn, Input } from "@nextui-org/react"
 
 import { useLocaleRouter } from "@/i18n/routing"
 import { getLocalePaths } from "@/i18n/locale-paths"
@@ -109,7 +109,7 @@ export default function Login({ view }) {
 
     return isClient && (
         <div className={cn((!session && !sessionLoading) ? "opacity-1" : "opacity-0",
-            "flex-center transition-all max-w-lg"
+            "flex-center transition-all max-w-md"
         )}>
             <Card fullWidth>
                 <CardBody className="px-4 pb-0">
@@ -140,19 +140,28 @@ export default function Login({ view }) {
                                 anchor: { fontFamily: DefaultFont.style.fontFamily },
                             },
                             className: {
-                                label: '!text-foreground !text-base',
-                                button: '!rounded-xl !h-12 !text-base hover:!opacity-90',
-                                input: '!rounded-xl !text-base !h-12 !border-2 focus:!border-foreground',
-                                anchor: '!text-small',
+                                label: '!text-foreground',
+                                button: '!rounded-xl hover:!opacity-90',
+                                input: '!rounded-xl !border-2 focus:!border-foreground',
+                                anchor: '!text-default-500 hover:!text-default-600',
                             }
                         }}
                         localization={{ variables }}
-                    />
+
+                    >
+                        <Input
+                            label="Email Address"
+                            name="email"
+                            placeholder="Enter your email"
+                            type="email"
+                            labelPlacement="outside"
+                        />
+                    </Auth>
                 </CardBody>
             </Card>
 
-            <p className="text-xs text-center text-foreground/60 px-8 max-w-xs">
-                By creating an account, you agree to our <a href="/terms" className="underline">Terms of Service</a> and <a href="/privacy" className="underline">Privacy Policy</a>.
+            <p className="text-center text-small text-default-400">
+                By continuing, you agree to our <a href="/terms" className="underline">Terms</a> and <a href="/privacy" className="underline">Privacy</a>.
             </p>
         </div>
     )
