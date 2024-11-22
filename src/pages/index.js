@@ -20,7 +20,7 @@ export default function IndexPage() {
                     </p>
 
                     <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
-                        <Dropdown>
+                        <Dropdown placement="top">
                             <DropdownTrigger>
                                 <Button
                                     color="primary"

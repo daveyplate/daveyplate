@@ -14,8 +14,19 @@ import NotificationItem from "./notification-item"
 import { BellSlashIcon, Cog6ToothIcon, TrashIcon } from "@heroicons/react/24/solid"
 import { useState } from "react"
 import { Link } from "@/i18n/routing"
+import { useSession } from "@supabase/auth-helpers-react"
+import { useEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useLocale } from "next-intl"
 
-export default function NotificationsCard({ notifications, setIsOpen, updateNotification, deleteNotification, ...props }) {
+export default function NotificationsCard({ notifications: fallbackData, setIsOpen, ...props }) {
+    const session = useSession()
+    const locale = useLocale()
+    const {
+        entities: notifications,
+        updateEntity: updateNotification,
+        deleteEntity: deleteNotification
+    } = useEntities(session && "notifications", { lang: locale }, { fallbackData })
+
     const [activeTab, setActiveTab] = useState("all")
     let activeNotifications = notifications?.filter((notification) => {
         return activeTab == "all" || !notification.is_read

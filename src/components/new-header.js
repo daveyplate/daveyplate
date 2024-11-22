@@ -23,13 +23,14 @@ import {
 import NotificationsCard from "./notifications/notifications-card"
 import { BellIcon, Cog6ToothIcon, MagnifyingGlassIcon, SunIcon, MoonIcon } from "@heroicons/react/24/outline"
 import { useSession } from "@supabase/auth-helpers-react"
-import { useEntity } from "@daveyplate/supabase-swr-entities/client"
+import { useEntities, useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { useLocale } from "next-intl"
 import Logo from "./logo"
 import { useRouter } from "next/router"
 import { useTheme } from "next-themes"
 import ThemeDropdownMenu from "./theme-dropdown-menu"
 import { useIsClient } from "@uidotdev/usehooks"
+import { useState } from "react"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -45,12 +46,19 @@ export default function NewHeader() {
     const router = useRouter()
     const session = useSession()
     const locale = useLocale()
-    const { resolvedTheme } = useTheme()
     const isClient = useIsClient()
+    const { resolvedTheme } = useTheme()
     const { entity: user } = useEntity(session && "profiles", session?.user.id, { lang: locale })
+    const { entity: metadata } = useEntity(session && "metadata", "me")
+    const { entities: notifications } = useEntities(session && "notifications", { lang: locale })
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+    const unseenNotifications = notifications?.filter((notification) => !notification.is_seen)
 
     return (
         <Navbar
+            isMenuOpen={isMenuOpen}
+            onMenuOpenChange={setIsMenuOpen}
             classNames={{
                 base: cn("md:py-2", router.pathname == "/" && "bg-transparent backdrop-blur-none backdrop-saturate-100"),
                 item: "data-[active=true]:text-primary",
@@ -138,14 +146,23 @@ export default function NewHeader() {
                                 radius="full"
                                 variant="light"
                             >
-                                <Badge color="danger" content="5" showOutline={false} size="md">
+                                <Badge
+                                    color="danger"
+                                    content={unseenNotifications?.length}
+                                    showOutline={false}
+                                    size="md"
+                                    isInvisible={!metadata?.notifications_badge_enabled || !unseenNotifications?.length}
+                                >
                                     <BellIcon className="text-default-500 size-6" />
                                 </Badge>
                             </Button>
                         </PopoverTrigger>
 
                         <PopoverContent className="max-w-[90vw] p-0 md:max-w-[380px]">
-                            <NotificationsCard className="w-full shadow-none" />
+                            <NotificationsCard
+                                notifications={notifications}
+                                className="w-full shadow-none"
+                            />
                         </PopoverContent>
                     </Popover>
                 </NavbarItem>
@@ -185,37 +202,23 @@ export default function NewHeader() {
             </NavbarContent>
 
             {/* Mobile Menu */}
-            <NavbarMenu className="bg-transparent">
-                <NavbarMenuItem>
-                    <Link className="w-full" color="foreground" href="#">
-                        Dashboard
-                    </Link>
-                </NavbarMenuItem>
-
-                <NavbarMenuItem isActive>
-                    <Link aria-current="page" className="w-full" color="primary" href="#">
-                        Deployments
-                    </Link>
-                </NavbarMenuItem>
-
-                <NavbarMenuItem>
-                    <Link className="w-full" color="foreground" href="#">
-                        Analytics
-                    </Link>
-                </NavbarMenuItem>
-
-                <NavbarMenuItem>
-                    <Link className="w-full" color="foreground" href="#">
-                        Team
-                    </Link>
-                </NavbarMenuItem>
-
-                <NavbarMenuItem>
-                    <Link className="w-full" color="foreground" href="#">
-                        Settings
-                    </Link>
-                </NavbarMenuItem>
+            <NavbarMenu>
+                {menuItems.map((item) => (
+                    <NavbarMenuItem
+                        key={item.name}
+                        isActive={router.pathname === item.path}
+                    >
+                        <Link
+                            className="w-full"
+                            color={router.pathname === item.path ? "primary" : "foreground"}
+                            href={item.path}
+                            onPress={() => setIsMenuOpen(false)}
+                        >
+                            {item.name}
+                        </Link>
+                    </NavbarMenuItem>
+                ))}
             </NavbarMenu>
         </Navbar>
-    );
+    )
 }
