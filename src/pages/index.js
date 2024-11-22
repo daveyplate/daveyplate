@@ -21,7 +21,8 @@ export default function IndexPage() {
 
                     <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
                         <Button
-                            className="bg-default-foreground px-6 text-background"
+                            className="px-6"
+                            color="primary"
                             radius="full"
                             startContent={
                                 <ExclamationTriangleIcon className="size-5" />
@@ -34,11 +35,11 @@ export default function IndexPage() {
                         </Button>
 
                         <Button
-                            className="border-1 border-default-100 px-6 hidden"
+                            className="border-1 px-6 hidden"
                             endContent={
-                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-default-100">
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-default">
                                     <ArrowRightIcon
-                                        className="text-default-500 size-3.5"
+                                        className="size-3.5"
                                     />
                                 </span>
                             }
