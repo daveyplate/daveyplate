@@ -139,13 +139,13 @@ export default function IndexPage() {
 
                 <section className="mx-auto w-full max-w-xl invert dark:invert-0">
                     <ScrollingBanner shouldPauseOnHover gap="2rem">
-                        <Image src={NextJSLogo} className="w-36" />
-                        <Image src={SupabaseLogo} className="w-36" />
-                        <Image src={NextUILogo} className="w-36" />
-                        <Image src={CapacitorLogo} className="w-36 grayscale invert" />
-                        <Image src={VercelLogo} className="w-36" />
-                        <Image src={StripeLogo} className="w-32" />
-                        <Image src={TailwindLogo} className="w-36 grayscale invert" />
+                        <Image src={NextJSLogo} className="w-32" alt="Next.js" />
+                        <Image src={SupabaseLogo} className="w-36" alt="Supabase" />
+                        <Image src={NextUILogo} className="w-36" alt="NextUI" />
+                        <Image src={CapacitorLogo} className="w-36 grayscale invert" alt="Capacitor" />
+                        <Image src={VercelLogo} className="w-40" alt="Vercel" />
+                        <Image src={StripeLogo} className="w-24" alt="Stripe" />
+                        <Image src={TailwindLogo} className="w-36 grayscale invert" alt="Tailwind CSS" />
                     </ScrollingBanner>
                 </section>
             </main>
