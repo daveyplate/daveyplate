@@ -1,6 +1,6 @@
 import { toast } from "sonner"
-import { Button } from "@nextui-org/react"
-import { ArrowRightIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline"
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Spinner } from "@nextui-org/react"
+import { ArrowRightIcon, CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, PlusCircleIcon, RocketLaunchIcon } from "@heroicons/react/24/outline"
 
 import NewFooter from "@/components/new-footer"
 
@@ -20,17 +20,79 @@ export default function IndexPage() {
                     </p>
 
                     <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
-                        <Button
-                            color="primary"
-                            startContent={
-                                <ExclamationTriangleIcon className="size-5" />
-                            }
-                            onPress={() => {
-                                toast.info("Have a slice!")
-                            }}
-                        >
-                            Show Toast
-                        </Button>
+                        <Dropdown>
+                            <DropdownTrigger>
+                                <Button
+                                    color="primary"
+                                    startContent={
+                                        <RocketLaunchIcon className="size-5" />
+                                    }
+                                >
+                                    Show Toast
+                                </Button>
+                            </DropdownTrigger>
+
+                            <DropdownMenu>
+                                <DropdownItem
+                                    startContent={
+                                        <PlusCircleIcon className="size-5" />
+                                    }
+                                    onPress={() => toast("Default Toast")}
+                                >
+                                    Default
+                                </DropdownItem>
+                                <DropdownItem
+                                    color="success"
+                                    startContent={
+                                        <CheckCircleIcon className="size-5" />
+                                    }
+                                    onPress={() => toast.success("Success Toast")}
+                                >
+                                    Success
+                                </DropdownItem>
+                                <DropdownItem
+                                    color="primary"
+                                    startContent={
+                                        <InformationCircleIcon className="size-5" />
+                                    }
+                                    onPress={() => toast.info("Info Toast")}
+                                >
+                                    Info
+                                </DropdownItem>
+                                <DropdownItem
+                                    color="warning"
+                                    startContent={
+                                        <ExclamationTriangleIcon className="size-5" />
+                                    }
+                                    onPress={() => toast.warning("Warning Toast")}
+                                >
+                                    Warning
+                                </DropdownItem>
+                                <DropdownItem
+                                    color="danger"
+                                    startContent={
+                                        <ExclamationCircleIcon className="size-5" />
+                                    }
+                                    onPress={() => toast.error("Error Toast")}>
+                                    Error
+                                </DropdownItem>
+                                <DropdownItem
+                                    color="secondary"
+                                    startContent={
+                                        <Spinner size="sm" color="current" />
+                                    }
+                                    onPress={() => {
+                                        toast.loading("Loading Toast")
+                                        setTimeout(() => {
+                                            toast.dismiss()
+                                        }, 4000)
+                                    }}
+                                >
+                                    Loading
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+
 
                         <Button
                             className="border-1 hidden"
