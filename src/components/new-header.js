@@ -17,6 +17,7 @@ import {
     PopoverTrigger,
     Avatar,
     Badge,
+    cn,
 } from "@nextui-org/react"
 import NotificationsCard from "./notifications/notifications-card"
 import { BellIcon, Cog6ToothIcon, MagnifyingGlassIcon, SunIcon } from "@heroicons/react/24/outline"
@@ -24,10 +25,20 @@ import { useSession } from "@supabase/auth-helpers-react"
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { useLocale } from "next-intl"
 import Logo from "./logo"
+import { useRouter } from "next/router"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
+const menuItems = [
+    { name: "Home", path: "/" },
+    { name: "Users", path: "/users" },
+    { name: "Blog", path: "/blog" }, // Blog item added here
+    { name: "Products", path: "/products" },
+    { name: "Chat", path: "/chat" },
+]
+
 export default function NewHeader() {
+    const router = useRouter()
     const session = useSession()
     const locale = useLocale()
     const { entity: user } = useEntity(session && "profiles", session?.user.id, { lang: locale })
@@ -35,7 +46,7 @@ export default function NewHeader() {
     return (
         <Navbar
             classNames={{
-                base: "md:py-2 bg-transparent",
+                base: cn("md:py-2", router.pathname == "/" && "bg-transparent backdrop-blur-none backdrop-saturate-100"),
                 item: "data-[active=true]:text-primary",
                 wrapper: "ps-4 pe-2 md:ps-6 md:pe-6",
             }}
@@ -58,35 +69,16 @@ export default function NewHeader() {
                 className="ml-4 hidden h-12 w-full max-w-fit gap-4 rounded-full bg-content2 px-4 dark:bg-content1 md:flex"
                 justify="end"
             >
-                <NavbarItem>
-                    <Link className="flex gap-2 text-inherit" href="#">
-                        Dashboard
-                    </Link>
-                </NavbarItem>
-
-                <NavbarItem isActive>
-                    <Link aria-current="page" className="flex gap-2 text-inherit" href="#">
-                        Deployments
-                    </Link>
-                </NavbarItem>
-
-                <NavbarItem>
-                    <Link className="flex gap-2 text-inherit" href="#">
-                        Analytics
-                    </Link>
-                </NavbarItem>
-
-                <NavbarItem>
-                    <Link className="flex gap-2 text-inherit" href="#">
-                        Team
-                    </Link>
-                </NavbarItem>
-
-                <NavbarItem>
-                    <Link className="flex gap-2 text-inherit" href="#">
-                        Settings
-                    </Link>
-                </NavbarItem>
+                {menuItems.map((item) => (
+                    <NavbarItem key={item.name} isActive={router.pathname === item.path}>
+                        <Link
+                            className="flex gap-2 text-inherit"
+                            href={item.path}
+                        >
+                            {item.name}
+                        </Link>
+                    </NavbarItem>
+                ))}
             </NavbarContent>
 
             <NavbarContent
