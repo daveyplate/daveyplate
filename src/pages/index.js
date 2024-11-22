@@ -1,6 +1,21 @@
 import { toast } from "sonner"
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Spinner } from "@nextui-org/react"
-import { ArrowRightIcon, CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, PlusCircleIcon, RocketLaunchIcon } from "@heroicons/react/24/outline"
+import {
+    Button,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
+    Spinner
+} from "@nextui-org/react"
+import {
+    ArrowRightIcon,
+    CheckCircleIcon,
+    ExclamationCircleIcon,
+    ExclamationTriangleIcon,
+    InformationCircleIcon,
+    PlusCircleIcon,
+    RocketLaunchIcon
+} from "@heroicons/react/24/outline"
 
 import NewFooter from "@/components/new-footer"
 import ScrollingBanner from "@/components/scrolling-banner"
@@ -18,7 +33,7 @@ import Image from "next/image"
 export default function IndexPage() {
     return (
         <>
-            <main className="container mx-auto flex flex-col grow items-center justify-center px-8 py-4 justify-evenly">
+            <main className="container mx-auto flex flex-col grow items-center justify-center px-8 pt-8 gap-2">
                 <section className="flex flex-col items-center justify-center gap-5 md:gap-6">
                     <div className="text-center font-bold leading-[1.2] tracking-tight text-5xl md:text-6xl">
                         <div className="bg-gradient-to-r from-foreground to-foreground-500 bg-clip-text text-transparent">
@@ -124,21 +139,13 @@ export default function IndexPage() {
 
                 <section className="mx-auto w-full max-w-xl invert dark:invert-0">
                     <ScrollingBanner shouldPauseOnHover gap="2rem">
-                        <Image src={NextJSLogo} className="w-32" />
-                        <Image src={SupabaseLogo} className="w-32" />
-                        <Image src={NextUILogo} className="w-32" />
-                        <Image src={CapacitorLogo} className="w-32 grayscale invert" />
-                        <Image src={VercelLogo} className="w-32" />
-                        <Image src={StripeLogo} className="w-24" />
-                        <Image src={TailwindLogo} className="w-32 grayscale invert" />
-
-                        <Image src={NextJSLogo} className="w-32" />
-                        <Image src={SupabaseLogo} className="w-32" />
-                        <Image src={NextUILogo} className="w-32" />
-                        <Image src={CapacitorLogo} className="w-32 grayscale invert" />
-                        <Image src={VercelLogo} className="w-32" />
-                        <Image src={StripeLogo} className="w-24" />
-                        <Image src={TailwindLogo} className="w-32 grayscale invert" />
+                        <Image src={NextJSLogo} className="w-36" />
+                        <Image src={SupabaseLogo} className="w-36" />
+                        <Image src={NextUILogo} className="w-36" />
+                        <Image src={CapacitorLogo} className="w-36 grayscale invert" />
+                        <Image src={VercelLogo} className="w-36" />
+                        <Image src={StripeLogo} className="w-32" />
+                        <Image src={TailwindLogo} className="w-36 grayscale invert" />
                     </ScrollingBanner>
                 </section>
             </main>
