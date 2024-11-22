@@ -37,7 +37,7 @@ export default function IndexPage() {
                                     startContent={
                                         <PlusCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast("Default Toast")}
+                                    onPress={() => toast("Toast")}
                                 >
                                     Default
                                 </DropdownItem>
@@ -46,7 +46,7 @@ export default function IndexPage() {
                                     startContent={
                                         <CheckCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.success("Success Toast")}
+                                    onPress={() => toast.success("Success")}
                                 >
                                     Success
                                 </DropdownItem>
@@ -55,7 +55,7 @@ export default function IndexPage() {
                                     startContent={
                                         <InformationCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.info("Info Toast")}
+                                    onPress={() => toast.info("Info")}
                                 >
                                     Info
                                 </DropdownItem>
@@ -64,7 +64,7 @@ export default function IndexPage() {
                                     startContent={
                                         <ExclamationTriangleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.warning("Warning Toast")}
+                                    onPress={() => toast.warning("Warning")}
                                 >
                                     Warning
                                 </DropdownItem>
@@ -73,7 +73,7 @@ export default function IndexPage() {
                                     startContent={
                                         <ExclamationCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.error("Error Toast")}>
+                                    onPress={() => toast.error("Error")}>
                                     Error
                                 </DropdownItem>
                                 <DropdownItem
@@ -82,7 +82,7 @@ export default function IndexPage() {
                                         <Spinner size="sm" color="current" />
                                     }
                                     onPress={() => {
-                                        toast.loading("Loading Toast")
+                                        toast.loading("Loading")
                                         setTimeout(() => {
                                             toast.dismiss()
                                         }, 4000)
