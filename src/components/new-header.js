@@ -167,7 +167,7 @@ export default function NewHeader() {
                             </button>
                         </DropdownTrigger>
 
-                        <DropdownMenu aria-label="Profile Actions" variant="flat">
+                        <DropdownMenu aria-label="Profile Actions" variant="flat" className="-mb-2">
                             <DropdownSection title={session?.user.email || "Account"}>
                                 <DropdownItem key="settings">My Settings</DropdownItem>
                                 <DropdownItem key="team_settings">Team Settings</DropdownItem>
