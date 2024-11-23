@@ -1,21 +1,47 @@
 import React, { useState } from "react"
 import { Button, Input, Checkbox, Link, Divider, Card, CardBody } from "@nextui-org/react"
 import { Icon } from "@iconify/react"
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
+import { EnvelopeIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
 import BrandIcon from "@/components/brand-icon"
+
+const authProviders = {
+    apple: {
+        name: "Apple",
+        icon: <BrandIcon brand="apple" alt="Apple" className="size-[20px] -mt-0.5 dark:invert" />,
+    },
+    discord: {
+        name: "Discord",
+        icon: <BrandIcon brand="discord" alt="Discord" className="size-[22px]" />,
+    },
+    facebook: {
+        name: "Facebook",
+        icon: <BrandIcon brand="facebook" alt="Facebook" className="size-[21px]" />,
+    },
+    google: {
+        name: "Google",
+        icon: <BrandIcon brand="google" alt="Google" className="size-[18px]" />,
+    },
+    github: {
+        name: "GitHub",
+        icon: <BrandIcon brand="github" alt="GitHub" className="size-[20px] dark:invert" />,
+    }
+}
 
 export default function Login() {
     const [isVisible, setIsVisible] = useState(false)
+    const [view, setView] = useState("login")
+    const magicLink = true
+    const providers = ["google", "facebook", "apple"]
 
     const toggleVisibility = () => setIsVisible(!isVisible)
 
     return (
-        <div className="flex flex-col grow items-center justify-center p-4">
+        <div className="flex flex-col grow items-center justify-center p-4 gap-4">
             <Card
                 fullWidth
-                className="max-w-sm px-2 pb-3 pt-2"
+                className="max-w-sm"
             >
-                <CardBody className="gap-4">
+                <CardBody className="gap-4 px-8 pb-8 pt-6">
                     <p className="text-xl font-medium">Log In</p>
 
                     <form
@@ -69,71 +95,48 @@ export default function Login() {
                         <Divider className="flex-1" />
                     </div>
 
+                    <div className="flex flex-col gap-2">
+                        {magicLink && (
+                            <Button
+                                startContent={
+                                    <EnvelopeIcon className="size-6" />
+                                }
+                                variant="bordered"
+                            >
+                                Continue with Email
+                            </Button>
+                        )}
 
-                    <div className="flex gap-2 justify-stretch mb-2">
-                        <Button
-                            variant="bordered"
-                            className="min-w-0 grow"
-                        >
-                            <BrandIcon brand="discord" className="size-[24px]" />
-                        </Button>
+                        {providers?.length < 3 && (
+                            <div className="flex flex-col gap-2">
+                                {providers?.map((provider) => (
+                                    <Button
+                                        key={provider}
+                                        startContent={authProviders[provider].icon}
+                                        variant="bordered"
+                                    >
+                                        Continue with {authProviders[provider].name}
+                                    </Button>
+                                ))}
+                            </div>
+                        )}
 
-                        <Button
-                            variant="bordered"
-                            className="min-w-0 grow"
-                        >
-                            <BrandIcon brand="google" className="size-[20px]" />
-                        </Button>
 
-                        <Button
-                            variant="bordered"
-                            className="min-w-0 grow"
-                        >
-                            <BrandIcon brand="facebook" className="size-[22px]" />
-                        </Button>
-
-                        <Button
-                            variant="bordered"
-                            className="min-w-0 grow"
-                        >
-                            <BrandIcon brand="apple" className="size-[22px] -mt-0.5 dark:invert" />
-                        </Button>
+                        {providers?.length > 2 && (
+                            <div className="flex gap-2 justify-stretch">
+                                {providers?.map((provider) => (
+                                    <Button
+                                        key={provider}
+                                        variant="bordered"
+                                        className="min-w-0 grow"
+                                    >
+                                        {authProviders[provider].icon}
+                                    </Button>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
-                    <div className="flex flex-col gap-2 hidden">
-                        <Button
-                            startContent={<Icon className="text-default-500" icon="logos:discord-icon" width={24} />}
-                            variant="bordered"
-                        >
-                            Continue with Discord
-                        </Button>
-                        <Button
-                            startContent={<Icon icon="flat-color-icons:google" width={24} />}
-                            variant="bordered"
-                        >
-                            Continue with Google
-                        </Button>
-                        <Button
-                            startContent={<Icon icon="logos:facebook" width={22} />}
-                            variant="bordered"
-                        >
-                            Continue with Facebook
-                        </Button>
-                        <Button
-                            startContent={<Icon icon="fa:apple" width={18} className="mb-0.5" />}
-                            variant="bordered"
-                        >
-                            Continue with Apple
-                        </Button>
-
-                        <Button
-                            className="hidden"
-                            startContent={<Icon className="text-default-500" icon="fe:github" width={24} />}
-                            variant="bordered"
-                        >
-                            Continue with Github
-                        </Button>
-                    </div>
                     <p className="text-center text-small">
                         Need to create an account?&nbsp;
                         <Link href="#" size="sm">
@@ -142,6 +145,10 @@ export default function Login() {
                     </p>
                 </CardBody>
             </Card>
+
+            <p className="text-center text-small text-default-400">
+                By continuing, you agree to our <a href="/terms" className="underline">Terms</a> and <a href="/privacy" className="underline">Privacy</a>.
+            </p>
         </div>
     )
 }
