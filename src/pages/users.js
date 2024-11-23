@@ -16,102 +16,102 @@ import UserAvatar from "@/components/user-avatar"
 import { useLocale } from "next-intl"
 
 export default function UsersPage() {
-    const locale = useLocale()
-    const { autoTranslate } = useAutoTranslate()
-    const [search, setSearch] = useState('')
-    const debouncedSearch = useDebounce(search, 300)
+  const locale = useLocale()
+  const { autoTranslate } = useAutoTranslate()
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
 
-    const { entities, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch, lang: locale } : { lang: locale }, { keepPreviousData: true })
-    const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
+  const { entities, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch, lang: locale } : { lang: locale }, { keepPreviousData: true })
+  const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
-    return (
-        <div className="flex-container mx-auto max-w-xl">
-            <Input
-                size="lg"
-                fullWidth
-                isClearable
-                placeholder={autoTranslate('search_placeholder', "Type to search...")}
-                startContent={
-                    <SearchIcon className="size-5 me-0.5 pointer-events-none" />
-                }
-                value={search}
-                onValueChange={setSearch}
-            />
+  return (
+    <div className="flex-container mx-auto max-w-xl">
+      <Input
+        size="lg"
+        fullWidth
+        isClearable
+        placeholder={autoTranslate('search_placeholder', "Type to search...")}
+        startContent={
+          <SearchIcon className="size-5 me-0.5 pointer-events-none" />
+        }
+        value={search}
+        onValueChange={setSearch}
+      />
 
-            <div className="flex flex-col gap-4 transition-all w-full">
-                {!users?.length && !isLoading && (
-                    <Card fullWidth>
-                        <CardBody className="p-8">
-                            <AutoTranslate tKey="no_users">
-                                No users found...
-                            </AutoTranslate>
-                        </CardBody>
-                    </Card>
-                )}
+      <div className="flex flex-col gap-4 transition-all w-full">
+        {!users?.length && !isLoading && (
+          <Card fullWidth>
+            <CardBody className="p-8">
+              <AutoTranslate tKey="no_users">
+                No users found...
+              </AutoTranslate>
+            </CardBody>
+          </Card>
+        )}
 
-                {isLoading && !users && [...Array(3)].fill({}).map((_, index) => (
-                    <Card key={index}>
-                        <CardBody className="p-4">
-                            <div className="flex items-center gap-4">
-                                <Skeleton className="size-14 rounded-full" />
+        {isLoading && !users && [...Array(3)].fill({}).map((_, index) => (
+          <Card key={index}>
+            <CardBody className="p-4">
+              <div className="flex items-center gap-4">
+                <Skeleton className="size-14 rounded-full" />
 
-                                <div className="space-y-2">
-                                    <Skeleton className="h-4 w-[100px] rounded-lg" />
-                                    <Skeleton className="h-4 w-[150px] rounded-lg" />
-                                </div>
-                            </div>
-                        </CardBody>
-                    </Card>
-                ))}
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[100px] rounded-lg" />
+                  <Skeleton className="h-4 w-[150px] rounded-lg" />
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        ))}
 
-                {users?.map((user, index) => (
-                    <Card
-                        key={index}
-                        as={Link}
-                        href={`/user?user_id=${user.id}`}
-                        linkAs={`/user/${user.id}`}
-                        isPressable
-                        fullWidth
-                    >
-                        <CardBody className="p-4 flex-row items-center gap-4">
-                            <UserAvatar user={user} size="lg" />
+        {users?.map((user, index) => (
+          <Card
+            key={index}
+            as={Link}
+            href={`/user?user_id=${user.id}`}
+            linkAs={`/user/${user.id}`}
+            isPressable
+            fullWidth
+          >
+            <CardBody className="p-4 flex-row items-center gap-4">
+              <UserAvatar user={user} size="lg" />
 
-                            <div>
-                                <p className="font-semibold">
-                                    {user.full_name || "Unnamed"}
-                                </p>
+              <div>
+                <p className="font-semibold">
+                  {user.full_name || "Unnamed"}
+                </p>
 
-                                <p className="text-foreground-400 text-small">
-                                    <AutoTranslate tKey="subscription">
-                                        Subscription:
-                                    </AutoTranslate>
+                <p className="text-foreground-400 text-small">
+                  <AutoTranslate tKey="subscription">
+                    Subscription:
+                  </AutoTranslate>
 
-                                    <span className={cn('ml-1.5', user.claims?.premium ? "text-success font-semibold" : "text-foreground")}>
-                                        {user.claims?.premium ?
-                                            <AutoTranslate tKey="active">
-                                                Active
-                                            </AutoTranslate>
-                                            :
-                                            <AutoTranslate tKey="inactive">
-                                                Inactive
-                                            </AutoTranslate>
-                                        }
-                                    </span>
-                                </p>
-                            </div>
-                        </CardBody>
-                    </Card>
-                ))}
-            </div>
-        </div>
-    )
+                  <span className={cn('ml-1.5', user.claims?.premium ? "text-success font-semibold" : "text-foreground")}>
+                    {user.claims?.premium ?
+                      <AutoTranslate tKey="active">
+                        Active
+                      </AutoTranslate>
+                      :
+                      <AutoTranslate tKey="inactive">
+                        Inactive
+                      </AutoTranslate>
+                    }
+                  </span>
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export async function getStaticProps({ locale, params }) {
-    const translationProps = await getTranslationProps({ locale, params })
+  const translationProps = await getTranslationProps({ locale, params })
 
 
-    return { props: { ...translationProps, } }
+  return { props: { ...translationProps, } }
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined

@@ -15,271 +15,271 @@ import { useSession } from '@supabase/auth-helpers-react'
 import { toast } from 'sonner'
 
 export default memo(({
-    message,
-    user,
-    isOnline,
-    mutateMessage,
-    deleteMessage,
-    sendData,
-    sendWhisperData,
-    updateMessage,
-    setWhisperUser
+  message,
+  user,
+  isOnline,
+  mutateMessage,
+  deleteMessage,
+  sendData,
+  sendWhisperData,
+  updateMessage,
+  setWhisperUser
 }) => {
-    const session = useSession()
-    const locale = useLocale()
-    const { autoTranslate } = useAutoTranslate("message")
-    const isWhisper = !!message.recipient_id
-    const isOutgoing = message.user_id == session?.user.id
-    const [isEditing, setIsEditing] = useState(false)
-    const [editedContent, setEditedContent] = useState(getLocaleValue(message.content, locale))
+  const session = useSession()
+  const locale = useLocale()
+  const { autoTranslate } = useAutoTranslate("message")
+  const isWhisper = !!message.recipient_id
+  const isOutgoing = message.user_id == session?.user.id
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedContent, setEditedContent] = useState(getLocaleValue(message.content, locale))
 
-    const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user?.id)
-    const createEntity = useCreateEntity()
-    const deleteEntity = useDeleteEntity()
+  const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user?.id)
+  const createEntity = useCreateEntity()
+  const deleteEntity = useDeleteEntity()
 
-    const likeMessage = (message) => {
-        const messageLike = { message_id: message.id, user_id: user.id }
-        createEntity("message_likes", messageLike).then(({ error }) => {
-            if (error) {
-                return mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
-            }
+  const likeMessage = (message) => {
+    const messageLike = { message_id: message.id, user_id: user.id }
+    createEntity("message_likes", messageLike).then(({ error }) => {
+      if (error) {
+        return mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
+      }
 
-            !error && sendData && sendData({ event: "like_message" })
-        })
+      !error && sendData && sendData({ event: "like_message" })
+    })
 
-        mutateMessage({ ...message, likes: [...(message.likes || []), { ...messageLike, user }] })
+    mutateMessage({ ...message, likes: [...(message.likes || []), { ...messageLike, user }] })
+  }
+
+  const unlikeMessage = (message) => {
+    const messageLike = message.likes?.find((like) => like.user_id == user.id)
+    if (!messageLike) {
+      toast.error("Message like not found")
+      return
     }
 
-    const unlikeMessage = (message) => {
-        const messageLike = message.likes?.find((like) => like.user_id == user.id)
-        if (!messageLike) {
-            toast.error("Message like not found")
-            return
-        }
+    deleteEntity("message_likes", null, { message_id: message.id, user_id: user.id }).then(({ error }) => {
+      if (error) {
+        return mutateMessage({ ...message, likes: [...(message.likes || []), messageLike] })
+      }
 
-        deleteEntity("message_likes", null, { message_id: message.id, user_id: user.id }).then(({ error }) => {
-            if (error) {
-                return mutateMessage({ ...message, likes: [...(message.likes || []), messageLike] })
-            }
+      !error && sendData && sendData({ event: "like_message" })
+    })
 
-            !error && sendData && sendData({ event: "like_message" })
-        })
+    mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
+  }
 
-        mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
+  useEffect(() => {
+    if (isEditing) {
+      const distanceToBottom = document.body.scrollHeight - window.scrollY - window.innerHeight
+
+      if (distanceToBottom < 200) {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' })
+      }
     }
+  }, [isEditing])
 
-    useEffect(() => {
-        if (isEditing) {
-            const distanceToBottom = document.body.scrollHeight - window.scrollY - window.innerHeight
+  const localizedMessage = getLocaleValue(message.content, locale, message.locale)
+  const originalMessage = getLocaleValue(message.content, message.locale)
 
-            if (distanceToBottom < 200) {
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' })
-            }
-        }
-    }, [isEditing])
+  return (
+    <div
+      key={message.id}
+      className={cn(
+        "flex gap-3 w-full",
+        isOutgoing && "flex-row-reverse"
+      )}
+    >
+      <Dropdown>
+        <DropdownTrigger>
+          <UserAvatar as={Button} isIconOnly user={message.user} />
+        </DropdownTrigger>
 
-    const localizedMessage = getLocaleValue(message.content, locale, message.locale)
-    const originalMessage = getLocaleValue(message.content, message.locale)
+        <DropdownMenu itemClasses={{ title: "!text-base", base: "gap-3 px-3" }}>
+          <DropdownItem
+            as={Link}
+            href={`/user?user_id=${message.user_id}`}
+            linkAs={`/user/${message.user_id}`}
+            startContent={<UserIcon className="size-5" />}
+          >
+            {autoTranslate('view_profile', 'View Profile')}
+          </DropdownItem>
 
-    return (
-        <div
-            key={message.id}
-            className={cn(
-                "flex gap-3 w-full",
-                isOutgoing && "flex-row-reverse"
-            )}
-        >
-            <Dropdown>
-                <DropdownTrigger>
-                    <UserAvatar as={Button} isIconOnly user={message.user} />
-                </DropdownTrigger>
+          {message.user_id !== user?.id && (
+            <DropdownItem
+              key="whisper"
+              startContent={<ChatBubbleOvalLeftIcon className="size-5" />}
+              onPress={() => setTimeout(() => setWhisperUser(message.user), 200)}
+            >
+              {autoTranslate('whisper', 'Whisper')}
+            </DropdownItem>
+          )}
+        </DropdownMenu>
+      </Dropdown>
 
-                <DropdownMenu itemClasses={{ title: "!text-base", base: "gap-3 px-3" }}>
-                    <DropdownItem
-                        as={Link}
-                        href={`/user?user_id=${message.user_id}`}
-                        linkAs={`/user/${message.user_id}`}
-                        startContent={<UserIcon className="size-5" />}
-                    >
-                        {autoTranslate('view_profile', 'View Profile')}
-                    </DropdownItem>
+      {isEditing ? (
+        <div className="flex flex-col gap-2 w-64">
+          <Textarea
+            fullWidth
+            size="lg"
+            variant="bordered"
+            value={editedContent}
+            onValueChange={(value) => setEditedContent(value)}
+          />
 
-                    {message.user_id !== user?.id && (
-                        <DropdownItem
-                            key="whisper"
-                            startContent={<ChatBubbleOvalLeftIcon className="size-5" />}
-                            onPress={() => setTimeout(() => setWhisperUser(message.user), 200)}
-                        >
-                            {autoTranslate('whisper', 'Whisper')}
-                        </DropdownItem>
-                    )}
-                </DropdownMenu>
-            </Dropdown>
+          <div className="flex gap-2">
+            <Button
+              size="lg"
+              color="primary"
+              onPress={async () => {
+                setIsEditing(false)
+                const { error } = await updateMessage(message.id, { content: { [locale]: editedContent } })
+                isWhisper && !error && sendWhisperData({ event: "update_entity" })
+              }}
+            >
+              Save
+            </Button>
 
-            {isEditing ? (
-                <div className="flex flex-col gap-2 w-64">
-                    <Textarea
-                        fullWidth
-                        size="lg"
-                        variant="bordered"
-                        value={editedContent}
-                        onValueChange={(value) => setEditedContent(value)}
+            <Button
+              size="lg"
+              onPress={() => setIsEditing(false)}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              isIconOnly
+              color="danger"
+              size="lg"
+              onPress={async () => {
+                setIsEditing(false)
+                const { error } = await deleteMessage(message.id) || {}
+                isWhisper && !error && sendWhisperData({ event: "delete_entity" })
+              }}
+            >
+              <TrashIcon className="size-4" />
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <Card className={cn("max-w-[70%]",
+            isWhisper ? "bg-secondary text-secondary-foreground" :
+              isOutgoing ? "bg-primary text-primary-foreground" : "bg-content2 text-default-foreground"
+          )}>
+            <CardBody className="px-4 py-3 gap-2">
+              <div className="flex gap-4 items-center">
+                <h6>
+                  {message.user?.full_name || "Unnamed"}
+                </h6>
+
+                <ReactTimeAgo
+                  className={cn("ms-auto text-small",
+                    (isOutgoing || isWhisper) ? "text-primary-foreground/60" : "text-default-400"
+                  )}
+                  date={new Date(message.created_at)}
+                  locale={locale}
+                  timeStyle="mini-minute-now"
+                />
+              </div>
+
+              {message.recipient_id && (
+                <div className="flex items-center gap-2">
+                  <ArrowRightIcon className="size-4 -mx-1" />
+
+                  <UserAvatar user={isOutgoing ? message.recipient : user} size="sm" className="ms-1 w-6 h-6" />
+
+                  {message.recipient?.full_name || (!isOutgoing && user?.full_name)}
+                </div>
+              )}
+
+              <div className="flex justify-between gap-4">
+                <p className={cn(isWhisper ? "text-secondary-foreground/95" :
+                  isOutgoing ? "text-primary-foreground/95" : "text-foreground/95")}>
+                  {localizedMessage}
+                </p>
+
+                {message.user_id == user?.id && (
+                  <Button
+                    size="sm"
+                    variant="light"
+                    isIconOnly
+                    radius="full"
+                    onPress={() => setIsEditing(true)}
+                    className="-me-2 -ms-1 -my-1 self-center"
+                  >
+                    <PencilIcon className="size-3 text-primary-foreground" />
+                  </Button>
+                )}
+              </div>
+
+              {localizedMessage != originalMessage && (
+                <>
+                  <Divider className={cn((isOutgoing || isWhisper) && "invert dark:invert-0")} />
+
+                  <div className="flex justify-start gap-3">
+                    <Flag
+                      code={localeToCountry[message.locale]}
+                      gradient="real-linear"
+                      size="m"
+                      hasDropShadow
                     />
 
-                    <div className="flex gap-2">
-                        <Button
-                            size="lg"
-                            color="primary"
-                            onPress={async () => {
-                                setIsEditing(false)
-                                const { error } = await updateMessage(message.id, { content: { [locale]: editedContent } })
-                                isWhisper && !error && sendWhisperData({ event: "update_entity" })
-                            }}
-                        >
-                            Save
-                        </Button>
-
-                        <Button
-                            size="lg"
-                            onPress={() => setIsEditing(false)}
-                        >
-                            Cancel
-                        </Button>
-
-                        <Button
-                            isIconOnly
-                            color="danger"
-                            size="lg"
-                            onPress={async () => {
-                                setIsEditing(false)
-                                const { error } = await deleteMessage(message.id) || {}
-                                isWhisper && !error && sendWhisperData({ event: "delete_entity" })
-                            }}
-                        >
-                            <TrashIcon className="size-4" />
-                        </Button>
-                    </div>
-                </div>
-            ) : (
-                <>
-                    <Card className={cn("max-w-[70%]",
-                        isWhisper ? "bg-secondary text-secondary-foreground" :
-                            isOutgoing ? "bg-primary text-primary-foreground" : "bg-content2 text-default-foreground"
-                    )}>
-                        <CardBody className="px-4 py-3 gap-2">
-                            <div className="flex gap-4 items-center">
-                                <h6>
-                                    {message.user?.full_name || "Unnamed"}
-                                </h6>
-
-                                <ReactTimeAgo
-                                    className={cn("ms-auto text-small",
-                                        (isOutgoing || isWhisper) ? "text-primary-foreground/60" : "text-default-400"
-                                    )}
-                                    date={new Date(message.created_at)}
-                                    locale={locale}
-                                    timeStyle="mini-minute-now"
-                                />
-                            </div>
-
-                            {message.recipient_id && (
-                                <div className="flex items-center gap-2">
-                                    <ArrowRightIcon className="size-4 -mx-1" />
-
-                                    <UserAvatar user={isOutgoing ? message.recipient : user} size="sm" className="ms-1 w-6 h-6" />
-
-                                    {message.recipient?.full_name || (!isOutgoing && user?.full_name)}
-                                </div>
-                            )}
-
-                            <div className="flex justify-between gap-4">
-                                <p className={cn(isWhisper ? "text-secondary-foreground/95" :
-                                    isOutgoing ? "text-primary-foreground/95" : "text-foreground/95")}>
-                                    {localizedMessage}
-                                </p>
-
-                                {message.user_id == user?.id && (
-                                    <Button
-                                        size="sm"
-                                        variant="light"
-                                        isIconOnly
-                                        radius="full"
-                                        onPress={() => setIsEditing(true)}
-                                        className="-me-2 -ms-1 -my-1 self-center"
-                                    >
-                                        <PencilIcon className="size-3 text-primary-foreground" />
-                                    </Button>
-                                )}
-                            </div>
-
-                            {localizedMessage != originalMessage && (
-                                <>
-                                    <Divider className={cn((isOutgoing || isWhisper) && "invert dark:invert-0")} />
-
-                                    <div className="flex justify-start gap-3">
-                                        <Flag
-                                            code={localeToCountry[message.locale]}
-                                            gradient="real-linear"
-                                            size="m"
-                                            hasDropShadow
-                                        />
-
-                                        {(isOutgoing || isWhisper) ? (
-                                            <Image alt="Google Translate" src="/logos/translated-by-google-white.svg" width={122} height={16} className="dark:hidden" />
-                                        ) : (
-                                            <Image alt="Google Translate" src="/logos/translated-by-google-color.svg" width={122} height={16} className="dark:hidden" />
-                                        )}
-                                        <Image alt="Google Translate" src="/logos/translated-by-google-white.svg" width={122} height={16} className="hidden dark:block" />
-                                    </div>
-                                </>
-                            )}
-                        </CardBody>
-                    </Card>
-
-                    {isWhisper ? !isOutgoing && (
-                        <Button
-                            size="sm"
-                            variant="light"
-                            isIconOnly
-                            radius="full"
-                            onPress={() => setWhisperUser(message.user)}
-                            className="-mx-1 self-center"
-                            isDisabled={!user}
-                        >
-                            <ChatBubbleOvalLeftIcon
-                                className="size-5 text-default"
-                            />
-                        </Button>
+                    {(isOutgoing || isWhisper) ? (
+                      <Image alt="Google Translate" src="/logos/translated-by-google-white.svg" width={122} height={16} className="dark:hidden" />
                     ) : (
-                        <Button
-                            size="sm"
-                            variant="light"
-                            isIconOnly
-                            radius="full"
-                            onPress={
-                                () => {
-                                    isMessageLiked(message)
-                                        ? unlikeMessage(message)
-                                        : likeMessage(message)
-                                }}
-                            className="-mx-1 self-center"
-                            isDisabled={!user}
-                        >
-                            <HeartIcon
-                                className={cn(isMessageLiked(message) ? "text-danger" : "text-default",
-                                    "size-5"
-                                )}
-                            />
-                        </Button>
+                      <Image alt="Google Translate" src="/logos/translated-by-google-color.svg" width={122} height={16} className="dark:hidden" />
                     )}
-
-                    <AvatarGroup max={3} size="sm">
-                        {message.likes?.map((like) => (
-                            <UserAvatar key={like.user_id} user={like.user} size="sm" />
-                        ))}
-                    </AvatarGroup>
+                    <Image alt="Google Translate" src="/logos/translated-by-google-white.svg" width={122} height={16} className="hidden dark:block" />
+                  </div>
                 </>
-            )}
-        </div>
-    )
+              )}
+            </CardBody>
+          </Card>
+
+          {isWhisper ? !isOutgoing && (
+            <Button
+              size="sm"
+              variant="light"
+              isIconOnly
+              radius="full"
+              onPress={() => setWhisperUser(message.user)}
+              className="-mx-1 self-center"
+              isDisabled={!user}
+            >
+              <ChatBubbleOvalLeftIcon
+                className="size-5 text-default"
+              />
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              variant="light"
+              isIconOnly
+              radius="full"
+              onPress={
+                () => {
+                  isMessageLiked(message)
+                    ? unlikeMessage(message)
+                    : likeMessage(message)
+                }}
+              className="-mx-1 self-center"
+              isDisabled={!user}
+            >
+              <HeartIcon
+                className={cn(isMessageLiked(message) ? "text-danger" : "text-default",
+                  "size-5"
+                )}
+              />
+            </Button>
+          )}
+
+          <AvatarGroup max={3} size="sm">
+            {message.likes?.map((like) => (
+              <UserAvatar key={like.user_id} user={like.user} size="sm" />
+            ))}
+          </AvatarGroup>
+        </>
+      )}
+    </div>
+  )
 })

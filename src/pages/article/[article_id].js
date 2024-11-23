@@ -7,29 +7,29 @@ import ArticlePage from '../article'
 export default ArticlePage
 
 export async function getStaticPaths() {
-    if (isExport()) return getLocalePaths()
+  if (isExport()) return getLocalePaths()
 
-    return {
-        paths: [],
-        fallback: true
-    }
+  return {
+    paths: [],
+    fallback: true
+  }
 }
 
 export async function getStaticProps({ locale, params }) {
-    const translationProps = await getTranslationProps({ locale, params })
+  const translationProps = await getTranslationProps({ locale, params })
 
-    if (isExport()) return { props: { ...translationProps, canGoBack: true } }
+  if (isExport()) return { props: { ...translationProps, canGoBack: true } }
 
-    const { article_id } = params
-    const { entity: article } = await getEntity('articles', article_id, { lang: locale })
+  const { article_id } = params
+  const { entity: article } = await getEntity('articles', article_id, { lang: locale })
 
-    return {
-        props: {
-            ...translationProps,
-            article_id,
-            article,
-            canGoBack: true
-        },
-        revalidate: 60
-    }
+  return {
+    props: {
+      ...translationProps,
+      article_id,
+      article,
+      canGoBack: true
+    },
+    revalidate: 60
+  }
 }

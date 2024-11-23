@@ -8,76 +8,76 @@ import { EllipsisHorizontalIcon, ExclamationTriangleIcon, ShareIcon } from '@her
 import { toast } from 'sonner'
 
 const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
-    const { autoTranslate } = useAutoTranslate()
-    const linkCopiedText = autoTranslate('link_copied', 'Link copied to clipboard')
-    const router = useRouter()
+  const { autoTranslate } = useAutoTranslate()
+  const linkCopiedText = autoTranslate('link_copied', 'Link copied to clipboard')
+  const router = useRouter()
 
-    const handleReport = () => {
-        // Handle report action
-        console.log("Report action triggered")
+  const handleReport = () => {
+    // Handle report action
+    console.log("Report action triggered")
+  }
+
+  const handleShare = async () => {
+    // Extract metadata
+    const title = document.querySelector('title').textContent;
+
+    // Handle share action
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          url: `${process.env.NEXT_PUBLIC_BASE_URL}${router.asPath}`,
+          title: title
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${router.asPath}`)
+        toast.success(linkCopiedText)
+      } catch (error) {
+        console.error(error)
+      }
     }
+  }
 
-    const handleShare = async () => {
-        // Extract metadata
-        const title = document.querySelector('title').textContent;
+  return (
+    <Dropdown placement="bottom-end">
+      <DropdownTrigger>
+        <Button
+          isIconOnly
+          variant={variant}
+          aria-label="More options"
+          disableRipple
+          radius="full"
+          className={className}
+          isDisabled={isDisabled}
+          size="sm"
+        >
+          <EllipsisHorizontalIcon className="size-7" />
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Options actions" itemClasses={{ title: "!text-lg", base: "gap-4" }}>
+        <DropdownItem
+          key="share"
+          startContent={<ShareIcon className="size-5" />}
+          onPress={handleShare}
+        >
+          {autoTranslate("share", "Share")}
+        </DropdownItem>
 
-        // Handle share action
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    url: `${process.env.NEXT_PUBLIC_BASE_URL}${router.asPath}`,
-                    title: title
-                })
-            } catch (error) {
-                console.error(error)
-            }
-        } else {
-            try {
-                await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${router.asPath}`)
-                toast.success(linkCopiedText)
-            } catch (error) {
-                console.error(error)
-            }
-        }
-    }
-
-    return (
-        <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-                <Button
-                    isIconOnly
-                    variant={variant}
-                    aria-label="More options"
-                    disableRipple
-                    radius="full"
-                    className={className}
-                    isDisabled={isDisabled}
-                    size="sm"
-                >
-                    <EllipsisHorizontalIcon className="size-7" />
-                </Button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Options actions" itemClasses={{ title: "!text-lg", base: "gap-4" }}>
-                <DropdownItem
-                    key="share"
-                    startContent={<ShareIcon className="size-5" />}
-                    onPress={handleShare}
-                >
-                    {autoTranslate("share", "Share")}
-                </DropdownItem>
-
-                <DropdownItem
-                    key="report"
-                    className="text-danger hidden"
-                    color="danger"
-                    startContent={<ExclamationTriangleIcon className="size-6 mt-0.5 -me-1" />}
-                    onPress={handleReport}
-                >
-                    {autoTranslate("report", "Report")}
-                </DropdownItem>
-            </DropdownMenu>
-        </Dropdown>
-    )
+        <DropdownItem
+          key="report"
+          className="text-danger hidden"
+          color="danger"
+          startContent={<ExclamationTriangleIcon className="size-6 mt-0.5 -me-1" />}
+          onPress={handleReport}
+        >
+          {autoTranslate("report", "Report")}
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  )
 }
 
 export default OptionsDropdown

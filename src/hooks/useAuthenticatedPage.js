@@ -11,17 +11,17 @@ import { usePathname, useLocaleRouter } from "@/i18n/routing"
  * @returns {import("@supabase/auth-helpers-react").SessionContext} An object containing the session and isLoading state.
  */
 const useAuthenticatedPage = () => {
-    const { session, isLoading, error, supabaseClient } = useSessionContext()
-    const localeRouter = useLocaleRouter()
-    const pathname = usePathname()
+  const { session, isLoading, error, supabaseClient } = useSessionContext()
+  const localeRouter = useLocaleRouter()
+  const pathname = usePathname()
 
-    useEffect(() => {
-        if (!isLoading && !session) {
-            localeRouter.replace(`/login?returnTo=${pathname}`)
-        }
-    }, [session, isLoading])
+  useEffect(() => {
+    if (!isLoading && !session) {
+      localeRouter.replace(`/login?returnTo=${pathname}`)
+    }
+  }, [session, isLoading])
 
-    return { session, isLoading, error, supabaseClient }
+  return { session, isLoading, error, supabaseClient }
 }
 
 export default useAuthenticatedPage
