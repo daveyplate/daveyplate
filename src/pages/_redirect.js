@@ -5,16 +5,16 @@ import languageDetector from '@/i18n/language-detector'
 
 // Index redirect for static export & Capacitor
 export default () => {
-  const router = useRouter()
-  let to = router.asPath
+    const router = useRouter()
+    let to = router.asPath
 
-  // Language detection
-  useEffect(() => {
-    if (!to || to == "/") {
-      const detectedLng = languageDetector.detect()
-      to = `/${detectedLng}${to}`
-    }
+    // Language detection
+    useEffect(() => {
+        if (!to || to == "/") {
+            const detectedLng = languageDetector.detect()
+            to = `/${detectedLng}${to}`
+        }
 
-    router.replace(to)
-  }, [])
+        router.replace(to)
+    }, [])
 }

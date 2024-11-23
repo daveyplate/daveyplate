@@ -10,66 +10,66 @@ import { AutoTranslate } from 'next-auto-translate'
 import { getLocalePaths } from '@/i18n/locale-paths'
 
 export default function BlogPage() {
-  const locale = useLocale()
-  const { entities: articles, isLoading } = useEntities('articles', { lang: locale })
+    const locale = useLocale()
+    const { entities: articles, isLoading } = useEntities('articles', { lang: locale })
 
-  return (
-    <div className="flex-container max-w-xl mx-auto">
-      {isLoading && [...Array(3)].fill({}).map((_, index) => (
-        <Card key={index} fullWidth>
-          <CardBody className="flex flex-col items-start p-4 gap-4">
-            <Skeleton className="text-lg h-8 w-1/2 rounded-lg" />
-            <Skeleton className="text-sm h-5 w-3/4 rounded-lg" />
-            <Skeleton className="text-sm h-7 w-1/3 rounded-lg" />
-          </CardBody>
-        </Card>
-      ))}
+    return (
+        <div className="flex-container max-w-xl mx-auto">
+            {isLoading && [...Array(3)].fill({}).map((_, index) => (
+                <Card key={index} fullWidth>
+                    <CardBody className="flex flex-col items-start p-4 gap-4">
+                        <Skeleton className="text-lg h-8 w-1/2 rounded-lg" />
+                        <Skeleton className="text-sm h-5 w-3/4 rounded-lg" />
+                        <Skeleton className="text-sm h-7 w-1/3 rounded-lg" />
+                    </CardBody>
+                </Card>
+            ))}
 
-      {!isLoading && articles?.map((article) => (
-        <Card
-          key={article.id}
-          as={Link}
-          href={`/article?article_id=${article.id}`}
-          linkAs={`/article/${article.id}`}
-          isPressable
-          fullWidth
-        >
-          <CardBody className="flex flex-col items-start p-4 gap-4">
-            <h5 className="flex items-center">
-              {article.thumbnail_url && (
-                <Image
-                  src={article.thumbnail_url}
-                  alt={getLocaleValue(article.title, locale)}
-                  className="w-12 h-12"
-                  objectFit="cover"
-                />
-              )}
+            {!isLoading && articles?.map((article) => (
+                <Card
+                    key={article.id}
+                    as={Link}
+                    href={`/article?article_id=${article.id}`}
+                    linkAs={`/article/${article.id}`}
+                    isPressable
+                    fullWidth
+                >
+                    <CardBody className="flex flex-col items-start p-4 gap-4">
+                        <h5 className="flex items-center">
+                            {article.thumbnail_url && (
+                                <Image
+                                    src={article.thumbnail_url}
+                                    alt={getLocaleValue(article.title, locale)}
+                                    className="w-12 h-12"
+                                    objectFit="cover"
+                                />
+                            )}
 
-              {getLocaleValue(article.title, locale)}
-            </h5>
+                            {getLocaleValue(article.title, locale)}
+                        </h5>
 
-            <p className="text-sm opacity-80">
-              {getLocaleValue(article.summary, locale)}
-            </p>
+                        <p className="text-sm opacity-80">
+                            {getLocaleValue(article.summary, locale)}
+                        </p>
 
-            <div className="flex items-center">
-              <span className="text-gray-600 font-medium mr-2">
-                <AutoTranslate tKey="written_by">Written By</AutoTranslate> {article?.user?.full_name}
-              </span>
+                        <div className="flex items-center">
+                            <span className="text-gray-600 font-medium mr-2">
+                                <AutoTranslate tKey="written_by">Written By</AutoTranslate> {article?.user?.full_name}
+                            </span>
 
-              <UserAvatar user={article?.user} size="sm" />
-            </div>
-          </CardBody>
-        </Card>
-      ))}
-    </div>
-  )
+                            <UserAvatar user={article?.user} size="sm" />
+                        </div>
+                    </CardBody>
+                </Card>
+            ))}
+        </div>
+    )
 }
 
 export async function getStaticProps({ locale, params }) {
-  const translationProps = await getTranslationProps({ locale, params })
+    const translationProps = await getTranslationProps({ locale, params })
 
-  return { props: { ...translationProps } }
+    return { props: { ...translationProps } }
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined

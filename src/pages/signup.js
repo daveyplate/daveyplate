@@ -7,14 +7,14 @@ import LoginPage from "./login"
 export default LoginPage
 
 export async function getStaticProps({ locale, params }) {
-  const translationProps = await getTranslationProps({ locale, params })
+    const translationProps = await getTranslationProps({ locale, params })
 
-  return {
-    props: {
-      view: "sign_up",
-      ...translationProps
+    return {
+        props: {
+            view: "sign_up",
+            ...translationProps
+        }
     }
-  }
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined

@@ -9,34 +9,34 @@ import { toast } from "sonner"
 
 // The key purpose is to ensure that the user's subscription status is checked after a successful order
 export default function CheckoutStatus() {
-  const router = useRouter()
-  const session = useSession()
-  const { entity: user, mutate: mutateUser } = useEntity(session ? 'profiles' : null, 'me')
-  const { postAPI } = useAPI()
+    const router = useRouter()
+    const session = useSession()
+    const { entity: user, mutate: mutateUser } = useEntity(session ? 'profiles' : null, 'me')
+    const { postAPI } = useAPI()
 
-  useEffect(() => {
-    if (router.query.success && user) {
-      toast.success('Order placed!')
+    useEffect(() => {
+        if (router.query.success && user) {
+            toast.success('Order placed!')
 
-      if (!user.premium) {
-        // Check subscription status
-        postAPI('/api/check-subscription')
-          .then(res => {
-            if (res.data.active) {
-              toast.success('Subscription active!')
-              mutateUser()
+            if (!user.premium) {
+                // Check subscription status
+                postAPI('/api/check-subscription')
+                    .then(res => {
+                        if (res.data.active) {
+                            toast.success('Subscription active!')
+                            mutateUser()
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    })
+            } else {
+                toast.success('Subscription active!')
             }
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      } else {
-        toast.success('Subscription active!')
-      }
-    }
+        }
 
-    if (router.query.canceled) {
-      toast.error('Order canceled')
-    }
-  }, [router.query, user])
+        if (router.query.canceled) {
+            toast.error('Order canceled')
+        }
+    }, [router.query, user])
 }

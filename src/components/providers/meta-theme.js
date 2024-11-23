@@ -5,16 +5,16 @@ const lightBackground = '#FFFFFF'
 const darkBackground = '#000000'
 
 export default function MetaTheme() {
-  const { resolvedTheme, theme } = useTheme()
+    const { resolvedTheme, theme } = useTheme()
 
-  return (
-    <Head>
-      <meta
-        name="theme-color"
-        content={resolvedTheme == 'dark' ? darkBackground : lightBackground}
-      />
+    return (
+        <Head>
+            <meta
+                name="theme-color"
+                content={resolvedTheme == 'dark' ? darkBackground : lightBackground}
+            />
 
-      <link rel="manifest" href={theme == 'dark' ? "/manifest-dark.json" : "/manifest.json"} />
-    </Head>
-  )
+            <link rel="manifest" href={theme == 'dark' ? "/manifest-dark.json" : "/manifest.json"} />
+        </Head>
+    )
 }

@@ -8,29 +8,29 @@ import UserPage from "../user"
 export default UserPage
 
 export async function getStaticPaths() {
-  if (isExport()) return getLocalePaths()
+    if (isExport()) return getLocalePaths()
 
-  return {
-    paths: [],
-    fallback: true
-  }
+    return {
+        paths: [],
+        fallback: true
+    }
 }
 
 export async function getStaticProps({ locale, params }) {
-  const translationProps = await getTranslationProps({ locale, params })
+    const translationProps = await getTranslationProps({ locale, params })
 
-  if (isExport()) return { props: { ...translationProps, canGoBack: true } }
+    if (isExport()) return { props: { ...translationProps, canGoBack: true } }
 
-  const { user_id } = params
-  const { entity: user } = await getEntity('profiles', user_id, { lang: locale })
+    const { user_id } = params
+    const { entity: user } = await getEntity('profiles', user_id, { lang: locale })
 
-  return {
-    props: {
-      ...translationProps,
-      user_id,
-      user: user || null,
-      canGoBack: true
-    },
-    revalidate: 60
-  }
+    return {
+        props: {
+            ...translationProps,
+            user_id,
+            user: user || null,
+            canGoBack: true
+        },
+        revalidate: 60
+    }
 }

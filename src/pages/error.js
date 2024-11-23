@@ -5,21 +5,21 @@ import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
 export default function ErrorPage() {
-  return (
-    <div className="flex-center">
-      <h3>
-        <AutoTranslate tKey="sorry">
-          Sorry, something went wrong...
-        </AutoTranslate>
-      </h3>
-    </div>
-  )
+    return (
+        <div className="flex-center">
+            <h3>
+                <AutoTranslate tKey="sorry">
+                    Sorry, something went wrong...
+                </AutoTranslate>
+            </h3>
+        </div>
+    )
 }
 
 export async function getStaticProps({ locale, params }) {
-  const translationProps = await getTranslationProps({ locale, params })
+    const translationProps = await getTranslationProps({ locale, params })
 
-  return { props: { ...translationProps } }
+    return { props: { ...translationProps } }
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined

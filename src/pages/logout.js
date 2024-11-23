@@ -13,36 +13,36 @@ import { isExport } from "@/utils/utils"
 import { createClient } from "@/utils/supabase/component"
 
 export default () => {
-  const supabase = createClient()
-  const localeRouter = useLocaleRouter()
-  const clearCache = useClearCache()
+    const supabase = createClient()
+    const localeRouter = useLocaleRouter()
+    const clearCache = useClearCache()
 
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      CapacitorCookies.clearAllCookies()
-      CapacitorCookies.clearCookies()
-    }
+    useEffect(() => {
+        if (Capacitor.isNativePlatform()) {
+            CapacitorCookies.clearAllCookies()
+            CapacitorCookies.clearCookies()
+        }
 
-    supabase.auth.signOut({ scope: "local" })
-      .finally(() => {
-        localeRouter.replace("/login")
-        clearCache()
-      })
-  }, [])
+        supabase.auth.signOut({ scope: "local" })
+            .finally(() => {
+                localeRouter.replace("/login")
+                clearCache()
+            })
+    }, [])
 
-  return (
-    <div className="flex-center">
-      <PageTitle title="" />
+    return (
+        <div className="flex-center">
+            <PageTitle title="" />
 
-      <Spinner color="current" />
-    </div>
-  )
+            <Spinner color="current" />
+        </div>
+    )
 }
 
 export async function getStaticProps({ locale, params }) {
-  const translationProps = await getTranslationProps({ locale, params })
+    const translationProps = await getTranslationProps({ locale, params })
 
-  return { props: { ...translationProps } }
+    return { props: { ...translationProps } }
 }
 
 export const getStaticPaths = isExport() ? getLocalePaths : undefined

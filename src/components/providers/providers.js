@@ -32,71 +32,71 @@ import CheckoutStatus from "@/components/providers/checkout-status"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 
 const localeValues = [
-  'fr-FR', 'fr-CA', 'de-DE', 'en-US', 'en-GB', 'ja-JP',
-  'da-DK', 'nl-NL', 'fi-FI', 'it-IT', 'nb-NO', 'es-ES',
-  'sv-SE', 'pt-BR', 'zh-CN', 'zh-TW', 'ko-KR', 'bg-BG',
-  'hr-HR', 'cs-CZ', 'et-EE', 'hu-HU', 'lv-LV', 'lt-LT',
-  'pl-PL', 'ro-RO', 'ru-RU', 'sr-SP', 'sk-SK', 'sl-SI',
-  'tr-TR', 'uk-UA', 'ar-AE', 'ar-DZ', 'AR-EG', 'ar-SA',
-  'el-GR', 'he-IL', 'fa-AF', 'am-ET', 'hi-IN', 'th-TH'
+    'fr-FR', 'fr-CA', 'de-DE', 'en-US', 'en-GB', 'ja-JP',
+    'da-DK', 'nl-NL', 'fi-FI', 'it-IT', 'nb-NO', 'es-ES',
+    'sv-SE', 'pt-BR', 'zh-CN', 'zh-TW', 'ko-KR', 'bg-BG',
+    'hr-HR', 'cs-CZ', 'et-EE', 'hu-HU', 'lv-LV', 'lt-LT',
+    'pl-PL', 'ro-RO', 'ru-RU', 'sr-SP', 'sk-SK', 'sl-SI',
+    'tr-TR', 'uk-UA', 'ar-AE', 'ar-DZ', 'AR-EG', 'ar-SA',
+    'el-GR', 'he-IL', 'fa-AF', 'am-ET', 'hi-IN', 'th-TH'
 ];
 
 
 export default function Providers({ children, ...pageProps }) {
-  useWindowFocusBlur()
-  const localeRouter = useLocaleRouter()
-  const pathname = usePathname()
-  const supabase = createClient()
-  const cacheProvider = useCacheProvider({
-    dbName: 'daveyplate',
-    storeName: 'swr-cache',
-  })
+    useWindowFocusBlur()
+    const localeRouter = useLocaleRouter()
+    const pathname = usePathname()
+    const supabase = createClient()
+    const cacheProvider = useCacheProvider({
+        dbName: 'daveyplate',
+        storeName: 'swr-cache',
+    })
 
-  const nextUILocale = localeValues.find((locale) => locale.startsWith(pageProps.locale))
+    const nextUILocale = localeValues.find((locale) => locale.startsWith(pageProps.locale))
 
-  useEffect(() => {
-    window.history.scrollRestoration = iOS() ? 'auto' : 'manual'
-  }, [localeRouter])
+    useEffect(() => {
+        window.history.scrollRestoration = iOS() ? 'auto' : 'manual'
+    }, [localeRouter])
 
-  return (
-    <PageTitleProvider>
-      <SessionContextProvider supabaseClient={supabase}>
-        <SWRConfig value={{
-          onError: (error, key) => {
-            if (error.status !== 403 && error.status !== 404) {
-              // We can send the error to Sentry,
-              // or show a notification UI.
-            }
+    return (
+        <PageTitleProvider>
+            <SessionContextProvider supabaseClient={supabase}>
+                <SWRConfig value={{
+                    onError: (error, key) => {
+                        if (error.status !== 403 && error.status !== 404) {
+                            // We can send the error to Sentry,
+                            // or show a notification UI.
+                        }
 
-            toast.error(error.message)
-          }
-        }}>
-          <NextUIProvider locale={nextUILocale} navigate={localeRouter.push}>
-            <ThemeProvider attribute="class" disableTransitionOnChange>
-              <AutoTranslateProvider
-                pathname={pathname}
-                defaultLocale={i18nConfig.i18n.defaultLocale}
-                locales={i18nConfig.i18n.locales}
-                messages={pageProps.messages || []}
-                locale={pageProps.locale}
-                debug={false}
-                disabled={true}
-              >
-                <MetaTheme />
+                        toast.error(error.message)
+                    }
+                }}>
+                    <NextUIProvider locale={nextUILocale} navigate={localeRouter.push}>
+                        <ThemeProvider attribute="class" disableTransitionOnChange>
+                            <AutoTranslateProvider
+                                pathname={pathname}
+                                defaultLocale={i18nConfig.i18n.defaultLocale}
+                                locales={i18nConfig.i18n.locales}
+                                messages={pageProps.messages || []}
+                                locale={pageProps.locale}
+                                debug={false}
+                                disabled={true}
+                            >
+                                <MetaTheme />
 
-                {children}
+                                {children}
 
-                <CheckoutStatus />
-                <ToastProvider />
-                <CapacitorProvider />
+                                <CheckoutStatus />
+                                <ToastProvider />
+                                <CapacitorProvider />
 
-                <SpeedInsights debug={false} />
-                <Analytics debug={false} />
-              </AutoTranslateProvider>
-            </ThemeProvider>
-          </NextUIProvider>
-        </SWRConfig>
-      </SessionContextProvider>
-    </PageTitleProvider>
-  )
+                                <SpeedInsights debug={false} />
+                                <Analytics debug={false} />
+                            </AutoTranslateProvider>
+                        </ThemeProvider>
+                    </NextUIProvider>
+                </SWRConfig>
+            </SessionContextProvider>
+        </PageTitleProvider>
+    )
 }

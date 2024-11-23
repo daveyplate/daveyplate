@@ -1,191 +1,191 @@
 [
-  {
-    "table": "profiles",
-    "usersSchema": true,
-    "select": [
-      "*"
-    ],
-    "localizedColumns": [
-      "bio"
-    ],
-    "defaultOrder": "-created_at",
-    "hasDeactivated": true,
-    "disableList": false
-  },
-  {
-    "table": "metadata",
-    "usersSchema": true,
-    "select": [
-      "*"
-    ],
-    "authMethods": [
-      "*"
-    ],
-    "hasDeactivated": false
-  },
-  {
-    "table": "peers",
-    "select": [
-      "*",
-      "user:user_id(*)"
-    ]
-  },
-  {
-    "table": "messages",
-    "select": [
-      "*",
-      "user:user_id!inner(*)",
-      "likes:message_likes(user_id, user:profiles(id, full_name, avatar_url))"
-    ],
-    "localizedColumns": [
-      "content"
-    ],
-    "requiredParams": {
-      "user.deactivated": false
+    {
+        "table": "profiles",
+        "usersSchema": true,
+        "select": [
+            "*"
+        ],
+        "localizedColumns": [
+            "bio"
+        ],
+        "defaultOrder": "-created_at",
+        "hasDeactivated": true,
+        "disableList": false
     },
-    "realtime": true,
-    "defaultOrder": "-created_at"
-  },
-  {
-    "table": "message_likes",
-    "select": [
-      "*",
-      "message:message_id(id, user_id, content)"
-    ],
-    "realtimeParent": {
-      "table": "messages",
-      "column": "message_id"
+    {
+        "table": "metadata",
+        "usersSchema": true,
+        "select": [
+            "*"
+        ],
+        "authMethods": [
+            "*"
+        ],
+        "hasDeactivated": false
     },
-    "onConflict": "user_id,message_id",
-    "notifications": true,
-    "notificationTemplate": {
-      "userIdColumn": "message.user_id",
-      "senderIdColumn": "user_id",
-      "content": {
-        "en": "{sender} liked your message: {{message.content.en}}"
-      },
-      "groupedContent": {
-        "en": "{senders} liked your message: {{message.content.en}}"
-      },
-      "url": "/chat",
-      "defaultLocale": "en"
+    {
+        "table": "peers",
+        "select": [
+            "*",
+            "user:user_id(*)"
+        ]
+    },
+    {
+        "table": "messages",
+        "select": [
+            "*",
+            "user:user_id!inner(*)",
+            "likes:message_likes(user_id, user:profiles(id, full_name, avatar_url))"
+        ],
+        "localizedColumns": [
+            "content"
+        ],
+        "requiredParams": {
+            "user.deactivated": false
+        },
+        "realtime": true,
+        "defaultOrder": "-created_at"
+    },
+    {
+        "table": "message_likes",
+        "select": [
+            "*",
+            "message:message_id(id, user_id, content)"
+        ],
+        "realtimeParent": {
+            "table": "messages",
+            "column": "message_id"
+        },
+        "onConflict": "user_id,message_id",
+        "notifications": true,
+        "notificationTemplate": {
+            "userIdColumn": "message.user_id",
+            "senderIdColumn": "user_id",
+            "content": {
+                "en": "{sender} liked your message: {{message.content.en}}"
+            },
+            "groupedContent": {
+                "en": "{senders} liked your message: {{message.content.en}}"
+            },
+            "url": "/chat",
+            "defaultLocale": "en"
+        }
+    },
+    {
+        "table": "whispers",
+        "authMethods": [
+            "*"
+        ],
+        "authColumns": {
+            "select": [
+                "user_id",
+                "recipient_id"
+            ],
+            "update": [
+                "user_id"
+            ],
+            "upsert": [
+                "user_id"
+            ],
+            "delete": [
+                "user_id",
+                "recipient_id"
+            ]
+        },
+        "localizedColumns": [
+            "content"
+        ],
+        "select": [
+            "*",
+            "user:user_id!inner(*)",
+            "recipient:recipient_id!inner(*)"
+        ],
+        "requiredParams": {
+            "user.deactivated": false,
+            "recipient.deactivated": false
+        },
+        "defaultOrder": "-created_at",
+        "notifications": true,
+        "notificationTemplate": {
+            "userIdColumn": "recipient_id",
+            "senderIdColumn": "user_id",
+            "content": {
+                "en": "{sender} sent you a whisper: {{content.en}}"
+            },
+            "url": "/chat"
+        }
+    },
+    {
+        "table": "articles",
+        "select": [
+            "*",
+            "user:user_id!inner(*)"
+        ],
+        "localizedColumns": [
+            "title",
+            "slug",
+            "summary",
+            "content"
+        ],
+        "defaultOrder": "-created_at"
+    },
+    {
+        "table": "article_comments",
+        "select": [
+            "*",
+            "user:user_id!inner(*)",
+            "article:article_id!inner(id, user_id, title, thumbnail_url)"
+        ],
+        "localizedColumns": [
+            "content"
+        ],
+        "defaultOrder": "-created_at",
+        "requiredParams": {
+            "user.deactivated": false
+        },
+        "realtimeIdentifier": "article_id",
+        "notifications": true,
+        "notificationTemplate": {
+            "userIdColumn": "article.user_id",
+            "senderIdColumn": "user_id",
+            "content": {
+                "en": "{sender} commented on {{article.title.en}}: {{content.en}}"
+            },
+            "imageUrlColumn": "article.thumbnail_url",
+            "url": "/article?article_id={{article_id}}",
+            "urlAs": "/article/{{article_id}}",
+            "primaryLabel": {
+                "en": "View Article"
+            },
+            "primaryAction": {
+                "color": "primary",
+                "action": "navigate",
+                "url": "/article?article_id={{article_id}}",
+                "urlAs": "/article/{{article_id}}"
+            },
+            "secondaryLabel": {
+                "en": "Ignore"
+            },
+            "secondaryAction": {
+                "color": "default",
+                "deleteNotification": true
+            }
+        }
+    },
+    {
+        "table": "notifications",
+        "authMethods": [
+            "*"
+        ],
+        "select": [
+            "*",
+            "sender:sender_id(*)"
+        ],
+        "localizedColumns": [
+            "content",
+            "primary_label",
+            "secondary_label"
+        ],
+        "defaultOrder": "-created_at"
     }
-  },
-  {
-    "table": "whispers",
-    "authMethods": [
-      "*"
-    ],
-    "authColumns": {
-      "select": [
-        "user_id",
-        "recipient_id"
-      ],
-      "update": [
-        "user_id"
-      ],
-      "upsert": [
-        "user_id"
-      ],
-      "delete": [
-        "user_id",
-        "recipient_id"
-      ]
-    },
-    "localizedColumns": [
-      "content"
-    ],
-    "select": [
-      "*",
-      "user:user_id!inner(*)",
-      "recipient:recipient_id!inner(*)"
-    ],
-    "requiredParams": {
-      "user.deactivated": false,
-      "recipient.deactivated": false
-    },
-    "defaultOrder": "-created_at",
-    "notifications": true,
-    "notificationTemplate": {
-      "userIdColumn": "recipient_id",
-      "senderIdColumn": "user_id",
-      "content": {
-        "en": "{sender} sent you a whisper: {{content.en}}"
-      },
-      "url": "/chat"
-    }
-  },
-  {
-    "table": "articles",
-    "select": [
-      "*",
-      "user:user_id!inner(*)"
-    ],
-    "localizedColumns": [
-      "title",
-      "slug",
-      "summary",
-      "content"
-    ],
-    "defaultOrder": "-created_at"
-  },
-  {
-    "table": "article_comments",
-    "select": [
-      "*",
-      "user:user_id!inner(*)",
-      "article:article_id!inner(id, user_id, title, thumbnail_url)"
-    ],
-    "localizedColumns": [
-      "content"
-    ],
-    "defaultOrder": "-created_at",
-    "requiredParams": {
-      "user.deactivated": false
-    },
-    "realtimeIdentifier": "article_id",
-    "notifications": true,
-    "notificationTemplate": {
-      "userIdColumn": "article.user_id",
-      "senderIdColumn": "user_id",
-      "content": {
-        "en": "{sender} commented on {{article.title.en}}: {{content.en}}"
-      },
-      "imageUrlColumn": "article.thumbnail_url",
-      "url": "/article?article_id={{article_id}}",
-      "urlAs": "/article/{{article_id}}",
-      "primaryLabel": {
-        "en": "View Article"
-      },
-      "primaryAction": {
-        "color": "primary",
-        "action": "navigate",
-        "url": "/article?article_id={{article_id}}",
-        "urlAs": "/article/{{article_id}}"
-      },
-      "secondaryLabel": {
-        "en": "Ignore"
-      },
-      "secondaryAction": {
-        "color": "default",
-        "deleteNotification": true
-      }
-    }
-  },
-  {
-    "table": "notifications",
-    "authMethods": [
-      "*"
-    ],
-    "select": [
-      "*",
-      "sender:sender_id(*)"
-    ],
-    "localizedColumns": [
-      "content",
-      "primary_label",
-      "secondary_label"
-    ],
-    "defaultOrder": "-created_at"
-  }
 ]

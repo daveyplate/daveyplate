@@ -5,39 +5,39 @@ import { DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
 import { ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline"
 
 export default function ThemeDropdownMenu() {
-  const { setTheme } = useTheme()
-  const { autoTranslate } = useAutoTranslate("toggle_theme")
+    const { setTheme } = useTheme()
+    const { autoTranslate } = useAutoTranslate("toggle_theme")
 
-  const themes = [
-    {
-      key: 'light',
-      title: autoTranslate("light", "Light"),
-      icon: SunIcon
-    },
-    {
-      key: 'dark',
-      title: autoTranslate("dark", "Dark"),
-      icon: MoonIcon
-    },
-    {
-      key: 'system',
-      title: autoTranslate("system", "System"),
-      icon: ComputerDesktopIcon
-    },
-  ]
+    const themes = [
+        {
+            key: 'light',
+            title: autoTranslate("light", "Light"),
+            icon: SunIcon
+        },
+        {
+            key: 'dark',
+            title: autoTranslate("dark", "Dark"),
+            icon: MoonIcon
+        },
+        {
+            key: 'system',
+            title: autoTranslate("system", "System"),
+            icon: ComputerDesktopIcon
+        },
+    ]
 
-  return (
-    <DropdownMenu variant="flat" className="!min-w-32">
-      {themes.map(theme => (
-        <DropdownItem
-          key={theme.key}
-          startContent={
-            <theme.icon className="size-5" />
-          }
-          title={theme.title}
-          onPress={() => setTheme(theme.key)}
-        />
-      ))}
-    </DropdownMenu>
-  )
+    return (
+        <DropdownMenu variant="flat" className="!min-w-32">
+            {themes.map(theme => (
+                <DropdownItem
+                    key={theme.key}
+                    startContent={
+                        <theme.icon className="size-5" />
+                    }
+                    title={theme.title}
+                    onPress={() => setTheme(theme.key)}
+                />
+            ))}
+        </DropdownMenu>
+    )
 }
