@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Input, Checkbox, Link, Divider, Card, CardBody } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import BrandIcon from "@/components/brand-icon";
 
 export default function Login() {
     const [isVisible, setIsVisible] = useState(false);
@@ -54,7 +55,11 @@ export default function Login() {
 
                     <div className="flex items-center gap-4 py-2">
                         <Divider className="flex-1" />
-                        <p className="shrink-0 text-tiny text-default-500">OR</p>
+
+                        <p className="shrink-0 text-tiny text-default-500">
+                            OR
+                        </p>
+
                         <Divider className="flex-1" />
                     </div>
 
@@ -63,30 +68,31 @@ export default function Login() {
                             variant="bordered"
                             className="min-w-0 grow"
                         >
-                            <Icon className="text-default-500" icon="logos:discord-icon" width={24} />
+                            <BrandIcon brand="discord" className="size-[24px]" />
                         </Button>
 
                         <Button
                             variant="bordered"
                             className="min-w-0 grow"
                         >
-                            <Icon icon="flat-color-icons:google" width={24} />
+                            <BrandIcon brand="google" className="size-[20px]" />
                         </Button>
 
                         <Button
                             variant="bordered"
                             className="min-w-0 grow"
                         >
-                            <Icon icon="logos:facebook" width={22} />
+                            <BrandIcon brand="facebook" className="size-[22px]" />
                         </Button>
 
                         <Button
                             variant="bordered"
                             className="min-w-0 grow"
                         >
-                            <Icon icon="fa:apple" width={18} className="mb-0.5" />
+                            <BrandIcon brand="apple" className="size-[22px] -mt-0.5 dark:invert" />
                         </Button>
                     </div>
+
                     <div className="flex flex-col gap-2 hidden">
                         <Button
                             startContent={<Icon className="text-default-500" icon="logos:discord-icon" width={24} />}
