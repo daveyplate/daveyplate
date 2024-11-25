@@ -28,9 +28,13 @@ import VercelLogo from "@/../public/logos/vercel.svg"
 import StripeLogo from "@/../public/logos/stripe.svg"
 import TailwindLogo from "@/../public/logos/tailwind.svg"
 import Image from "next/image"
+import { useIsClient } from "@uidotdev/usehooks"
+import { cn } from "@daveyplate/tailwind-drag-dropzone"
 
 
 export default function IndexPage() {
+    const isClient = useIsClient()
+
     return (
         <>
             <main className="container mx-auto flex flex-col grow items-center justify-center px-8 pt-8 gap-2">
@@ -134,10 +138,13 @@ export default function IndexPage() {
                             See our plans
                         </Button>
                     </div>
-
                 </section>
 
-                <section className="mx-auto w-full max-w-xl invert dark:invert-0">
+                <section
+                    className={cn(isClient ? "opacity-1" : "opacity-0",
+                        "mx-auto w-full max-w-xl invert dark:invert-0 h-36 transition-all"
+                    )}
+                >
                     <ScrollingBanner shouldPauseOnHover gap="2rem">
                         <Image src={NextJSLogo} className="w-32" alt="Next.js" />
                         <Image src={SupabaseLogo} className="w-36" alt="Supabase" />
@@ -148,7 +155,7 @@ export default function IndexPage() {
                         <Image src={TailwindLogo} className="w-36 grayscale invert" alt="Tailwind CSS" />
                     </ScrollingBanner>
                 </section>
-            </main>
+            </main >
 
             <NewFooter />
         </>

@@ -8,10 +8,7 @@ import DefaultFont from "@/styles/fonts"
 
 import Providers from "@/components/providers/providers"
 import Header from "@/components/header"
-import Footer from "@/components/footer"
 import { OpenGraph } from "@daveyplate/next-open-graph"
-import NewHeader from "@/components/new-header"
-import NewFooter from "@/components/new-footer"
 import { useRouter } from "next/router"
 import { cn } from "@nextui-org/react"
 
@@ -46,7 +43,7 @@ const MyApp = ({ Component, pageProps }) => {
                 <div className={cn(router.pathname == "/" && "bg-gradient-to-br from-background via-secondary-100 to-primary-100 dark:via-secondary-50 dark:to-primary-50",
                     "relative flex min-h-dvh w-full flex-col py-safe  px-safe"
                 )}>
-                    <NewHeader {...pageProps} />
+                    <Header {...pageProps} />
                     <Component {...pageProps} />
                 </div>
             </Providers>
