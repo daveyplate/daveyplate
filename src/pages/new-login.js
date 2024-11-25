@@ -1,5 +1,6 @@
 import React, { useState } from "react"
-import { Button, Input, Checkbox, Link, Divider, Card, CardBody } from "@nextui-org/react"
+import { Button, Input, Checkbox, Link, Divider, Card, CardBody, ResizablePanel, cn } from "@nextui-org/react"
+import { AnimatePresence, m, LazyMotion, domAnimation } from "framer-motion";
 import { Icon } from "@iconify/react"
 import { EnvelopeIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
 import BrandIcon from "@/components/brand-icon"
@@ -27,61 +28,59 @@ const authProviders = {
     }
 }
 
+const variants = {
+    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, y: 10 },
+}
+
 export default function Login() {
-    const [isVisible, setIsVisible] = useState(false)
     const [view, setView] = useState("login")
     const magicLink = true
     const providers = ["google", "facebook", "apple"]
 
-    const toggleVisibility = () => setIsVisible(!isVisible)
-
     return (
         <div className="flex flex-col grow items-center justify-center p-4 gap-4">
-            <Card
-                fullWidth
-                className="max-w-sm"
-            >
-                <CardBody className="gap-4 px-8 pb-8 pt-6">
-                    <p className="text-xl font-medium">Log In</p>
+            <Card fullWidth className="max-w-sm">
+                <CardBody className="gap-4 px-8 pb-10 pt-6">
+                    <p className="text-xl font-medium">
+                        {view == "signup" ? "Sign Up" : view == "login" ? "Log In" : view == "forgot-password" ? "Forgot Password" : "Unknown View"}
+                    </p>
 
                     <form
-                        className="flex flex-col gap-3"
+                        className="relative flex flex-col gap-3"
                         onSubmit={(e) => e.preventDefault()}
                     >
                         <Input
                             label="Email Address"
                             name="email"
-                            placeholder="Enter your email"
                             type="email"
                             variant="bordered"
                         />
 
                         <Input
-                            endContent={
-                                <button
-                                    type="button"
-                                    onClick={toggleVisibility}
-                                >
-                                    {isVisible ? (
-                                        <EyeSlashIcon className="text-default-400 size-6" />
-                                    ) : (
-                                        <EyeIcon className="text-default-400 size-6" />
-                                    )}
-                                </button>
-                            }
+                            className={cn(
+                                view != "forgot-password" ? "opacity-1" : "opacity-0 -mt-3 !h-0 overflow-hidden",
+                                "transition-all"
+                            )}
                             label="Password"
                             name="password"
-                            placeholder="Enter your password"
-                            type={isVisible ? "text" : "password"}
+                            type="password"
                             variant="bordered"
                         />
 
                         <Button color="primary" type="submit">
-                            Log In
+                            {view == "signup" ? "Sign Up" : view == "login" ? "Log In" : view == "forgot-password" ? "Send Reset Email" : "Unknown View"}
                         </Button>
                     </form>
 
-                    <Link className="self-center" href="#" size="sm">
+                    <Link
+                        className={cn(
+                            view == "login" ? "opacity-1" : "opacity-0 -mt-4 !h-0 overflow-hidden",
+                            "transition-all self-center cursor-pointer"
+                        )}
+                        size="sm"
+                        onPress={() => setView("forgot-password")}
+                    >
                         Forgot password?
                     </Link>
 
@@ -101,7 +100,7 @@ export default function Login() {
                                 startContent={
                                     <EnvelopeIcon className="size-6" />
                                 }
-                                variant="bordered"
+                                variant="flat"
                             >
                                 Continue with Email
                             </Button>
@@ -113,7 +112,7 @@ export default function Login() {
                                     <Button
                                         key={provider}
                                         startContent={authProviders[provider].icon}
-                                        variant="bordered"
+                                        variant="flat"
                                     >
                                         Continue with {authProviders[provider].name}
                                     </Button>
@@ -127,7 +126,7 @@ export default function Login() {
                                 {providers?.map((provider) => (
                                     <Button
                                         key={provider}
-                                        variant="bordered"
+                                        variant="flat"
                                         className="min-w-0 grow"
                                     >
                                         {authProviders[provider].icon}
@@ -137,10 +136,31 @@ export default function Login() {
                         )}
                     </div>
 
-                    <p className="text-center text-small">
+                    <p className={cn(
+                        view == "signup" ? "opacity-0 -mt-4 translate-y-1 h-0 overflow-hidden" : "opacity-1",
+                        "text-center text-small transition-all"
+                    )}>
                         Need to create an account?&nbsp;
-                        <Link href="#" size="sm">
+                        <Link
+                            size="sm"
+                            onPress={() => setView("signup")}
+                            className="cursor-pointer"
+                        >
                             Sign Up
+                        </Link>
+                    </p>
+
+                    <p className={cn(
+                        view == "signup" ? "opacity-1" : "opacity-0 translate-y-3 -mt-4 h-0 overflow-hidden",
+                        "text-center text-small transition-all"
+                    )}>
+                        Already have an account?&nbsp;
+                        <Link
+                            size="sm"
+                            onPress={() => setView("login")}
+                            className="cursor-pointer"
+                        >
+                            Log In
                         </Link>
                     </p>
                 </CardBody>
