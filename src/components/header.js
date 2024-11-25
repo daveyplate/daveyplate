@@ -220,7 +220,7 @@ export default function Header() {
                             <DropdownSection title={session?.user.email || autoTranslate("account", "Account")}>
                                 {session && (
                                     <DropdownItem
-                                        startContent={<UserIcon className="size-4" />}
+                                        startContent={<UserIcon className="size-5" />}
                                         onPress={() => {
                                             const url = getPathname({ href: `/user?user_id=${user.id}`, locale })
                                             const urlAs = getPathname({ href: `/user/${user.id}`, locale })
@@ -234,7 +234,7 @@ export default function Header() {
                                 {session && (
                                     <DropdownItem
                                         href="/edit-profile"
-                                        startContent={<PencilIcon className="size-4" />}
+                                        startContent={<PencilIcon className="size-5" />}
                                     >
                                         {autoTranslate("edit_profile", "Edit Profile")}
                                     </DropdownItem>
@@ -243,7 +243,7 @@ export default function Header() {
                                 {!session && (
                                     <DropdownItem
                                         href="/login"
-                                        startContent={<ArrowRightEndOnRectangleIcon className="size-4" />}
+                                        startContent={<ArrowRightEndOnRectangleIcon className="size-5" />}
                                     >
                                         {autoTranslate("log_in", "Log In")}
                                     </DropdownItem>
@@ -252,7 +252,7 @@ export default function Header() {
                                 {!session && (
                                     <DropdownItem
                                         href="/signup"
-                                        startContent={<UserPlusIcon className="size-4" />}
+                                        startContent={<UserPlusIcon className="size-5" />}
                                     >
                                         {autoTranslate("sign_up", "Register")}
                                     </DropdownItem>
@@ -260,7 +260,7 @@ export default function Header() {
 
                                 <DropdownItem
                                     href={"/settings"}
-                                    startContent={<Cog6ToothIcon className="size-4" />}
+                                    startContent={<Cog6ToothIcon className="size-5" />}
                                 >
                                     {autoTranslate('settings', 'Settings')}
                                 </DropdownItem>
@@ -269,7 +269,7 @@ export default function Header() {
                                     <DropdownItem
                                         href={"/logout"}
                                         color="danger"
-                                        startContent={<ArrowLeftStartOnRectangleIcon className="size-4" />}
+                                        startContent={<ArrowLeftStartOnRectangleIcon className="size-5" />}
                                     >
                                         {autoTranslate('logout', 'Log Out')}
                                     </DropdownItem>

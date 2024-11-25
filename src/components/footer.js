@@ -1,17 +1,81 @@
-import React from "react"
+
+import React from "react";
 import { motion } from "framer-motion"
 
-import LocaleDropdown from "@/components/locale-dropdown"
+import { Link, Spacer } from "@nextui-org/react"
+import { Icon } from "@iconify/react"
 
-export default function Footer() {
-    // Get the current year:
-    const year = new Date().getFullYear()
+import { useAutoTranslate } from 'next-auto-translate'
+
+import Logo from "./logo"
+
+const navLinks = [
+    {
+        name: "Home",
+        href: "#",
+    },
+    {
+        name: "About",
+        href: "#",
+    },
+    {
+        name: "Services",
+        href: "#",
+    },
+    {
+        name: "Projects",
+        href: "#",
+    },
+    {
+        name: "Contact",
+        href: "#",
+    },
+    {
+        name: "Blog",
+        href: "#",
+    },
+    {
+        name: "Careers",
+        href: "#",
+    },
+];
+
+const socialItems = [
+    {
+        name: "Facebook",
+        href: "https://facebook.com",
+        icon: (props) => <Icon {...props} icon="fontisto:facebook" />,
+    },
+    {
+        name: "Instagram",
+        href: "https://instagram.com",
+        icon: (props) => <Icon {...props} icon="fontisto:instagram" />,
+    },
+    {
+        name: "Twitter",
+        href: "https://twitter.com",
+        icon: (props) => <Icon {...props} icon="fontisto:twitter" />,
+    },
+    {
+        name: "GitHub",
+        href: "https://github.com",
+        icon: (props) => <Icon {...props} icon="fontisto:github" />,
+    },
+    {
+        name: "YouTube",
+        href: "https://youtube.com",
+        icon: (props) => <Icon {...props} icon="fontisto:youtube-play" />,
+    },
+];
+
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME
+
+export default function NewFooter() {
+    const { autoTranslate } = useAutoTranslate("footer")
 
     return (
-        <footer className="backdrop-blur bg-background/90 fixed w-full bottom-0 z-20 pb-safe">
-            <div className="flex justify-center items-center py-2 gap-2 overflow-hidden h-16">
-                <LocaleDropdown isIconOnly variant="light" />
-
+        <footer className="flex w-full flex-col">
+            <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center pb-6 md:pb-8">
                 <motion.div
                     initial={{ scale: 1 }}
                     animate={{ scale: [1, 1.01, 1], transition: { repeat: Infinity, duration: 2 } }}
@@ -21,9 +85,13 @@ export default function Footer() {
                         filter: 'drop-shadow(0 0 8px rgba(255, 100, 0, 0.8)) drop-shadow(0 0 15px rgba(255, 150, 0, 0.6))',
                     }}
                 >
-                    <p className="text-foreground/80">
-                        © {year} Daveyplate
-                    </p>
+                    <div className="flex items-center justify-center gap-2">
+                        <Logo />
+
+                        <span className="text-medium font-medium">
+                            {siteName}
+                        </span>
+                    </div>
 
                     {Array.from({ length: 15 }).map((_, index) => (
                         <motion.div
@@ -49,7 +117,43 @@ export default function Footer() {
                         />
                     ))}
                 </motion.div>
+
+                <Spacer y={4} className="hidden" />
+
+                <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 hidden">
+                    {navLinks.map((item) => (
+                        <Link
+                            key={item.name}
+                            isExternal
+                            className="text-default-500"
+                            href={item.href}
+                            size="sm"
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                </div>
+
+                <Spacer y={6} />
+
+                <div className="flex justify-center gap-x-4 h-6">
+                    {socialItems.map((item) => (
+                        <Link key={item.name} isExternal className="text-default-500" href={item.href}>
+                            <span className="sr-only">
+                                {item.name}
+                            </span>
+
+                            <item.icon aria-hidden="true" className="w-5" />
+                        </Link>
+                    ))}
+                </div>
+
+                <Spacer y={4} />
+
+                <p className="mt-1 text-center text-small text-default-500">
+                    &copy; 2024 {siteName}. {autoTranslate("all_rights_reserved", "All Rights Reserved.")}
+                </p>
             </div>
         </footer>
-    )
+    );
 }

@@ -1,4 +1,10 @@
+import Image from "next/image"
+import { cn } from "@daveyplate/tailwind-drag-dropzone"
+import { useIsClient } from "@uidotdev/usehooks"
 import { toast } from "sonner"
+
+import { useAutoTranslate, AutoTranslate } from 'next-auto-translate'
+
 import {
     Button,
     Dropdown,
@@ -7,6 +13,7 @@ import {
     DropdownTrigger,
     Spinner
 } from "@nextui-org/react"
+
 import {
     ArrowRightIcon,
     CheckCircleIcon,
@@ -17,7 +24,7 @@ import {
     RocketLaunchIcon
 } from "@heroicons/react/24/outline"
 
-import NewFooter from "@/components/new-footer"
+import NewFooter from "@/components/footer"
 import ScrollingBanner from "@/components/scrolling-banner"
 
 import NextJSLogo from "@/../public/logos/nextjs.svg"
@@ -27,13 +34,10 @@ import CapacitorLogo from "@/../public/logos/capacitor.svg"
 import VercelLogo from "@/../public/logos/vercel.svg"
 import StripeLogo from "@/../public/logos/stripe.svg"
 import TailwindLogo from "@/../public/logos/tailwind.svg"
-import Image from "next/image"
-import { useIsClient } from "@uidotdev/usehooks"
-import { cn } from "@daveyplate/tailwind-drag-dropzone"
-
 
 export default function IndexPage() {
     const isClient = useIsClient()
+    const { autoTranslate } = useAutoTranslate()
 
     return (
         <>
@@ -41,12 +45,20 @@ export default function IndexPage() {
                 <section className="flex flex-col items-center justify-center gap-5 md:gap-6">
                     <div className="text-center font-bold leading-[1.2] tracking-tight text-5xl md:text-6xl">
                         <div className="bg-gradient-to-r from-foreground to-foreground-500 bg-clip-text text-transparent">
-                            Welcome to <br /> Daveyplate.
+                            <AutoTranslate tKey="welcome_to">
+                                Welcome to
+                            </AutoTranslate>
+
+                            <br />
+
+                            Daveyplate.
                         </div>
                     </div>
 
                     <p className="text-center leading-7 text-default-500 max-w-sm">
-                        Daveyplate is an open source boilerplate project with a fully featured user management system - built with Next.js, NextUI, and Supabase.
+                        <AutoTranslate tKey="intro_card">
+                            Daveyplate is an open source boilerplate project with a fully featured user management system - built with Next.js, NextUI, and Supabase.
+                        </AutoTranslate>
                     </p>
 
                     <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
@@ -58,7 +70,9 @@ export default function IndexPage() {
                                         <RocketLaunchIcon className="size-5" />
                                     }
                                 >
-                                    Show Toast
+                                    <AutoTranslate tKey="show_toast">
+                                        Show Toast
+                                    </AutoTranslate>
                                 </Button>
                             </DropdownTrigger>
 
@@ -67,62 +81,77 @@ export default function IndexPage() {
                                     startContent={
                                         <PlusCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast("Toast")}
+                                    onPress={() => toast(autoTranslate("toast", "Toast"))}
                                 >
-                                    Default
+                                    <AutoTranslate tKey="default">
+                                        Default
+                                    </AutoTranslate>
                                 </DropdownItem>
+
                                 <DropdownItem
                                     color="success"
                                     startContent={
                                         <CheckCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.success("Success")}
+                                    onPress={() => toast.success(autoTranslate("success", "Success"))}
                                 >
                                     Success
                                 </DropdownItem>
+
                                 <DropdownItem
                                     color="primary"
                                     startContent={
                                         <InformationCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.info("Info")}
+                                    onPress={() => toast.info("autoTranslate('info', 'Info')")}
                                 >
-                                    Info
+                                    <AutoTranslate tKey="info">
+                                        Info
+                                    </AutoTranslate>
                                 </DropdownItem>
+
                                 <DropdownItem
                                     color="warning"
                                     startContent={
                                         <ExclamationTriangleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.warning("Warning")}
+                                    onPress={() => toast.warning(autoTranslate("warning", "Warning"))}
                                 >
-                                    Warning
+                                    <AutoTranslate tKey="warning">
+                                        Warning
+                                    </AutoTranslate>
                                 </DropdownItem>
+
                                 <DropdownItem
                                     color="danger"
                                     startContent={
                                         <ExclamationCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.error("Error")}>
-                                    Error
+                                    onPress={() => toast.error(autoTranslate("error", "Error"))}
+                                >
+                                    <AutoTranslate tKey="error">
+                                        Error
+                                    </AutoTranslate>
                                 </DropdownItem>
+
                                 <DropdownItem
                                     color="secondary"
                                     startContent={
                                         <Spinner size="sm" color="current" />
                                     }
                                     onPress={() => {
-                                        toast.loading("Loading")
+                                        toast.loading(autoTranslate("loading", "Loading"))
                                         setTimeout(() => {
                                             toast.dismiss()
                                         }, 4000)
                                     }}
                                 >
-                                    Loading
+                                    <AutoTranslate tKey="loading">
+                                        Loading
+                                    </AutoTranslate>
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
-
 
                         <Button
                             className="border-1 hidden"
@@ -135,7 +164,9 @@ export default function IndexPage() {
                             }
                             variant="bordered"
                         >
-                            See our plans
+                            <AutoTranslate tKey="see_our_plans">
+                                See our plans
+                            </AutoTranslate>
                         </Button>
                     </div>
                 </section>
@@ -155,9 +186,9 @@ export default function IndexPage() {
                         <Image src={TailwindLogo} className="w-36 grayscale invert" alt="Tailwind CSS" />
                     </ScrollingBanner>
                 </section>
-            </main >
+            </main>
 
             <NewFooter />
         </>
-    );
+    )
 }

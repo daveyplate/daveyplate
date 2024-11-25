@@ -32,7 +32,7 @@ export default function ThemeDropdownMenu() {
                 <DropdownItem
                     key={theme.key}
                     startContent={
-                        <theme.icon className="size-4" />
+                        <theme.icon className="size-5" />
                     }
                     title={theme.title}
                     onPress={() => setTheme(theme.key)}
