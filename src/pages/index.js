@@ -103,7 +103,7 @@ export default function IndexPage() {
                                     startContent={
                                         <InformationCircleIcon className="size-5" />
                                     }
-                                    onPress={() => toast.info("autoTranslate('info', 'Info')")}
+                                    onPress={() => toast.info(autoTranslate('info', 'Info'))}
                                 >
                                     <AutoTranslate tKey="info">
                                         Info

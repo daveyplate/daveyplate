@@ -15,7 +15,6 @@ export default function ToastProvider() {
     return (
         <Toaster
             theme={theme}
-            visibleToasts={1}
             richColors={true}
             icons={{
                 success: <CheckCircleIcon className="size-5 mb-[1px]" />,
