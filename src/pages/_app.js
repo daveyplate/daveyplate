@@ -41,7 +41,7 @@ const MyApp = ({ Component, pageProps }) => {
                 `}</style>
 
                 <div className={cn(router.pathname == "/" && "bg-gradient-to-br from-background via-secondary-100 to-primary-100 dark:via-secondary-50 dark:to-primary-50",
-                    "relative flex min-h-dvh w-full flex-col py-safe  px-safe"
+                    "flex flex-col min-h-dvh py-safe px-safe"
                 )}>
                     <Header {...pageProps} />
                     <Component {...pageProps} />
@@ -52,17 +52,3 @@ const MyApp = ({ Component, pageProps }) => {
 }
 
 export default MyApp
-
-/*
-
-
-                <main className={`flex min-h-svh w-svh
-                    pt-[calc(4rem+env(safe-area-inset-top))] 
-                    pb-[calc(4rem+env(safe-area-inset-bottom))] 
-                    px-safe
-                `}>
-                    <Component {...pageProps} />
-                </main>
-
-
-                */
