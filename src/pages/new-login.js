@@ -1,30 +1,28 @@
 import React, { useState } from "react"
-import { Button, Input, Checkbox, Link, Divider, Card, CardBody, ResizablePanel, cn } from "@nextui-org/react"
-import { AnimatePresence, m, LazyMotion, domAnimation } from "framer-motion";
+import { Button, Input, Link, Divider, Card, CardBody, cn } from "@nextui-org/react"
 import { Icon } from "@iconify/react"
 import { EnvelopeIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
-import BrandIcon from "@/components/brand-icon"
 
 const authProviders = {
     apple: {
         name: "Apple",
-        icon: <BrandIcon brand="apple" alt="Apple" className="size-[20px] -mt-0.5 dark:invert" />,
+        icon: <Icon className="text-default-500" icon="fa:apple" width={19} />,
     },
     discord: {
         name: "Discord",
-        icon: <BrandIcon brand="discord" alt="Discord" className="size-[22px]" />,
+        icon: <Icon icon="logos:discord-icon" width={25} />,
     },
     facebook: {
         name: "Facebook",
-        icon: <BrandIcon brand="facebook" alt="Facebook" className="size-[21px]" />,
+        icon: <Icon icon="logos:facebook" width={23} />,
     },
     google: {
         name: "Google",
-        icon: <BrandIcon brand="google" alt="Google" className="size-[18px]" />,
+        icon: <Icon icon="flat-color-icons:google" width={24} />,
     },
     github: {
         name: "GitHub",
-        icon: <BrandIcon brand="github" alt="GitHub" className="size-[20px] dark:invert" />,
+        icon: <Icon className="text-default-500" icon="fe:github" width={27} />,
     }
 }
 
