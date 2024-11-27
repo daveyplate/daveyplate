@@ -1,10 +1,10 @@
 import { Card, CardBody } from "@nextui-org/react"
 import { Auth } from "@daveyplate/supabase-auth-nextui"
 import { createClient } from "@/utils/supabase/component"
+import { getURL } from "@/utils/utils"
 
 export default function LoginPage() {
     const supabase = createClient()
-
 
     return (
         <div className="flex flex-col grow items-center justify-center p-4 gap-4">
@@ -12,8 +12,9 @@ export default function LoginPage() {
                 <CardBody>
                     <Auth
                         supabaseClient={supabase}
-                        socialLayout="vertical"
-                        providers={["facebook"]}
+                        socialLayout="horizontal"
+                        providers={["github", "google", "facebook", "apple"]}
+                        baseUrl={getURL()}
                     />
                 </CardBody>
             </Card>
