@@ -192,91 +192,91 @@ export default function Header() {
                 )}
 
                 <NavbarItem className="px-2">
-                    <Dropdown placement="bottom-end">
-                        <DropdownTrigger>
-                            <Button
-                                isIconOnly
-                                size="sm"
-                                radius="full"
-                                className="mt-1 overflow-visible"
-                                disableRipple
-                            >
-                                <Badge
-                                    className="border-transparent"
-                                    color="success"
-                                    content=""
-                                    placement="bottom-right"
-                                    shape="circle"
+                    <Badge
+                        className="border-transparent pointer-events-none"
+                        color="success"
+                        content=""
+                        placement="bottom-right"
+                        shape="circle"
+                        size="sm"
+                    >
+                        <Dropdown placement="bottom-end">
+                            <DropdownTrigger>
+                                <Button
+                                    isIconOnly
                                     size="sm"
+                                    radius="full"
+                                    className="mt-1"
+                                    disableRipple
                                 >
                                     <Skeleton className="rounded-full" isLoaded={!userLoading && !sessionLoading}>
                                         <Avatar size="sm" src={user?.avatar_url} name={user?.full_name} />
                                     </Skeleton>
-                                </Badge>
-                            </Button>
-                        </DropdownTrigger>
+                                </Button>
+                            </DropdownTrigger>
 
-                        <DropdownMenu aria-label={autoTranslate("profile_actions", "Profile Actions")} variant="flat" className="-mb-2">
-                            <DropdownSection title={session?.user.email || autoTranslate("account", "Account")}>
-                                {session && (
+                            <DropdownMenu aria-label={autoTranslate("profile_actions", "Profile Actions")} variant="flat" className="-mb-2">
+                                <DropdownSection title={session?.user.email || autoTranslate("account", "Account")}>
+                                    {session && (
+                                        <DropdownItem
+                                            startContent={<UserIcon className="size-5" />}
+                                            onPress={() => {
+                                                const url = getPathname({ href: `/user?user_id=${user.id}`, locale })
+                                                const urlAs = getPathname({ href: `/user/${user.id}`, locale })
+                                                router.push(url, urlAs)
+                                            }}
+                                        >
+                                            {autoTranslate("view_profile", "View Profile")}
+                                        </DropdownItem>
+                                    )}
+
+                                    {session && (
+                                        <DropdownItem
+                                            href="/edit-profile"
+                                            startContent={<PencilIcon className="size-5" />}
+                                        >
+                                            {autoTranslate("edit_profile", "Edit Profile")}
+                                        </DropdownItem>
+                                    )}
+
+                                    {!session && (
+                                        <DropdownItem
+                                            href="/login"
+                                            startContent={<ArrowRightEndOnRectangleIcon className="size-5" />}
+                                        >
+                                            {autoTranslate("log_in", "Log In")}
+                                        </DropdownItem>
+                                    )}
+
+                                    {!session && (
+                                        <DropdownItem
+                                            href="/signup"
+                                            startContent={<UserPlusIcon className="size-5" />}
+                                        >
+                                            {autoTranslate("sign_up", "Register")}
+                                        </DropdownItem>
+                                    )}
+
                                     <DropdownItem
-                                        startContent={<UserIcon className="size-5" />}
-                                        onPress={() => {
-                                            const url = getPathname({ href: `/user?user_id=${user.id}`, locale })
-                                            const urlAs = getPathname({ href: `/user/${user.id}`, locale })
-                                            router.push(url, urlAs)
-                                        }}
+                                        href={"/settings"}
+                                        startContent={<Cog6ToothIcon className="size-5" />}
                                     >
-                                        {autoTranslate("view_profile", "View Profile")}
+                                        {autoTranslate('settings', 'Settings')}
                                     </DropdownItem>
-                                )}
 
-                                {session && (
-                                    <DropdownItem
-                                        href="/edit-profile"
-                                        startContent={<PencilIcon className="size-5" />}
-                                    >
-                                        {autoTranslate("edit_profile", "Edit Profile")}
-                                    </DropdownItem>
-                                )}
-
-                                {!session && (
-                                    <DropdownItem
-                                        href="/login"
-                                        startContent={<ArrowRightEndOnRectangleIcon className="size-5" />}
-                                    >
-                                        {autoTranslate("log_in", "Log In")}
-                                    </DropdownItem>
-                                )}
-
-                                {!session && (
-                                    <DropdownItem
-                                        href="/signup"
-                                        startContent={<UserPlusIcon className="size-5" />}
-                                    >
-                                        {autoTranslate("sign_up", "Register")}
-                                    </DropdownItem>
-                                )}
-
-                                <DropdownItem
-                                    href={"/settings"}
-                                    startContent={<Cog6ToothIcon className="size-5" />}
-                                >
-                                    {autoTranslate('settings', 'Settings')}
-                                </DropdownItem>
-
-                                {session &&
-                                    <DropdownItem
-                                        href={"/logout"}
-                                        color="danger"
-                                        startContent={<ArrowLeftStartOnRectangleIcon className="size-5" />}
-                                    >
-                                        {autoTranslate('logout', 'Log Out')}
-                                    </DropdownItem>
-                                }
-                            </DropdownSection>
-                        </DropdownMenu>
-                    </Dropdown>
+                                    {session &&
+                                        <DropdownItem
+                                            href={"/logout"}
+                                            color="danger"
+                                            startContent={<ArrowLeftStartOnRectangleIcon className="size-5" />}
+                                        >
+                                            {autoTranslate('logout', 'Log Out')}
+                                        </DropdownItem>
+                                    }
+                                </DropdownSection>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </Badge>
                 </NavbarItem>
             </NavbarContent>
 
