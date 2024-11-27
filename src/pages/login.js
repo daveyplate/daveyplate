@@ -1,13 +1,17 @@
-import { Card, CardBody } from "@nextui-org/react"
+import { Card, CardBody, cn } from "@nextui-org/react"
 import { Auth } from "@daveyplate/supabase-auth-nextui"
 import { createClient } from "@/utils/supabase/component"
 import { getURL } from "@/utils/utils"
+import { useSessionContext } from "@supabase/auth-helpers-react"
 
 export default function LoginPage() {
     const supabase = createClient()
+    const { session, isLoading: sessionLoading } = useSessionContext()
 
     return (
-        <div className="flex flex-col grow items-center justify-center p-4 gap-4">
+        <div className={cn((session || sessionLoading) && "opacity-0",
+            "flex flex-col grow items-center justify-center p-4 gap-4 transition-all"
+        )}>
             <Card fullWidth className="max-w-sm p-2">
                 <CardBody>
                     <Auth
