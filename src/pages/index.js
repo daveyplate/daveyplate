@@ -176,7 +176,7 @@ export default function IndexPage() {
                         "mx-auto w-full max-w-xl invert dark:invert-0 h-36 transition-all"
                     )}
                 >
-                    <ScrollingBanner shouldPauseOnHover gap="2rem">
+                    <ScrollingBanner shouldPauseOnHover={false} gap="2rem">
                         <Image src={NextJSLogo} className="w-32" alt="Next.js" />
                         <Image src={SupabaseLogo} className="w-36" alt="Supabase" />
                         <Image src={NextUILogo} className="w-36" alt="NextUI" />
