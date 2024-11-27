@@ -40,3 +40,11 @@ h6 {
 .flex-center {
     @apply flex-container mx-auto justify-center text-center !items-center;
 }
+
+input:-webkit-autofill-and-obscured,
+input:-webkit-autofill-strong-password,
+input:-webkit-autofill-strong-password-viewable,
+input:-webkit-autofill {
+  -webkit-text-fill-color: #000000 !important;
+  @apply dark:invert;
+}
