@@ -2,12 +2,15 @@
 import React from "react";
 import { motion } from "framer-motion"
 
-import { Link, Spacer } from "@nextui-org/react"
+import { Button, Link, Spacer } from "@nextui-org/react"
 import { Icon } from "@iconify/react"
 
 import { useAutoTranslate } from 'next-auto-translate'
 
 import Logo from "./logo"
+import { useLocale } from "next-intl";
+import { localeToCountry } from "./locale-dropdown";
+import Flag from "react-flagpack";
 
 const navLinks = [
     {
@@ -72,51 +75,68 @@ const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
 export default function NewFooter() {
     const { autoTranslate } = useAutoTranslate("footer")
+    const locale = useLocale()
 
     return (
         <footer className="flex w-full flex-col">
             <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center pb-6 md:pb-8">
-                <motion.div
-                    initial={{ scale: 1 }}
-                    animate={{ scale: [1, 1.01, 1], transition: { repeat: Infinity, duration: 2 } }}
-                    style={{
-                        position: 'relative',
-                        display: 'inline-block',
-                        filter: 'drop-shadow(0 0 8px rgba(255, 100, 0, 0.8)) drop-shadow(0 0 15px rgba(255, 150, 0, 0.6))',
-                    }}
-                >
-                    <div className="flex items-center justify-center gap-2">
-                        <Logo />
+                <div className="flex items-center gap-0.5">
+                    <motion.div
+                        initial={{ scale: 1 }}
+                        animate={{ scale: [1, 1.01, 1], transition: { repeat: Infinity, duration: 2 } }}
+                        style={{
+                            position: 'relative',
+                            display: 'inline-block',
+                            filter: 'drop-shadow(0 0 8px rgba(255, 100, 0, 0.8)) drop-shadow(0 0 15px rgba(255, 150, 0, 0.6))',
+                        }}
+                    >
+                        <div className="flex items-center justify-center gap-2">
+                            <Logo />
 
-                        <span className="text-medium font-medium">
-                            {siteName}
-                        </span>
-                    </div>
+                            <span className="text-medium font-medium">
+                                {siteName}
+                            </span>
+                        </div>
 
-                    {Array.from({ length: 15 }).map((_, index) => (
-                        <motion.div
-                            suppressHydrationWarning
-                            key={index}
-                            initial={{ opacity: 0, x: Math.random() * 20 - 10, y: Math.random() * 20 - 10 }}
-                            animate={{
-                                opacity: [0, 1, 0],
-                                x: [null, Math.random() * 100 - 50, Math.random() * 200 - 100],
-                                y: [null, Math.random() * 100 - 50, Math.random() * 200 - 100],
-                                scale: [1, 0.5, 0],
-                                transition: { duration: Math.random() + 4, repeat: Infinity, ease: "linear" },
-                            }}
-                            style={{
-                                position: 'fixed',
-                                width: 4,
-                                height: 4,
-                                backgroundColor: ['red', 'orange', 'yellow'][Math.floor(Math.random() * 3)],
-                                borderRadius: '50%',
-                                top: '50%',
-                                left: '50%',
-                            }}
+                        {Array.from({ length: 15 }).map((_, index) => (
+                            <motion.div
+                                suppressHydrationWarning
+                                key={index}
+                                initial={{ opacity: 0, x: Math.random() * 20 - 10, y: Math.random() * 20 - 10 }}
+                                animate={{
+                                    opacity: [0, 1, 0],
+                                    x: [null, Math.random() * 100 - 50, Math.random() * 200 - 100],
+                                    y: [null, Math.random() * 100 - 50, Math.random() * 200 - 100],
+                                    scale: [1, 0.5, 0],
+                                    transition: { duration: Math.random() + 4, repeat: Infinity, ease: "linear" },
+                                }}
+                                style={{
+                                    position: 'fixed',
+                                    width: 4,
+                                    height: 4,
+                                    backgroundColor: ['red', 'orange', 'yellow'][Math.floor(Math.random() * 3)],
+                                    borderRadius: '50%',
+                                    top: '50%',
+                                    left: '50%',
+                                }}
+                            />
+                        ))}
+                    </motion.div>
+
+                    <Button
+                        isIconOnly
+                        variant="light"
+                        className="!bg-transparent"
+                        disableRipple
+                    >
+                        <Flag
+                            code={localeToCountry[locale]}
+                            gradient="real-linear"
+                            hasDropShadow
+                            size="m"
                         />
-                    ))}
-                </motion.div>
+                    </Button>
+                </div>
 
                 <Spacer y={4} className="hidden" />
 
