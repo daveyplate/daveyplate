@@ -182,17 +182,12 @@ export default function Chat() {
 
     return (
         <div className={cn((!sessionLoading && messagesAndWhispers) ? "opacity-1" : "opacity-0",
-            "flex px-5 flex-col w-full max-w-xl mx-auto justify-end transition-all"
+            "flex px-5 flex-col w-full max-w-xl mx-auto transition-all grow"
         )}>
-            <div className="sticky top-0 h-[60px] md:h-[76px] bg-background z-20" />
+            <div className="sticky top-0 -mt-[60px] md:-mt-[76px] h-[60px] md:h-[76px] bg-background z-20" />
+            <div className="sticky top-[60px] md:top-[76px] h-[40px] bg-gradient-to-b from-background to-transparent z-20" />
 
-            <div
-                className={cn(
-                    "sticky top-[60px] h-[40px] md:top-[76px] bg-gradient-to-b from-background to-transparent z-20"
-                )}
-            />
-
-            <div className="flex flex-col gap-4 w-full flex-col-reverse py-4 mb-16">
+            <div className="flex flex-col gap-4 w-full flex-col-reverse p-4 grow">
                 {messagesAndWhispers?.map((message) => (
                     <Message
                         key={message.id}
@@ -209,16 +204,15 @@ export default function Chat() {
                 ))}
             </div>
 
-            <div className="sticky bottom-[60px] flex flex-col z-20">
+            <div className="sticky bottom-0 -mb-[64px] flex flex-col z-20 mt-auto">
                 <div
-                    className={cn(shouldScrollDown ? "opacity-0" : "opacity-100",
+                    className={cn(shouldScrollDown ? "opacity-0 !h-0" : "opacity-100",
                         "bg-gradient-to-t from-background/90 to-transparent w-full h-[40px] transition-all"
                     )}
                 />
 
                 <form onSubmit={sendMessage} className="mx-auto w-full max-w-xl bg-background px-4 pb-safe">
                     <Input
-                        className="mb-4"
                         autoFocus
                         ref={inputRef}
                         size="lg"
@@ -267,6 +261,8 @@ export default function Chat() {
                         }
                     />
                 </form>
+
+                <div className="h-[64px] bg-background" />
             </div>
         </div>
     )
