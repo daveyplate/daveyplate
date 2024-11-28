@@ -209,7 +209,7 @@ export default function Chat() {
                 ))}
             </div>
 
-            <div className="fixed bottom-0 left-0 w-full flex flex-col z-20">
+            <div className="sticky bottom-[60px] flex flex-col z-20">
                 <div
                     className={cn(shouldScrollDown ? "opacity-0" : "opacity-100",
                         "bg-gradient-to-t from-background/90 to-transparent w-full h-[40px] transition-all"

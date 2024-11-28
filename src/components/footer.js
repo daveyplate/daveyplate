@@ -2,7 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion"
 
-import { Button, Dropdown, DropdownTrigger, Link, Spacer } from "@nextui-org/react"
+import { Button, cn, Dropdown, DropdownTrigger, Link, Spacer } from "@nextui-org/react"
 import { Icon } from "@iconify/react"
 
 import { useAutoTranslate } from 'next-auto-translate'
@@ -12,6 +12,7 @@ import { localeToCountry } from "./locale-dropdown-menu"
 import Flag from "react-flagpack"
 import LocaleDropdownMenu from "./locale-dropdown-menu"
 import { useLocale } from "next-intl";
+import { useRouter } from "next/router";
 
 const navLinks = [
     {
@@ -75,14 +76,15 @@ const socialItems = [
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
 export default function Footer() {
+    const router = useRouter()
     const { autoTranslate } = useAutoTranslate("footer")
     const locale = useLocale()
 
-    console.log("locale", locale)
-
     return (
-        <footer className="flex w-full flex-col sticky bottom-0 bg-background/70 backdrop-blur-xl">
-            <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center pt-3 pb-2 overflow-hidden">
+        <footer className={cn(router.pathname != "/" && "bg-background/70 backdrop-blur-xl",
+            "flex w-full flex-col sticky bottom-0 z-10"
+        )}>
+            <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center p-3 overflow-hidden">
                 <div className="flex items-center gap-0.5">
                     <motion.div
                         initial={{ scale: 1 }}
@@ -90,7 +92,7 @@ export default function Footer() {
                         style={{
                             position: 'relative',
                             display: 'inline-block',
-                            filter: 'drop-shadow(0 0 8px rgba(255, 100, 0, 0.8)) drop-shadow(0 0 15px rgba(255, 150, 0, 0.6))',
+                            filter: 'drop-shadow(0 0 5px rgba(255, 100, 0, 0.8)) drop-shadow(0 0 10px rgba(255, 150, 0, 0.6))',
                         }}
                     >
                         <div className="flex items-center justify-center gap-2">
