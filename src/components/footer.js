@@ -2,15 +2,16 @@
 import React from "react";
 import { motion } from "framer-motion"
 
-import { Button, Link, Spacer } from "@nextui-org/react"
+import { Button, Dropdown, DropdownTrigger, Link, Spacer } from "@nextui-org/react"
 import { Icon } from "@iconify/react"
 
 import { useAutoTranslate } from 'next-auto-translate'
 
 import Logo from "./logo"
+import { localeToCountry } from "./locale-dropdown-menu"
+import Flag from "react-flagpack"
+import LocaleDropdownMenu from "./locale-dropdown-menu"
 import { useLocale } from "next-intl";
-import { localeToCountry } from "./locale-dropdown";
-import Flag from "react-flagpack";
 
 const navLinks = [
     {
@@ -73,13 +74,15 @@ const socialItems = [
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
-export default function NewFooter() {
+export default function Footer() {
     const { autoTranslate } = useAutoTranslate("footer")
     const locale = useLocale()
 
+    console.log("locale", locale)
+
     return (
-        <footer className="flex w-full flex-col">
-            <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center pb-6 md:pb-8">
+        <footer className="flex w-full flex-col sticky bottom-0 bg-background/70 backdrop-blur-xl">
+            <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center pt-3 pb-2 overflow-hidden">
                 <div className="flex items-center gap-0.5">
                     <motion.div
                         initial={{ scale: 1 }}
@@ -123,19 +126,26 @@ export default function NewFooter() {
                         ))}
                     </motion.div>
 
-                    <Button
-                        isIconOnly
-                        variant="light"
-                        className="!bg-transparent"
-                        disableRipple
-                    >
-                        <Flag
-                            code={localeToCountry[locale]}
-                            gradient="real-linear"
-                            hasDropShadow
-                            size="m"
-                        />
-                    </Button>
+
+                    <Dropdown>
+                        <DropdownTrigger>
+                            <Button
+                                isIconOnly
+                                variant="light"
+                                className="!bg-transparent"
+                                disableRipple
+                            >
+                                <Flag
+                                    code={localeToCountry[locale]}
+                                    gradient="real-linear"
+                                    hasDropShadow
+                                    size="m"
+                                />
+                            </Button>
+                        </DropdownTrigger>
+
+                        <LocaleDropdownMenu />
+                    </Dropdown>
                 </div>
 
                 <Spacer y={4} className="hidden" />
@@ -154,9 +164,9 @@ export default function NewFooter() {
                     ))}
                 </div>
 
-                <Spacer y={6} />
+                <Spacer y={6} className="hidden" />
 
-                <div className="flex justify-center gap-x-4 h-6">
+                <div className="flex justify-center gap-x-4 h-6 hidden">
                     {socialItems.map((item) => (
                         <Link key={item.name} isExternal className="text-default-500" href={item.href}>
                             <span className="sr-only">
@@ -168,9 +178,9 @@ export default function NewFooter() {
                     ))}
                 </div>
 
-                <Spacer y={4} />
+                <Spacer y={4} className="hidden" />
 
-                <p className="mt-1 text-center text-small text-default-500">
+                <p className="mt-1 text-center text-small text-default-500 hidden">
                     &copy; 2024 {siteName}. {autoTranslate("all_rights_reserved", "All Rights Reserved.")}
                 </p>
             </div>

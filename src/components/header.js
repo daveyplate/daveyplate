@@ -48,6 +48,7 @@ import {
 import Logo from "@/components/logo"
 import ThemeDropdownMenu from "@/components/theme-dropdown-menu"
 import NotificationsCard from "@/components/notifications/notifications-card"
+import { getPathname } from "@/i18n/routing"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 

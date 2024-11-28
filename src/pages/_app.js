@@ -11,6 +11,7 @@ import Header from "@/components/header"
 import { OpenGraph } from "@daveyplate/next-open-graph"
 import { useRouter } from "next/router"
 import { cn } from "@nextui-org/react"
+import Footer from "@/components/footer"
 
 const MyApp = ({ Component, pageProps }) => {
     const router = useRouter()
@@ -45,6 +46,7 @@ const MyApp = ({ Component, pageProps }) => {
                 )}>
                     <Header {...pageProps} />
                     <Component {...pageProps} />
+                    <Footer />
                 </div>
             </Providers>
         </NextIntlClientProvider>

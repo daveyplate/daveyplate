@@ -5,6 +5,10 @@ import { toast } from "sonner"
 
 import { useAutoTranslate, AutoTranslate } from 'next-auto-translate'
 
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { getTranslationProps } from '@/i18n/translation-props'
+import { isExport } from "@/utils/utils"
+
 import {
     Button,
     Dropdown,
@@ -187,8 +191,14 @@ export default function IndexPage() {
                     </ScrollingBanner>
                 </section>
             </main>
-
-            <NewFooter />
         </>
     )
 }
+
+export async function getStaticProps({ locale, params }) {
+    const translationProps = await getTranslationProps({ locale, params })
+
+    return { props: { ...translationProps } }
+}
+
+export const getStaticPaths = isExport() ? getLocalePaths : undefined

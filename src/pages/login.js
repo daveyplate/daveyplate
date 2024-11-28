@@ -1,12 +1,21 @@
+import { useSessionContext } from "@supabase/auth-helpers-react"
+
+import { Auth, defaultLocalization } from "@daveyplate/supabase-auth-nextui"
+
 import { Card, CardBody, cn } from "@nextui-org/react"
-import { Auth } from "@daveyplate/supabase-auth-nextui"
+
+import { getLocalePaths } from "@/i18n/locale-paths"
+import { getTranslationProps } from '@/i18n/translation-props'
+import { isExport } from "@/utils/utils"
+
 import { createClient } from "@/utils/supabase/component"
 import { getURL } from "@/utils/utils"
-import { useSessionContext } from "@supabase/auth-helpers-react"
 
 export default function LoginPage() {
     const supabase = createClient()
     const { session, isLoading: sessionLoading } = useSessionContext()
+
+    const localization = defaultLocalization
 
     return (
         <div className={cn((session || sessionLoading) && "opacity-0",
@@ -39,3 +48,11 @@ export default function LoginPage() {
         </div>
     )
 }
+
+export async function getStaticProps({ locale, params }) {
+    const translationProps = await getTranslationProps({ locale, params })
+
+    return { props: { ...translationProps } }
+}
+
+export const getStaticPaths = isExport() ? getLocalePaths : undefined
