@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import { SWRConfig } from "swr"
 import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
+import PullToRefresh from 'pulltorefreshjs'
+import ReactDOMServer from 'react-dom/server'
 
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
@@ -14,7 +16,7 @@ TimeAgo.addLocale(de)
 TimeAgo.setDefaultLocale('en')
 
 import { ThemeProvider } from "next-themes"
-import { NextUIProvider } from "@nextui-org/react"
+import { NextUIProvider, Spinner } from "@nextui-org/react"
 import { toast } from 'sonner'
 
 import { AutoTranslateProvider } from 'next-auto-translate'
@@ -39,8 +41,7 @@ const localeValues = [
     'pl-PL', 'ro-RO', 'ru-RU', 'sr-SP', 'sk-SK', 'sl-SI',
     'tr-TR', 'uk-UA', 'ar-AE', 'ar-DZ', 'AR-EG', 'ar-SA',
     'el-GR', 'he-IL', 'fa-AF', 'am-ET', 'hi-IN', 'th-TH'
-];
-
+]
 
 export default function Providers({ children, ...pageProps }) {
     useWindowFocusBlur()
@@ -56,7 +57,23 @@ export default function Providers({ children, ...pageProps }) {
 
     useEffect(() => {
         window.history.scrollRestoration = iOS() ? 'auto' : 'manual'
-    }, [localeRouter])
+
+        // Enable pull to refresh for iOS PWA
+        const standalone = window.matchMedia("(display-mode: standalone)").matches
+
+        if (standalone) {
+            PullToRefresh.init({
+                instructionsReleaseToRefresh: " ",
+                instructionsPullToRefresh: " ",
+                instructionsRefreshing: " ",
+                iconRefreshing: ReactDOMServer.renderToString(<Spinner color="current" size="sm" />),
+            })
+        }
+
+        return () => {
+            PullToRefresh.destroyAll()
+        }
+    }, [])
 
     return (
         <PageTitleProvider>
