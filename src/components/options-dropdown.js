@@ -57,7 +57,8 @@ const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
                     <EllipsisHorizontalIcon className="size-6" />
                 </Button>
             </DropdownTrigger>
-            <DropdownMenu aria-label="Options actions" itemClasses={{ title: "!text-lg", base: "gap-4" }}>
+
+            <DropdownMenu aria-label="Options actions">
                 <DropdownItem
                     key="share"
                     startContent={<ShareIcon className="size-5" />}
@@ -70,7 +71,7 @@ const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
                     key="report"
                     className="text-danger hidden"
                     color="danger"
-                    startContent={<ExclamationTriangleIcon className="size-6 mt-0.5 -me-1" />}
+                    startContent={<ExclamationTriangleIcon className="size-5" />}
                     onPress={handleReport}
                 >
                     {autoTranslate("report", "Report")}
