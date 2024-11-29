@@ -19,7 +19,7 @@ import {
 } from "@nextui-org/react"
 import {
     CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon
-} from '@heroicons/react/24/solid'
+} from '@heroicons/react/24/outline'
 import { toast } from 'sonner'
 
 import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
