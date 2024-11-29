@@ -104,7 +104,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         onError={(error) => toast.error(error.message)}
                     >
                         <div className="pt-6 pb-1 flex flex-col">
-                            <div className="-mt-20 -mb-1.5 mx-auto z-10">
+                            <div className="-mt-[76px] -mb-2.5 mx-auto z-10">
                                 <Badge
                                     as={Button}
                                     isOneChar
@@ -123,7 +123,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                         <UserAvatar
                                             as={Button}
                                             isIconOnly
-                                            className="h-20 w-20"
+                                            className="h-20 w-20 text-xl"
                                             size="lg"
                                             user={user}
                                             onPress={() => setLightboxOpen(true)}
@@ -170,7 +170,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                             ) : (
                                 localizedBio && (
                                     <p className="pt-2 text-small text-foreground">
-                                        Test Bio
+                                        {localizedBio}
                                     </p>
                                 )
                             )}

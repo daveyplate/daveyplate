@@ -1,6 +1,5 @@
 import React, { forwardRef } from 'react'
-import { cn, AvatarProps } from '@nextui-org/react'
-import { Avatar } from '@daveyplate/nextui-fixed-avatar'
+import { cn, AvatarProps, Avatar } from '@nextui-org/react'
 
 /**
  * A user avatar component that displays a user's avatar image and name.
@@ -14,26 +13,12 @@ import { Avatar } from '@daveyplate/nextui-fixed-avatar'
  * @returns {JSX.Element} The user avatar component.
  */
 const UserAvatar = forwardRef(({ user, ...props }, ref) => {
-    let textSize
-    switch (props.size) {
-        case 'sm':
-            textSize = 'text-tiny'
-            break
-        case 'lg':
-            textSize = 'text-xl'
-            break
-        default:
-            textSize = 'text-sm'
-    }
-
     return (
         <Avatar
             {...props}
-            className={cn(textSize, props.className)}
             ref={ref}
-            name={user?.full_name?.substring(0, 2)?.toUpperCase()}
+            name={user?.full_name}
             src={user?.avatar_url || ""}
-            alt={user?.full_name || "Avatar"}
         />
     )
 })

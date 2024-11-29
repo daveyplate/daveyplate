@@ -74,19 +74,21 @@ export default function UsersPage() {
                         fullWidth
                     >
                         <CardBody className="p-4 flex-row items-center gap-4">
-                            <UserAvatar user={user} size="lg" />
+                            <UserAvatar user={user} size="lg" className="text-base" />
 
-                            <div>
-                                <p className="font-semibold">
+                            <div className="flex flex-col items-start justify-center">
+                                <p className="font-medium">
                                     {user.full_name || "Unnamed"}
                                 </p>
 
-                                <p className="text-foreground-400 text-small">
+                                <span className="text-small text-default-500">
                                     <AutoTranslate tKey="subscription">
                                         Subscription:
                                     </AutoTranslate>
 
-                                    <span className={cn('ml-1.5', user.claims?.premium ? "text-success font-semibold" : "text-foreground")}>
+                                    &nbsp;
+
+                                    <span className={cn(user.claims?.premium ? "text-success" : "text-foreground")}>
                                         {user.claims?.premium ?
                                             <AutoTranslate tKey="active">
                                                 Active
@@ -97,7 +99,7 @@ export default function UsersPage() {
                                             </AutoTranslate>
                                         }
                                     </span>
-                                </p>
+                                </span>
                             </div>
                         </CardBody>
                     </Card>
