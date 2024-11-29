@@ -143,16 +143,15 @@ export default function EditProfile() {
                             <Skeleton isLoaded={!!user} className="rounded-full">
                                 <Badge
                                     as={Button}
+                                    variant="faded"
+                                    className="bg-background"
                                     isOneChar
                                     content={
-                                        <PencilIcon className="size-2.5" />
+                                        <PencilIcon className="size-2.5 text-default-500" />
                                     }
                                     placement="bottom-right"
                                     shape="circle"
-                                    variant="faded"
-                                    className="bg-background"
                                     onPress={() => uploadRef.current()}
-                                    size="lg"
                                 >
                                     <UserAvatar
                                         as={Button}

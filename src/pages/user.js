@@ -19,7 +19,7 @@ import {
     cn,
     Skeleton
 } from "@nextui-org/react"
-import { PencilIcon } from "@heroicons/react/24/solid"
+import { PencilIcon } from "@heroicons/react/24/outline"
 import { toast } from "sonner"
 
 import { createClient } from "@/utils/supabase/component"
@@ -109,12 +109,11 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                     as={Button}
                                     isOneChar
                                     content={
-                                        <PencilIcon className="size-2.5" />
+                                        <PencilIcon className="size-2.5 text-default-500" />
                                     }
                                     placement="bottom-right"
                                     shape="circle"
                                     variant="faded"
-                                    size="lg"
                                     className="bg-background"
                                     isInvisible={!isMe}
                                     onPress={() => uploadRef.current()}
