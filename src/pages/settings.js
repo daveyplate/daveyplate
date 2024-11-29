@@ -189,13 +189,12 @@ export default function Settings() {
     return (
         <div
             className={cn(sessionLoading ? "opacity-0" : "opacity-1",
-                "flex-center max-w-lg transition-all"
+                "flex flex-col gap-4 p-4 items-center"
             )}
         >
             {/* Notifcation Settings */}
             {session && (
-
-                <Card fullWidth>
+                <Card fullWidth className="max-w-xl">
                     <CardBody className="gap-4 p-4 items-start">
                         <div className="flex gap-2 items-center -my-1">
                             <BellIcon className="size-5 text-primary" />
@@ -233,7 +232,7 @@ export default function Settings() {
             )}
 
             {/* Theme & Language */}
-            <Card fullWidth>
+            <Card fullWidth className="max-w-xl">
                 <CardBody className="gap-4 p-4 items-start">
                     <div className="flex gap-2 items-center -mt-1.5 -mb-2">
                         <EyeIcon className="size-4 text-primary" />
@@ -260,7 +259,7 @@ export default function Settings() {
             {/* Change Email */}
             {session && (
                 <>
-                    <Card fullWidth>
+                    <Card fullWidth className="max-w-xl">
                         <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updateEmail}>
                             <Input
                                 type="email"
@@ -307,7 +306,7 @@ export default function Settings() {
                     </Card>
 
                     {/* Change Password */}
-                    <Card fullWidth>
+                    <Card fullWidth className="max-w-xl">
                         <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updatePassword}>
                             <input type="hidden" name="email" value={session?.user?.email} />
 
@@ -393,7 +392,7 @@ export default function Settings() {
             )}
 
             {/* Account Management */}
-            <Card fullWidth>
+            <Card fullWidth className="max-w-xl">
                 <CardBody className="gap-4 p-4 items-start">
                     <div className="flex gap-2 items-center -my-1.5">
                         <UserIcon className="size-4 text-primary" />

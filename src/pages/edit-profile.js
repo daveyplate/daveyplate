@@ -14,7 +14,8 @@ import {
     Textarea,
     Skeleton,
     cn,
-    Badge
+    Badge,
+    CardHeader
 } from "@nextui-org/react"
 import {
     CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon
@@ -111,9 +112,17 @@ export default function EditProfile() {
     }, [name, bio])
 
     return (
-        <div className="flex-center max-w-lg">
-            <Card fullWidth>
-                <CardBody as="form" onSubmit={updateProfile} className="p-4">
+        <div className="flex-center">
+            <Card fullWidth className="max-w-xl p-2">
+                <CardHeader className="flex flex-col items-start p-4 pb-2">
+                    <p className="text-large">
+                        <AutoTranslate tKey="account_details">
+                            Account Details
+                        </AutoTranslate>
+                    </p>
+                </CardHeader>
+
+                <CardBody as="form" onSubmit={updateProfile}>
                     <DragDropzone
                         size="lg"
                         label={autoTranslate("upload_avatar", "Upload Avatar")}
@@ -122,8 +131,8 @@ export default function EditProfile() {
                         onError={(error) => toast.error(error.message)}
                         className="gap-4 flex flex-col"
                     >
-                        <div className="flex items-center gap-2 -mb-2 -mt-1">
-                            <UserCircleIcon className="size-5 text-primary" />
+                        <div className="flex items-center gap-2 -mb-3 text-small">
+                            <UserCircleIcon className="size-4 text-primary" />
 
                             <AutoTranslate tKey="avatar">
                                 Avatar
@@ -151,16 +160,14 @@ export default function EditProfile() {
                                         size="lg"
                                         user={user}
                                         onPress={() => setLightboxOpen(true)}
-                                        className="w-16 h-16"
                                     />
                                 </Badge>
                             </Skeleton>
 
                             <Button
-                                size="lg"
                                 color="primary"
                                 startContent={
-                                    <CloudArrowUpIcon className="size-6 -ms-1" />
+                                    <CloudArrowUpIcon className="size-5" />
                                 }
                                 onPress={() => uploadRef.current()}
                                 isDisabled={!user}
@@ -172,7 +179,6 @@ export default function EditProfile() {
 
                             <Button
                                 isIconOnly
-                                size="lg"
                                 color="danger"
                                 onPress={() => setConfirm({
                                     title: autoTranslate('delete_avatar', 'Delete Avatar'),
@@ -187,13 +193,11 @@ export default function EditProfile() {
                                 })}
                                 isDisabled={!user?.avatar_url}
                             >
-                                <TrashIcon className="size-5" />
+                                <TrashIcon className="size-4" />
                             </Button>
                         </div>
 
                         <Input
-                            variant="bordered"
-                            size="lg"
                             label={
                                 <div className="flex items-center gap-2">
                                     <UserIcon className="size-4 text-primary" />
@@ -213,12 +217,10 @@ export default function EditProfile() {
                         />
 
                         <Textarea
-                            variant="bordered"
-                            size="lg"
-                            classNames={{ label: "text-base", inputWrapper: "!min-h-24" }}
+                            classNames={{ inputWrapper: "!min-h-[76px]" }}
                             label={
                                 <div className="flex items-center gap-2">
-                                    <PencilIcon className="mx-0.5 size-3.5 text-primary" />
+                                    <PencilIcon className="size-4 text-primary" />
 
                                     <AutoTranslate tKey="bio">
                                         Bio
@@ -234,20 +236,19 @@ export default function EditProfile() {
                             errorMessage={bioError}
                         />
 
-                        <Skeleton isLoaded={!!user} className="self-end rounded-2xl min-w-10 me-2 -mt-2 -mb-1">
-                            <p className="text-right text-small text-foreground/60">
+                        <Skeleton isLoaded={!!user} className="self-end rounded-2xl min-w-10 me-2 -mt-2">
+                            <p className="text-right text-tiny text-foreground/60">
                                 {bio.length}/{maxBioLength}
                             </p>
                         </Skeleton>
 
-                        <Skeleton isLoaded={!!user} className="max-w-fit rounded-2xl">
+                        <Skeleton isLoaded={!!user} className="ms-auto max-w-fit rounded-2xl">
                             <Button
                                 type="submit"
                                 className={cn(!user && "invisible", null)}
                                 color="primary"
-                                size="lg"
                                 isDisabled={!user || !formChanged || !!nameError || !!bioError}
-                                startContent={<CheckIcon className="size-5 -ms-1" />}
+                                startContent={<CheckIcon className="size-4" />}
                             >
                                 <AutoTranslate tKey="save_changes">
                                     Save Changes

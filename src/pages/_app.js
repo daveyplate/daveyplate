@@ -45,7 +45,11 @@ const MyApp = ({ Component, pageProps }) => {
                     "flex flex-col min-h-dvh py-safe px-safe"
                 )}>
                     <Header {...pageProps} />
-                    <Component {...pageProps} />
+
+                    <main className="flex flex-col grow">
+                        <Component {...pageProps} />
+                    </main>
+
                     <Footer />
                 </div>
             </Providers>
