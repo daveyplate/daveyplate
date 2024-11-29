@@ -25,84 +25,86 @@ export default function UsersPage() {
     const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
     return (
-        <div className="flex flex-col grow max-w-xl self-center w-full m-4 gap-4">
-            <Input
-                size="lg"
-                fullWidth
-                isClearable
-                placeholder={autoTranslate('search_placeholder', "Type to search...")}
-                startContent={
-                    <SearchIcon className="size-5 me-0.5 pointer-events-none" />
-                }
-                value={search}
-                onValueChange={setSearch}
-            />
-
-            {!users?.length && !isLoading && (
-                <Card fullWidth>
-                    <CardBody className="p-8">
-                        <AutoTranslate tKey="no_users">
-                            No users found...
-                        </AutoTranslate>
-                    </CardBody>
-                </Card>
-            )}
-
-            {isLoading && !users && [...Array(3)].fill({}).map((_, index) => (
-                <Card key={index} fullWidth>
-                    <CardBody className="p-4">
-                        <div className="flex items-center gap-4">
-                            <Skeleton className="size-14 rounded-full" />
-
-                            <div className="space-y-2">
-                                <Skeleton className="h-4 w-[100px] rounded-lg" />
-                                <Skeleton className="h-4 w-[150px] rounded-lg" />
-                            </div>
-                        </div>
-                    </CardBody>
-                </Card>
-            ))}
-
-            {users?.map((user, index) => (
-                <Card
-                    key={index}
-                    as={Link}
-                    href={`/user?user_id=${user.id}`}
-                    linkAs={`/user/${user.id}`}
-                    isPressable
+        <div className="p-4">
+            <div className="flex flex-col gap-4 max-w-xl mx-auto">
+                <Input
+                    size="lg"
                     fullWidth
-                >
-                    <CardBody className="p-4 flex-row items-center gap-4">
-                        <UserAvatar user={user} size="lg" className="text-base" />
+                    isClearable
+                    placeholder={autoTranslate('search_placeholder', "Type to search...")}
+                    startContent={
+                        <SearchIcon className="size-5 me-0.5 pointer-events-none" />
+                    }
+                    value={search}
+                    onValueChange={setSearch}
+                />
 
-                        <div className="flex flex-col items-start justify-center">
-                            <p className="font-medium">
-                                {user.full_name || "Unnamed"}
-                            </p>
+                {!users?.length && !isLoading && (
+                    <Card fullWidth>
+                        <CardBody className="p-8">
+                            <AutoTranslate tKey="no_users">
+                                No users found...
+                            </AutoTranslate>
+                        </CardBody>
+                    </Card>
+                )}
 
-                            <span className="text-small text-default-500">
-                                <AutoTranslate tKey="subscription">
-                                    Subscription:
-                                </AutoTranslate>
+                {isLoading && !users && [...Array(3)].fill({}).map((_, index) => (
+                    <Card key={index} fullWidth>
+                        <CardBody className="p-4">
+                            <div className="flex items-center gap-4">
+                                <Skeleton className="size-14 rounded-full" />
 
-                                &nbsp;
+                                <div className="space-y-2">
+                                    <Skeleton className="h-4 w-[100px] rounded-lg" />
+                                    <Skeleton className="h-4 w-[150px] rounded-lg" />
+                                </div>
+                            </div>
+                        </CardBody>
+                    </Card>
+                ))}
 
-                                <span className={cn(user.claims?.premium ? "text-success" : "text-foreground")}>
-                                    {user.claims?.premium ?
-                                        <AutoTranslate tKey="active">
-                                            Active
-                                        </AutoTranslate>
-                                        :
-                                        <AutoTranslate tKey="inactive">
-                                            Inactive
-                                        </AutoTranslate>
-                                    }
+                {users?.map((user, index) => (
+                    <Card
+                        key={index}
+                        as={Link}
+                        href={`/user?user_id=${user.id}`}
+                        linkAs={`/user/${user.id}`}
+                        isPressable
+                        fullWidth
+                    >
+                        <CardBody className="p-4 flex-row items-center gap-4">
+                            <UserAvatar user={user} size="lg" className="text-base" />
+
+                            <div className="flex flex-col items-start justify-center">
+                                <p className="font-medium">
+                                    {user.full_name || "Unnamed"}
+                                </p>
+
+                                <span className="text-small text-default-500">
+                                    <AutoTranslate tKey="subscription">
+                                        Subscription:
+                                    </AutoTranslate>
+
+                                    &nbsp;
+
+                                    <span className={cn(user.claims?.premium ? "text-success" : "text-foreground")}>
+                                        {user.claims?.premium ?
+                                            <AutoTranslate tKey="active">
+                                                Active
+                                            </AutoTranslate>
+                                            :
+                                            <AutoTranslate tKey="inactive">
+                                                Inactive
+                                            </AutoTranslate>
+                                        }
+                                    </span>
                                 </span>
-                            </span>
-                        </div>
-                    </CardBody>
-                </Card>
-            ))}
+                            </div>
+                        </CardBody>
+                    </Card>
+                ))}
+            </div>
         </div>
     )
 }

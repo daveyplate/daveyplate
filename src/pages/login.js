@@ -21,7 +21,7 @@ export default function LoginPage() {
         <div className={cn((session || sessionLoading) && "opacity-0",
             "flex flex-col grow items-center justify-center p-4 gap-4 transition-all"
         )}>
-            <Card fullWidth className="max-w-sm p-2">
+            <Card fullWidth className="max-w-md p-2">
                 <CardBody>
                     <Auth
                         supabaseClient={supabase}
