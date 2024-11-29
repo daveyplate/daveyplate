@@ -57,7 +57,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     }, [userId, user, userLoading])
 
     return (
-        <div className="flex grow items-start justify-center p-4">
+        <div className="flex flex-col items-center grow p-4">
             <PageTitle title={user?.full_name} />
 
             <OpenGraph
@@ -67,10 +67,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
                 ogType="profile"
             />
 
-            <Card className="my-10 w-[400px]">
-                <CardHeader
-                    className="relative flex h-[100px] flex-col justify-end bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400 z-0"
-                >
+            <Card className="my-10 max-w-[400px]" fullWidth>
+                <CardHeader className="relative flex h-[100px] flex-col justify-end overflow-visible bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400">
                     <OptionsDropdown
                         className={cn(!isMe ? "opacity-100" : "opacity-0",
                             "absolute right-3 top-3 transition-all text-white bg-background/20"
@@ -104,75 +102,79 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         openRef={uploadRef}
                         onFiles={(files) => setAvatarFile(files[0])}
                         onError={(error) => toast.error(error.message)}
-                        className="flex flex-col"
                     >
-                        <Skeleton isLoaded={!!user} className="rounded-full -mt-14 -mb-2 mx-auto z-10">
-                            <Badge
-                                as={Button}
-                                isOneChar
-                                content={
-                                    <PencilIcon className="size-2.5" />
-                                }
-                                placement="bottom-right"
-                                shape="circle"
-                                variant="faded"
-                                size="lg"
-                                className="bg-background"
-                                isInvisible={!isMe}
-                                onPress={() => uploadRef.current()}
-                            >
-                                <UserAvatar
+                        <div className="pt-6 pb-1 flex flex-col">
+                            <div className="-mt-20 -mb-1.5 mx-auto z-10">
+                                <Badge
                                     as={Button}
-                                    isIconOnly
-                                    className="h-20 w-20"
-                                    size="lg"
-                                    user={user}
-                                    onPress={() => setLightboxOpen(true)}
-                                />
-                            </Badge>
-                        </Skeleton>
-
-                        <p className="text-large font-medium">
-                            <Skeleton isLoaded={!!user} className="rounded-full size-fit h-6 my-0.5 min-w-32">
-                                {user && (user?.full_name || "Unnamed")}
-                            </Skeleton>
-                        </p>
-
-                        <Skeleton isLoaded={!!user} className="rounded-full size-fit h-6 my-0.5">
-                            <p className="text-small text-default-400">
-                                <AutoTranslate tKey="subscription">
-                                    Subscription:
-                                </AutoTranslate>
-
-                                <span className={cn('ml-1.5', user?.claims?.premium ? "text-success" : "text-foreground")}>
-                                    {user?.claims?.premium ?
-                                        <AutoTranslate tKey="active">
-                                            Active
-                                        </AutoTranslate>
-                                        :
-                                        <AutoTranslate tKey="inactive">
-                                            Inactive
-                                        </AutoTranslate>
+                                    isOneChar
+                                    content={
+                                        <PencilIcon className="size-2.5" />
                                     }
-                                </span>
-                            </p>
-                        </Skeleton>
+                                    placement="bottom-right"
+                                    shape="circle"
+                                    variant="faded"
+                                    size="lg"
+                                    className="bg-background"
+                                    isInvisible={!isMe}
+                                    onPress={() => uploadRef.current()}
+                                >
+                                    <Skeleton isLoaded={!!user} className="rounded-full w-20 h-20">
+                                        <UserAvatar
+                                            as={Button}
+                                            isIconOnly
+                                            className="h-20 w-20"
+                                            size="lg"
+                                            user={user}
+                                            onPress={() => setLightboxOpen(true)}
+                                        />
+                                    </Skeleton>
+                                </Badge>
+                            </div>
 
-
-                        <div className="flex gap-2 pb-1 pt-2 hidden">
-                            <Chip variant="flat" size="lg"></Chip>
-                        </div>
-
-                        <Skeleton
-                            isLoaded={!!user}
-                            className={cn("rounded-full size-fit my-0.5 min-w-64", (!user || localizedBio) && "min-h-6 pt-2")}
-                        >
-                            {localizedBio && (
-                                <p className="text-small">
-                                    {localizedBio}
+                            {!user ? (
+                                <Skeleton className="rounded-full w-24 h-5 my-1" />
+                            ) : (
+                                <p className="text-large font-medium">
+                                    {user && (user?.full_name || "Unnamed")}
                                 </p>
                             )}
-                        </Skeleton>
+
+
+                            {!user ? (
+                                <Skeleton className="rounded-full w-36 h-4 my-0.5" />
+                            ) : (
+                                <p className="max-w-[90%] text-small text-default-400">
+                                    <AutoTranslate tKey="subscription">
+                                        Subscription:
+                                    </AutoTranslate>
+
+                                    &nbsp;
+
+                                    <span className={cn(user?.claims?.premium ? "text-success" : "text-foreground")}>
+                                        {user?.claims?.premium ?
+                                            <AutoTranslate tKey="active">
+                                                Active
+                                            </AutoTranslate>
+                                            :
+                                            <AutoTranslate tKey="inactive">
+                                                Inactive
+                                            </AutoTranslate>
+                                        }
+                                    </span>
+                                </p>
+                            )}
+
+                            {!user ? (
+                                <Skeleton className="rounded-full w-64 h-4 mt-2 mb-1" />
+                            ) : (
+                                localizedBio && (
+                                    <p className="pt-2 text-small text-foreground">
+                                        Test Bio
+                                    </p>
+                                )
+                            )}
+                        </div>
                     </DragDropzone>
                 </CardBody>
             </Card>
