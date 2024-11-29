@@ -54,7 +54,7 @@ const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
                     isDisabled={isDisabled}
                     size="sm"
                 >
-                    <EllipsisHorizontalIcon className="size-7" />
+                    <EllipsisHorizontalIcon className="size-6" />
                 </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Options actions" itemClasses={{ title: "!text-lg", base: "gap-4" }}>
