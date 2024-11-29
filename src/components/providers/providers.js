@@ -32,6 +32,7 @@ import MetaTheme from "@/components/providers/meta-theme"
 import ToastProvider from "@/components/providers/toast-provider"
 import CheckoutStatus from "@/components/providers/checkout-status"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
+import { ArrowDownIcon } from '@heroicons/react/24/outline'
 
 const localeValues = [
     'fr-FR', 'fr-CA', 'de-DE', 'en-US', 'en-GB', 'ja-JP',
@@ -66,13 +67,16 @@ export default function Providers({ children, ...pageProps }) {
                 instructionsReleaseToRefresh: " ",
                 instructionsPullToRefresh: " ",
                 instructionsRefreshing: " ",
-                iconRefreshing: ReactDOMServer.renderToString(<Spinner color="current" size="sm" />),
+                iconRefreshing: ReactDOMServer.renderToString(
+                    <Spinner color="white" size="sm" className="invert dark:invert-0" />
+                ),
+                iconArrow: ReactDOMServer.renderToString(
+                    <ArrowDownIcon className="size-5 mx-auto text-foreground" />
+                )
             })
         }
 
-        return () => {
-            PullToRefresh.destroyAll()
-        }
+        return () => PullToRefresh.destroyAll()
     }, [])
 
     return (
