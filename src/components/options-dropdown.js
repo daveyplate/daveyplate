@@ -61,7 +61,7 @@ const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
             <DropdownMenu aria-label="Options actions">
                 <DropdownItem
                     key="share"
-                    startContent={<ShareIcon className="size-5" />}
+                    startContent={<ShareIcon className="size-4" />}
                     onPress={handleShare}
                 >
                     {autoTranslate("share", "Share")}
