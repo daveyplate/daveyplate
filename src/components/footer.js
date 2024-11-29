@@ -116,7 +116,7 @@ export default function Footer() {
                                     transition: { duration: Math.random() + 4, repeat: Infinity, ease: "linear" },
                                 }}
                                 style={{
-                                    position: 'fixed',
+                                    position: 'absolute',
                                     width: 4,
                                     height: 4,
                                     backgroundColor: ['red', 'orange', 'yellow'][Math.floor(Math.random() * 3)],
