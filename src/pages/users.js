@@ -25,7 +25,7 @@ export default function UsersPage() {
     const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
     return (
-        <div className="flex flex-col p-4 gap-4 items-center">
+        <div className="flex flex-col grow max-w-xl self-center w-full m-4 gap-4">
             <Input
                 size="lg"
                 fullWidth
@@ -36,7 +36,6 @@ export default function UsersPage() {
                 }
                 value={search}
                 onValueChange={setSearch}
-                className="max-w-xl"
             />
 
             {!users?.length && !isLoading && (
@@ -50,7 +49,7 @@ export default function UsersPage() {
             )}
 
             {isLoading && !users && [...Array(3)].fill({}).map((_, index) => (
-                <Card key={index}>
+                <Card key={index} fullWidth>
                     <CardBody className="p-4">
                         <div className="flex items-center gap-4">
                             <Skeleton className="size-14 rounded-full" />
@@ -72,7 +71,6 @@ export default function UsersPage() {
                     linkAs={`/user/${user.id}`}
                     isPressable
                     fullWidth
-                    className="max-w-xl"
                 >
                     <CardBody className="p-4 flex-row items-center gap-4">
                         <UserAvatar user={user} size="lg" className="text-base" />

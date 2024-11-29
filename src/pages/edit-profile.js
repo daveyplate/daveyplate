@@ -132,7 +132,7 @@ export default function EditProfile() {
                         className="gap-4 flex flex-col"
                     >
                         <div className="flex items-center gap-2 -mb-3 text-small">
-                            <UserCircleIcon className="size-4 text-primary" />
+                            <UserCircleIcon className="size-4 text-primary hidden" />
 
                             <AutoTranslate tKey="avatar">
                                 Avatar
@@ -200,7 +200,7 @@ export default function EditProfile() {
                         <Input
                             label={
                                 <div className="flex items-center gap-2">
-                                    <UserIcon className="size-4 text-primary" />
+                                    <UserIcon className="size-4 text-primary hidden" />
 
                                     <AutoTranslate tKey="name">
                                         Name
@@ -220,7 +220,7 @@ export default function EditProfile() {
                             classNames={{ inputWrapper: "!min-h-[76px]" }}
                             label={
                                 <div className="flex items-center gap-2">
-                                    <PencilIcon className="size-4 text-primary" />
+                                    <PencilIcon className="size-4 text-primary hidden" />
 
                                     <AutoTranslate tKey="bio">
                                         Bio
