@@ -1,25 +1,24 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useLocale } from 'next-intl'
-import { v4 } from 'uuid'
-import { useSessionContext } from '@supabase/auth-helpers-react'
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useLocale } from "next-intl"
+import { useSessionContext } from "@supabase/auth-helpers-react"
 
-import { useEntity, useInfiniteEntities, usePeers } from '@daveyplate/supabase-swr-entities/client'
+import { useEntity, useInfiniteEntities, usePeers } from "@daveyplate/supabase-swr-entities/client"
 
 import { Button, Chip, Input, cn } from "@nextui-org/react"
-import { ArrowUpIcon } from '@heroicons/react/24/solid'
+import { ArrowUpIcon } from "@heroicons/react/24/solid"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
-import { getTranslationProps } from '@/i18n/translation-props'
+import { getTranslationProps } from "@/i18n/translation-props"
 import { isExport } from "@/utils/utils"
 
-import Message from '@/components/chat/message'
-import UserAvatar from '@/components/user-avatar'
+import Message from "@/components/chat/message"
+import UserAvatar from "@/components/user-avatar"
 
 export default function Chat() {
     const { session, isLoading: sessionLoading } = useSessionContext()
     const locale = useLocale()
-    const { entity: user } = useEntity(session && 'profiles', 'me')
-    const [content, setContent] = useState('')
+    const { entity: user } = useEntity(session && "profiles", "me")
+    const [content, setContent] = useState("")
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const [lastWhisperUser, setLastWhisperUser] = useState(null)
     const [whisperUser, setWhisperUser] = useState(null)
@@ -172,7 +171,7 @@ export default function Chat() {
             createMessage(newMessage, { user })
         }
 
-        setContent('')
+        setContent("")
         setWhisperUser(null)
     }
 
@@ -227,7 +226,7 @@ export default function Chat() {
                         value={content}
                         onValueChange={setContent}
                         isDisabled={!session}
-                        autoComplete='off'
+                        autoComplete="off"
                         startContent={
                             whisperUser && (
                                 <Chip
