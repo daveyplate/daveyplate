@@ -112,7 +112,7 @@ export default function EditProfile() {
     }, [name, bio])
 
     return (
-        <div className="flex-center">
+        <div className="flex flex-col grow items-center justify-center p-4">
             <Card fullWidth className="max-w-xl p-2">
                 <CardHeader className="flex flex-col items-start p-4 pb-2">
                     <p className="text-large">
