@@ -50,7 +50,6 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const isMe = session && userId == session.user.id
     const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
 
-
     useEffect(() => {
         if (userId && !userLoading && !user) {
             router.replace('/404')
@@ -58,7 +57,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     }, [userId, user, userLoading])
 
     return (
-        <div className="flex-center max-w-lg">
+        <div className="flex grow items-start justify-center p-4">
             <PageTitle title={user?.full_name} />
 
             <OpenGraph
@@ -68,9 +67,9 @@ export default function UserPage({ user_id, user: fallbackData }) {
                 ogType="profile"
             />
 
-            <Card fullWidth>
+            <Card className="my-10 w-[400px]">
                 <CardHeader
-                    className="flex h-24 flex-col justify-end bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400 z-0"
+                    className="relative flex h-[100px] flex-col justify-end bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400 z-0"
                 >
                     <OptionsDropdown
                         className={cn(!isMe ? "opacity-100" : "opacity-0",
@@ -87,8 +86,9 @@ export default function UserPage({ user_id, user: fallbackData }) {
                             "absolute right-3 top-3 bg-background/20"
                         )}
                         radius="full"
+                        size="sm"
                         variant="light"
-                        startContent={<PencilIcon className="size-3.5" />}
+                        startContent={<PencilIcon className="size-3" />}
                         isDisabled={!isMe}
                     >
                         <AutoTranslate tKey="edit_profile">
@@ -97,7 +97,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                     </Button>
                 </CardHeader>
 
-                <CardBody className="px-4 pt-9 overflow-visible">
+                <CardBody className="overflow-visible">
                     <DragDropzone
                         size="lg"
                         label={autoTranslate("upload_avatar", "Upload Avatar")}
@@ -106,7 +106,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         onError={(error) => toast.error(error.message)}
                         className="flex flex-col"
                     >
-                        <Skeleton isLoaded={!!user} className="rounded-full -mt-20 -mb-1 mx-auto z-10">
+                        <Skeleton isLoaded={!!user} className="rounded-full -mt-14 -mb-2 mx-auto z-10">
                             <Badge
                                 as={Button}
                                 isOneChar
@@ -132,14 +132,14 @@ export default function UserPage({ user_id, user: fallbackData }) {
                             </Badge>
                         </Skeleton>
 
-                        <h5>
+                        <p className="text-large font-medium">
                             <Skeleton isLoaded={!!user} className="rounded-full size-fit h-6 my-0.5 min-w-32">
                                 {user && (user?.full_name || "Unnamed")}
                             </Skeleton>
-                        </h5>
+                        </p>
 
                         <Skeleton isLoaded={!!user} className="rounded-full size-fit h-6 my-0.5">
-                            <p className="text-default-400">
+                            <p className="text-small text-default-400">
                                 <AutoTranslate tKey="subscription">
                                     Subscription:
                                 </AutoTranslate>
@@ -165,10 +165,10 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
                         <Skeleton
                             isLoaded={!!user}
-                            className={cn("rounded-full size-fit my-0.5 min-w-64", (!user || localizedBio) && "min-h-6 mt-2.5")}
+                            className={cn("rounded-full size-fit my-0.5 min-w-64", (!user || localizedBio) && "min-h-6 pt-2")}
                         >
                             {localizedBio && (
-                                <p>
+                                <p className="text-small">
                                     {localizedBio}
                                 </p>
                             )}
