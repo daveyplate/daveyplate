@@ -10,25 +10,27 @@ import {
     Button,
     Card,
     CardBody,
+    CardHeader,
     cn,
+    Dropdown,
+    DropdownTrigger,
     Input,
     Spinner,
     Switch,
+    Tab,
+    Tabs,
 } from "@nextui-org/react"
+
 import {
-    ArrowLeftStartOnRectangleIcon,
-    ArrowRightEndOnRectangleIcon,
     BellIcon,
-    CheckIcon,
-    EnvelopeIcon,
+    ChevronDownIcon,
+    Cog6ToothIcon,
+    ComputerDesktopIcon,
     EyeIcon,
     EyeSlashIcon,
-    KeyIcon,
-    LanguageIcon,
-    NoSymbolIcon,
-    TrashIcon,
-    UserIcon
-} from '@heroicons/react/24/solid'
+    MoonIcon,
+    SunIcon
+} from '@heroicons/react/24/outline'
 import { toast } from 'sonner'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
@@ -37,13 +39,20 @@ import { Link, useLocaleRouter } from '@/i18n/routing'
 import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
-import ThemeDropdown from '@/components/theme-dropdown'
-import LocaleDropdown from '@/components/locale-dropdown'
+import ThemeDropdownMenu from '@/components/theme-dropdown-menu'
+import { useIsClient } from '@uidotdev/usehooks'
+import { useTheme } from 'next-themes'
+import LocaleDropdownMenu, { localeToCountry } from '@/components/locale-dropdown-menu'
+import { useLocale } from 'next-intl'
+import Flag from 'react-flagpack'
 
 export default function Settings() {
     const router = useRouter()
     const localeRouter = useLocaleRouter()
+    const locale = useLocale()
     const supabase = createClient()
+    const isClient = useIsClient()
+    const { theme: currentTheme } = useTheme()
     const { autoTranslate } = useAutoTranslate()
     const { session, isLoading: sessionLoading } = useSessionContext()
     const { postAPI } = useAPI()
@@ -78,6 +87,26 @@ export default function Settings() {
     const accountDeleted = autoTranslate('account_deleted', 'Account deleted')
     const authenticationCodeText = autoTranslate('authentication_code', 'Authentication Code')
     const checkEmailText = autoTranslate('check_email', 'Check your email for an authentication code')
+
+    const themes = [
+        {
+            key: 'light',
+            title: autoTranslate("light", "Light"),
+            icon: SunIcon
+        },
+        {
+            key: 'dark',
+            title: autoTranslate("dark", "Dark"),
+            icon: MoonIcon
+        },
+        {
+            key: 'system',
+            title: autoTranslate("system", "System"),
+            icon: ComputerDesktopIcon
+        },
+    ]
+
+    const selectedTheme = themes.find(theme => theme.key === currentTheme)
 
     useEffect(() => {
         setEmail(session?.user.email || '')
@@ -189,308 +218,318 @@ export default function Settings() {
     return (
         <div
             className={cn(sessionLoading ? "opacity-0" : "opacity-1",
-                "flex flex-col gap-4 p-4 items-center"
+                "flex flex-col grow gap-4 p-4 items-center justify-center"
             )}
         >
-            {/* Notifcation Settings */}
-            {session && (
-                <Card fullWidth className="max-w-xl">
-                    <CardBody className="gap-4 p-4 items-start">
-                        <div className="flex gap-2 items-center -my-1">
-                            <BellIcon className="size-5 text-primary" />
+            <Card fullWidth className="max-w-xl px-1 pt-2">
+                <Tabs className="p-3" classNames={{ tabContent: "text-small", base: cn(!session && "hidden") }} size="lg">
+                    <Tab
+                        textValue="Settings"
+                        title={
+                            <div className="flex items-center gap-1.5">
+                                <Cog6ToothIcon className="size-5" />
 
-                            <AutoTranslate tKey="notification_settings">
-                                Notifications
-                            </AutoTranslate>
-                        </div>
+                                <p>
+                                    Settings
+                                </p>
+                            </div>
+                        }
+                    >
+                        <CardHeader className="px-4 py-0">
+                            <p className="text-large">
+                                Application Settings
+                            </p>
+                        </CardHeader>
 
-                        <Switch
-                            size="lg"
-                            isSelected={metadata?.notifications_enabled}
-                            onValueChange={(value) => updateMetadata({ notifications_enabled: value })}
-                            classNames={{ label: "text-base" }}
-                            isDisabled={!metadata}
-                        >
-                            <AutoTranslate tKey="enable_notifications">
-                                Enable Notifications
-                            </AutoTranslate>
-                        </Switch>
-
-                        <Switch
-                            size="lg"
-                            isSelected={metadata?.notifications_badge_enabled}
-                            onValueChange={(value) => updateMetadata({ notifications_badge_enabled: value })}
-                            classNames={{ label: "text-base" }}
-                            isDisabled={!metadata}
-                        >
-                            <AutoTranslate tKey="enable_notifications">
-                                Notifications Badge
-                            </AutoTranslate>
-                        </Switch>
-                    </CardBody>
-                </Card>
-            )}
-
-            {/* Theme & Language */}
-            <Card fullWidth className="max-w-xl">
-                <CardBody className="gap-4 p-4 items-start">
-                    <div className="flex gap-2 items-center -mt-1.5 -mb-2">
-                        <EyeIcon className="size-4 text-primary" />
-
-                        <AutoTranslate tKey="theme">
-                            Theme
-                        </AutoTranslate>
-                    </div>
-
-                    <ThemeDropdown size="lg" />
-
-                    <div className="flex gap-2 items-center -mt-1 -mb-2">
-                        <LanguageIcon className="size-4 text-primary" />
-
-                        <AutoTranslate tKey="language">
-                            Language
-                        </AutoTranslate>
-                    </div>
-
-                    <LocaleDropdown size="lg" />
-                </CardBody>
-            </Card>
-
-            {/* Change Email */}
-            {session && (
-                <>
-                    <Card fullWidth className="max-w-xl">
-                        <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updateEmail}>
-                            <Input
-                                type="email"
-                                size="lg"
-                                variant="bordered"
-                                label={
-                                    <div className="flex gap-2.5 items-center">
-                                        <EnvelopeIcon className="size-4 text-primary" />
-
-                                        <AutoTranslate tKey="change_email">
-                                            Change Email
-                                        </AutoTranslate>
-                                    </div>
-                                }
-                                labelPlacement="outside"
-                                placeholder={autoTranslate('email_address', 'Email Address')}
-                                value={email}
-                                onValueChange={setEmail}
-                                isDisabled={updatingEmail}
-                            />
-
-                            <Button
-                                type="submit"
-                                color="primary"
-                                size="lg"
-                                isDisabled={
-                                    updatingEmail ||
-                                    email == session?.user?.email ||
-                                    email == newEmail
-                                }
-                                isLoading={updatingEmail}
-                                spinner={
-                                    <Spinner color="current" size="sm" />
-                                }
-                                startContent={!updatingEmail && (
-                                    <CheckIcon className="size-5 -ms-1" />
-                                )}
-                            >
-                                <AutoTranslate tKey="update_email">
-                                    Update Email
-                                </AutoTranslate>
-                            </Button>
-                        </CardBody>
-                    </Card>
-
-                    {/* Change Password */}
-                    <Card fullWidth className="max-w-xl">
-                        <CardBody className="p-4 gap-4 items-start" as="form" onSubmit={updatePassword}>
-                            <input type="hidden" name="email" value={session?.user?.email} />
-
-                            <Input
-                                size="lg"
-                                labelPlacement="outside"
-                                variant="bordered"
-                                type={passwordVisible ? "text" : "password"}
-                                name="password"
-                                value={password}
-                                onValueChange={setPassword}
-                                label={
-                                    <div className="flex gap-2.5 items-center">
-                                        <KeyIcon className="size-4 text-primary" />
-
-                                        {changePasswordText}
-                                    </div>
-                                }
-                                placeholder={autoTranslate('new_password', 'New Password')}
-                                isDisabled={!session || updatingPassword}
-                                endContent={
-                                    <Button
-                                        size="sm"
-                                        variant="light"
-                                        isIconOnly
-                                        onPress={() => setPasswordVisible(!passwordVisible)}
-                                        disableRipple
-                                    >
-                                        {passwordVisible ? (
-                                            <EyeSlashIcon className="size-6" />
-                                        ) : (
-                                            <EyeIcon className="size-6" />
-                                        )}
-                                    </Button>
-                                }
-                            />
-
-                            {requireNonce && (
-                                <Input
-                                    autoFocus
-                                    size="lg"
-                                    labelPlacement="outside"
-                                    variant="bordered"
-                                    type="text"
-                                    value={nonce}
-                                    onValueChange={setNonce}
-                                    label={
-                                        <div className="flex gap-2 items-center">
-                                            <HashtagIcon className="size-4 text-primary" />
-
-                                            {authenticationCodeText}
-                                        </div>
-                                    }
-                                    placeholder={authenticationCodeText}
-                                    isDisabled={updatingPassword}
-                                />
-                            )}
-
-                            <Button
-                                type="submit"
-                                size="lg"
-                                color="primary"
-                                isDisabled={
-                                    updatingPassword ||
-                                    password.length == 0 ||
-                                    (requireNonce && nonce.length == 0)
-                                }
-                                isLoading={updatingPassword}
-                                spinner={
-                                    <Spinner color="current" size="sm" />
-                                }
-                                startContent={!updatingPassword && (
-                                    <CheckIcon className="size-5 -ms-1" />
-                                )}
-                            >
-                                <AutoTranslate tKey="update_password">
-                                    Update Password
-                                </AutoTranslate>
-                            </Button>
-                        </CardBody>
-                    </Card>
-                </>
-            )}
-
-            {/* Account Management */}
-            <Card fullWidth className="max-w-xl">
-                <CardBody className="gap-4 p-4 items-start">
-                    <div className="flex gap-2 items-center -my-1.5">
-                        <UserIcon className="size-4 text-primary" />
-
-                        <AutoTranslate tKey="manage_account">
-                            Manage Account
-                        </AutoTranslate>
-                    </div>
-
-                    {session ? (
-                        <>
-                            {user?.premium && (
-                                <Button
-                                    onPress={manageSubscription}
-                                    isDisabled={loadingPortal}
-                                    size="lg"
-                                    isLoading={loadingPortal}
-                                    spinner={
-                                        <Spinner color="current" size="sm" />
-                                    }
-                                >
-                                    <AutoTranslate tKey="manage_subscription">
-                                        Manage Subscription
+                        <CardBody className="gap-3 items-start">
+                            <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+                                <p>
+                                    <AutoTranslate tKey="theme">
+                                        Theme
                                     </AutoTranslate>
-                                </Button>
-                            )}
+                                </p>
 
-                            <Button
-                                as={Link}
-                                size="lg"
-                                href="/logout"
-                                startContent={
-                                    <ArrowLeftStartOnRectangleIcon className="size-5 -ms-1.5 me-[1px]" />
-                                }
-                            >
-                                <AutoTranslate tKey="logout">
-                                    Log Out
-                                </AutoTranslate>
-                            </Button>
+                                <Dropdown>
+                                    <DropdownTrigger>
+                                        <Button
+                                            variant="bordered"
+                                            startContent={isClient && (
+                                                <selectedTheme.icon className="size-5" />
+                                            )}
+                                            endContent={
+                                                <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
+                                            }
+                                        >
+                                            {selectedTheme?.title}
+                                        </Button>
+                                    </DropdownTrigger>
 
-                            <Button
-                                color="warning"
-                                size="lg"
-                                onPress={() => {
-                                    setConfirm({
-                                        title: deactivateAccountText,
-                                        content: deactivateConfirm,
-                                        label: deactivateText,
-                                        action: deactivateAccount,
-                                        color: 'warning'
-                                    })
+                                    <ThemeDropdownMenu />
+                                </Dropdown>
+                            </div>
+
+                            <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+                                <p>
+                                    <AutoTranslate tKey="language">
+                                        Language
+                                    </AutoTranslate>
+                                </p>
+
+                                <Dropdown>
+                                    <DropdownTrigger>
+                                        <Button
+                                            variant="bordered"
+                                            startContent={
+                                                <Flag
+                                                    code={localeToCountry[locale]}
+                                                    gradient="real-linear"
+                                                    hasDropShadow
+                                                    size="m"
+                                                />
+                                            }
+                                            endContent={
+                                                <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
+                                            }
+                                        >
+                                            {new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
+                                        </Button>
+                                    </DropdownTrigger>
+
+                                    <LocaleDropdownMenu />
+                                </Dropdown>
+                            </div>
+                        </CardBody>
+
+                        {session && (
+                            <>
+                                <CardHeader className="px-4 pb-1">
+                                    <p className="text-large">Account Settings</p>
+                                </CardHeader>
+
+                                <CardBody className="gap-4 items-start pb-2" as="form" onSubmit={updateEmail}>
+                                    <Input
+                                        type="email"
+                                        label={
+                                            <AutoTranslate tKey="email_address">
+                                                Email Address
+                                            </AutoTranslate>
+                                        }
+                                        labelPlacement="outside"
+                                        placeholder={autoTranslate('email_address', 'Email Address')}
+                                        value={email}
+                                        onValueChange={setEmail}
+                                        isDisabled={updatingEmail}
+                                    />
+
+                                    <Button
+                                        type="submit"
+                                        color="primary"
+                                        isDisabled={
+                                            updatingEmail ||
+                                            email == session?.user?.email ||
+                                            email == newEmail
+                                        }
+                                        isLoading={updatingEmail}
+                                        spinner={
+                                            <Spinner color="current" size="sm" />
+                                        }
+                                    >
+                                        <AutoTranslate tKey="update_email">
+                                            Update Email
+                                        </AutoTranslate>
+                                    </Button>
+                                </CardBody>
+
+                                <CardBody className="gap-4 items-start" as="form" onSubmit={updatePassword}>
+                                    <input type="hidden" name="email" value={session?.user?.email} />
+
+                                    <Input
+                                        labelPlacement="outside"
+                                        type={passwordVisible ? "text" : "password"}
+                                        name="password"
+                                        value={password}
+                                        onValueChange={setPassword}
+                                        label={changePasswordText}
+                                        placeholder={autoTranslate('new_password', 'New Password')}
+                                        isDisabled={!session || updatingPassword}
+                                        endContent={
+                                            <Button
+                                                size="sm"
+                                                variant="light"
+                                                isIconOnly
+                                                onPress={() => setPasswordVisible(!passwordVisible)}
+                                                disableRipple
+                                            >
+                                                {passwordVisible ? (
+                                                    <EyeSlashIcon className="size-5" />
+                                                ) : (
+                                                    <EyeIcon className="size-5" />
+                                                )}
+                                            </Button>
+                                        }
+                                    />
+
+                                    {requireNonce && (
+                                        <Input
+                                            autoFocus
+                                            labelPlacement="outside"
+                                            type="text"
+                                            value={nonce}
+                                            onValueChange={setNonce}
+                                            label={authenticationCodeText}
+                                            placeholder={authenticationCodeText}
+                                            isDisabled={updatingPassword}
+                                        />
+                                    )}
+
+                                    <Button
+                                        type="submit"
+                                        color="primary"
+                                        isDisabled={
+                                            updatingPassword ||
+                                            password.length == 0 ||
+                                            (requireNonce && nonce.length == 0)
+                                        }
+                                        isLoading={updatingPassword}
+                                        spinner={
+                                            <Spinner color="current" size="sm" />
+                                        }
+                                    >
+                                        <AutoTranslate tKey="update_password">
+                                            Update Password
+                                        </AutoTranslate>
+                                    </Button>
+                                </CardBody>
+
+                                <CardHeader className="px-4 pb-0">
+                                    <p className="text-large">
+                                        Manage Account
+                                    </p>
+                                </CardHeader>
+
+                                <CardBody className="gap-3 items-start">
+                                    <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+                                        <p>
+                                            <AutoTranslate tKey="logout">
+                                                Log Out
+                                            </AutoTranslate>
+                                        </p>
+
+                                        <Button
+                                            variant="bordered"
+                                            as={Link}
+                                            href="/logout"
+                                        >
+                                            <AutoTranslate tKey="logout">
+                                                Log Out
+                                            </AutoTranslate>
+                                        </Button>
+                                    </div>
+
+                                    <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+                                        <p>
+                                            <AutoTranslate tKey="deactivate_account">
+                                                Deactivate Account
+                                            </AutoTranslate>
+                                        </p>
+
+                                        <Button
+                                            color="warning"
+                                            variant="flat"
+                                            onPress={() => {
+                                                setConfirm({
+                                                    title: deactivateAccountText,
+                                                    content: deactivateConfirm,
+                                                    label: deactivateText,
+                                                    action: deactivateAccount,
+                                                    color: 'warning'
+                                                })
+                                            }}
+                                        >
+                                            <AutoTranslate tKey="deactivate">
+                                                Deactivate
+                                            </AutoTranslate>
+                                        </Button>
+                                    </div>
+
+                                    <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+                                        <p className="text-base">
+                                            <AutoTranslate tKey="delete_account">
+                                                Delete Account
+                                            </AutoTranslate>
+                                        </p>
+
+                                        <Button
+                                            color="danger"
+                                            variant="flat"
+                                            onPress={() => {
+                                                setConfirm({
+                                                    title: deleteAccountText,
+                                                    content: deleteConfirm,
+                                                    label: deleteText,
+                                                    action: deleteAccount,
+                                                    color: 'danger'
+                                                })
+                                            }}
+                                        >
+                                            <AutoTranslate tKey="delete">
+                                                Delete
+                                            </AutoTranslate>
+                                        </Button>
+                                    </div>
+                                </CardBody>
+                            </>
+                        )}
+                    </Tab>
+
+                    <Tab
+                        className={cn(!session && "hidden")}
+                        textValue="Notifications"
+                        title={
+                            <div className="flex items-center gap-1.5">
+                                <BellIcon className="size-5" />
+
+                                <p>
+                                    Notifications
+                                </p>
+                            </div>
+                        }
+                    >
+                        <CardHeader className="px-4 py-0">
+                            <p className="text-large">Notification Settings</p>
+                        </CardHeader>
+
+                        <CardBody className="gap-3">
+                            <Switch
+                                isSelected={metadata?.notifications_enabled}
+                                onValueChange={(value) => updateMetadata({ notifications_enabled: value })}
+                                classNames={{
+                                    base: "flex-row-reverse justify-between w-full max-w-full"
                                 }}
-                                startContent={
-                                    <NoSymbolIcon className="size-5 -ms-1" />
-                                }
+                                className="bg-content2 p-4 rounded-medium"
+                                isDisabled={!metadata}
                             >
-                                <AutoTranslate tKey="deactivate_account">
-                                    Deactivate Account
+                                <AutoTranslate tKey="enable_notifications">
+                                    Enable Notifications
                                 </AutoTranslate>
-                            </Button>
+                            </Switch>
 
-                            <Button
-                                color="danger"
-                                size="lg"
-                                onPress={() => {
-                                    setConfirm({
-                                        title: deleteAccountText,
-                                        content: deleteConfirm,
-                                        label: deleteText,
-                                        action: deleteAccount,
-                                        color: 'danger'
-                                    })
+                            <Switch
+                                isSelected={metadata?.notifications_badge_enabled}
+                                onValueChange={(value) => updateMetadata({ notifications_badge_enabled: value })}
+                                classNames={{
+                                    base: "flex-row-reverse justify-between w-full max-w-full"
                                 }}
-                                startContent={
-                                    <TrashIcon className="size-5 -ms-1" />
-                                }
+                                className="bg-content2 p-4 rounded-medium"
+                                isDisabled={!metadata}
                             >
-                                <AutoTranslate tKey="delete_account">
-                                    Delete Account
+                                <AutoTranslate tKey="enable_notifications">
+                                    Notifications Badge
                                 </AutoTranslate>
-                            </Button>
-                        </>
-                    ) : (
-                        <Button
-                            as={Link}
-                            size="lg"
-                            color="primary"
-                            href="/login"
-                            startContent={
-                                <ArrowRightEndOnRectangleIcon className="size-5 -ms-1.5 mt-[1px]" />
-                            }
-                        >
-                            <AutoTranslate tKey="login">
-                                Log In
-                            </AutoTranslate>
-                        </Button>
-                    )}
-                </CardBody>
+                            </Switch>
+                        </CardBody>
+                    </Tab>
+                </Tabs>
             </Card>
 
             <ConfirmModal confirm={confirm} setConfirm={setConfirm} />

@@ -26,7 +26,7 @@ export default function UsersPage() {
 
     return (
         <div>
-            <div className="sticky top-0 z-40 bg-background/70 backdrop-blur-lg p-4 items-center flex flex-col">
+            <div className="sticky top-0 min-h-[60px] md:min-h-[76px] z-40 bg-background/70 backdrop-blur-lg p-4 items-center flex flex-col">
                 <Input
                     fullWidth
                     isClearable
@@ -40,7 +40,7 @@ export default function UsersPage() {
                 />
             </div>
 
-            <div className="px-4 pb-4">
+            <div className="p-4">
                 <div className="flex flex-col gap-4 max-w-xl mx-auto">
                     {!users?.length && !isLoading && (
                         <Card fullWidth>

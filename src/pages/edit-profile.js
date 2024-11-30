@@ -114,7 +114,7 @@ export default function EditProfile() {
     return (
         <div className="flex flex-col grow items-center justify-center p-4">
             <Card fullWidth className="max-w-xl p-2">
-                <CardHeader className="flex flex-col items-start px-4 pb-2">
+                <CardHeader className="flex flex-col items-start px-4 pb-0 pt-2">
                     <p className="text-large">
                         <AutoTranslate tKey="account_details">
                             Account Details
