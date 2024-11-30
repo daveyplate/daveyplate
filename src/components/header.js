@@ -46,7 +46,7 @@ import {
 } from "@heroicons/react/24/outline"
 
 import Logo from "@/components/logo"
-import ThemeDropdownMenu from "@/components/theme-dropdown-menu"
+import { ThemeDropdown } from "@/components/theme-dropdown"
 import NotificationsCard from "@/components/notifications/notifications-card"
 import { getPathname } from "@/i18n/routing"
 
@@ -131,20 +131,15 @@ export default function Header() {
                 </NavbarItem>
 
                 <NavbarItem className="flex">
-                    <Dropdown className="min-w-0">
-                        <DropdownTrigger>
-                            <Button isIconOnly radius="full" variant="light">
-                                {isClient && (resolvedTheme == "dark" ? (
-                                    <MoonIcon className="text-default-500 size-6" />
-                                ) : (
-                                    <SunIcon className="text-default-500 size-6" />
-                                ))}
-                            </Button>
-                        </DropdownTrigger>
-
-                        <ThemeDropdownMenu />
-                    </Dropdown>
-
+                    <ThemeDropdown>
+                        <Button isIconOnly radius="full" variant="light">
+                            {isClient && (resolvedTheme == "dark" ? (
+                                <MoonIcon className="text-default-500 size-6" />
+                            ) : (
+                                <SunIcon className="text-default-500 size-6" />
+                            ))}
+                        </Button>
+                    </ThemeDropdown>
                 </NavbarItem>
 
                 <NavbarItem className="hidden md:flex">

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useSessionContext } from '@supabase/auth-helpers-react'
+import { toast } from 'sonner'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { useAPI, useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { useEntity } from '@daveyplate/supabase-swr-entities/client'
 import { ConfirmModal } from "@daveyplate/nextui-confirm-modal"
 
 import {
@@ -11,8 +12,6 @@ import {
     CardBody,
     CardHeader,
     cn,
-    Dropdown,
-    DropdownTrigger,
     Input,
     Spinner,
     Switch,
@@ -30,7 +29,6 @@ import {
     MoonIcon,
     SunIcon
 } from '@heroicons/react/24/outline'
-import { toast } from 'sonner'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
@@ -38,7 +36,7 @@ import { Link, useLocaleRouter } from '@/i18n/routing'
 import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
-import ThemeDropdownMenu from '@/components/theme-dropdown-menu'
+import { ThemeDropdown } from '@/components/theme-dropdown'
 import { useIsClient } from '@uidotdev/usehooks'
 import { useTheme } from 'next-themes'
 import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
@@ -223,23 +221,19 @@ export default function Settings() {
                                     </AutoTranslate>
                                 </p>
 
-                                <Dropdown>
-                                    <DropdownTrigger>
-                                        <Button
-                                            variant="bordered"
-                                            startContent={isClient && (
-                                                <selectedTheme.icon className="size-5" />
-                                            )}
-                                            endContent={
-                                                <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
-                                            }
-                                        >
-                                            {selectedTheme?.title}
-                                        </Button>
-                                    </DropdownTrigger>
-
-                                    <ThemeDropdownMenu />
-                                </Dropdown>
+                                <ThemeDropdown>
+                                    <Button
+                                        variant="bordered"
+                                        startContent={isClient && (
+                                            <selectedTheme.icon className="size-5" />
+                                        )}
+                                        endContent={
+                                            <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
+                                        }
+                                    >
+                                        {selectedTheme?.title}
+                                    </Button>
+                                </ThemeDropdown>
                             </div>
 
                             <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
@@ -498,7 +492,7 @@ export default function Settings() {
                             </Switch>
 
                             <Switch
-                                isSelected={metadata?.notifications_badge_enabled}
+                                isSelected={!!metadata?.notifications_badge_enabled}
                                 onValueChange={(value) => updateMetadata({ notifications_badge_enabled: value })}
                                 classNames={{
                                     base: "flex-row-reverse justify-between w-full max-w-full"
@@ -512,7 +506,7 @@ export default function Settings() {
                             </Switch>
 
                             <Switch
-                                isSelected={metadata?.show_badge_count}
+                                isSelected={!!metadata?.show_badge_count}
                                 onValueChange={(value) => updateMetadata({ show_badge_count: value })}
                                 classNames={{
                                     base: "flex-row-reverse justify-between w-full max-w-full"
@@ -537,7 +531,7 @@ export default function Settings() {
 
                         <CardBody className="gap-3">
                             <Switch
-                                isSelected={metadata?.notifications_whispers}
+                                isSelected={!!metadata?.notifications_whispers}
                                 onValueChange={(value) => updateMetadata({ notifications_whispers: value })}
                                 classNames={{
                                     base: "flex-row-reverse justify-between w-full max-w-full"
@@ -551,7 +545,7 @@ export default function Settings() {
                             </Switch>
 
                             <Switch
-                                isSelected={metadata?.notifications_article_comments}
+                                isSelected={!!metadata?.notifications_article_comments}
                                 onValueChange={(value) => updateMetadata({ notifications_article_comments: value })}
                                 classNames={{
                                     base: "flex-row-reverse justify-between w-full max-w-full"
