@@ -41,7 +41,7 @@ import { isExport } from "@/utils/utils"
 import ThemeDropdownMenu from '@/components/theme-dropdown-menu'
 import { useIsClient } from '@uidotdev/usehooks'
 import { useTheme } from 'next-themes'
-import LocaleDropdownMenu, { localeToCountry } from '@/components/locale-dropdown-menu'
+import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
 import { useLocale } from 'next-intl'
 import Flag from 'react-flagpack'
 
@@ -249,28 +249,24 @@ export default function Settings() {
                                     </AutoTranslate>
                                 </p>
 
-                                <Dropdown>
-                                    <DropdownTrigger>
-                                        <Button
-                                            variant="bordered"
-                                            startContent={
-                                                <Flag
-                                                    code={localeToCountry[locale]}
-                                                    gradient="real-linear"
-                                                    hasDropShadow
-                                                    size="m"
-                                                />
-                                            }
-                                            endContent={
-                                                <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
-                                            }
-                                        >
-                                            {new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
-                                        </Button>
-                                    </DropdownTrigger>
-
-                                    <LocaleDropdownMenu />
-                                </Dropdown>
+                                <LocaleDropdown>
+                                    <Button
+                                        variant="bordered"
+                                        startContent={
+                                            <Flag
+                                                code={localeToCountry[locale]}
+                                                gradient="real-linear"
+                                                hasDropShadow
+                                                size="m"
+                                            />
+                                        }
+                                        endContent={
+                                            <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
+                                        }
+                                    >
+                                        {new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
+                                    </Button>
+                                </LocaleDropdown>
                             </div>
                         </CardBody>
 

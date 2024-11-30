@@ -8,9 +8,8 @@ import { Icon } from "@iconify/react"
 import { useAutoTranslate } from 'next-auto-translate'
 
 import Logo from "./logo"
-import { localeToCountry } from "./locale-dropdown-menu"
+import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
 import Flag from "react-flagpack"
-import LocaleDropdownMenu from "./locale-dropdown-menu"
 import { useLocale } from "next-intl";
 import { useRouter } from "next/router";
 
@@ -129,25 +128,22 @@ export default function Footer() {
                     </motion.div>
 
 
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <Button
-                                isIconOnly
-                                variant="light"
-                                className="!bg-transparent"
-                                disableRipple
-                            >
-                                <Flag
-                                    code={localeToCountry[locale]}
-                                    gradient="real-linear"
-                                    hasDropShadow
-                                    size="m"
-                                />
-                            </Button>
-                        </DropdownTrigger>
 
-                        <LocaleDropdownMenu />
-                    </Dropdown>
+                    <LocaleDropdown>
+                        <Button
+                            isIconOnly
+                            variant="light"
+                            className="!bg-transparent"
+                            disableRipple
+                        >
+                            <Flag
+                                code={localeToCountry[locale]}
+                                gradient="real-linear"
+                                hasDropShadow
+                                size="m"
+                            />
+                        </Button>
+                    </LocaleDropdown>
                 </div>
 
                 <Spacer y={4} className="hidden" />
