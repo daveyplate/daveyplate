@@ -158,7 +158,7 @@ export default function EditProfile() {
                                         isIconOnly
                                         size="lg"
                                         user={user}
-                                        onPress={() => setLightboxOpen(true)}
+                                        onPress={() => uploadRef.current()}
                                     />
                                 </Badge>
                             </Skeleton>
