@@ -25,8 +25,8 @@ export default function UsersPage() {
     const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
     return (
-        <div className="p-4">
-            <div className="flex flex-col gap-4 max-w-xl mx-auto">
+        <div>
+            <div className="sticky top-0 z-40 bg-background/70 backdrop-blur-lg p-4 items-center flex flex-col">
                 <Input
                     fullWidth
                     isClearable
@@ -36,73 +36,78 @@ export default function UsersPage() {
                     }
                     value={search}
                     onValueChange={setSearch}
+                    className="pt-safe max-w-xl"
                 />
+            </div>
 
-                {!users?.length && !isLoading && (
-                    <Card fullWidth>
-                        <CardBody className="p-8">
-                            <AutoTranslate tKey="no_users">
-                                No users found...
-                            </AutoTranslate>
-                        </CardBody>
-                    </Card>
-                )}
+            <div className="px-4 pb-4">
+                <div className="flex flex-col gap-4 max-w-xl mx-auto">
+                    {!users?.length && !isLoading && (
+                        <Card fullWidth>
+                            <CardBody className="p-8">
+                                <AutoTranslate tKey="no_users">
+                                    No users found...
+                                </AutoTranslate>
+                            </CardBody>
+                        </Card>
+                    )}
 
-                {isLoading && !users && [...Array(3)].fill({}).map((_, index) => (
-                    <Card key={index} fullWidth>
-                        <CardBody className="p-4">
-                            <div className="flex items-center gap-4">
-                                <Skeleton className="size-14 rounded-full" />
+                    {isLoading && !users && [...Array(8)].fill({}).map((_, index) => (
+                        <Card key={index} fullWidth>
+                            <CardBody className="p-4">
+                                <div className="flex items-center gap-4">
+                                    <Skeleton className="size-14 rounded-full" />
 
-                                <div className="space-y-2">
-                                    <Skeleton className="h-4 w-[100px] rounded-lg" />
-                                    <Skeleton className="h-4 w-[150px] rounded-lg" />
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-[100px] rounded-full" />
+                                        <Skeleton className="h-4 w-[150px] rounded-full" />
+                                    </div>
                                 </div>
-                            </div>
-                        </CardBody>
-                    </Card>
-                ))}
+                            </CardBody>
+                        </Card>
+                    ))}
 
-                {users?.map((user, index) => (
-                    <Card
-                        key={index}
-                        as={Link}
-                        href={`/user?user_id=${user.id}`}
-                        linkAs={`/user/${user.id}`}
-                        isPressable
-                        fullWidth
-                    >
-                        <CardBody className="p-4 flex-row items-center gap-4">
-                            <UserAvatar user={user} size="lg" className="text-base" />
+                    {users?.map((user, index) => (
+                        <Card
+                            key={index}
+                            as={Link}
+                            href={`/user?user_id=${user.id}`}
+                            linkAs={`/user/${user.id}`}
+                            isPressable
+                            fullWidth
+                        >
+                            <CardBody className="p-4 flex-row items-center gap-4">
+                                <UserAvatar user={user} size="lg" className="text-base" />
 
-                            <div className="flex flex-col items-start justify-center">
-                                <p className="font-medium">
-                                    {user.full_name || "Unnamed"}
-                                </p>
+                                <div className="flex flex-col items-start justify-center">
+                                    <p className="font-medium">
+                                        {user.full_name || "Unnamed"}
+                                    </p>
 
-                                <span className="text-small text-default-500">
-                                    <AutoTranslate tKey="subscription">
-                                        Subscription:
-                                    </AutoTranslate>
+                                    <span className="text-small text-default-500">
+                                        <AutoTranslate tKey="subscription">
+                                            Subscription:
+                                        </AutoTranslate>
 
-                                    &nbsp;
+                                        &nbsp;
 
-                                    <span className={cn(user.claims?.premium ? "text-success" : "text-foreground")}>
-                                        {user.claims?.premium ?
-                                            <AutoTranslate tKey="active">
-                                                Active
-                                            </AutoTranslate>
-                                            :
-                                            <AutoTranslate tKey="inactive">
-                                                Inactive
-                                            </AutoTranslate>
-                                        }
+                                        <span className={cn(user.claims?.premium ? "text-success" : "text-foreground")}>
+                                            {user.claims?.premium ?
+                                                <AutoTranslate tKey="active">
+                                                    Active
+                                                </AutoTranslate>
+                                                :
+                                                <AutoTranslate tKey="inactive">
+                                                    Inactive
+                                                </AutoTranslate>
+                                            }
+                                        </span>
                                     </span>
-                                </span>
-                            </div>
-                        </CardBody>
-                    </Card>
-                ))}
+                                </div>
+                            </CardBody>
+                        </Card>
+                    ))}
+                </div>
             </div>
         </div>
     )

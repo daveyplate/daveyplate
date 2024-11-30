@@ -82,7 +82,7 @@ export default function Footer() {
 
     return (
         <footer className={cn(router.pathname != "/" && "bg-background/70 backdrop-blur-xl",
-            "flex w-full flex-col sticky bottom-0 z-30"
+            "flex w-full flex-col sticky bottom-0 pb-safe z-30"
         )}>
             <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center p-3 overflow-hidden">
                 <div className="flex items-center gap-0.5">

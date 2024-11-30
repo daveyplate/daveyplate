@@ -42,7 +42,7 @@ const MyApp = ({ Component, pageProps }) => {
                 `}</style>
 
                 <div className={cn(router.pathname == "/" && "bg-gradient-to-br from-background via-secondary-100 to-primary-100 dark:via-secondary-50 dark:to-primary-50",
-                    "flex flex-col min-h-dvh py-safe px-safe"
+                    "flex flex-col min-h-dvh px-safe"
                 )}>
                     <Header {...pageProps} />
 
