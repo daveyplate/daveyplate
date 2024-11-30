@@ -139,7 +139,7 @@ export default function EditProfile() {
                             </AutoTranslate>
                         </div>
 
-                        <div className="flex items-center gap-4 mb-1">
+                        <div className="flex items-center gap-3 mb-1">
                             <Skeleton isLoaded={!!user} className="rounded-full">
                                 <Badge
                                     as={Button}
@@ -164,6 +164,7 @@ export default function EditProfile() {
                             </Skeleton>
 
                             <Button
+                                className="ms-1"
                                 color="primary"
                                 startContent={
                                     <CloudArrowUpIcon className="size-5" />
@@ -241,13 +242,12 @@ export default function EditProfile() {
                             </p>
                         </Skeleton>
 
-                        <Skeleton isLoaded={!!user} className="ms-auto max-w-fit rounded-2xl">
+                        <Skeleton isLoaded={!!user} className="max-w-fit rounded-2xl">
                             <Button
                                 type="submit"
                                 className={cn(!user && "invisible", null)}
                                 color="primary"
                                 isDisabled={!user || !formChanged || !!nameError || !!bioError}
-                                startContent={<CheckIcon className="size-4" />}
                             >
                                 <AutoTranslate tKey="save_changes">
                                     Save Changes
