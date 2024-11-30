@@ -19,7 +19,8 @@
     "title": "Users",
     "subscription": "Subscription:",
     "inactive": "Inactive",
-    "active": "Active"
+    "active": "Active",
+    "search_placeholder": "Search..."
   },
   "products": {
     "title": "Products",
@@ -40,7 +41,11 @@
     "inactive": "Inactive",
     "user_not_found": "User not found",
     "avatar_error": "Error uploading avatar",
-    "invalid_image": "Invalid image"
+    "invalid_image": "Invalid image",
+    "upload_avatar": "Upload Avatar",
+    "link_copied": "Link copied to clipboard",
+    "share": "Share",
+    "report": "Report"
   },
   "edit-profile": {
     "name_required": "Name is required",
@@ -97,7 +102,18 @@
     "manage_account": "Manage Account",
     "update_password": "Update Password",
     "logout": "Log Out",
-    "new_password": "New Password"
+    "new_password": "New Password",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "notifications": "Notifications",
+    "application_settings": "Application Settings",
+    "account_settings": "Account Settings",
+    "notification_settings": "Notification Settings",
+    "enable_notifications": "Enabled",
+    "notifications_badge": "Badge",
+    "pause_all": "Pause all",
+    "badge": "Badge"
   },
   "login": {
     "sign_up_email_label": "Email address",
@@ -155,7 +171,12 @@
     "welcome_to": "Welcome to",
     "intro_card": "Daveyplate is an open source boilerplate project with a fully featured user management system - built with Next.js, NextUI, and Supabase.",
     "show_toast": "Show Toast",
-    "see_our_plans": "See our plans"
+    "see_our_plans": "See our plans",
+    "default": "Default",
+    "info": "Info",
+    "warning": "Warning",
+    "error": "Error",
+    "loading": "Loading"
   },
   "footer": {
     "language_menu": "Language Menu",
@@ -215,7 +236,8 @@
   },
   "article": {
     "written_by": "Written By",
-    "comments": "Comments"
+    "comments": "Comments",
+    "submit": "Submit"
   },
   "message": {
     "view_profile": "View Profile",

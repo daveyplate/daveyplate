@@ -19,7 +19,8 @@
     "title": "Benutzer",
     "subscription": "Abonnement:",
     "inactive": "Inaktiv",
-    "active": "Aktiv"
+    "active": "Aktiv",
+    "search_placeholder": "Suche..."
   },
   "products": {
     "title": "Produkte",
@@ -40,7 +41,11 @@
     "inactive": "Inaktiv",
     "user_not_found": "Benutzer nicht gefunden",
     "avatar_error": "Fehler beim Hochladen des Avatars",
-    "invalid_image": "Ungültiges Bild"
+    "invalid_image": "Ungültiges Bild",
+    "upload_avatar": "Avatar hochladen",
+    "link_copied": "Link in die Zwischenablage kopiert",
+    "share": "Teilen",
+    "report": "Bericht"
   },
   "edit-profile": {
     "name_required": "Name ist erforderlich.",
@@ -97,7 +102,18 @@
     "manage_account": "Verwalten Sie Ihr Konto",
     "update_password": "Passwort aktualisieren",
     "logout": "Abmelden",
-    "new_password": "Neues Passwort"
+    "new_password": "Neues Passwort",
+    "light": "Licht",
+    "dark": "Dunkel",
+    "system": "System",
+    "notifications": "Benachrichtigungen",
+    "application_settings": "Anwendungseinstellungen",
+    "account_settings": "Kontoeinstellungen",
+    "notification_settings": "Benachrichtigungseinstellungen",
+    "enable_notifications": "Aktiviert",
+    "notifications_badge": "Abzeichen",
+    "pause_all": "Alle pausieren",
+    "badge": "Abzeichen"
   },
   "login": {
     "sign_up_email_label": "E-Mail-Adresse",
@@ -155,7 +171,12 @@
     "welcome_to": "Willkommen bei",
     "intro_card": "Daveyplate ist ein Open-Source-Boilerplate-Projekt mit einem voll ausgestatteten Benutzerverwaltungssystem - erstellt mit Next.js, NextUI und Supabase.",
     "show_toast": "Zeige Toast",
-    "see_our_plans": "Sieh dir unsere Pläne an."
+    "see_our_plans": "Sieh dir unsere Pläne an.",
+    "default": "Standard",
+    "info": "Info",
+    "warning": "Warnung",
+    "error": "Fehler",
+    "loading": "Laden"
   },
   "footer": {
     "language_menu": "Sprachmenü",
@@ -215,7 +236,8 @@
   },
   "article": {
     "written_by": "Von geschrieben",
-    "comments": "Kommentare"
+    "comments": "Kommentare",
+    "submit": "Einreichen"
   },
   "message": {
     "view_profile": "Profil anzeigen",

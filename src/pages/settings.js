@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
@@ -47,7 +46,6 @@ import { useLocale } from 'next-intl'
 import Flag from 'react-flagpack'
 
 export default function Settings() {
-    const router = useRouter()
     const localeRouter = useLocaleRouter()
     const locale = useLocale()
     const supabase = createClient()
@@ -55,9 +53,8 @@ export default function Settings() {
     const { theme: currentTheme } = useTheme()
     const { autoTranslate } = useAutoTranslate()
     const { session, isLoading: sessionLoading } = useSessionContext()
-    const { postAPI } = useAPI()
 
-    const { entity: user, updateEntity: updateUser, deleteEntity: deleteUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
+    const { updateEntity: updateUser, deleteEntity: deleteUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
     const { entity: metadata, updateEntity: updateMetadata } = useEntity(session ? 'metadata' : null, 'me', null, { revalidateOnFocus: false })
     const [confirm, setConfirm] = useState(null)
 
@@ -71,7 +68,6 @@ export default function Settings() {
 
     const [updatingEmail, setUpdatingEmail] = useState(false)
     const [updatingPassword, setUpdatingPassword] = useState(false)
-    const [loadingPortal, setLoadingPortal] = useState(false)
 
     const confirmEmail = autoTranslate('confirm_email', 'Check your email to confirm update')
     const deactivateText = autoTranslate('deactivate', 'Deactivate')
@@ -81,7 +77,6 @@ export default function Settings() {
     const deleteAccountText = autoTranslate('delete_account', 'Delete Account')
     const deleteConfirm = autoTranslate('delete_confirm', 'Are you sure you want to delete your account? This deletion is permanent and cannot be undone.')
     const changePasswordText = autoTranslate('change_password', 'Change Password')
-    const portalError = autoTranslate('portal_error', 'Customer portal error')
     const passwordChanged = autoTranslate('password_changed', 'Your password has been changed')
     const accountDeactivated = autoTranslate('account_deactivated', 'Account deactivated')
     const accountDeleted = autoTranslate('account_deleted', 'Account deleted')
@@ -152,15 +147,11 @@ export default function Settings() {
             const { error } = await supabase.auth.reauthenticate()
             setUpdatingPassword(false)
 
-            if (error) {
-                console.error(error)
-                toast.error(error.message)
-                return
-            }
+            if (error) return toast.error(error.message)
 
-            toast.info(checkEmailText)
             setRequireNonce(true)
-            return
+
+            return toast.info(checkEmailText)
         }
 
         // Clear the nonce and requireNonce state
@@ -168,11 +159,7 @@ export default function Settings() {
         setRequireNonce(false)
         setUpdatingPassword(false)
 
-        if (error) {
-            console.error(error)
-            toast.error(error.message)
-            return
-        }
+        if (error) return toast.error(error.message)
 
         setPassword('')
         toast.success(passwordChanged)
@@ -192,33 +179,16 @@ export default function Settings() {
 
     const deleteAccount = async () => {
         const { error } = await deleteUser()
-
-        if (error) {
-            toast.error(error.message)
-            return
-        }
+        if (error) return
 
         toast.error(accountDeleted)
         localeRouter.replace('/logout')
     }
 
-    const manageSubscription = () => {
-        setLoadingPortal(true)
-
-        // Redirect user to Stripe Portal for subscription management
-        postAPI('/api/stripe/portal-session').then((res) => {
-            router.push(res.data.url)
-        }).catch((error) => {
-            console.error(error)
-            toast.error(portalError)
-            setLoadingPortal(false)
-        })
-    }
-
     return (
         <div
             className={cn(sessionLoading ? "opacity-0" : "opacity-1",
-                "flex flex-col grow gap-4 p-4 items-center justify-center"
+                "flex flex-col grow gap-4 p-4 items-center"
             )}
         >
             <Card fullWidth className="max-w-xl px-1 pt-2">
@@ -230,14 +200,18 @@ export default function Settings() {
                                 <Cog6ToothIcon className="size-5" />
 
                                 <p>
-                                    Settings
+                                    <AutoTranslate tKey="settings">
+                                        Settings
+                                    </AutoTranslate>
                                 </p>
                             </div>
                         }
                     >
                         <CardHeader className="px-4 py-0">
                             <p className="text-large">
-                                Application Settings
+                                <AutoTranslate tKey="application_settings">
+                                    Application Settings
+                                </AutoTranslate>
                             </p>
                         </CardHeader>
 
@@ -303,7 +277,11 @@ export default function Settings() {
                         {session && (
                             <>
                                 <CardHeader className="px-4 pb-1">
-                                    <p className="text-large">Account Settings</p>
+                                    <p className="text-large">
+                                        <AutoTranslate tKey="account_settings">
+                                            Account Settings
+                                        </AutoTranslate>
+                                    </p>
                                 </CardHeader>
 
                                 <CardBody className="gap-4 items-start pb-2" as="form" onSubmit={updateEmail}>
@@ -361,9 +339,9 @@ export default function Settings() {
                                                 disableRipple
                                             >
                                                 {passwordVisible ? (
-                                                    <EyeSlashIcon className="size-5" />
+                                                    <EyeSlashIcon className="size-5 text-default-400" />
                                                 ) : (
-                                                    <EyeIcon className="size-5" />
+                                                    <EyeIcon className="size-5 text-default-400" />
                                                 )}
                                             </Button>
                                         }
@@ -403,7 +381,9 @@ export default function Settings() {
 
                                 <CardHeader className="px-4 pb-0">
                                     <p className="text-large">
-                                        Manage Account
+                                        <AutoTranslate tKey="manage_account">
+                                            Manage Account
+                                        </AutoTranslate>
                                     </p>
                                 </CardHeader>
 
@@ -490,27 +470,33 @@ export default function Settings() {
                                 <BellIcon className="size-5" />
 
                                 <p>
-                                    Notifications
+                                    <AutoTranslate tKey="notifications">
+                                        Notifications
+                                    </AutoTranslate>
                                 </p>
                             </div>
                         }
                     >
                         <CardHeader className="px-4 py-0">
-                            <p className="text-large">Notification Settings</p>
+                            <p className="text-large">
+                                <AutoTranslate tKey="notification_settings">
+                                    Notification Settings
+                                </AutoTranslate>
+                            </p>
                         </CardHeader>
 
                         <CardBody className="gap-3">
                             <Switch
-                                isSelected={metadata?.notifications_enabled}
-                                onValueChange={(value) => updateMetadata({ notifications_enabled: value })}
+                                isSelected={!metadata?.notifications_enabled}
+                                onValueChange={(value) => updateMetadata({ notifications_enabled: !value })}
                                 classNames={{
                                     base: "flex-row-reverse justify-between w-full max-w-full"
                                 }}
                                 className="bg-content2 p-4 rounded-medium"
                                 isDisabled={!metadata}
                             >
-                                <AutoTranslate tKey="enable_notifications">
-                                    Enable Notifications
+                                <AutoTranslate tKey="pause_all">
+                                    Pause all
                                 </AutoTranslate>
                             </Switch>
 
@@ -523,8 +509,8 @@ export default function Settings() {
                                 className="bg-content2 p-4 rounded-medium"
                                 isDisabled={!metadata}
                             >
-                                <AutoTranslate tKey="enable_notifications">
-                                    Notifications Badge
+                                <AutoTranslate tKey="badge">
+                                    Badge
                                 </AutoTranslate>
                             </Switch>
                         </CardBody>
