@@ -28,12 +28,11 @@ export default function UsersPage() {
         <div className="p-4">
             <div className="flex flex-col gap-4 max-w-xl mx-auto">
                 <Input
-                    size="lg"
                     fullWidth
                     isClearable
-                    placeholder={autoTranslate('search_placeholder', "Type to search...")}
+                    placeholder={autoTranslate('search_placeholder', "Search...")}
                     startContent={
-                        <SearchIcon className="size-5 me-0.5 pointer-events-none" />
+                        <SearchIcon className="size-5 pointer-events-none" />
                     }
                     value={search}
                     onValueChange={setSearch}

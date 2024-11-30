@@ -19,8 +19,7 @@
     "title": "Benutzer",
     "subscription": "Abonnement:",
     "inactive": "Inaktiv",
-    "active": "Aktiv",
-    "search_placeholder": "Geben Sie zum Suchen ein..."
+    "active": "Aktiv"
   },
   "products": {
     "title": "Produkte",
