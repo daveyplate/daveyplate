@@ -25,10 +25,11 @@ export default function ToastProvider() {
             }}
             toastOptions={{
                 classNames: {
-                    error: "!bg-danger-50 !text-danger-700",
-                    success: "!bg-success-50 !text-success-700",
-                    warning: "!bg-warning-50 !text-warning-700",
-                    info: "!bg-primary-50 !text-primary-700",
+                    title: "!text-small",
+                    error: "!bg-danger-50 !border-danger-100 !text-danger-700",
+                    success: "!bg-success-50 !border-success-100 !text-success-700",
+                    warning: "!bg-warning-50 !border-warning-100 !text-warning-700",
+                    info: "!bg-primary-50 !border-primary-100 !text-primary-700"
                 },
                 className: "justify-center rounded-large !my-safe"
             }}
