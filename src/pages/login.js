@@ -21,16 +21,12 @@ export default function LoginPage() {
         <div className={cn((session || sessionLoading) && "opacity-0",
             "flex flex-col grow items-center justify-center p-4 gap-4 transition-all"
         )}>
-            <Card fullWidth className="max-w-md p-2">
-                <CardBody>
-                    <Auth
-                        supabaseClient={supabase}
-                        socialLayout="horizontal"
-                        providers={["github", "google", "facebook", "apple"]}
-                        baseUrl={getURL()}
-                    />
-                </CardBody>
-            </Card>
+            <Auth
+                supabaseClient={supabase}
+                socialLayout="horizontal"
+                providers={["github", "google", "facebook", "apple"]}
+                baseUrl={getURL()}
+            />
 
             <p className="text-center text-small text-default-400">
                 By continuing, you agree to our&nbsp;

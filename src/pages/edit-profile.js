@@ -114,7 +114,7 @@ export default function EditProfile() {
     return (
         <div className="flex flex-col grow items-center justify-center p-4">
             <Card fullWidth className="max-w-xl p-2">
-                <CardHeader className="flex flex-col items-start p-4 pb-2">
+                <CardHeader className="flex flex-col items-start px-4 pb-2">
                     <p className="text-large">
                         <AutoTranslate tKey="account_details">
                             Account Details
@@ -131,7 +131,7 @@ export default function EditProfile() {
                         onError={(error) => toast.error(error.message)}
                         className="gap-4 flex flex-col"
                     >
-                        <div className="flex items-center gap-2 -mb-3 text-small">
+                        <div className="flex items-center gap-1 -mb-3 text-small">
                             <UserCircleIcon className="size-4 text-primary hidden" />
 
                             <AutoTranslate tKey="avatar">
@@ -198,7 +198,7 @@ export default function EditProfile() {
 
                         <Input
                             label={
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1">
                                     <UserIcon className="size-4 text-primary hidden" />
 
                                     <AutoTranslate tKey="name">
@@ -218,7 +218,7 @@ export default function EditProfile() {
                         <Textarea
                             classNames={{ inputWrapper: "!min-h-[76px]" }}
                             label={
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1">
                                     <PencilIcon className="size-4 text-primary hidden" />
 
                                     <AutoTranslate tKey="bio">
