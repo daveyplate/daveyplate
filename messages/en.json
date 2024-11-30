@@ -5,13 +5,15 @@
     "settings": "Settings",
     "logout": "Log Out",
     "login": "Log In",
-    "sign_up": "Sign Up",
+    "sign_up": "Register",
     "Home": "Home",
     "Users": "Users",
     "Products": "Products",
     "Chat": "Chat",
-    "profile_actions": "Profile actions",
-    "account": "Account"
+    "profile_actions": "Profile Actions",
+    "account": "Account",
+    "Blog": "Blog",
+    "log_in": "Log In"
   },
   "users": {
     "title": "Users",
@@ -58,7 +60,8 @@
     "cancel": "Cancel",
     "delete_avatar": "Delete Avatar",
     "delete_avatar_message": "Are you sure you want to delete your avatar?",
-    "delete": "Delete"
+    "delete": "Delete",
+    "account_details": "Account Details"
   },
   "settings": {
     "confirm_email": "Check your email to confirm update",
@@ -140,17 +143,25 @@
     "verify_otp_token_input_label": "Token",
     "verify_otp_token_input_placeholder": "Your Otp token",
     "verify_otp_button_label": "Verify token",
-    "verify_otp_loading_button_label": "Logging in …"
+    "verify_otp_loading_button_label": "Logging in …",
+    "by_continuing": "By continuing, you agree to our",
+    "terms": "Terms",
+    "privacy": "Privacy"
   },
   "index": {
     "title": "Welcome to Daveyplate",
     "heading": "Next.js Boilerplate",
     "description_1": "Simple user management system built with Next.js, NextUI, and Supabase.",
-    "description_2": "NextJS Page Router to create a simple navigation system. Stripe to accept payments and synchronize subscriptions & products."
+    "description_2": "NextJS Page Router to create a simple navigation system. Stripe to accept payments and synchronize subscriptions & products.",
+    "welcome_to": "Welcome to",
+    "intro_card": "Daveyplate is an open source boilerplate project with a fully featured user management system - built with Next.js, NextUI, and Supabase.",
+    "show_toast": "Show Toast",
+    "see_our_plans": "See our plans"
   },
   "footer": {
     "language_menu": "Language Menu",
-    "language": "Language"
+    "language": "Language",
+    "all_rights_reserved": "All Rights Reserved."
   },
   "toggle_theme": {
     "themes_menu": "Themes Menu",
@@ -165,5 +176,50 @@
     "Settings": "Settings",
     "Products": "Products",
     "Chat": "Chat"
+  },
+  "auth": {
+    "Log In": "Log In",
+    "Sign Up": "Sign Up",
+    "Forgot Password": "Forgot Password",
+    "Update Password": "Update Password",
+    "Email Address": "Email Address",
+    "Password": "Password",
+    "Send Reset Password Link": "Send Reset Password Link",
+    "Send Magic Link": "Send Magic Link",
+    "Forgot password?": "Forgot password?",
+    "OR": "OR",
+    "Continue with": "Continue with",
+    "Email": "Email",
+    "Already have an account?": "Already have an account?",
+    "Need to create an account?": "Need to create an account?",
+    "Check your email for the confirmation link": "Check your email for the confirmation link",
+    "Check your email for the password reset link": "Check your email for the password reset link",
+    "Check your email for the magic link": "Check your email for the magic link",
+    "Enter a valid email": "Enter a valid email",
+    "Enter a valid password": "Enter a valid password",
+    "by_continuing": "By continuing, you agree to our",
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
+  "signup": {
+    "by_continuing": "By continuing, you agree to our",
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
+  "forgot-password": {
+    "by_continuing": "By continuing, you agree to our",
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
+  "blog": {
+    "written_by": "Written By"
+  },
+  "article": {
+    "written_by": "Written By",
+    "comments": "Comments"
+  },
+  "message": {
+    "view_profile": "View Profile",
+    "whisper": "Whisper"
   }
 }

@@ -5,13 +5,15 @@
     "settings": "Einstellungen",
     "logout": "Abmelden",
     "login": "Anmelden",
-    "sign_up": "Anmelden",
     "Home": "Zuhause",
     "Users": "Benutzer",
     "Products": "Produkte",
     "Chat": "Chat",
+    "account": "Konto",
+    "Blog": "Blog",
     "profile_actions": "Profilaktionen",
-    "account": "Konto"
+    "log_in": "Anmelden",
+    "sign_up": "Registrieren"
   },
   "users": {
     "title": "Benutzer",
@@ -58,7 +60,8 @@
     "cancel": "Stornieren",
     "delete_avatar": "Avatar löschen",
     "delete_avatar_message": "Bist du sicher, dass du dein Avatar löschen möchtest?",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "account_details": "Kontodetails"
   },
   "settings": {
     "confirm_email": "Überprüfen Sie Ihre E-Mail, um die Aktualisierung zu bestätigen.",
@@ -140,17 +143,25 @@
     "verify_otp_token_input_label": "Token",
     "verify_otp_token_input_placeholder": "Ihr OTP-Token",
     "verify_otp_button_label": "Token überprüfen",
-    "verify_otp_loading_button_label": "Anmeldung …"
+    "verify_otp_loading_button_label": "Anmeldung …",
+    "by_continuing": "Indem du fortfährst, stimmst du unseren",
+    "terms": "Begriffe",
+    "privacy": "Datenschutz"
   },
   "index": {
     "title": "Willkommen bei Daveyplate",
     "heading": "Next.js-Boilerplatte",
     "description_2": "NextJS Seitenrouter, um ein einfaches Navigationssystem zu erstellen. Stripe zum Akzeptieren von Zahlungen und Synchronisieren von Abonnements & Produkten.",
-    "description_1": "Einfaches Benutzerverwaltungssystem, das mit Next.js, NextUI und Supabase erstellt wurde."
+    "description_1": "Einfaches Benutzerverwaltungssystem, das mit Next.js, NextUI und Supabase erstellt wurde.",
+    "welcome_to": "Willkommen bei",
+    "intro_card": "Daveyplate ist ein Open-Source-Boilerplate-Projekt mit einem voll ausgestatteten Benutzerverwaltungssystem - erstellt mit Next.js, NextUI und Supabase.",
+    "show_toast": "Zeige Toast",
+    "see_our_plans": "Sieh dir unsere Pläne an."
   },
   "footer": {
     "language_menu": "Sprachmenü",
-    "language": "Sprache"
+    "language": "Sprache",
+    "all_rights_reserved": "Alle Rechte vorbehalten."
   },
   "toggle_theme": {
     "themes_menu": "Themenmenü",
@@ -165,5 +176,50 @@
     "Settings": "Einstellungen",
     "Products": "Produkte",
     "Chat": "Chat"
+  },
+  "auth": {
+    "Log In": "Einloggen",
+    "Sign Up": "Registrieren",
+    "Forgot Password": "Passwort vergessen",
+    "Update Password": "Passwort aktualisieren",
+    "Email Address": "E-Mail-Adresse",
+    "Password": "Passwort",
+    "Send Reset Password Link": "Send Reset-Passwort-Link.",
+    "Send Magic Link": "Sende einen Magic Link.",
+    "Forgot password?": "Passwort vergessen?",
+    "OR": "ODER",
+    "Continue with": "Weiter mit",
+    "Email": "E-Mail",
+    "Already have an account?": "Schon ein Konto vorhanden?",
+    "Need to create an account?": "Muss ein Konto erstellt werden?",
+    "Check your email for the confirmation link": "Überprüfen Sie Ihre E-Mails auf den Bestätigungslink.",
+    "Check your email for the password reset link": "Überprüfen Sie Ihre E-Mails auf den Link zum Zurücksetzen des Passworts.",
+    "Check your email for the magic link": "Überprüfen Sie Ihre E-Mail für den magischen Link.",
+    "Enter a valid email": "Geben Sie eine gültige E-Mail-Adresse ein.",
+    "Enter a valid password": "Geben Sie ein gültiges Passwort ein.",
+    "by_continuing": "Durch die Fortsetzung stimmen Sie unserem zu.",
+    "terms": "Begriffe",
+    "privacy": "Datenschutz"
+  },
+  "signup": {
+    "by_continuing": "Durch die Fortsetzung stimmen Sie unseren zu.",
+    "terms": "Bedingungen",
+    "privacy": "Datenschutz"
+  },
+  "forgot-password": {
+    "by_continuing": "Durch die weitere Nutzung stimmst du unseren zu.",
+    "terms": "Bedingungen",
+    "privacy": "Datenschutz"
+  },
+  "blog": {
+    "written_by": "Verfasst von"
+  },
+  "article": {
+    "written_by": "Von geschrieben",
+    "comments": "Kommentare"
+  },
+  "message": {
+    "view_profile": "Profil anzeigen",
+    "whisper": "Flüstern"
   }
 }

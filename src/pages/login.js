@@ -1,6 +1,7 @@
 import { useSessionContext } from "@supabase/auth-helpers-react"
 
 import { Auth, defaultLocalization } from "@daveyplate/supabase-auth-nextui"
+import { useAutoTranslate } from 'next-auto-translate'
 
 import { Card, CardBody, cn } from "@nextui-org/react"
 
@@ -14,8 +15,13 @@ import { getURL } from "@/utils/utils"
 export default function LoginPage() {
     const supabase = createClient()
     const { session, isLoading: sessionLoading } = useSessionContext()
+    const { autoTranslate } = useAutoTranslate("auth")
 
-    const localization = defaultLocalization
+    // Autotranslate the entire objects keys and values
+    const localization = {}
+    for (const key in defaultLocalization) {
+        localization[key] = autoTranslate(defaultLocalization[key], defaultLocalization[key])
+    }
 
     return (
         <div className={cn((session || sessionLoading) && "opacity-0",
@@ -26,19 +32,22 @@ export default function LoginPage() {
                 socialLayout="horizontal"
                 providers={["github", "google", "facebook", "apple"]}
                 baseUrl={getURL()}
+                localization={localization}
             />
 
-            <p className="text-center text-small text-default-400">
-                By continuing, you agree to our&nbsp;
+            <p className="text-center text-small text-default-400 max-w-sm">
+                {autoTranslate("by_continuing", "By continuing, you agree to our")}
+
+                &nbsp;
 
                 <a href="/terms" className="underline">
-                    Terms
+                    {autoTranslate("terms", "Terms")}
                 </a>
 
                 &nbsp;&&nbsp;
 
                 <a href="/privacy" className="underline">
-                    Privacy
+                    {autoTranslate("privacy", "Privacy")}
                 </a>
             </p>
         </div>
