@@ -337,6 +337,7 @@ export default function Settings() {
                                                 isIconOnly
                                                 onPress={() => setPasswordVisible(!passwordVisible)}
                                                 disableRipple
+                                                className="!bg-transparent"
                                             >
                                                 {passwordVisible ? (
                                                     <EyeSlashIcon className="size-5 text-default-400" />
@@ -509,8 +510,61 @@ export default function Settings() {
                                 className="bg-content2 p-4 rounded-medium"
                                 isDisabled={!metadata}
                             >
-                                <AutoTranslate tKey="badge">
-                                    Badge
+                                <AutoTranslate tKey="show_badge">
+                                    Show Badge
+                                </AutoTranslate>
+                            </Switch>
+
+                            <Switch
+                                isSelected={metadata?.show_badge_count}
+                                onValueChange={(value) => updateMetadata({ show_badge_count: value })}
+                                classNames={{
+                                    base: "flex-row-reverse justify-between w-full max-w-full"
+                                }}
+                                className="bg-content2 p-4 rounded-medium"
+                                isDisabled={!metadata}
+                            >
+                                <AutoTranslate tKey="badge_count">
+                                    Badge Count
+                                </AutoTranslate>
+                            </Switch>
+
+                        </CardBody>
+
+                        <CardHeader className="px-4 pb-0">
+                            <p className="text-large">
+                                <AutoTranslate tKey="notification_types">
+                                    Notification Types
+                                </AutoTranslate>
+                            </p>
+                        </CardHeader>
+
+                        <CardBody className="gap-3">
+                            <Switch
+                                isSelected={metadata?.notifications_whispers}
+                                onValueChange={(value) => updateMetadata({ notifications_whispers: value })}
+                                classNames={{
+                                    base: "flex-row-reverse justify-between w-full max-w-full"
+                                }}
+                                className="bg-content2 p-4 rounded-medium"
+                                isDisabled={!metadata}
+                            >
+                                <AutoTranslate tKey="whispers">
+                                    Whispers
+                                </AutoTranslate>
+                            </Switch>
+
+                            <Switch
+                                isSelected={metadata?.notifications_article_comments}
+                                onValueChange={(value) => updateMetadata({ notifications_article_comments: value })}
+                                classNames={{
+                                    base: "flex-row-reverse justify-between w-full max-w-full"
+                                }}
+                                className="bg-content2 p-4 rounded-medium"
+                                isDisabled={!metadata}
+                            >
+                                <AutoTranslate tKey="article_comments">
+                                    Article Comments
                                 </AutoTranslate>
                             </Switch>
                         </CardBody>
