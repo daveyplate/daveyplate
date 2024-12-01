@@ -1,7 +1,9 @@
-import { useEntity } from '@daveyplate/supabase-swr-entities/client'
-import { AutoTranslate } from 'next-auto-translate'
-import { Switch, CardBody, CardHeader } from "@nextui-org/react"
 import { useSession } from '@supabase/auth-helpers-react'
+
+import { AutoTranslate } from 'next-auto-translate'
+import { useEntity } from '@daveyplate/supabase-swr-entities/client'
+
+import { Switch, CardBody, CardHeader } from "@nextui-org/react"
 
 export default function NotificationSettings() {
     const session = useSession()
@@ -59,7 +61,6 @@ export default function NotificationSettings() {
                         Badge Count
                     </AutoTranslate>
                 </Switch>
-
             </CardBody>
 
             <CardHeader className="px-4 pb-0">

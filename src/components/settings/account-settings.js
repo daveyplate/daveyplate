@@ -109,7 +109,7 @@ export default function AccountSettings() {
                 </p>
             </CardHeader>
 
-            <CardBody className="gap-4 items-start pb-2" as="form" onSubmit={updateEmail}>
+            <CardBody className="gap-4 pb-2" as="form" onSubmit={updateEmail}>
                 <Input
                     type="email"
                     label={
@@ -125,6 +125,7 @@ export default function AccountSettings() {
                 />
 
                 <Button
+                    className="self-start"
                     type="submit"
                     color="primary"
                     isDisabled={
@@ -143,7 +144,7 @@ export default function AccountSettings() {
                 </Button>
             </CardBody>
 
-            <CardBody className="gap-4 items-start" as="form" onSubmit={updatePassword}>
+            <CardBody className="gap-4" as="form" onSubmit={updatePassword}>
                 <input type="hidden" name="email" value={session?.user?.email} />
 
                 <Input
@@ -187,6 +188,7 @@ export default function AccountSettings() {
                 )}
 
                 <Button
+                    className="self-start"
                     type="submit"
                     color="primary"
                     isDisabled={

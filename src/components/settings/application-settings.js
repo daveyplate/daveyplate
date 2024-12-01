@@ -9,6 +9,7 @@ import { ChevronDownIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from '@heroic
 
 import { ThemeDropdown } from '@/components/theme-dropdown'
 import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
+import CellWrapper from '@/components/settings/cell-wrapper'
 
 export default function ApplicationSettings() {
     const { theme: currentTheme } = useTheme()
@@ -45,8 +46,8 @@ export default function ApplicationSettings() {
                 </p>
             </CardHeader>
 
-            <CardBody className="gap-3 items-start">
-                <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+            <CardBody className="gap-3">
+                <CellWrapper>
                     <p>
                         <AutoTranslate tKey="theme">
                             Theme
@@ -66,9 +67,9 @@ export default function ApplicationSettings() {
                             {selectedTheme?.title}
                         </Button>
                     </ThemeDropdown>
-                </div>
+                </CellWrapper>
 
-                <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+                <CellWrapper>
                     <p>
                         <AutoTranslate tKey="language">
                             Language
@@ -93,7 +94,7 @@ export default function ApplicationSettings() {
                             {new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
                         </Button>
                     </LocaleDropdown>
-                </div>
+                </CellWrapper>
             </CardBody>
 
         </>
