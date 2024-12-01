@@ -140,28 +140,32 @@ export default function EditProfile() {
                         </div>
 
                         <div className="flex items-center gap-3 mb-1">
-                            <Skeleton isLoaded={!!user} className="rounded-full">
-                                <Badge
+                            <Badge
+                                as={Button}
+                                variant="faded"
+                                className="bg-background"
+                                isOneChar
+                                content={
+                                    <PencilIcon className="size-2.5 text-default-500" />
+                                }
+                                placement="bottom-right"
+                                shape="circle"
+                                onPress={() => uploadRef.current()}
+                            >
+                                <Skeleton
                                     as={Button}
-                                    variant="faded"
-                                    className="bg-background"
-                                    isOneChar
-                                    content={
-                                        <PencilIcon className="size-2.5 text-default-500" />
-                                    }
-                                    placement="bottom-right"
-                                    shape="circle"
+                                    isIconOnly
+                                    isLoaded={!!user}
+                                    size="lg"
+                                    className="rounded-full !overflow-hidden"
                                     onPress={() => uploadRef.current()}
                                 >
                                     <UserAvatar
-                                        as={Button}
-                                        isIconOnly
                                         size="lg"
                                         user={user}
-                                        onPress={() => uploadRef.current()}
                                     />
-                                </Badge>
-                            </Skeleton>
+                                </Skeleton>
+                            </Badge>
 
                             <Button
                                 className="ms-1"
@@ -272,7 +276,7 @@ export default function EditProfile() {
                 confirm={confirm}
                 setConfirm={setConfirm}
             />
-        </div>
+        </div >
     )
 }
 
