@@ -293,3 +293,9 @@ alter table public.article_comments enable row level security;
 create policy none_shall_pass on public.article_comments
     for select
     using (false);
+
+/* RLS Policies for storage buckets */
+/**
+((bucket_id = 'avatars'::text) AND (name = (auth.uid() || '.jpg'::text)))
+((bucket_id = 'banners'::text) AND (name = (auth.uid() || '.jpg'::text)))
+**/
