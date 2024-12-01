@@ -20,13 +20,9 @@ import {
 
 import {
     BellIcon,
-    ChevronDownIcon,
     Cog6ToothIcon,
-    ComputerDesktopIcon,
     EyeIcon,
-    EyeSlashIcon,
-    MoonIcon,
-    SunIcon
+    EyeSlashIcon
 } from '@heroicons/react/24/outline'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
@@ -35,21 +31,12 @@ import { Link, useLocaleRouter } from '@/i18n/routing'
 import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
-import { ThemeDropdown } from '@/components/theme-dropdown'
-import { useIsClient } from '@uidotdev/usehooks'
-import { useTheme } from 'next-themes'
-import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
-import { useLocale } from 'next-intl'
-import Flag from 'react-flagpack'
-
 import NotificationSettings from '@/components/settings/notification-settings'
+import ApplicationSettings from '@/components/settings/application-settings'
 
 export default function Settings() {
     const localeRouter = useLocaleRouter()
-    const locale = useLocale()
     const supabase = createClient()
-    const isClient = useIsClient()
-    const { theme: currentTheme } = useTheme()
     const { autoTranslate } = useAutoTranslate()
     const { session, isLoading: sessionLoading } = useSessionContext()
 
@@ -80,26 +67,6 @@ export default function Settings() {
     const accountDeleted = autoTranslate('account_deleted', 'Account deleted')
     const authenticationCodeText = autoTranslate('authentication_code', 'Authentication Code')
     const checkEmailText = autoTranslate('check_email', 'Check your email for an authentication code')
-
-    const themes = [
-        {
-            key: 'light',
-            title: autoTranslate("light", "Light"),
-            icon: SunIcon
-        },
-        {
-            key: 'dark',
-            title: autoTranslate("dark", "Dark"),
-            icon: MoonIcon
-        },
-        {
-            key: 'system',
-            title: autoTranslate("system", "System"),
-            icon: ComputerDesktopIcon
-        },
-    ]
-
-    const selectedTheme = themes.find(theme => theme.key === currentTheme)
 
     useEffect(() => {
         setEmail(session?.user.email || '')
@@ -213,56 +180,7 @@ export default function Settings() {
                             </p>
                         </CardHeader>
 
-                        <CardBody className="gap-3 items-start">
-                            <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
-                                <p>
-                                    <AutoTranslate tKey="theme">
-                                        Theme
-                                    </AutoTranslate>
-                                </p>
-
-                                <ThemeDropdown>
-                                    <Button
-                                        variant="bordered"
-                                        startContent={isClient && (
-                                            <selectedTheme.icon className="size-5" />
-                                        )}
-                                        endContent={
-                                            <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
-                                        }
-                                    >
-                                        {selectedTheme?.title}
-                                    </Button>
-                                </ThemeDropdown>
-                            </div>
-
-                            <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
-                                <p>
-                                    <AutoTranslate tKey="language">
-                                        Language
-                                    </AutoTranslate>
-                                </p>
-
-                                <LocaleDropdown>
-                                    <Button
-                                        variant="bordered"
-                                        startContent={
-                                            <Flag
-                                                code={localeToCountry[locale]}
-                                                gradient="real-linear"
-                                                hasDropShadow
-                                                size="m"
-                                            />
-                                        }
-                                        endContent={
-                                            <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
-                                        }
-                                    >
-                                        {new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
-                                    </Button>
-                                </LocaleDropdown>
-                            </div>
-                        </CardBody>
+                        <ApplicationSettings />
 
                         {session && (
                             <>
