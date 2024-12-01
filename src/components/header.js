@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useRouter } from "next/router"
 import { useTheme } from "next-themes"
 import { useSessionContext } from "@supabase/auth-helpers-react"
-import { useIsClient } from "@uidotdev/usehooks"
 import { useLocale } from "next-intl"
 
 import { useAutoTranslate } from 'next-auto-translate'
@@ -49,6 +48,7 @@ import Logo from "@/components/logo"
 import { ThemeDropdown } from "@/components/theme-dropdown"
 import NotificationsCard from "@/components/notifications/notifications-card"
 import { getPathname } from "@/i18n/routing"
+import { useIsHydrated } from "@/hooks/useIsHydrated"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -64,7 +64,7 @@ export default function Header() {
     const router = useRouter()
     const { session, isLoading: sessionLoading } = useSessionContext()
     const locale = useLocale()
-    const isClient = useIsClient()
+    const isHydrated = useIsHydrated()
     const { resolvedTheme } = useTheme()
     const { entity: user, isLoading: userLoading } = useEntity(session && "profiles", session?.user.id, { lang: locale })
     const { entity: metadata } = useEntity(session && "metadata", "me")
@@ -133,7 +133,7 @@ export default function Header() {
                 <NavbarItem className="flex">
                     <ThemeDropdown>
                         <Button isIconOnly radius="full" variant="light">
-                            {isClient && (resolvedTheme == "dark" ? (
+                            {isHydrated && (resolvedTheme == "dark" ? (
                                 <MoonIcon className="text-default-500 size-6" />
                             ) : (
                                 <SunIcon className="text-default-500 size-6" />
