@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes'
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
 import Flag from 'react-flagpack'
-import { Button, CardBody } from "@nextui-org/react"
+import { Button, CardBody, CardHeader } from "@nextui-org/react"
 import { ChevronDownIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 
 import { ThemeDropdown } from '@/components/theme-dropdown'
@@ -36,55 +36,66 @@ export default function ApplicationSettings() {
     const selectedTheme = themes.find(theme => theme.key === currentTheme)
 
     return (
-        <CardBody className="gap-3 items-start">
-            <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
-                <p>
-                    <AutoTranslate tKey="theme">
-                        Theme
+        <>
+            <CardHeader className="px-4 py-0">
+                <p className="text-large">
+                    <AutoTranslate tKey="application_settings">
+                        Application Settings
                     </AutoTranslate>
                 </p>
+            </CardHeader>
 
-                <ThemeDropdown>
-                    <Button
-                        variant="bordered"
-                        startContent={(
-                            <selectedTheme.icon className="size-5" />
-                        )}
-                        endContent={
-                            <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
-                        }
-                    >
-                        {selectedTheme?.title}
-                    </Button>
-                </ThemeDropdown>
-            </div>
+            <CardBody className="gap-3 items-start">
+                <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+                    <p>
+                        <AutoTranslate tKey="theme">
+                            Theme
+                        </AutoTranslate>
+                    </p>
 
-            <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
-                <p>
-                    <AutoTranslate tKey="language">
-                        Language
-                    </AutoTranslate>
-                </p>
+                    <ThemeDropdown>
+                        <Button
+                            variant="bordered"
+                            startContent={(
+                                <selectedTheme.icon className="size-5" />
+                            )}
+                            endContent={
+                                <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
+                            }
+                        >
+                            {selectedTheme?.title}
+                        </Button>
+                    </ThemeDropdown>
+                </div>
 
-                <LocaleDropdown>
-                    <Button
-                        variant="bordered"
-                        startContent={
-                            <Flag
-                                code={localeToCountry[locale]}
-                                gradient="real-linear"
-                                hasDropShadow
-                                size="m"
-                            />
-                        }
-                        endContent={
-                            <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
-                        }
-                    >
-                        {new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
-                    </Button>
-                </LocaleDropdown>
-            </div>
-        </CardBody>
+                <div className="bg-content2 p-4 rounded-medium flex justify-between items-center w-full">
+                    <p>
+                        <AutoTranslate tKey="language">
+                            Language
+                        </AutoTranslate>
+                    </p>
+
+                    <LocaleDropdown>
+                        <Button
+                            variant="bordered"
+                            startContent={
+                                <Flag
+                                    code={localeToCountry[locale]}
+                                    gradient="real-linear"
+                                    hasDropShadow
+                                    size="m"
+                                />
+                            }
+                            endContent={
+                                <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
+                            }
+                        >
+                            {new Intl.DisplayNames([locale], { type: 'language' }).of(locale)}
+                        </Button>
+                    </LocaleDropdown>
+                </div>
+            </CardBody>
+
+        </>
     )
 }
