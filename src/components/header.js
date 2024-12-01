@@ -66,7 +66,7 @@ export default function Header() {
     const locale = useLocale()
     const isHydrated = useIsHydrated()
     const { resolvedTheme } = useTheme()
-    const { entity: user, isLoading: userLoading } = useEntity(session && "profiles", session?.user.id, { lang: locale })
+    const { entity: user, isLoading: userLoading } = useEntity(session && "profiles", "me", { lang: locale })
     const { entity: metadata } = useEntity(session && "metadata", "me")
     const { entities: notifications } = useEntities(session && "notifications", { lang: locale })
     const { autoTranslate } = useAutoTranslate("header")

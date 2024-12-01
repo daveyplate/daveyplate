@@ -109,7 +109,6 @@ export default function Providers({ children, ...pageProps }) {
 
                                     {children}
 
-                                    <CheckoutStatus />
                                     <ToastProvider />
                                     <CapacitorProvider />
 
