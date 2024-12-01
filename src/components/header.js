@@ -150,7 +150,7 @@ export default function Header() {
 
                 {session && (
                     <NavbarItem className="flex">
-                        <NotificationsPopover />
+                        <NotificationsPopover key={router.pathname} />
                     </NavbarItem>
                 )}
 

@@ -31,13 +31,6 @@ export default function NotificationsPopover() {
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
-        if (!notifications) return
-        if (!session) return
-
-        mutateNotifications()
-    }, [router.pathname])
-
-    useEffect(() => {
         setBadgeCount(notifications?.filter((notification) => !notification.is_seen).length || 0)
 
         setPreviousNotifications(notifications)
