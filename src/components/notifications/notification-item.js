@@ -1,16 +1,18 @@
-import { Badge, Button, Link as NextUILink } from "@nextui-org/react"
-import { cn } from "@nextui-org/react"
-import { getLocaleValue } from "@daveyplate/supabase-swr-entities/client"
-import { useLocale } from "next-intl"
-import ReactTimeAgo from "react-time-ago"
-import { getPathname, Link } from "@/i18n/routing"
-import { useRouter } from "next/router"
-import UserAvatar from "../user-avatar"
 import { forwardRef, useCallback, useRef } from "react"
-import { TrashIcon } from "@heroicons/react/24/solid"
-import { Avatar } from "@daveyplate/nextui-fixed-avatar"
-import SwipeToDelete from "react-swipe-to-delete-ios"
+import { useRouter } from "next/router"
+import { useLocale } from "next-intl"
 import { toast } from "sonner"
+
+import { getLocaleValue } from "@daveyplate/supabase-swr-entities/client"
+
+import ReactTimeAgo from "react-time-ago"
+import SwipeToDelete from "react-swipe-to-delete-ios"
+import { cn, Avatar, Badge, Button, Link as NextUILink } from "@nextui-org/react"
+import { TrashIcon } from "@heroicons/react/24/outline"
+
+import { getPathname, Link } from "@/i18n/routing"
+
+import UserAvatar from "@/components/user-avatar"
 
 const NotificationItem = forwardRef(
     ({

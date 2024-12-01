@@ -1,3 +1,9 @@
+import { useEffect, useState } from "react"
+import { useLocale } from "next-intl"
+import { useSession } from "@supabase/auth-helpers-react"
+
+import { useEntities, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
+
 import {
     Button,
     Card,
@@ -10,13 +16,10 @@ import {
     CardFooter,
 } from "@nextui-org/react"
 
-import NotificationItem from "./notification-item"
 import { BellSlashIcon } from "@heroicons/react/24/solid"
-import { useEffect, useState } from "react"
+
 import { Link } from "@/i18n/routing"
-import { useSession } from "@supabase/auth-helpers-react"
-import { useEntities, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
-import { useLocale } from "next-intl"
+import NotificationItem from "@/components/notifications/notification-item"
 
 export default function NotificationsCard({ notifications: fallbackData, setIsOpen, ...props }) {
     const session = useSession()
@@ -34,10 +37,10 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
 
     const activeNotifications = notifications?.filter((notification) => activeTab == "all" || !notification.is_read)
     const unreadNotifications = notifications?.filter((notification) => !notification.is_read)
-    const unseenNotifications = notifications?.filter((notification) => !notification.is_seen)
 
     // Mark all notifications as seen
     useEffect(() => {
+        const unseenNotifications = notifications?.filter((notification) => !notification.is_seen)
         if (!unseenNotifications?.length) return
 
         updateEntities("notifications", null, { is_seen: true }).then(() => {

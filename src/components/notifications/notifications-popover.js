@@ -4,13 +4,13 @@ import { useLocale } from "next-intl"
 import { useSession } from "@supabase/auth-helpers-react"
 import { toast } from "sonner"
 
-import { useEntities, useEntity, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useEntities, useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 import { Popover, PopoverTrigger, PopoverContent, Button, Badge } from "@nextui-org/react"
 import { BellIcon } from "@heroicons/react/24/outline"
 
-import NotificationItem from "./notification-item"
-import NotificationsCard from "./notifications-card"
+import NotificationItem from "@/components/notifications/notification-item"
+import NotificationsCard from "@/components/notifications/notifications-card"
 
 export default function NotificationsPopover() {
     const router = useRouter()
@@ -38,6 +38,7 @@ export default function NotificationsPopover() {
 
     useEffect(() => {
         setBadgeCount(notifications?.filter((notification) => !notification.is_seen).length || 0)
+
         setPreviousNotifications(notifications)
         if (!previousNotifications) return
 

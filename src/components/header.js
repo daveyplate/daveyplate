@@ -5,7 +5,7 @@ import { useSessionContext } from "@supabase/auth-helpers-react"
 import { useLocale } from "next-intl"
 
 import { useAutoTranslate } from 'next-auto-translate'
-import { useEntities, useEntity } from "@daveyplate/supabase-swr-entities/client"
+import { useEntity } from "@daveyplate/supabase-swr-entities/client"
 
 import {
     Navbar,
@@ -29,7 +29,6 @@ import {
 } from "@nextui-org/react"
 
 import {
-    BellIcon,
     Cog6ToothIcon,
     MagnifyingGlassIcon,
     SunIcon,
@@ -41,11 +40,12 @@ import {
     PencilIcon
 } from "@heroicons/react/24/outline"
 
-import Logo from "@/components/logo"
 import { ThemeDropdown } from "@/components/theme-dropdown"
 import { getPathname } from "@/i18n/routing"
 import { useIsHydrated } from "@/hooks/useIsHydrated"
-import NotificationsPopover from "./notifications/notifications-popover"
+
+import Logo from "@/components/logo"
+import NotificationsPopover from "@/components/notifications/notifications-popover"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
