@@ -23,11 +23,13 @@ export default () => {
             CapacitorCookies.clearCookies()
         }
 
-        supabase.auth.signOut({ scope: "local" })
-            .finally(() => {
-                localeRouter.replace("/login")
-                clearCache()
-            })
+        setTimeout(() => {
+            supabase.auth.signOut({ scope: "local" })
+                .finally(() => {
+                    localeRouter.replace("/login")
+                    clearCache()
+                })
+        }, 0)
     }, [])
 
     return (
