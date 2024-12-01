@@ -216,7 +216,7 @@ export default function Header() {
                                             href="/signup"
                                             startContent={<UserPlusIcon className="size-5" />}
                                         >
-                                            {autoTranslate("sign_up", "Register")}
+                                            {autoTranslate("sign_up", "Sign Up")}
                                         </DropdownItem>
                                     )}
 

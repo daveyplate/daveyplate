@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useLocale } from "next-intl"
 import { useSession } from "@supabase/auth-helpers-react"
 
-import { useEntities, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useDeleteEntities, useEntities, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
 
 import {
     Button,
@@ -32,6 +32,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
         deleteEntity: deleteNotification,
     } = useEntities(session && "notifications", { lang: locale }, { fallbackData })
     const updateEntities = useUpdateEntities()
+    const deleteEntities = useDeleteEntities()
 
     const [activeTab, setActiveTab] = useState("all")
 
@@ -57,14 +58,28 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                             Notifications
                         </h4>
 
-                        <Chip size="sm" variant="flat">
-                            {notifications?.length}
-                        </Chip>
+                        {!!notifications?.length && (
+                            <Chip size="sm" variant="flat">
+                                {notifications?.length}
+                            </Chip>
+                        )}
                     </div>
 
-                    <Button className="h-8 px-3 -me-2" color="primary" radius="full" variant="light">
-                        Mark all as read
-                    </Button>
+                    {!!unreadNotifications?.length && (
+                        <Button
+                            className="h-8 px-3 -me-2"
+                            color="primary"
+                            radius="full"
+                            variant="light"
+                            onPress={() => {
+                                updateEntities("notifications", null, { is_read: true }).then(() => {
+                                    mutateNotifications()
+                                })
+                            }}
+                        >
+                            Mark all as read
+                        </Button>
+                    )}
                 </div>
 
                 <Tabs
@@ -88,9 +103,11 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                                     All
                                 </span>
 
-                                <Chip size="sm" variant="flat">
-                                    {notifications?.length}
-                                </Chip>
+                                {!!notifications?.length && (
+                                    <Chip size="sm" variant="flat">
+                                        {notifications?.length}
+                                    </Chip>
+                                )}
                             </div>
                         }
                     />
@@ -103,9 +120,11 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                                     Unread
                                 </span>
 
-                                <Chip size="sm" variant="flat">
-                                    {unreadNotifications?.length}
-                                </Chip>
+                                {!!unreadNotifications?.length && (
+                                    <Chip size="sm" variant="flat">
+                                        {unreadNotifications?.length}
+                                    </Chip>
+                                )}
                             </div>
                         }
                     />
@@ -141,18 +160,26 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
             <CardFooter className="justify-end gap-2 px-4">
                 <Button
                     as={Link}
-                    href="/settings"
+                    href="/settings?tab=notifications"
                     variant="light"
                     onPress={() => setIsOpen(false)}
                 >
                     Settings
                 </Button>
 
-                <Button
-                    variant="flat"
-                >
-                    Archive All
-                </Button>
+                {!!notifications?.length && (
+                    <Button
+                        variant="flat"
+                        onPress={() => {
+                            mutateNotifications([])
+                            deleteEntities("notifications").then(() => {
+                                mutateNotifications()
+                            })
+                        }}
+                    >
+                        Archive All
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     )
