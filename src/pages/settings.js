@@ -14,7 +14,6 @@ import {
     cn,
     Input,
     Spinner,
-    Switch,
     Tab,
     Tabs,
 } from "@nextui-org/react"
@@ -43,6 +42,8 @@ import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
 import { useLocale } from 'next-intl'
 import Flag from 'react-flagpack'
 
+import NotificationSettings from '@/components/settings/notification-settings'
+
 export default function Settings() {
     const localeRouter = useLocaleRouter()
     const locale = useLocale()
@@ -53,7 +54,6 @@ export default function Settings() {
     const { session, isLoading: sessionLoading } = useSessionContext()
 
     const { updateEntity: updateUser, deleteEntity: deleteUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
-    const { entity: metadata, updateEntity: updateMetadata } = useEntity(session ? 'metadata' : null, 'me', null, { revalidateOnFocus: false })
     const [confirm, setConfirm] = useState(null)
 
     const [email, setEmail] = useState('')
@@ -468,96 +468,7 @@ export default function Settings() {
                             </div>
                         }
                     >
-                        <CardHeader className="px-4 py-0">
-                            <p className="text-large">
-                                <AutoTranslate tKey="notification_settings">
-                                    Notification Settings
-                                </AutoTranslate>
-                            </p>
-                        </CardHeader>
-
-                        <CardBody className="gap-3">
-                            <Switch
-                                isSelected={!metadata?.notifications_enabled}
-                                onValueChange={(value) => updateMetadata({ notifications_enabled: !value })}
-                                classNames={{
-                                    base: "flex-row-reverse justify-between w-full max-w-full"
-                                }}
-                                className="bg-content2 p-4 rounded-medium"
-                                isDisabled={!metadata}
-                            >
-                                <AutoTranslate tKey="pause_all">
-                                    Pause all
-                                </AutoTranslate>
-                            </Switch>
-
-                            <Switch
-                                isSelected={!!metadata?.notifications_badge_enabled}
-                                onValueChange={(value) => updateMetadata({ notifications_badge_enabled: value })}
-                                classNames={{
-                                    base: "flex-row-reverse justify-between w-full max-w-full"
-                                }}
-                                className="bg-content2 p-4 rounded-medium"
-                                isDisabled={!metadata}
-                            >
-                                <AutoTranslate tKey="show_badge">
-                                    Show Badge
-                                </AutoTranslate>
-                            </Switch>
-
-                            <Switch
-                                isSelected={!!metadata?.show_badge_count}
-                                onValueChange={(value) => updateMetadata({ show_badge_count: value })}
-                                classNames={{
-                                    base: "flex-row-reverse justify-between w-full max-w-full"
-                                }}
-                                className="bg-content2 p-4 rounded-medium"
-                                isDisabled={!metadata}
-                            >
-                                <AutoTranslate tKey="badge_count">
-                                    Badge Count
-                                </AutoTranslate>
-                            </Switch>
-
-                        </CardBody>
-
-                        <CardHeader className="px-4 pb-0">
-                            <p className="text-large">
-                                <AutoTranslate tKey="notification_types">
-                                    Notification Types
-                                </AutoTranslate>
-                            </p>
-                        </CardHeader>
-
-                        <CardBody className="gap-3">
-                            <Switch
-                                isSelected={!!metadata?.notifications_whispers}
-                                onValueChange={(value) => updateMetadata({ notifications_whispers: value })}
-                                classNames={{
-                                    base: "flex-row-reverse justify-between w-full max-w-full"
-                                }}
-                                className="bg-content2 p-4 rounded-medium"
-                                isDisabled={!metadata}
-                            >
-                                <AutoTranslate tKey="whispers">
-                                    Whispers
-                                </AutoTranslate>
-                            </Switch>
-
-                            <Switch
-                                isSelected={!!metadata?.notifications_article_comments}
-                                onValueChange={(value) => updateMetadata({ notifications_article_comments: value })}
-                                classNames={{
-                                    base: "flex-row-reverse justify-between w-full max-w-full"
-                                }}
-                                className="bg-content2 p-4 rounded-medium"
-                                isDisabled={!metadata}
-                            >
-                                <AutoTranslate tKey="article_comments">
-                                    Article Comments
-                                </AutoTranslate>
-                            </Switch>
-                        </CardBody>
+                        <NotificationSettings />
                     </Tab>
                 </Tabs>
             </Card>
