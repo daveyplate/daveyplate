@@ -32,9 +32,10 @@ export default function NotificationsPopover() {
 
     useEffect(() => {
         if (!notifications) return
+        if (!session) return
 
         mutateNotifications()
-    }, [router.asPath])
+    }, [router.pathname])
 
     useEffect(() => {
         setBadgeCount(notifications?.filter((notification) => !notification.is_seen).length || 0)
