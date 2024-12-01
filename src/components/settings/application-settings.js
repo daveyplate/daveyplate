@@ -9,7 +9,6 @@ import { ChevronDownIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from '@heroic
 
 import { ThemeDropdown } from '@/components/theme-dropdown'
 import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
-import { useIsHydrated } from '@/hooks/useIsHydrated'
 
 export default function ApplicationSettings() {
     const { theme: currentTheme } = useTheme()
