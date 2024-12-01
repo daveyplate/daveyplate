@@ -4,6 +4,7 @@ import { SWRConfig } from "swr"
 import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
 import PullToRefresh from 'pulltorefreshjs'
 import ReactDOMServer from 'react-dom/server'
+import { NuqsAdapter } from 'nuqs/adapters/next/pages'
 
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
@@ -94,26 +95,28 @@ export default function Providers({ children, ...pageProps }) {
                 }}>
                     <NextUIProvider locale={nextUILocale} navigate={localeRouter.push}>
                         <ThemeProvider attribute="class" disableTransitionOnChange>
-                            <AutoTranslateProvider
-                                pathname={pathname}
-                                defaultLocale={i18nConfig.i18n.defaultLocale}
-                                locales={i18nConfig.i18n.locales}
-                                messages={pageProps.messages || []}
-                                locale={pageProps.locale}
-                                debug={false}
-                                disabled={true}
-                            >
-                                <MetaTheme />
+                            <NuqsAdapter>
+                                <AutoTranslateProvider
+                                    pathname={pathname}
+                                    defaultLocale={i18nConfig.i18n.defaultLocale}
+                                    locales={i18nConfig.i18n.locales}
+                                    messages={pageProps.messages || []}
+                                    locale={pageProps.locale}
+                                    debug={false}
+                                    disabled={true}
+                                >
+                                    <MetaTheme />
 
-                                {children}
+                                    {children}
 
-                                <CheckoutStatus />
-                                <ToastProvider />
-                                <CapacitorProvider />
+                                    <CheckoutStatus />
+                                    <ToastProvider />
+                                    <CapacitorProvider />
 
-                                <SpeedInsights debug={false} />
-                                <Analytics debug={false} />
-                            </AutoTranslateProvider>
+                                    <SpeedInsights debug={false} />
+                                    <Analytics debug={false} />
+                                </AutoTranslateProvider>
+                            </NuqsAdapter>
                         </ThemeProvider>
                     </NextUIProvider>
                 </SWRConfig>

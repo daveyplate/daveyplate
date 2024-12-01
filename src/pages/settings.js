@@ -1,4 +1,5 @@
 import { useSessionContext } from '@supabase/auth-helpers-react'
+import { useQueryState } from 'nuqs'
 
 import { AutoTranslate } from 'next-auto-translate'
 
@@ -16,6 +17,7 @@ import ManageAccount from '@/components/settings/manage-account'
 
 export default function Settings() {
     const { session, isLoading: sessionLoading } = useSessionContext()
+    const [activeTab, setActiveTab] = useQueryState('tab', { defaultValue: "settings" })
 
     return (
         <div
@@ -24,8 +26,15 @@ export default function Settings() {
             )}
         >
             <Card fullWidth className="max-w-xl px-1 pt-2">
-                <Tabs className="p-3" classNames={{ tabContent: "text-small", base: cn(!session && "hidden") }} size="lg">
+                <Tabs
+                    className="p-3"
+                    classNames={{ tabContent: "text-small", base: cn(!session && "hidden") }}
+                    size="lg"
+                    selectedKey={activeTab}
+                    onSelectionChange={setActiveTab}
+                >
                     <Tab
+                        key="settings"
                         textValue="Settings"
                         title={
                             <div className="flex items-center gap-1.5">
@@ -50,6 +59,7 @@ export default function Settings() {
                     </Tab>
 
                     <Tab
+                        key="notifications"
                         className={cn(!session && "hidden")}
                         textValue="Notifications"
                         title={

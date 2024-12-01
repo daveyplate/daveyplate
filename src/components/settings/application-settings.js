@@ -10,8 +10,10 @@ import { ChevronDownIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from '@heroic
 import { ThemeDropdown } from '@/components/theme-dropdown'
 import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
 import CellWrapper from '@/components/settings/cell-wrapper'
+import { useIsHydrated } from '@/hooks/useIsHydrated'
 
 export default function ApplicationSettings() {
+    const isHydrated = useIsHydrated()
     const { theme: currentTheme } = useTheme()
     const { autoTranslate } = useAutoTranslate()
     const locale = useLocale()
@@ -57,14 +59,14 @@ export default function ApplicationSettings() {
                     <ThemeDropdown>
                         <Button
                             variant="bordered"
-                            startContent={(
+                            startContent={isHydrated && selectedTheme && (
                                 <selectedTheme.icon className="size-5" />
                             )}
                             endContent={
                                 <ChevronDownIcon className="size-4 mt-0.5 -me-0.5" />
                             }
                         >
-                            {selectedTheme?.title}
+                            {isHydrated && selectedTheme?.title}
                         </Button>
                     </ThemeDropdown>
                 </CellWrapper>
