@@ -1,52 +1,49 @@
-import { BellIcon } from "@heroicons/react/24/solid"
-import { Popover, PopoverTrigger, PopoverContent, Button, Badge, Card } from "@nextui-org/react"
-import { useEntities, useEntity, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
-import { useSession } from "@supabase/auth-helpers-react"
-import { useLocale } from "next-intl"
 import { useEffect, useState } from "react"
-import NotificationItem from "./notification-item"
-import { toast } from "sonner"
-import NotificationsCard from "./notifications-card"
 import { useRouter } from "next/router"
+import { useLocale } from "next-intl"
+import { useSession } from "@supabase/auth-helpers-react"
+import { toast } from "sonner"
+
+import { useEntities, useEntity, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
+
+import { Popover, PopoverTrigger, PopoverContent, Button, Badge } from "@nextui-org/react"
+import { BellIcon } from "@heroicons/react/24/outline"
+
+import NotificationItem from "./notification-item"
+import NotificationsCard from "./notifications-card"
 
 export default function NotificationsPopover() {
-    const session = useSession()
     const router = useRouter()
     const locale = useLocale()
-    const [previousNotifications, setPreviousNotifications] = useState([])
+    const session = useSession()
+
     const {
         entities: notifications,
         mutate: mutateNotifications,
         updateEntity: updateNotification,
         deleteEntity: deleteNotification
     } = useEntities(session && "notifications", { lang: locale })
-    const unseenNotifications = notifications?.filter((notification) => !notification.is_seen)
+
     const { entity: metadata } = useEntity(session && "metadata", "me")
-    const updateEntities = useUpdateEntities()
+
+    const [badgeCount, setBadgeCount] = useState(0)
+    const [previousNotifications, setPreviousNotifications] = useState([])
     const [isOpen, setIsOpen] = useState(false)
-
-    // Mark all notifications as seen when the popover is opened
-    useEffect(() => {
-        if (!isOpen) return
-        if (!unseenNotifications?.length) return
-
-        updateEntities("notifications", null, { is_seen: true }).then(() => {
-            mutateNotifications()
-        })
-    }, [isOpen, notifications, mutateNotifications])
 
     useEffect(() => {
         if (!notifications) return
+
         mutateNotifications()
     }, [router.asPath])
 
     useEffect(() => {
+        setBadgeCount(notifications?.filter((notification) => !notification.is_seen).length || 0)
         setPreviousNotifications(notifications)
         if (!previousNotifications) return
 
         // Compare the notifications to see if any new one exists that wasn't here before based on notification.id
         const newNotifications = notifications?.filter((notification) => {
-            // Skip read notifications
+            // Skip seen notifications
             if (notification.is_read) return false
             if (notification.is_seen) return false
 
@@ -60,12 +57,12 @@ export default function NotificationsPopover() {
 
         if (!newNotifications?.length) return
 
-        toast((
+        toast.custom((t) => (
             <div
                 draggable
                 onDragStart={(event) => {
                     event.preventDefault()
-                    toast.dismiss()
+                    toast.dismiss(t)
                 }}
                 onTouchEnd={() => toast.dismiss()}
             >
@@ -87,12 +84,14 @@ export default function NotificationsPopover() {
 
     return (
         <Popover
+            offset={12}
             placement="bottom-end"
             isOpen={isOpen}
-            onOpenChange={(open) => setIsOpen(open)}
+            onOpenChange={(open) => {
+                setIsOpen(open)
+                setBadgeCount(0)
+            }}
             shouldBlockScroll
-            backdrop="opaque"
-            size="lg"
         >
             <PopoverTrigger>
                 <Button
@@ -104,16 +103,16 @@ export default function NotificationsPopover() {
                 >
                     <Badge
                         color="danger"
-                        content={unseenNotifications?.length}
-                        isInvisible={!unseenNotifications?.length || !metadata?.notifications_badge_enabled}
+                        content={badgeCount}
+                        isInvisible={!badgeCount || !metadata?.notifications_badge_enabled}
                         showOutline={false}
                     >
-                        <BellIcon className="size-7" />
+                        <BellIcon className="size-6 text-default-500" />
                     </Badge>
                 </Button>
             </PopoverTrigger>
 
-            <PopoverContent className="max-w-[94svw] p-0 sm:max-w-[480px] w-svw">
+            <PopoverContent className="max-w-[94vw] p-0 sm:w-[380px]">
                 <NotificationsCard
                     notifications={notifications}
                     setIsOpen={setIsOpen}

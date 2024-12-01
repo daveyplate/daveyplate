@@ -11,35 +11,46 @@ import {
 } from "@nextui-org/react"
 
 import NotificationItem from "./notification-item"
-import { BellSlashIcon, Cog6ToothIcon, TrashIcon } from "@heroicons/react/24/solid"
-import { useState } from "react"
+import { BellSlashIcon } from "@heroicons/react/24/solid"
+import { useEffect, useState } from "react"
 import { Link } from "@/i18n/routing"
 import { useSession } from "@supabase/auth-helpers-react"
-import { useEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useEntities, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
 import { useLocale } from "next-intl"
 
 export default function NotificationsCard({ notifications: fallbackData, setIsOpen, ...props }) {
     const session = useSession()
     const locale = useLocale()
+
     const {
         entities: notifications,
+        mutate: mutateNotifications,
         updateEntity: updateNotification,
-        deleteEntity: deleteNotification
+        deleteEntity: deleteNotification,
     } = useEntities(session && "notifications", { lang: locale }, { fallbackData })
+    const updateEntities = useUpdateEntities()
 
     const [activeTab, setActiveTab] = useState("all")
-    let activeNotifications = notifications?.filter((notification) => {
-        return activeTab == "all" || !notification.is_read
-    })
 
+    const activeNotifications = notifications?.filter((notification) => activeTab == "all" || !notification.is_read)
     const unreadNotifications = notifications?.filter((notification) => !notification.is_read)
+    const unseenNotifications = notifications?.filter((notification) => !notification.is_seen)
+
+    // Mark all notifications as seen
+    useEffect(() => {
+        if (!unseenNotifications?.length) return
+
+        updateEntities("notifications", null, { is_seen: true }).then(() => {
+            mutateNotifications()
+        })
+    }, [notifications])
 
     return (
-        <Card fullWidth {...props}>
-            <CardHeader className="flex flex-col px-0 pt-2 pb-0">
-                <div className="flex w-full items-center justify-between px-6 py-2">
-                    <div className="flex items-center gap-2">
-                        <h4>
+        <Card fullWidth className="max-w-[420px]" {...props}>
+            <CardHeader className="flex flex-col px-0 pb-0">
+                <div className="flex w-full items-center justify-between px-5 py-2">
+                    <div className="inline-flex items-center gap-1">
+                        <h4 className="inline-block align-middle text-large font-medium">
                             Notifications
                         </h4>
 
@@ -48,7 +59,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                         </Chip>
                     </div>
 
-                    <Button color="primary" radius="full" variant="light" className="-me-2">
+                    <Button className="h-8 px-3" color="primary" radius="full" variant="light">
                         Mark all as read
                     </Button>
                 </div>
@@ -64,13 +75,12 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                     color="primary"
                     selectedKey={activeTab}
                     variant="underlined"
-                    onSelectionChange={(selected) => setActiveTab(selected)}
-                    size="lg"
+                    onSelectionChange={setActiveTab}
                 >
                     <Tab
                         key="all"
                         title={
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center space-x-2">
                                 <span>
                                     All
                                 </span>
@@ -98,23 +108,26 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                     />
                 </Tabs>
             </CardHeader>
+
             <CardBody className="w-full gap-0 p-0">
-                <ScrollShadow className="h-[420px]">
+                <ScrollShadow className="h-[420px] w-full">
                     {activeNotifications?.length ? (
-                        activeNotifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((notification) => (
-                            <NotificationItem
-                                key={notification.id}
-                                notification={notification}
-                                setIsOpen={setIsOpen}
-                                updateNotification={updateNotification}
-                                deleteNotification={deleteNotification}
-                            />
-                        ))
+                        activeNotifications
+                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                            .map((notification) => (
+                                <NotificationItem
+                                    key={notification.id}
+                                    notification={notification}
+                                    setIsOpen={setIsOpen}
+                                    updateNotification={updateNotification}
+                                    deleteNotification={deleteNotification}
+                                />
+                            ))
                     ) : (
-                        <div className="flex flex-col items-center justify-center h-full gap-2">
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-2">
                             <BellSlashIcon className="text-default-400 size-16" />
 
-                            <p className="text-base text-default-400">
+                            <p className="text-small text-default-400">
                                 No notifications yet.
                             </p>
                         </div>
@@ -122,27 +135,20 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                 </ScrollShadow>
             </CardBody>
 
-            <CardFooter className="justify-end gap-4 p-4">
+            <CardFooter className="justify-end gap-2 px-4">
                 <Button
                     as={Link}
-                    size="lg"
                     href="/settings"
+                    variant="light"
                     onPress={() => setIsOpen(false)}
-                    startContent={
-                        <Cog6ToothIcon className="size-5 -ms-1" />
-                    }
                 >
                     Settings
                 </Button>
 
                 <Button
                     variant="flat"
-                    size="lg"
-                    startContent={
-                        <TrashIcon className="size-5 -ms-1" />
-                    }
                 >
-                    Clear All
+                    Archive All
                 </Button>
             </CardFooter>
         </Card>

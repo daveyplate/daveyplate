@@ -67,11 +67,11 @@ const NotificationItem = forwardRef(
         const contentByType = {
             request: (
                 <div className="flex gap-2 pt-2">
-                    <Button color="primary">
+                    <Button color="primary" size="sm">
                         Accept
                     </Button>
 
-                    <Button variant="flat">
+                    <Button size="sm" variant="flat">
                         Decline
                     </Button>
                 </div>
@@ -86,13 +86,13 @@ const NotificationItem = forwardRef(
                 height="fit"
                 deleteColor="transparent"
                 deleteComponent={
-                    <TrashIcon className="size-5 mx-auto" />
+                    <TrashIcon className="size-4 mx-auto" />
                 }
                 disabled={disableSwipe}
             >
                 <div
                     className={cn(
-                        "group flex gap-4 border-b border-divider px-6 py-4 cursor-pointer select-none",
+                        "group flex gap-3 border-b border-divider px-6 py-4 cursor-pointer select-none",
                         !is_read ? "bg-primary-50" : "bg-content1", className,
                     )}
                     {...props}
@@ -105,7 +105,7 @@ const NotificationItem = forwardRef(
                         legacyBehavior
                     >
                         <Button
-                            className="overflow-visible mt-1"
+                            className="overflow-visible"
                             disableRipple
                             isIconOnly
                             radius="full"
@@ -127,11 +127,11 @@ const NotificationItem = forwardRef(
                         </Button>
                     </Link>
 
-                    <div className="flex flex-col gap-0.5 sm:-me-2">
-                        <p>
+                    <div className="flex flex-col gap-1">
+                        <p className="text-small text-foreground">
                             {contentParts.length > 1 ? (
                                 <>
-                                    <span className="text-foreground/90">
+                                    <span>
                                         {contentParts[0]}
                                     </span>
 
@@ -141,14 +141,14 @@ const NotificationItem = forwardRef(
                                         legacyBehavior
                                     >
                                         <NextUILink
-                                            className="font-semibold text-foreground"
+                                            className="text-small font-medium text-foreground"
                                             onPress={notificationPressed}
                                         >
                                             {sender.full_name}
                                         </NextUILink>
                                     </Link>
 
-                                    <span className="text-foreground/90">
+                                    <span>
                                         {contentParts[1]}
                                     </span>
                                 </>
@@ -157,7 +157,11 @@ const NotificationItem = forwardRef(
                             )}
                         </p>
 
-                        <ReactTimeAgo date={new Date(created_at)} locale={locale} className="text-small text-default-400" />
+                        <ReactTimeAgo
+                            date={new Date(created_at)}
+                            locale={locale}
+                            className="text-tiny text-default-400"
+                        />
                     </div>
 
                     <Button
@@ -171,7 +175,7 @@ const NotificationItem = forwardRef(
                             deleteNotification(notification_id)
                         }}
                     >
-                        <TrashIcon className="size-5" />
+                        <TrashIcon className="size-4" />
                     </Button>
                 </div>
             </SwipeToDelete>
