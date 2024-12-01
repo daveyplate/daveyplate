@@ -62,7 +62,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                         </Chip>
                     </div>
 
-                    <Button className="h-8 px-3" color="primary" radius="full" variant="light">
+                    <Button className="h-8 px-3 -me-2" color="primary" radius="full" variant="light">
                         Mark all as read
                     </Button>
                 </div>
