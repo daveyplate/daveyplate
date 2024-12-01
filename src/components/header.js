@@ -131,7 +131,7 @@ export default function Header() {
                 </NavbarItem>
 
                 <NavbarItem className="flex">
-                    <ThemeDropdown>
+                    <ThemeDropdown className="min-w-0">
                         <Button isIconOnly radius="full" variant="light">
                             {isHydrated && (resolvedTheme == "dark" ? (
                                 <MoonIcon className="text-default-500 size-6" />

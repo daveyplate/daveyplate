@@ -127,9 +127,7 @@ export default function Footer() {
                         ))}
                     </motion.div>
 
-
-
-                    <LocaleDropdown>
+                    <LocaleDropdown className="min-w-0">
                         <Button
                             isIconOnly
                             variant="light"

@@ -30,7 +30,7 @@ export const localeToCountry = {
  * Dropdown component to switch between locales
  * @returns {JSX.Element}
  */
-export function LocaleDropdown({ children }) {
+export function LocaleDropdown({ children, ...props }) {
     const router = useRouter()
     const currentLocale = useLocale()
     const pathname = usePathname()
@@ -45,7 +45,7 @@ export function LocaleDropdown({ children }) {
     }
 
     return (
-        <Dropdown>
+        <Dropdown {...props}>
             <DropdownTrigger>
                 {children}
             </DropdownTrigger>

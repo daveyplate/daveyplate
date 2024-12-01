@@ -56,7 +56,7 @@ export default function ApplicationSettings() {
                         </AutoTranslate>
                     </p>
 
-                    <ThemeDropdown>
+                    <ThemeDropdown className="min-w-40">
                         <Button
                             variant="bordered"
                             startContent={isHydrated && selectedTheme && (
@@ -78,7 +78,7 @@ export default function ApplicationSettings() {
                         </AutoTranslate>
                     </p>
 
-                    <LocaleDropdown>
+                    <LocaleDropdown className="min-w-40">
                         <Button
                             variant="bordered"
                             startContent={

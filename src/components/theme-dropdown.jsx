@@ -4,7 +4,7 @@ import { useAutoTranslate } from "next-auto-translate"
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
 import { ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline"
 
-export function ThemeDropdown({ children }) {
+export function ThemeDropdown({ children, ...props }) {
     const { setTheme } = useTheme()
     const { autoTranslate } = useAutoTranslate("toggle_theme")
 
@@ -27,12 +27,12 @@ export function ThemeDropdown({ children }) {
     ]
 
     return (
-        <Dropdown>
+        <Dropdown {...props}>
             <DropdownTrigger>
                 {children}
             </DropdownTrigger>
 
-            <DropdownMenu variant="flat" className="!min-w-32">
+            <DropdownMenu variant="flat">
                 {themes.map((theme) => (
                     <DropdownItem
                         key={theme.key}
