@@ -49,7 +49,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
     }, [notifications])
 
     return (
-        <Card fullWidth className="max-w-[420px]" {...props}>
+        <Card fullWidth {...props}>
             <CardHeader className="flex flex-col px-0 pb-0">
                 <div className="flex w-full items-center justify-between px-5 py-2">
                     <div className="inline-flex items-center gap-1">

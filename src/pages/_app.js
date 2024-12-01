@@ -1,5 +1,11 @@
 import Head from "next/head"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
 import { NextIntlClientProvider } from 'next-intl'
+
+import { OpenGraph } from "@daveyplate/next-open-graph"
+
+import { cn } from "@nextui-org/react"
 
 import "@/styles/global.css"
 import "@/styles/custom.css"
@@ -8,13 +14,16 @@ import DefaultFont from "@/styles/fonts"
 
 import Providers from "@/components/providers/providers"
 import Header from "@/components/header"
-import { OpenGraph } from "@daveyplate/next-open-graph"
-import { useRouter } from "next/router"
-import { cn } from "@nextui-org/react"
 import Footer from "@/components/footer"
 
 const MyApp = ({ Component, pageProps }) => {
     const router = useRouter()
+
+    useEffect(() => {
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+            document.documentElement.classList.add('ua-ios');
+        }
+    }, [])
 
     return (
         <NextIntlClientProvider
@@ -36,7 +45,13 @@ const MyApp = ({ Component, pageProps }) => {
                 <OpenGraph description="Welcome to Daveyplate" />
 
                 <style jsx global>{`
-                    html {
+                    &.ua-ios {
+                        @supports (font: -apple-system-body) {
+                            font: -apple-system-body;
+                        }
+                    }
+                        
+                    body {
                         font-family: ${DefaultFont.style.fontFamily}
                     }
                 `}</style>

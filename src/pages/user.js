@@ -86,7 +86,6 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         radius="full"
                         size="sm"
                         variant="light"
-                        startContent={<PencilIcon className="size-3" />}
                         isDisabled={!isMe}
                     >
                         <AutoTranslate tKey="edit_profile">
@@ -95,7 +94,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                     </Button>
                 </CardHeader>
 
-                <CardBody className="overflow-visible">
+                <CardBody className="overflow-visible px-4">
                     <DragDropzone
                         size="lg"
                         label={autoTranslate("upload_avatar", "Upload Avatar")}
@@ -104,7 +103,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         onError={(error) => toast.error(error.message)}
                     >
                         <div className="pt-6 pb-1 flex flex-col">
-                            <div className="-mt-[76px] -mb-2.5 mx-auto z-10">
+                            <div className="-mt-20 -mb-2 mx-auto z-10">
                                 <Badge
                                     as={Button}
                                     isOneChar

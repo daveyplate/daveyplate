@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useLocale } from "next-intl"
 import { useDebounce } from "@uidotdev/usehooks"
 
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
@@ -13,7 +14,6 @@ import { getTranslationProps } from "@/i18n/translation-props"
 import { isExport } from "@/utils/utils"
 
 import UserAvatar from "@/components/user-avatar"
-import { useLocale } from "next-intl"
 
 export default function UsersPage() {
     const locale = useLocale()
@@ -55,10 +55,10 @@ export default function UsersPage() {
                     {isLoading && !users && [...Array(8)].fill({}).map((_, index) => (
                         <Card key={index} fullWidth>
                             <CardBody className="p-4">
-                                <div className="flex items-center gap-4">
-                                    <Skeleton className="size-14 rounded-full" />
+                                <div className="flex items-center gap-3">
+                                    <Skeleton className="size-10 rounded-full" />
 
-                                    <div className="space-y-2">
+                                    <div className="space-y-1">
                                         <Skeleton className="h-4 w-[100px] rounded-full" />
                                         <Skeleton className="h-4 w-[150px] rounded-full" />
                                     </div>
@@ -76,15 +76,15 @@ export default function UsersPage() {
                             isPressable
                             fullWidth
                         >
-                            <CardBody className="p-4 flex-row items-center gap-4">
-                                <UserAvatar user={user} size="lg" className="text-base" />
+                            <CardBody className="p-4 flex-row items-center gap-3">
+                                <UserAvatar user={user} />
 
                                 <div className="flex flex-col items-start justify-center">
-                                    <p className="font-medium">
+                                    <p className="font-medium text-small">
                                         {user.full_name || "Unnamed"}
                                     </p>
 
-                                    <span className="text-small text-default-500">
+                                    <span className="text-tiny text-default-500">
                                         <AutoTranslate tKey="subscription">
                                             Subscription:
                                         </AutoTranslate>

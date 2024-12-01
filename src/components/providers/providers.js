@@ -61,6 +61,7 @@ export default function Providers({ children, ...pageProps }) {
         window.history.scrollRestoration = iOS() ? 'auto' : 'manual'
 
         // Enable pull to refresh for iOS PWA
+        /*
         const standalone = window.matchMedia("(display-mode: standalone)").matches
 
         if (standalone) {
@@ -78,6 +79,7 @@ export default function Providers({ children, ...pageProps }) {
         }
 
         return () => PullToRefresh.destroyAll()
+        */
     }, [])
 
     return (

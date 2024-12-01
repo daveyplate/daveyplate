@@ -46,6 +46,7 @@ import { useIsHydrated } from "@/hooks/useIsHydrated"
 
 import Logo from "@/components/logo"
 import NotificationsPopover from "@/components/notifications/notifications-popover"
+import UserAvatar from "@/components/user-avatar"
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -82,7 +83,7 @@ export default function Header() {
             onClick={() => setIsMenuOpen(false)}
         >
             <NavbarBrand>
-                <NavbarMenuToggle className="ms-1 me-3.5 h-6 md:hidden" />
+                <NavbarMenuToggle className="me-3.5 h-6 md:hidden" />
 
                 <Link href="/" className="text-foreground">
                     <Logo />
@@ -113,7 +114,7 @@ export default function Header() {
 
             <NavbarContent
                 className={cn(!sessionLoading ? "opacity-1" : "opacity-0",
-                    "ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 md:bg-content2 md:px-1 md:dark:bg-content1 transition-all"
+                    "-me-1 ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 md:bg-content2 md:px-1 md:dark:bg-content1 transition-all"
                 )}
                 justify="end"
             >
@@ -125,7 +126,7 @@ export default function Header() {
 
                 <NavbarItem className="flex">
                     <ThemeDropdown className="min-w-0">
-                        <Button isIconOnly radius="full" variant="light">
+                        <Button isIconOnly radius="full" variant="light" disableRipple>
                             {isHydrated && (resolvedTheme == "dark" ? (
                                 <MoonIcon className="text-default-500 size-6" />
                             ) : (
@@ -135,7 +136,7 @@ export default function Header() {
                     </ThemeDropdown>
                 </NavbarItem>
 
-                <NavbarItem className="hidden md:flex">
+                <NavbarItem className="hidden lg:flex">
                     <Button
                         as={Link}
                         href="/settings"
@@ -172,7 +173,7 @@ export default function Header() {
                                     disableRipple
                                 >
                                     <Skeleton className="rounded-full" isLoaded={!userLoading && !sessionLoading}>
-                                        <Avatar size="sm" src={user?.avatar_url} name={user?.full_name} />
+                                        <UserAvatar size="sm" user={user} />
                                     </Skeleton>
                                 </Button>
                             </DropdownTrigger>
@@ -243,7 +244,7 @@ export default function Header() {
             </NavbarContent>
 
             {/* Mobile Menu */}
-            <NavbarMenu>
+            <NavbarMenu className="z-50">
                 {menuItems.map((item) => (
                     <NavbarMenuItem
                         key={item.name}
