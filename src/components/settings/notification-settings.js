@@ -3,11 +3,16 @@ import { useSession } from '@supabase/auth-helpers-react'
 import { AutoTranslate } from 'next-auto-translate'
 import { useEntity } from '@daveyplate/supabase-swr-entities/client'
 
-import { Switch, CardBody, CardHeader } from "@nextui-org/react"
+import { Switch, CardBody, CardHeader, table } from "@nextui-org/react"
 
 export default function NotificationSettings() {
     const session = useSession()
     const { entity: metadata, updateEntity: updateMetadata } = useEntity(session ? 'metadata' : null, 'me', null, { revalidateOnFocus: false })
+
+    const notificationTypes = [
+        { table: 'whispers', label: 'Whispers' },
+        { table: 'article_comments', label: 'Article Comments' }
+    ]
 
     return (
         <>
@@ -72,33 +77,22 @@ export default function NotificationSettings() {
             </CardHeader>
 
             <CardBody className="gap-3">
-                <Switch
-                    isSelected={!!metadata?.notifications_whispers}
-                    onValueChange={(value) => updateMetadata({ notifications_whispers: value })}
-                    classNames={{
-                        base: "flex-row-reverse justify-between w-full max-w-full"
-                    }}
-                    className="bg-content2 p-4 rounded-medium"
-                    isDisabled={!metadata}
-                >
-                    <AutoTranslate tKey="whispers">
-                        Whispers
-                    </AutoTranslate>
-                </Switch>
-
-                <Switch
-                    isSelected={!!metadata?.notifications_article_comments}
-                    onValueChange={(value) => updateMetadata({ notifications_article_comments: value })}
-                    classNames={{
-                        base: "flex-row-reverse justify-between w-full max-w-full"
-                    }}
-                    className="bg-content2 p-4 rounded-medium"
-                    isDisabled={!metadata}
-                >
-                    <AutoTranslate tKey="article_comments">
-                        Article Comments
-                    </AutoTranslate>
-                </Switch>
+                {notificationTypes.map(({ table, label }) => (
+                    <Switch
+                        key={`notifications_${table}`}
+                        isSelected={!!metadata?.[`notifications_${table}`]}
+                        onValueChange={(value) => updateMetadata({ [`notifications_${table}`]: value })}
+                        classNames={{
+                            base: "flex-row-reverse justify-between w-full max-w-full"
+                        }}
+                        className="bg-content2 p-4 rounded-medium"
+                        isDisabled={!metadata}
+                    >
+                        <AutoTranslate tKey={`notifications_${table}`}>
+                            {label}
+                        </AutoTranslate>
+                    </Switch>
+                ))}
             </CardBody>
         </>
     )
