@@ -24,6 +24,7 @@ create table public.profiles (
   id uuid not null references auth.users on delete cascade,
   full_name text,
   avatar_url text,
+  banner_url text,
   bio text,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now(),

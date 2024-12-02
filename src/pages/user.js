@@ -15,11 +15,10 @@ import {
     Card,
     CardBody,
     CardHeader,
-    Chip,
     cn,
     Skeleton
 } from "@nextui-org/react"
-import { PencilIcon } from "@heroicons/react/24/outline"
+import { PencilIcon, PhotoIcon } from "@heroicons/react/24/outline"
 import { toast } from "sonner"
 
 import { createClient } from "@/utils/supabase/component"
@@ -31,6 +30,7 @@ import UserAvatar from "@/components/user-avatar"
 import UploadAvatarModal from "@/components/upload-avatar-modal"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
+import CropImageModal from "@/components/crop-image-modal"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -41,10 +41,12 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
     const userId = user_id || router.query.user_id
     const { entity: user, isLoading: userLoading } = useEntity(userId && 'profiles', userId, { lang: locale }, { fallbackData })
-    const { updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me')
+    const { updateEntity: updateUser } = useEntity(session && 'profiles', 'me', { lang: locale })
     const [lightboxOpen, setLightboxOpen] = useState(false)
-
+    const [bannerFile, setBannerFile] = useState(null)
+    const bannerUploadRef = useRef(null)
     const [avatarFile, setAvatarFile] = useState(null)
+
     const uploadRef = useRef(null)
 
     const isMe = session && userId == session.user.id
@@ -57,7 +59,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     }, [userId, user, userLoading])
 
     return (
-        <div className="flex flex-col items-center grow p-4">
+        <div className="flex flex-col items-center justify-center grow p-4">
             <PageTitle title={user?.full_name} />
 
             <OpenGraph
@@ -67,31 +69,62 @@ export default function UserPage({ user_id, user: fallbackData }) {
                 ogType="profile"
             />
 
-            <Card className="my-10 max-w-[400px]" fullWidth>
-                <CardHeader className="relative flex h-[100px] flex-col justify-end overflow-visible bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400">
-                    <OptionsDropdown
-                        className={cn(!isMe ? "opacity-100" : "opacity-0",
-                            "absolute right-3 top-3 transition-all text-white bg-background/20"
-                        )}
-                        variant="light"
-                        isDisabled={isMe}
-                    />
-
-                    <Button
-                        as={Link}
-                        href="/edit-profile"
-                        className={cn(isMe ? "opacity-100 " : "opacity-0",
-                            "absolute right-3 top-3 bg-background/20"
-                        )}
-                        radius="full"
+            <Card className="max-w-md" fullWidth>
+                <CardHeader
+                    className={cn((!user || user?.banner_url) ? "bg-default"
+                        : "bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400 ",
+                        "p-0 bg-contain bg-center aspect-[4/1]"
+                    )}
+                    style={{
+                        backgroundImage: user?.banner_url && `url(${user?.banner_url})`
+                    }}
+                >
+                    <DragDropzone
                         size="sm"
-                        variant="light"
-                        isDisabled={!isMe}
+                        label={autoTranslate("upload_banner", "Upload Banner")}
+                        openRef={bannerUploadRef}
+                        onFiles={(files) => setBannerFile(files[0])}
+                        onError={(error) => toast.error(error.message)}
+                        className="flex flex-col justify-end overflow-visible w-full h-full aspect-[4/1]"
                     >
-                        <AutoTranslate tKey="edit_profile">
-                            Edit Profile
-                        </AutoTranslate>
-                    </Button>
+                        <Button
+                            className={cn(isMe ? "opacity-100 " : "opacity-0",
+                                "absolute left-3 top-3 bg-background/40"
+                            )}
+                            isIconOnly
+                            radius="full"
+                            size="sm"
+                            variant="light"
+                            isDisabled={!isMe}
+                            onPress={() => bannerUploadRef.current()}
+                        >
+                            <PhotoIcon className="size-4" />
+                        </Button>
+
+                        <OptionsDropdown
+                            className={cn(!isMe ? "opacity-100" : "opacity-0",
+                                "absolute right-3 top-3 transition-all text-white bg-background/40"
+                            )}
+                            variant="light"
+                            isDisabled={isMe}
+                        />
+
+                        <Button
+                            as={Link}
+                            href="/edit-profile"
+                            className={cn(isMe ? "opacity-100 " : "opacity-0",
+                                "absolute right-3 top-3 bg-background/40"
+                            )}
+                            radius="full"
+                            size="sm"
+                            variant="light"
+                            isDisabled={!isMe}
+                        >
+                            <AutoTranslate tKey="edit_profile">
+                                Edit Profile
+                            </AutoTranslate>
+                        </Button>
+                    </DragDropzone>
                 </CardHeader>
 
                 <CardBody className="overflow-visible px-4">
@@ -101,9 +134,10 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         openRef={uploadRef}
                         onFiles={(files) => setAvatarFile(files[0])}
                         onError={(error) => toast.error(error.message)}
+                        className="overflow-visible z-10"
                     >
                         <div className="pt-6 pb-1 flex flex-col">
-                            <div className="-mt-20 -mb-2 mx-auto z-10">
+                            <div className="-mt-20 -mb-2 mx-auto">
                                 <Badge
                                     as={Button}
                                     isOneChar
@@ -191,6 +225,35 @@ export default function UserPage({ user_id, user: fallbackData }) {
                     updateUser({ avatar_url: url })
                 }}
                 onError={(error) => toast.error(error.message)}
+            />
+
+            <CropImageModal
+                imageFile={bannerFile}
+                setImageFile={setBannerFile}
+                onConfirm={async (file) => {
+                    const fileName = `${userId}.jpg`
+
+                    const { error: uploadError } = await supabase.storage
+                        .from("banners")
+                        .upload(fileName, file, { upsert: true })
+
+                    if (uploadError) {
+                        toast.error(uploadError.message)
+                        return false
+                    }
+
+                    const bannerUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/banners/${fileName}` + `?${new Date().getTime()}`
+                    const { error } = await updateUser({ banner_url: bannerUrl })
+
+                    if (error) {
+                        toast.error(error.message)
+                        return false
+                    }
+
+                    return true
+                }}
+                onError={(error) => toast.error(error.message)}
+                imageSize={{ width: 1600, height: 400 }}
             />
         </div>
     )
