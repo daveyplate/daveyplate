@@ -20,7 +20,7 @@ export default function LoginPage() {
     // Autotranslate the entire objects keys and values
     const localization = {}
     for (const key in defaultLocalization) {
-        localization[key] = autoTranslate(defaultLocalization[key], defaultLocalization[key])
+        localization[key] = autoTranslate(key, defaultLocalization[key])
     }
 
     return (

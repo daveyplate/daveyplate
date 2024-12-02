@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Compressor from "compressorjs"
 import AvatarEditor from "react-avatar-editor"
 
@@ -15,10 +15,8 @@ import {
     ModalFooter,
 } from "@nextui-org/react"
 
-import { CheckIcon } from "@heroicons/react/24/solid"
-
 /**
- * CropImageModal
+ * Displays a modal to crop an image
  * 
  * @param {Object} props
  * @param {File} props.imageFile - The image file to crop
@@ -54,6 +52,8 @@ export default function CropImageModal({
         full: maxImageWidth / 2
     }[radius]
 
+    useEffect(() => setImageScale(1), [imageFile])
+
     const handleConfirm = async () => {
         setProcessing(true)
 
@@ -61,27 +61,24 @@ export default function CropImageModal({
 
         // Convert the canvas blob to a file, then compress it
         canvas.toBlob(blob => {
-            const imageFile = new File([blob], "image.jpg", { type: "image/jpeg" })
+            const blobFile = new File([blob], "blob.jpg", { type: "image/jpeg" })
 
-            new Compressor(imageFile, {
+            new Compressor(blobFile, {
                 maxWidth: imageSize.width,
                 maxHeight: imageSize.height,
                 resize: "cover",
                 mimeType: "image/jpeg",
                 success: async (compressedFile) => {
                     const successful = await onConfirm(compressedFile)
-                    if (successful) {
-                        setImageFile(null)
-                    }
+                    if (successful) setImageFile(null)
+
                     setProcessing(false)
-                    setImageScale(1)
                 },
                 error(error) {
                     console.error(error)
                     onError && onError(error)
                     setImageFile(null)
                     setProcessing(false)
-                    setImageScale(1)
                 }
             })
         }, 'image/jpeg')
@@ -90,11 +87,7 @@ export default function CropImageModal({
     return (
         <Modal
             isOpen={!!imageFile}
-            onOpenChange={() => {
-                setImageFile(null)
-                setImageScale(1)
-            }}
-            classNames={{ closeButton: "text-xl" }}
+            onOpenChange={() => setImageFile(null)}
             placement="center"
         >
             <ModalContent>
@@ -106,7 +99,7 @@ export default function CropImageModal({
                             </AutoTranslate>
                         </ModalHeader>
 
-                        <ModalBody className="items-center">
+                        <ModalBody className="items-center gap-4">
                             <AvatarEditor
                                 className="rounded-xl"
                                 borderRadius={calculatedRadius}
@@ -118,10 +111,9 @@ export default function CropImageModal({
                             />
 
                             <Slider
-                                size="lg"
                                 color="foreground"
                                 aria-label="Image Scale"
-                                className="w-[304px]"
+                                className="w-[306px]"
                                 value={imageScale}
                                 maxValue={3}
                                 minValue={1}
@@ -132,7 +124,7 @@ export default function CropImageModal({
                         </ModalBody>
 
                         <ModalFooter>
-                            <Button variant="light" onPress={onClose} size="lg">
+                            <Button variant="light" onPress={onClose}>
                                 <AutoTranslate tKey="cancel">
                                     Cancel
                                 </AutoTranslate>
@@ -141,10 +133,6 @@ export default function CropImageModal({
                             <Button
                                 onPress={handleConfirm}
                                 color="primary"
-                                size="lg"
-                                startContent={!processing &&
-                                    <CheckIcon className="size-5 -ms-1" />
-                                }
                                 spinner={<Spinner color="current" size="sm" />}
                                 isLoading={processing}
                             >
