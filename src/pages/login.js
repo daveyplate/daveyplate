@@ -3,7 +3,7 @@ import { useSessionContext } from "@supabase/auth-helpers-react"
 import { Auth, defaultLocalization } from "@daveyplate/supabase-auth-nextui"
 import { useAutoTranslate } from 'next-auto-translate'
 
-import { Card, CardBody, cn } from "@nextui-org/react"
+import { cn } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
