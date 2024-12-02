@@ -7,38 +7,40 @@ import { AutoTranslate } from 'next-auto-translate'
 import {
     Button,
     Slider,
-    Spinner,
     Modal,
     ModalContent,
     ModalHeader,
     ModalBody,
     ModalFooter,
+    ModalProps
 } from "@nextui-org/react"
 
 /**
  * Displays a modal to crop an image
  * 
- * @param {Object} props
- * @param {File} props.imageFile - The image file to crop
- * @param {(file: File) => void} props.setImageFile - Set the image file
- * @param {Object} props.imageSize - The desired size of the image to crop, with width and height
- * @param {number} props.imageSize.width - The width of the image
- * @param {number} props.imageSize.height - The height of the image
- * @param {("sm"| "md" | "lg" | "xl" | "full")} [props.radius="sm"] - The border radius of the image
- * @param {(file: File) => Promise<boolean>} props.onConfirm - Asynchronous callback when the image is confirmed, returns true if successful
- * @param {(error: Error) => void} props.onError - Callback when an error occurs
+ * @typedef {object} CropImageModalProps
+ * @property {File} imageFile - The image file to crop
+ * @property {(file: File) => void} setImageFile - Set the image file
+ * @property {object} imageSize - The desired size of the image to crop, with width and height
+ * @property {number} imageSize.width - The width of the image
+ * @property {number} imageSize.height - The height of the image
+ * @property {("sm"| "md" | "lg" | "xl" | "full" | "none")} [imageRadius="sm"] - The border radius of the image
+ * @property {(croppedImage: File) => void} onConfirm - Callback with the cropped image file
+ * @property {(error: Error) => void} onError - Callback when an error occurs
+ * 
+ * @param {CropImageModalProps & ModalProps} props
  * @returns {JSX.Element}
  */
 export default function CropImageModal({
     imageFile,
     setImageFile,
     imageSize,
+    imageRadius = "md",
     onConfirm,
-    radius = "md",
-    onError
+    onError,
+    ...props
 }) {
     const [imageScale, setImageScale] = useState(1)
-    const [processing, setProcessing] = useState(false)
     const editor = useRef(null)
 
     const maxImageWidth = 256
@@ -49,14 +51,13 @@ export default function CropImageModal({
         md: maxImageWidth / 16,
         lg: maxImageWidth / 8,
         xl: maxImageWidth / 4,
-        full: maxImageWidth / 2
-    }[radius]
+        full: maxImageWidth / 2,
+        none: 0
+    }[imageRadius]
 
     useEffect(() => setImageScale(1), [imageFile])
 
     const handleConfirm = async () => {
-        setProcessing(true)
-
         const canvas = editor.current.getImage()
 
         // Convert the canvas blob to a file, then compress it
@@ -69,16 +70,13 @@ export default function CropImageModal({
                 resize: "cover",
                 mimeType: "image/jpeg",
                 success: async (compressedFile) => {
-                    const successful = await onConfirm(compressedFile)
-                    if (successful) setImageFile(null)
-
-                    setProcessing(false)
+                    onConfirm && onConfirm(compressedFile)
+                    setImageFile(null)
                 },
                 error(error) {
                     console.error(error)
                     onError && onError(error)
                     setImageFile(null)
-                    setProcessing(false)
                 }
             })
         }, 'image/jpeg')
@@ -89,6 +87,7 @@ export default function CropImageModal({
             isOpen={!!imageFile}
             onOpenChange={() => setImageFile(null)}
             placement="center"
+            {...props}
         >
             <ModalContent>
                 {(onClose) => (
@@ -119,7 +118,6 @@ export default function CropImageModal({
                                 minValue={1}
                                 step={0.01}
                                 onChange={(value) => setImageScale(value)}
-                                isDisabled={processing}
                             />
                         </ModalBody>
 
@@ -133,8 +131,6 @@ export default function CropImageModal({
                             <Button
                                 onPress={handleConfirm}
                                 color="primary"
-                                spinner={<Spinner color="current" size="sm" />}
-                                isLoading={processing}
                             >
                                 <AutoTranslate tKey="confirm">
                                     Confirm

@@ -44,6 +44,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const { updateEntity: updateUser } = useEntity(session && 'profiles', 'me', { lang: locale })
     const [lightboxOpen, setLightboxOpen] = useState(false)
     const [bannerFile, setBannerFile] = useState(null)
+    const [uploadingBanner, setUploadingBanner] = useState(false)
     const bannerUploadRef = useRef(null)
     const [avatarFile, setAvatarFile] = useState(null)
 
@@ -73,7 +74,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                 <CardHeader
                     className={cn((!user || user?.banner_url) ? "bg-default"
                         : "bg-gradient-to-br from-indigo-300 via-blue-300 to-primary-400 ",
-                        "p-0 bg-contain bg-center aspect-[4/1]"
+                        "p-0 bg-contain bg-center"
                     )}
                     style={{
                         backgroundImage: user?.banner_url && `url(${user?.banner_url})`
@@ -87,43 +88,45 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         onError={(error) => toast.error(error.message)}
                         className="flex flex-col justify-end overflow-visible w-full h-full aspect-[4/1]"
                     >
-                        <Button
-                            className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                "absolute left-3 top-3 bg-background/40"
-                            )}
-                            isIconOnly
-                            radius="full"
-                            size="sm"
-                            variant="light"
-                            isDisabled={!isMe}
-                            onPress={() => bannerUploadRef.current()}
-                        >
-                            <PhotoIcon className="size-4" />
-                        </Button>
+                        <Skeleton isLoaded={!!user && !uploadingBanner} className="w-full h-full">
+                            <Button
+                                className={cn(isMe ? "opacity-100 " : "opacity-0",
+                                    "absolute left-3 top-3 bg-background/40"
+                                )}
+                                isIconOnly
+                                radius="full"
+                                size="sm"
+                                variant="light"
+                                isDisabled={!isMe}
+                                onPress={() => bannerUploadRef.current()}
+                            >
+                                <PhotoIcon className="size-4" />
+                            </Button>
 
-                        <OptionsDropdown
-                            className={cn(!isMe ? "opacity-100" : "opacity-0",
-                                "absolute right-3 top-3 transition-all text-white bg-background/40"
-                            )}
-                            variant="light"
-                            isDisabled={isMe}
-                        />
+                            <OptionsDropdown
+                                className={cn(!isMe ? "opacity-100" : "opacity-0",
+                                    "absolute right-3 top-3 transition-all text-white bg-background/40"
+                                )}
+                                variant="light"
+                                isDisabled={isMe}
+                            />
 
-                        <Button
-                            as={Link}
-                            href="/edit-profile"
-                            className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                "absolute right-3 top-3 bg-background/40"
-                            )}
-                            radius="full"
-                            size="sm"
-                            variant="light"
-                            isDisabled={!isMe}
-                        >
-                            <AutoTranslate tKey="edit_profile">
-                                Edit Profile
-                            </AutoTranslate>
-                        </Button>
+                            <Button
+                                as={Link}
+                                href="/edit-profile"
+                                className={cn(isMe ? "opacity-100 " : "opacity-0",
+                                    "absolute right-3 top-3 bg-background/40"
+                                )}
+                                radius="full"
+                                size="sm"
+                                variant="light"
+                                isDisabled={!isMe}
+                            >
+                                <AutoTranslate tKey="edit_profile">
+                                    Edit Profile
+                                </AutoTranslate>
+                            </Button>
+                        </Skeleton>
                     </DragDropzone>
                 </CardHeader>
 
@@ -230,30 +233,28 @@ export default function UserPage({ user_id, user: fallbackData }) {
             <CropImageModal
                 imageFile={bannerFile}
                 setImageFile={setBannerFile}
-                onConfirm={async (file) => {
-                    const fileName = `${userId}.jpg`
+                imageSize={{ width: 1600, height: 400 }}
+                imageRadius="sm"
+                onConfirm={async (croppedImage) => {
+                    setUploadingBanner(true)
 
+                    const fileName = `${userId}.jpg`
                     const { error: uploadError } = await supabase.storage
                         .from("banners")
-                        .upload(fileName, file, { upsert: true })
+                        .upload(fileName, croppedImage, { upsert: true })
 
                     if (uploadError) {
-                        toast.error(uploadError.message)
-                        return false
+                        setUploadingBanner(false)
+                        return toast.error(uploadError.message)
                     }
 
                     const bannerUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/banners/${fileName}` + `?${new Date().getTime()}`
                     const { error } = await updateUser({ banner_url: bannerUrl })
 
-                    if (error) {
-                        toast.error(error.message)
-                        return false
-                    }
-
-                    return true
+                    setUploadingBanner(false)
+                    error && toast.error(error.message)
                 }}
                 onError={(error) => toast.error(error.message)}
-                imageSize={{ width: 1600, height: 400 }}
             />
         </div>
     )

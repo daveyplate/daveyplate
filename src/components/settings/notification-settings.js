@@ -3,7 +3,7 @@ import { useSession } from '@supabase/auth-helpers-react'
 import { AutoTranslate } from 'next-auto-translate'
 import { useEntity } from '@daveyplate/supabase-swr-entities/client'
 
-import { Switch, CardBody, CardHeader, table } from "@nextui-org/react"
+import { Switch, CardBody, CardHeader } from "@nextui-org/react"
 
 export default function NotificationSettings() {
     const session = useSession()
@@ -64,6 +64,34 @@ export default function NotificationSettings() {
                 >
                     <AutoTranslate tKey="badge_count">
                         Badge Count
+                    </AutoTranslate>
+                </Switch>
+
+                <Switch
+                    isSelected={!!metadata?.notifications_email}
+                    onValueChange={(value) => updateMetadata({ notifications_email: value })}
+                    classNames={{
+                        base: "flex-row-reverse justify-between w-full max-w-full"
+                    }}
+                    className="bg-content2 p-4 rounded-medium"
+                    isDisabled={!metadata}
+                >
+                    <AutoTranslate tKey="email">
+                        Email
+                    </AutoTranslate>
+                </Switch>
+
+                <Switch
+                    isSelected={!!metadata?.notifications_sms}
+                    onValueChange={(value) => updateMetadata({ notifications_sms: value })}
+                    classNames={{
+                        base: "flex-row-reverse justify-between w-full max-w-full"
+                    }}
+                    className="bg-content2 p-4 rounded-medium"
+                    isDisabled={!metadata}
+                >
+                    <AutoTranslate tKey="sms">
+                        SMS
                     </AutoTranslate>
                 </Switch>
             </CardBody>
