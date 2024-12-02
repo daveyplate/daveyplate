@@ -60,7 +60,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     }, [userId, user, userLoading])
 
     return (
-        <div className="flex flex-col items-center justify-center grow p-4">
+        <div className="flex flex-col items-center my-10 grow p-4">
             <PageTitle title={user?.full_name} />
 
             <OpenGraph
@@ -91,7 +91,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         <Skeleton isLoaded={!!user && !uploadingBanner} className="w-full h-full">
                             <Button
                                 className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                    "absolute left-3 top-3 bg-background/40"
+                                    user?.banner_url ? "bg-background/40" : "bg-background/20",
+                                    "absolute left-3 top-3"
                                 )}
                                 isIconOnly
                                 radius="full"
@@ -105,7 +106,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
                             <OptionsDropdown
                                 className={cn(!isMe ? "opacity-100" : "opacity-0",
-                                    "absolute right-3 top-3 transition-all text-white bg-background/40"
+                                    user?.banner_url ? "bg-background/40" : "bg-background/20",
+                                    "absolute right-3 top-3 transition-all text-white"
                                 )}
                                 variant="light"
                                 isDisabled={isMe}
@@ -115,7 +117,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                 as={Link}
                                 href="/edit-profile"
                                 className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                    "absolute right-3 top-3 bg-background/40"
+                                    user?.banner_url ? "bg-background/40" : "bg-background/20",
+                                    "absolute right-3 top-3"
                                 )}
                                 radius="full"
                                 size="sm"
@@ -140,7 +143,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         className="overflow-visible z-10"
                     >
                         <div className="pt-6 pb-1 flex flex-col">
-                            <div className="-mt-20 -mb-2 mx-auto">
+                            <div className="-mt-20 sm:-mt-[5.4rem] -mb-2 mx-auto">
                                 <Badge
                                     as={Button}
                                     isOneChar
@@ -154,11 +157,11 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                     isInvisible={!isMe}
                                     onPress={() => uploadRef.current()}
                                 >
-                                    <Skeleton isLoaded={!!user} className="rounded-full w-20 h-20">
+                                    <Skeleton isLoaded={!!user} className="rounded-full w-20 h-20 sm:h-24 sm:w-24">
                                         <UserAvatar
                                             as={Button}
                                             isIconOnly
-                                            className="h-20 w-20 text-xl"
+                                            className="h-20 w-20 sm:h-24 sm:w-24 text-xl"
                                             size="lg"
                                             user={user}
                                             onPress={() => setLightboxOpen(true)}

@@ -66,6 +66,30 @@ export default function NotificationSettings() {
                         Badge Count
                     </AutoTranslate>
                 </Switch>
+            </CardBody>
+
+            <CardHeader className="px-4 pb-0">
+                <p className="text-large">
+                    <AutoTranslate tKey="notification_methods">
+                        Notification Methods
+                    </AutoTranslate>
+                </p>
+            </CardHeader>
+
+            <CardBody className="gap-3">
+                <Switch
+                    isSelected={!!metadata?.notifications_push}
+                    onValueChange={(value) => updateMetadata({ notifications_push: value })}
+                    classNames={{
+                        base: "flex-row-reverse justify-between w-full max-w-full"
+                    }}
+                    className="bg-content2 p-4 rounded-medium"
+                    isDisabled={!metadata}
+                >
+                    <AutoTranslate tKey="push">
+                        Push
+                    </AutoTranslate>
+                </Switch>
 
                 <Switch
                     isSelected={!!metadata?.notifications_email}
