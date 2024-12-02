@@ -29,7 +29,7 @@ export default () => {
                     localeRouter.replace("/login")
                     clearCache()
                 })
-        }, 100)
+        }, 500)
     }, [])
 
     return (
