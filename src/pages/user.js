@@ -143,7 +143,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         className="overflow-visible z-10"
                     >
                         <div className="pt-6 pb-1 flex flex-col">
-                            <div className="-mt-20 sm:-mt-[5.4rem] -mb-2 mx-auto">
+                            <div className="-mt-20 -mb-2 mx-auto">
                                 <Badge
                                     as={Button}
                                     isOneChar
@@ -157,11 +157,11 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                     isInvisible={!isMe}
                                     onPress={() => uploadRef.current()}
                                 >
-                                    <Skeleton isLoaded={!!user} className="rounded-full w-20 h-20 sm:h-24 sm:w-24">
+                                    <Skeleton isLoaded={!!user} className="rounded-full size-fit">
                                         <UserAvatar
                                             as={Button}
                                             isIconOnly
-                                            className="h-20 w-20 sm:h-24 sm:w-24 text-xl"
+                                            className="h-20 w-20 text-xl"
                                             size="lg"
                                             user={user}
                                             onPress={() => setLightboxOpen(true)}
