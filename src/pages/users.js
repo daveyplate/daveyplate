@@ -77,14 +77,14 @@ export default function UsersPage() {
                             fullWidth
                         >
                             <CardBody className="p-4 flex-row items-center gap-3">
-                                <UserAvatar user={user} />
+                                <UserAvatar user={user} size="lg" />
 
                                 <div className="flex flex-col items-start justify-center">
-                                    <p className="font-medium text-small">
+                                    <p className="font-medium">
                                         {user.full_name || "Unnamed"}
                                     </p>
 
-                                    <span className="text-tiny text-default-500">
+                                    <span className="text-small text-default-500">
                                         <AutoTranslate tKey="subscription">
                                             Subscription:
                                         </AutoTranslate>
