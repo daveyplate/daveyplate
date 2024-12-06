@@ -87,9 +87,7 @@ export default function IndexPage() {
                                     }
                                     onPress={() => toast(autoTranslate("toast", "Toast"))}
                                 >
-                                    <AutoTranslate tKey="default">
-                                        Default
-                                    </AutoTranslate>
+                                    {autoTranslate("default", "Default")}
                                 </DropdownItem>
 
                                 <DropdownItem
@@ -99,7 +97,7 @@ export default function IndexPage() {
                                     }
                                     onPress={() => toast.success(autoTranslate("success", "Success"))}
                                 >
-                                    Success
+                                    {autoTranslate("success", "Success")}
                                 </DropdownItem>
 
                                 <DropdownItem
@@ -109,9 +107,7 @@ export default function IndexPage() {
                                     }
                                     onPress={() => toast.info(autoTranslate('info', 'Info'))}
                                 >
-                                    <AutoTranslate tKey="info">
-                                        Info
-                                    </AutoTranslate>
+                                    {autoTranslate("info", "Info")}
                                 </DropdownItem>
 
                                 <DropdownItem
@@ -121,9 +117,7 @@ export default function IndexPage() {
                                     }
                                     onPress={() => toast.warning(autoTranslate("warning", "Warning"))}
                                 >
-                                    <AutoTranslate tKey="warning">
-                                        Warning
-                                    </AutoTranslate>
+                                    {autoTranslate("warning", "Warning")}
                                 </DropdownItem>
 
                                 <DropdownItem
@@ -133,9 +127,7 @@ export default function IndexPage() {
                                     }
                                     onPress={() => toast.error(autoTranslate("error", "Error"))}
                                 >
-                                    <AutoTranslate tKey="error">
-                                        Error
-                                    </AutoTranslate>
+                                    {autoTranslate("error", "Error")}
                                 </DropdownItem>
 
                                 <DropdownItem
@@ -150,9 +142,7 @@ export default function IndexPage() {
                                         }, 4000)
                                     }}
                                 >
-                                    <AutoTranslate tKey="loading">
-                                        Loading
-                                    </AutoTranslate>
+                                    {autoTranslate("loading", "Loading")}
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>

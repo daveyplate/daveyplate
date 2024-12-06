@@ -19,7 +19,6 @@ import { NextUIProvider } from "@nextui-org/react"
 import { toast } from 'sonner'
 
 import { AutoTranslateProvider } from 'next-auto-translate'
-import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
 import { PageTitleProvider } from '@daveyplate/next-page-title'
 
 import i18nConfig from 'i18n.config'
@@ -42,7 +41,6 @@ const localeValues = [
 ]
 
 export default function Providers({ children, ...pageProps }) {
-    useWindowFocusBlur()
     const localeRouter = useLocaleRouter()
     const pathname = usePathname()
     const supabase = createClient()

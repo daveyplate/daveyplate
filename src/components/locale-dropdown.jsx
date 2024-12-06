@@ -45,7 +45,7 @@ export function LocaleDropdown({ children, ...props }) {
     }
 
     return (
-        <Dropdown {...props}>
+        <Dropdown placement="auto" {...props}>
             <DropdownTrigger>
                 {children}
             </DropdownTrigger>
