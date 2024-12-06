@@ -27,7 +27,6 @@ import { getLocalePaths } from "@/i18n/locale-paths"
 import { Link } from "@/i18n/routing"
 
 import UserAvatar from "@/components/user-avatar"
-import UploadAvatarModal from "@/components/upload-avatar-modal"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
 import CropImageModal from "@/components/crop-image-modal"
@@ -44,6 +43,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     const { updateEntity: updateUser } = useEntity(session && 'profiles', 'me', { lang: locale })
     const [lightboxOpen, setLightboxOpen] = useState(false)
     const [bannerFile, setBannerFile] = useState(null)
+    const [uploadingAvatar, setUploadingAvatar] = useState(false)
     const [uploadingBanner, setUploadingBanner] = useState(false)
     const bannerUploadRef = useRef(null)
     const [avatarFile, setAvatarFile] = useState(null)
@@ -157,7 +157,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                     isInvisible={!isMe}
                                     onPress={() => uploadRef.current()}
                                 >
-                                    <Skeleton isLoaded={!!user} className="rounded-full size-fit">
+                                    <Skeleton isLoaded={!!user && !uploadingAvatar} className="rounded-full size-fit">
                                         <UserAvatar
                                             as={Button}
                                             isIconOnly
@@ -223,12 +223,28 @@ export default function UserPage({ user_id, user: fallbackData }) {
                 slides={[{ src: user?.avatar_url }]}
             />
 
-            <UploadAvatarModal
-                avatarFile={avatarFile}
-                setAvatarFile={setAvatarFile}
-                onUpload={async (url) => {
-                    supabase.auth.updateUser({ data: { avatar_url: url } })
-                    updateUser({ avatar_url: url })
+            <CropImageModal
+                imageFile={avatarFile}
+                setImageFile={setAvatarFile}
+                imageSize={{ width: 512, height: 512 }}
+                imageRadius="full"
+                onConfirm={async (croppedImage) => {
+                    setUploadingAvatar(true)
+                    const fileName = `${userId}.jpg`
+                    const { error: uploadError } = await supabase.storage
+                        .from("avatars")
+                        .upload(fileName, croppedImage, { upsert: true })
+
+                    if (uploadError) {
+                        setUploadingAvatar(false)
+                        return toast.error(uploadError.message)
+                    }
+
+                    const avatarUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/avatars/${fileName}` + `?${new Date().getTime()}`
+                    const { error } = await updateUser({ avatar_url: avatarUrl })
+
+                    setUploadingAvatar(false)
+                    error && toast.error(error.message)
                 }}
                 onError={(error) => toast.error(error.message)}
             />

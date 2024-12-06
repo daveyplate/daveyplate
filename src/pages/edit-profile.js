@@ -29,7 +29,7 @@ import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
 import UserAvatar from '@/components/user-avatar'
-import UploadAvatarModal from '@/components/upload-avatar-modal'
+import CropImageModal from '@/components/crop-image-modal'
 
 export default function EditProfile() {
     const supabase = createClient()
@@ -45,6 +45,7 @@ export default function EditProfile() {
     const [bioError, setBioError] = useState(null)
     const [avatarFile, setAvatarFile] = useState(null)
     const [confirm, setConfirm] = useState(null)
+    const [uploadingAvatar, setUploadingAvatar] = useState(false)
 
     const uploadRef = useRef(null)
 
@@ -155,7 +156,7 @@ export default function EditProfile() {
                                 <Skeleton
                                     as={Button}
                                     isIconOnly
-                                    isLoaded={!!user}
+                                    isLoaded={!!user && !uploadingAvatar}
                                     size="lg"
                                     className="rounded-full !overflow-hidden"
                                     onPress={() => uploadRef.current()}
@@ -262,12 +263,28 @@ export default function EditProfile() {
                 </CardBody>
             </Card>
 
-            <UploadAvatarModal
-                avatarFile={avatarFile}
-                setAvatarFile={setAvatarFile}
-                onUpload={async (url) => {
-                    supabase.auth.updateUser({ data: { avatar_url: url } })
-                    updateUser({ avatar_url: url })
+            <CropImageModal
+                imageFile={avatarFile}
+                setImageFile={setAvatarFile}
+                imageSize={{ width: 512, height: 512 }}
+                imageRadius="full"
+                onConfirm={async (croppedImage) => {
+                    setUploadingAvatar(true)
+                    const fileName = `${user.id}.jpg`
+                    const { error: uploadError } = await supabase.storage
+                        .from("avatars")
+                        .upload(fileName, croppedImage, { upsert: true })
+
+                    if (uploadError) {
+                        setUploadingAvatar(false)
+                        return toast.error(uploadError.message)
+                    }
+
+                    const avatarUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/avatars/${fileName}` + `?${new Date().getTime()}`
+                    const { error } = await updateUser({ avatar_url: avatarUrl })
+
+                    setUploadingAvatar(false)
+                    error && toast.error(error.message)
                 }}
                 onError={(error) => toast.error(error.message)}
             />
@@ -276,7 +293,7 @@ export default function EditProfile() {
                 confirm={confirm}
                 setConfirm={setConfirm}
             />
-        </div >
+        </div>
     )
 }
 
