@@ -34,9 +34,16 @@ export default function MetaTheme() {
         <Head>
             <meta
                 name="theme-color"
-                content={resolvedTheme === 'dark' ? darkBackground : lightBackground}
+                content={resolvedTheme == 'dark' ? darkBackground : lightBackground}
             />
-            <link rel="manifest" href={resolvedTheme === 'dark' ? "/manifest-dark.json" : "/manifest.json"} />
+
+            <link
+                rel="manifest"
+                href={resolvedTheme == 'dark'
+                    ? "/manifest-dark.json"
+                    : "/manifest.json"
+                }
+            />
         </Head>
     )
 }
