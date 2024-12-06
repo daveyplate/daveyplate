@@ -41,7 +41,7 @@ import {
 } from "@heroicons/react/24/outline"
 
 import { ThemeDropdown } from "@/components/theme-dropdown"
-import { getPathname } from "@/i18n/routing"
+import { getPathname, useLocaleRouter } from "@/i18n/routing"
 import { useIsHydrated } from "@/hooks/useIsHydrated"
 
 import Logo from "@/components/logo"
@@ -60,6 +60,7 @@ const menuItems = [
 
 export default function Header() {
     const router = useRouter()
+    const localeRouter = useLocaleRouter()
     const { session, isLoading: sessionLoading } = useSessionContext()
     const locale = useLocale()
     const isHydrated = useIsHydrated()
@@ -195,7 +196,7 @@ export default function Header() {
 
                                     {session && (
                                         <DropdownItem
-                                            href="/edit-profile"
+                                            onPress={() => localeRouter.push("/edit-profile")}
                                             startContent={<PencilIcon className="size-5" />}
                                         >
                                             {autoTranslate("edit_profile", "Edit Profile")}
@@ -204,7 +205,7 @@ export default function Header() {
 
                                     {!session && (
                                         <DropdownItem
-                                            href="/login"
+                                            onPress={() => localeRouter.push("/login")}
                                             startContent={<ArrowRightEndOnRectangleIcon className="size-5" />}
                                         >
                                             {autoTranslate("log_in", "Log In")}
@@ -213,7 +214,7 @@ export default function Header() {
 
                                     {!session && (
                                         <DropdownItem
-                                            href="/signup"
+                                            onPress={() => localeRouter.push("/signup")}
                                             startContent={<UserPlusIcon className="size-5" />}
                                         >
                                             {autoTranslate("sign_up", "Sign Up")}
@@ -221,7 +222,7 @@ export default function Header() {
                                     )}
 
                                     <DropdownItem
-                                        href={"/settings"}
+                                        onPress={() => localeRouter.push("/settings")}
                                         startContent={<Cog6ToothIcon className="size-5" />}
                                     >
                                         {autoTranslate('settings', 'Settings')}
@@ -229,7 +230,7 @@ export default function Header() {
 
                                     {session &&
                                         <DropdownItem
-                                            href={"/logout"}
+                                            onPress={() => localeRouter.push("/logout")}
                                             color="danger"
                                             startContent={<ArrowLeftStartOnRectangleIcon className="size-5" />}
                                         >
