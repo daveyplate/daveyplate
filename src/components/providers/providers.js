@@ -2,8 +2,6 @@ import { useEffect } from 'react'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import { SWRConfig } from "swr"
 import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
-import PullToRefresh from 'pulltorefreshjs'
-import ReactDOMServer from 'react-dom/server'
 import { NuqsAdapter } from 'nuqs/adapters/next/pages'
 
 import { SpeedInsights } from '@vercel/speed-insights/react'
@@ -17,7 +15,7 @@ TimeAgo.addLocale(de)
 TimeAgo.setDefaultLocale('en')
 
 import { ThemeProvider } from "next-themes"
-import { NextUIProvider, Spinner } from "@nextui-org/react"
+import { NextUIProvider } from "@nextui-org/react"
 import { toast } from 'sonner'
 
 import { AutoTranslateProvider } from 'next-auto-translate'
@@ -31,9 +29,7 @@ import { iOS } from '@/utils/utils'
 
 import MetaTheme from "@/components/providers/meta-theme"
 import ToastProvider from "@/components/providers/toast-provider"
-import CheckoutStatus from "@/components/providers/checkout-status"
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
-import { ArrowDownIcon } from '@heroicons/react/24/outline'
 
 const localeValues = [
     'fr-FR', 'fr-CA', 'de-DE', 'en-US', 'en-GB', 'ja-JP',
