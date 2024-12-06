@@ -10,9 +10,10 @@ import { useAutoTranslate } from 'next-auto-translate'
 
 import UserAvatar from '@/components/user-avatar'
 import { localeToCountry } from '../locale-dropdown'
-import { Link } from "@/i18n/routing"
+import { getPathname, Link } from "@/i18n/routing"
 import { useSession } from '@supabase/auth-helpers-react'
 import { toast } from 'sonner'
+import { useRouter } from 'next/router'
 
 export default memo(({
     message,
@@ -25,6 +26,7 @@ export default memo(({
     updateMessage,
     setWhisperUser
 }) => {
+    const router = useRouter()
     const session = useSession()
     const locale = useLocale()
     const { autoTranslate } = useAutoTranslate("message")
@@ -91,14 +93,18 @@ export default memo(({
         >
             <Dropdown>
                 <DropdownTrigger>
-                    <UserAvatar as={Button} isIconOnly user={message.user} />
+                    <Button isIconOnly radius="full">
+                        <UserAvatar user={message.user} />
+                    </Button>
                 </DropdownTrigger>
 
                 <DropdownMenu itemClasses={{ title: "!text-base", base: "gap-3 px-3" }}>
                     <DropdownItem
-                        as={Link}
-                        href={`/user?user_id=${message.user_id}`}
-                        linkAs={`/user/${message.user_id}`}
+                        onPress={() => router.push(getPathname({
+                            href: `/user?user_id=${message.user_id}`, locale
+                        }), getPathname({
+                            href: `/user/${message.user_id}`, locale
+                        }))}
                         startContent={<UserIcon className="size-5" />}
                     >
                         {autoTranslate('view_profile', 'View Profile')}
