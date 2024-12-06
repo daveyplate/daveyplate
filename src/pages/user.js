@@ -29,7 +29,7 @@ import { Link } from "@/i18n/routing"
 import UserAvatar from "@/components/user-avatar"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
-import CropImageModal from "@/components/crop-image-modal"
+import { CropImageModal, defaultLocalization } from "@daveyplate/nextui-crop-image-modal"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -52,6 +52,11 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
     const isMe = session && userId == session.user.id
     const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
+
+    const localization = {}
+    for (const key in defaultLocalization) {
+        localization[key] = autoTranslate(key, defaultLocalization[key])
+    }
 
     useEffect(() => {
         if (userId && !userLoading && !user) {
@@ -247,6 +252,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                     error && toast.error(error.message)
                 }}
                 onError={(error) => toast.error(error.message)}
+                localization={localization}
             />
 
             <CropImageModal
@@ -274,6 +280,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                     error && toast.error(error.message)
                 }}
                 onError={(error) => toast.error(error.message)}
+                localization={localization}
             />
         </div>
     )

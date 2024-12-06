@@ -29,7 +29,7 @@ import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
 import UserAvatar from '@/components/user-avatar'
-import CropImageModal from '@/components/crop-image-modal'
+import { CropImageModal } from '@daveyplate/nextui-crop-image-modal'
 
 export default function EditProfile() {
     const supabase = createClient()
