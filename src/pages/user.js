@@ -9,7 +9,7 @@ import { getLocaleValue, isExport, useEntity } from "@daveyplate/supabase-swr-en
 import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
-import { CloudArrowUpIcon, PencilIcon, PhotoIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { CloudArrowUpIcon, PencilIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline"
 import {
     Badge,
     Button,
@@ -115,7 +115,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                     </Button>
                                 </DropdownTrigger>
 
-                                <DropdownMenu>
+                                <DropdownMenu variant="flat">
                                     <DropdownItem
                                         color="success"
                                         startContent={<CloudArrowUpIcon className="size-5" />}
@@ -136,12 +136,6 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                             {autoTranslate("delete_banner", "Delete Banner")}
                                         </DropdownItem>
                                     ) : <></>}
-
-                                    <DropdownItem
-                                        startContent={<XMarkIcon className="size-5" />}
-                                    >
-                                        {autoTranslate("cancel", "Cancel")}
-                                    </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
 
