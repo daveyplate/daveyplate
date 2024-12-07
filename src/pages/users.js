@@ -1,19 +1,18 @@
-import { useState } from "react"
-import { useLocale } from "next-intl"
 import { useDebounce } from "@uidotdev/usehooks"
+import { useLocale } from "next-intl"
+import { useState } from "react"
 
-import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { useEntities } from "@daveyplate/supabase-swr-entities/client"
+import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
-import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
+import { Card, CardBody, Input, Skeleton, User, cn } from "@nextui-org/react"
 
-import { Link } from "@/i18n/routing"
 import { getLocalePaths } from "@/i18n/locale-paths"
+import { Link } from "@/i18n/routing"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { isExport } from "@/utils/utils"
 
-import UserAvatar from "@/components/user-avatar"
 
 export default function UsersPage() {
     const locale = useLocale()
@@ -25,8 +24,8 @@ export default function UsersPage() {
     const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
     return (
-        <div>
-            <div className="sticky top-0 min-h-[60px] md:min-h-[76px] z-40 bg-background/70 backdrop-blur-lg p-4 items-center flex flex-col">
+        <div className="p-4">
+            <div className="flex flex-col gap-4 max-w-xl mx-auto">
                 <Input
                     fullWidth
                     isClearable
@@ -38,53 +37,47 @@ export default function UsersPage() {
                     onValueChange={setSearch}
                     className="pt-safe max-w-xl"
                 />
-            </div>
 
-            <div className="p-4">
-                <div className="flex flex-col gap-4 max-w-xl mx-auto">
-                    {!users?.length && !isLoading && (
-                        <Card fullWidth>
-                            <CardBody className="p-8">
-                                <AutoTranslate tKey="no_users">
-                                    No users found...
-                                </AutoTranslate>
-                            </CardBody>
-                        </Card>
-                    )}
+                {!users?.length && !isLoading && (
+                    <Card>
+                        <CardBody className="p-8">
+                            <AutoTranslate tKey="no_users">
+                                No users found...
+                            </AutoTranslate>
+                        </CardBody>
+                    </Card>
+                )}
 
-                    {isLoading && !users && [...Array(8)].fill({}).map((_, index) => (
-                        <Card key={index} fullWidth>
-                            <CardBody className="p-4">
-                                <div className="flex items-center gap-3">
-                                    <Skeleton className="size-10 rounded-full" />
+                {isLoading && !users && [...Array(8)].fill({}).map((_, index) => (
+                    <Card key={index}>
+                        <CardBody className="p-4">
+                            <div className="flex items-center gap-2">
+                                <Skeleton className="size-10 rounded-full" />
 
-                                    <div className="space-y-1">
-                                        <Skeleton className="h-4 w-[100px] rounded-full" />
-                                        <Skeleton className="h-4 w-[150px] rounded-full" />
-                                    </div>
+                                <div className="space-y-1">
+                                    <Skeleton className="h-3.5 w-[100px] rounded-full" />
+                                    <Skeleton className="h-3.5 w-[150px] rounded-full" />
                                 </div>
-                            </CardBody>
-                        </Card>
-                    ))}
+                            </div>
+                        </CardBody>
+                    </Card>
+                ))}
 
-                    {users?.map((user, index) => (
-                        <Card
-                            key={index}
-                            as={Link}
-                            href={`/user?user_id=${user.id}`}
-                            linkAs={`/user/${user.id}`}
-                            isPressable
-                            fullWidth
-                        >
-                            <CardBody className="p-4 flex-row items-center gap-3">
-                                <UserAvatar user={user} size="lg" />
-
-                                <div className="flex flex-col items-start justify-center">
-                                    <p className="font-medium">
-                                        {user.full_name || "Unnamed"}
-                                    </p>
-
-                                    <span className="text-small text-default-500">
+                {users?.map((user, index) => (
+                    <Card
+                        key={index}
+                        as={Link}
+                        href={`/user?user_id=${user.id}`}
+                        linkAs={`/user/${user.id}`}
+                        isPressable
+                    >
+                        <CardBody className="p-4 items-start">
+                            <User
+                                avatarProps={{
+                                    src: user?.avatar_url
+                                }}
+                                description={
+                                    <>
                                         <AutoTranslate tKey="subscription">
                                             Subscription:
                                         </AutoTranslate>
@@ -102,12 +95,13 @@ export default function UsersPage() {
                                                 </AutoTranslate>
                                             }
                                         </span>
-                                    </span>
-                                </div>
-                            </CardBody>
-                        </Card>
-                    ))}
-                </div>
+                                    </>
+                                }
+                                name={user.full_name || "Unnamed"}
+                            />
+                        </CardBody>
+                    </Card>
+                ))}
             </div>
         </div>
     )
