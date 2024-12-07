@@ -3,17 +3,17 @@ import { useQueryState } from 'nuqs'
 
 import { AutoTranslate } from 'next-auto-translate'
 
-import { Card, cn, Tab, Tabs } from "@nextui-org/react"
 import { BellIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
+import { Card, cn, Tab, Tabs } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
-import NotificationSettings from '@/components/settings/notification-settings'
-import ApplicationSettings from '@/components/settings/application-settings'
 import AccountSettings from '@/components/settings/account-settings'
+import ApplicationSettings from '@/components/settings/application-settings'
 import ManageAccount from '@/components/settings/manage-account'
+import NotificationSettings from '@/components/settings/notification-settings'
 
 export default function Settings() {
     const { session, isLoading: sessionLoading } = useSessionContext()
@@ -21,7 +21,7 @@ export default function Settings() {
 
     return (
         <div
-            className={cn(sessionLoading ? "opacity-0" : "opacity-1",
+            className={cn(sessionLoading && "opacity-0",
                 "flex flex-col p-4 items-center"
             )}
         >

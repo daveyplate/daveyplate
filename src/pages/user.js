@@ -9,6 +9,7 @@ import { getLocaleValue, isExport, useEntity } from "@daveyplate/supabase-swr-en
 import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
+import { CropImageModal, defaultLocalization } from "@daveyplate/nextui-crop-image-modal"
 import { CloudArrowUpIcon, PencilIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline"
 import {
     Badge,
@@ -33,7 +34,6 @@ import { createClient } from "@/utils/supabase/component"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
 import UserAvatar from "@/components/user-avatar"
-import { CropImageModal, defaultLocalization } from "@daveyplate/nextui-crop-image-modal"
 
 export default function UserPage({ user_id, user: fallbackData }) {
     const supabase = createClient()
@@ -101,9 +101,9 @@ export default function UserPage({ user_id, user: fallbackData }) {
                             <Dropdown className="min-w-0">
                                 <DropdownTrigger>
                                     <Button
-                                        className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                            user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
-                                            "absolute left-3 top-3"
+                                        className={cn(!isMe && "hidden",
+                                            user?.banner_url && "backdrop-blur-sm",
+                                            "absolute left-3 top-3 bg-background/20"
                                         )}
                                         isIconOnly
                                         radius="full"
@@ -141,7 +141,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
 
                             <OptionsDropdown
-                                className={cn(!isMe ? "opacity-100" : "opacity-0",
+                                className={cn(isMe && "hidden",
                                     user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
                                     "absolute right-3 top-3 transition-all"
                                 )}
@@ -152,9 +152,9 @@ export default function UserPage({ user_id, user: fallbackData }) {
                             <Button
                                 as={Link}
                                 href="/edit-profile"
-                                className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                    user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
-                                    "absolute right-3 top-3"
+                                className={cn(!isMe && "hidden",
+                                    user?.banner_url && "backdrop-blur-sm",
+                                    "absolute right-3 top-3 bg-background/20"
                                 )}
                                 radius="full"
                                 size="sm"

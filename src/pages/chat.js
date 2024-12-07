@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react"
-import { useLocale } from "next-intl"
 import { useSessionContext } from "@supabase/auth-helpers-react"
+import { useLocale } from "next-intl"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useEntity, useInfiniteEntities, usePeers } from "@daveyplate/supabase-swr-entities/client"
 
-import { Button, Chip, Input, cn } from "@nextui-org/react"
 import { ArrowUpIcon } from "@heroicons/react/24/solid"
+import { Button, Chip, Input, cn } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from "@/i18n/translation-props"
@@ -180,7 +180,7 @@ export default function Chat() {
     }, [whisperUser])
 
     return (
-        <div className={cn((!sessionLoading && messagesAndWhispers) ? "opacity-1" : "opacity-0",
+        <div className={cn((sessionLoading || !messagesAndWhispers) && "opacity-0",
             "flex px-5 flex-col w-full max-w-xl mx-auto transition-all grow"
         )}>
             <div className="sticky top-0 -mt-[60px] md:-mt-[76px] h-[60px] md:h-[76px] bg-background z-20" />

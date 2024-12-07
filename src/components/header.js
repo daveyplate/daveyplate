@@ -1,13 +1,22 @@
-import { useState } from "react"
-import { useRouter } from "next/router"
-import { useTheme } from "next-themes"
 import { useSessionContext } from "@supabase/auth-helpers-react"
 import { useLocale } from "next-intl"
+import { useTheme } from "next-themes"
+import { useRouter } from "next/router"
+import { useState } from "react"
 
-import { useAutoTranslate } from 'next-auto-translate'
 import { useEntity } from "@daveyplate/supabase-swr-entities/client"
+import { useAutoTranslate } from 'next-auto-translate'
 
 import {
+    Badge,
+    Button,
+    cn,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownSection,
+    DropdownTrigger,
+    Link,
     Navbar,
     NavbarBrand,
     NavbarContent,
@@ -15,34 +24,24 @@ import {
     NavbarMenu,
     NavbarMenuItem,
     NavbarMenuToggle,
-    Link,
-    Button,
-    Dropdown,
-    DropdownTrigger,
-    DropdownMenu,
-    DropdownItem,
-    Avatar,
-    Badge,
-    cn,
-    DropdownSection,
-    Skeleton,
+    Skeleton
 } from "@nextui-org/react"
 
 import {
+    ArrowLeftStartOnRectangleIcon,
+    ArrowRightEndOnRectangleIcon,
     Cog6ToothIcon,
     MagnifyingGlassIcon,
-    SunIcon,
     MoonIcon,
-    UserPlusIcon,
-    ArrowRightEndOnRectangleIcon,
+    PencilIcon,
+    SunIcon,
     UserIcon,
-    ArrowLeftStartOnRectangleIcon,
-    PencilIcon
+    UserPlusIcon
 } from "@heroicons/react/24/outline"
 
 import { ThemeDropdown } from "@/components/theme-dropdown"
-import { getPathname, useLocaleRouter } from "@/i18n/routing"
 import { useIsHydrated } from "@/hooks/useIsHydrated"
+import { getPathname, useLocaleRouter } from "@/i18n/routing"
 
 import Logo from "@/components/logo"
 import NotificationsPopover from "@/components/notifications/notifications-popover"
@@ -95,154 +94,160 @@ export default function Header() {
                 </Link>
             </NavbarBrand>
 
-            <NavbarContent
-                className={cn(!sessionLoading ? "opacity-1" : "opacity-0",
-                    "ml-4 hidden h-12 w-full max-w-fit gap-4 rounded-full bg-content2 px-4 dark:bg-content1 md:flex transition-all"
-                )}
-                justify="end"
-            >
-                {menuItems.map((item) => (
-                    <NavbarItem key={item.name} isActive={router.pathname === item.path}>
-                        <Link
-                            className="flex gap-2 text-inherit"
-                            href={item.path}
-                        >
-                            {autoTranslate(item.name, item.name)}
-                        </Link>
-                    </NavbarItem>
-                ))}
-            </NavbarContent>
-
-            <NavbarContent
-                className={cn(!sessionLoading ? "opacity-1" : "opacity-0",
-                    "-me-1 ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 md:bg-content2 md:px-1 md:dark:bg-content1 transition-all"
-                )}
-                justify="end"
-            >
-                <NavbarItem className="hidden">
-                    <Button isIconOnly radius="full" variant="light">
-                        <MagnifyingGlassIcon className="text-default-500 size-6" />
-                    </Button>
-                </NavbarItem>
-
-                <NavbarItem className="flex">
-                    <ThemeDropdown className="min-w-0">
-                        <Button isIconOnly radius="full" variant="light" disableRipple>
-                            {isHydrated && (resolvedTheme == "dark" ? (
-                                <MoonIcon className="text-default-500 size-6" />
-                            ) : (
-                                <SunIcon className="text-default-500 size-6" />
-                            ))}
-                        </Button>
-                    </ThemeDropdown>
-                </NavbarItem>
-
-                <NavbarItem className="hidden lg:flex">
-                    <Button
-                        as={Link}
-                        href="/settings"
-                        isIconOnly
-                        radius="full"
-                        variant="light"
+            {!sessionLoading && (
+                <>
+                    <NavbarContent
+                        className={cn(
+                            "animate-in fade-in ml-4 hidden h-12 w-full max-w-fit gap-4 rounded-full bg-content2 px-4 dark:bg-content1 md:flex transition-all"
+                        )}
+                        justify="end"
                     >
-                        <Cog6ToothIcon className="text-default-500 size-6" />
-                    </Button>
-                </NavbarItem>
-
-                {session && (
-                    <NavbarItem className="flex">
-                        <NotificationsPopover key={router.pathname} />
-                    </NavbarItem>
-                )}
-
-                <NavbarItem className="px-2">
-                    <Badge
-                        className="border-transparent pointer-events-none"
-                        color="success"
-                        content=""
-                        placement="bottom-right"
-                        shape="circle"
-                        size="sm"
-                    >
-                        <Dropdown placement="bottom-end">
-                            <DropdownTrigger>
-                                <Button
-                                    isIconOnly
-                                    size="sm"
-                                    radius="full"
-                                    className="mt-1"
-                                    disableRipple
+                        {menuItems.map((item) => (
+                            <NavbarItem key={item.name} isActive={router.pathname === item.path}>
+                                <Link
+                                    className="flex gap-2 text-inherit"
+                                    href={item.path}
                                 >
-                                    <Skeleton className="rounded-full" isLoaded={!userLoading && !sessionLoading}>
-                                        <UserAvatar size="sm" user={user} />
-                                    </Skeleton>
+                                    {autoTranslate(item.name, item.name)}
+                                </Link>
+                            </NavbarItem>
+                        ))}
+                    </NavbarContent>
+
+                    <NavbarContent
+                        className={cn(
+                            "animate-in fade-in -me-1 ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 md:bg-content2 md:px-1 md:dark:bg-content1 transition-all"
+                        )}
+                        justify="end"
+                    >
+                        <NavbarItem className="hidden">
+                            <Button isIconOnly radius="full" variant="light">
+                                <MagnifyingGlassIcon className="text-default-500 size-6" />
+                            </Button>
+                        </NavbarItem>
+
+                        <NavbarItem className="flex">
+                            <ThemeDropdown className="min-w-0">
+                                <Button isIconOnly radius="full" variant="light" disableRipple>
+                                    {isHydrated && (resolvedTheme == "dark" ? (
+                                        <MoonIcon className="text-default-500 size-6" />
+                                    ) : (
+                                        <SunIcon className="text-default-500 size-6" />
+                                    ))}
                                 </Button>
-                            </DropdownTrigger>
+                            </ThemeDropdown>
+                        </NavbarItem>
 
-                            <DropdownMenu aria-label={autoTranslate("profile_actions", "Profile Actions")} variant="flat" className="-mb-2">
-                                <DropdownSection title={session?.user.email || autoTranslate("account", "Account")}>
-                                    {session && (
-                                        <DropdownItem
-                                            startContent={<UserIcon className="size-5" />}
-                                            onPress={() => {
-                                                const url = getPathname({ href: `/user?user_id=${user.id}`, locale })
-                                                const urlAs = getPathname({ href: `/user/${user.id}`, locale })
-                                                router.push(url, urlAs)
-                                            }}
+                        <NavbarItem className="hidden lg:flex">
+                            <Button
+                                as={Link}
+                                href="/settings"
+                                isIconOnly
+                                radius="full"
+                                variant="light"
+                            >
+                                <Cog6ToothIcon className="text-default-500 size-6" />
+                            </Button>
+                        </NavbarItem>
+
+                        {session && (
+                            <NavbarItem className="flex">
+                                <NotificationsPopover key={router.pathname} />
+                            </NavbarItem>
+                        )}
+
+                        <NavbarItem className="px-2">
+                            <Badge
+                                className="border-transparent pointer-events-none"
+                                color="success"
+                                content=""
+                                placement="bottom-right"
+                                shape="circle"
+                                size="sm"
+                            >
+                                <Dropdown placement="bottom-end">
+                                    <DropdownTrigger>
+                                        <Button
+                                            isIconOnly
+                                            size="sm"
+                                            radius="full"
+                                            className="mt-1"
+                                            disableRipple
                                         >
-                                            {autoTranslate("view_profile", "View Profile")}
-                                        </DropdownItem>
-                                    )}
+                                            <Skeleton className="rounded-full" isLoaded={!userLoading && !sessionLoading}>
+                                                <UserAvatar size="sm" user={user} />
+                                            </Skeleton>
+                                        </Button>
+                                    </DropdownTrigger>
 
-                                    {session && (
-                                        <DropdownItem
-                                            onPress={() => localeRouter.push("/edit-profile")}
-                                            startContent={<PencilIcon className="size-5" />}
-                                        >
-                                            {autoTranslate("edit_profile", "Edit Profile")}
-                                        </DropdownItem>
-                                    )}
+                                    <DropdownMenu aria-label={autoTranslate("profile_actions", "Profile Actions")} variant="flat" className="-mb-2">
+                                        <DropdownSection title={session?.user.email || autoTranslate("account", "Account")}>
+                                            {session && (
+                                                <DropdownItem
+                                                    startContent={<UserIcon className="size-5" />}
+                                                    onPress={() => {
+                                                        const url = getPathname({ href: `/user?user_id=${user.id}`, locale })
+                                                        const urlAs = getPathname({ href: `/user/${user.id}`, locale })
+                                                        router.push(url, urlAs)
+                                                    }}
+                                                >
+                                                    {autoTranslate("view_profile", "View Profile")}
+                                                </DropdownItem>
+                                            )}
 
-                                    {!session && (
-                                        <DropdownItem
-                                            onPress={() => localeRouter.push("/login")}
-                                            startContent={<ArrowRightEndOnRectangleIcon className="size-5" />}
-                                        >
-                                            {autoTranslate("log_in", "Log In")}
-                                        </DropdownItem>
-                                    )}
+                                            {session && (
+                                                <DropdownItem
+                                                    onPress={() => localeRouter.push("/edit-profile")}
+                                                    startContent={<PencilIcon className="size-5" />}
+                                                >
+                                                    {autoTranslate("edit_profile", "Edit Profile")}
+                                                </DropdownItem>
+                                            )}
 
-                                    {!session && (
-                                        <DropdownItem
-                                            onPress={() => localeRouter.push("/signup")}
-                                            startContent={<UserPlusIcon className="size-5" />}
-                                        >
-                                            {autoTranslate("sign_up", "Sign Up")}
-                                        </DropdownItem>
-                                    )}
+                                            {!session && (
+                                                <DropdownItem
+                                                    onPress={() => localeRouter.push("/login")}
+                                                    startContent={<ArrowRightEndOnRectangleIcon className="size-5" />}
+                                                >
+                                                    {autoTranslate("log_in", "Log In")}
+                                                </DropdownItem>
+                                            )}
 
-                                    <DropdownItem
-                                        onPress={() => localeRouter.push("/settings")}
-                                        startContent={<Cog6ToothIcon className="size-5" />}
-                                    >
-                                        {autoTranslate('settings', 'Settings')}
-                                    </DropdownItem>
+                                            {!session && (
+                                                <DropdownItem
+                                                    onPress={() => localeRouter.push("/signup")}
+                                                    startContent={<UserPlusIcon className="size-5" />}
+                                                >
+                                                    {autoTranslate("sign_up", "Sign Up")}
+                                                </DropdownItem>
+                                            )}
 
-                                    {session &&
-                                        <DropdownItem
-                                            onPress={() => localeRouter.push("/logout")}
-                                            color="danger"
-                                            startContent={<ArrowLeftStartOnRectangleIcon className="size-5" />}
-                                        >
-                                            {autoTranslate('logout', 'Log Out')}
-                                        </DropdownItem>
-                                    }
-                                </DropdownSection>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </Badge>
-                </NavbarItem>
-            </NavbarContent>
+                                            <DropdownItem
+                                                onPress={() => localeRouter.push("/settings")}
+                                                startContent={<Cog6ToothIcon className="size-5" />}
+                                            >
+                                                {autoTranslate('settings', 'Settings')}
+                                            </DropdownItem>
+
+                                            {session &&
+                                                <DropdownItem
+                                                    onPress={() => localeRouter.push("/logout")}
+                                                    color="danger"
+                                                    startContent={<ArrowLeftStartOnRectangleIcon className="size-5" />}
+                                                >
+                                                    {autoTranslate('logout', 'Log Out')}
+                                                </DropdownItem>
+                                            }
+                                        </DropdownSection>
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </Badge>
+                        </NavbarItem>
+                    </NavbarContent>
+                </>
+            )}
+
+
 
             {/* Mobile Menu */}
             <NavbarMenu className="z-50">

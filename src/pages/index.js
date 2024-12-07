@@ -1,5 +1,4 @@
 import { cn } from "@daveyplate/tailwind-drag-dropzone"
-import { useIsClient } from "@uidotdev/usehooks"
 import Image from "next/image"
 import { toast } from "sonner"
 
@@ -37,9 +36,10 @@ import StripeLogo from "@/../public/logos/stripe.svg"
 import SupabaseLogo from "@/../public/logos/supabase.svg"
 import TailwindLogo from "@/../public/logos/tailwind.svg"
 import VercelLogo from "@/../public/logos/vercel.svg"
+import { useIsHydrated } from "@/hooks/useIsHydrated"
 
 export default function IndexPage() {
-    const isClient = useIsClient()
+    const isHydrated = useIsHydrated()
     const { autoTranslate } = useAutoTranslate()
 
     return (
@@ -165,7 +165,7 @@ export default function IndexPage() {
                 </section>
 
                 <section
-                    className={cn(isClient ? "opacity-1" : "opacity-0",
+                    className={cn(!isHydrated && "opacity-0",
                         "mx-auto w-full max-w-xl invert dark:invert-0 h-36 transition-all"
                     )}
                 >
