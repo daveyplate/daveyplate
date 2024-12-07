@@ -6,8 +6,9 @@ import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
-import { Card, CardBody, Input, Skeleton, User, cn } from "@nextui-org/react"
+import { Card, CardBody, Input, Skeleton, cn } from "@nextui-org/react"
 
+import UserAvatar from "@/components/user-avatar"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { Link } from "@/i18n/routing"
 import { getTranslationProps } from "@/i18n/translation-props"
@@ -74,12 +75,15 @@ export default function UsersPage() {
                         isPressable
                     >
                         <CardBody className="p-4 items-start">
-                            <User
-                                avatarProps={{
-                                    src: user?.avatar_url
-                                }}
-                                description={
-                                    <>
+                            <div className="flex items-center gap-2">
+                                <UserAvatar user={user} />
+
+                                <div className="flex flex-col">
+                                    <p className="text-small text-foreground">
+                                        {user.full_name || "Unnamed"}
+                                    </p>
+
+                                    <p className="text-tiny text-foreground-400">
                                         <AutoTranslate tKey="subscription">
                                             Subscription:
                                         </AutoTranslate>
@@ -97,10 +101,9 @@ export default function UsersPage() {
                                                 </AutoTranslate>
                                             }
                                         </span>
-                                    </>
-                                }
-                                name={user.full_name || "Unnamed"}
-                            />
+                                    </p>
+                                </div>
+                            </div>
                         </CardBody>
                     </Card>
                 ))}
