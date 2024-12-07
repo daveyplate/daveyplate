@@ -1,0 +1,12 @@
+html {
+    user-select: auto !important;
+    -webkit-user-select: auto !important;
+}
+
+input:-webkit-autofill-and-obscured,
+input:-webkit-autofill-strong-password,
+input:-webkit-autofill-strong-password-viewable,
+input:-webkit-autofill {
+  -webkit-text-fill-color: #000000 !important;
+  @apply dark:invert;
+}

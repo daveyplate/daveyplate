@@ -1,27 +1,28 @@
+import { NextIntlClientProvider } from 'next-intl'
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { NextIntlClientProvider } from 'next-intl'
 
 import { OpenGraph } from "@daveyplate/next-open-graph"
 
 import { cn } from "@nextui-org/react"
 
-import "@/styles/global.css"
 import "@/styles/custom.css"
+import "@/styles/global.css"
+import "@/styles/webkit-fixes.css"
 
 import DefaultFont from "@/styles/fonts"
 
-import Providers from "@/components/providers/providers"
-import Header from "@/components/header"
 import Footer from "@/components/footer"
+import Header from "@/components/header"
+import Providers from "@/components/providers/providers"
 
 const MyApp = ({ Component, pageProps }) => {
     const router = useRouter()
 
     useEffect(() => {
         if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-            document.documentElement.classList.add('ua-ios');
+            document.documentElement.classList.add('ua-ios')
         }
     }, [])
 
