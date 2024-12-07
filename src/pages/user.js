@@ -96,8 +96,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         <Skeleton isLoaded={!!user && !uploadingBanner} className="w-full h-full">
                             <Button
                                 className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                    user?.banner_url ? "bg-background/40" : "bg-background/20",
-                                    "absolute left-3 top-3"
+                                    user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
+                                    "absolute left-3 top-3 text-white"
                                 )}
                                 isIconOnly
                                 radius="full"
@@ -111,7 +111,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
                             <OptionsDropdown
                                 className={cn(!isMe ? "opacity-100" : "opacity-0",
-                                    user?.banner_url ? "bg-background/40" : "bg-background/20",
+                                    user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
                                     "absolute right-3 top-3 transition-all text-white"
                                 )}
                                 variant="light"
@@ -122,8 +122,8 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                 as={Link}
                                 href="/edit-profile"
                                 className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                    user?.banner_url ? "bg-background/40" : "bg-background/20",
-                                    "absolute right-3 top-3"
+                                    user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
+                                    "absolute right-3 top-3 text-white"
                                 )}
                                 radius="full"
                                 size="sm"
