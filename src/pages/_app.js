@@ -46,14 +46,12 @@ const MyApp = ({ Component, pageProps }) => {
                 <OpenGraph description="Welcome to Daveyplate" />
 
                 <style jsx global>{`
-                /*
                     &.ua-ios {
                         @supports (font: -apple-system-body) {
                             font: -apple-system-body;
                             font-size-adjust: 0.5;
                         }
                     }
-                        */
                         
                     body {
                         font-family: ${DefaultFont.style.fontFamily};
