@@ -1,17 +1,16 @@
 
-import React from "react";
 import { motion } from "framer-motion"
+import { useLocale } from "next-intl"
+import { useRouter } from "next/router"
+import Flag from "react-flagpack"
 
-import { Button, cn, Dropdown, DropdownTrigger, Link, Spacer } from "@nextui-org/react"
 import { Icon } from "@iconify/react"
+import { Button, cn, Link, Spacer } from "@nextui-org/react"
 
 import { useAutoTranslate } from 'next-auto-translate'
 
-import Logo from "./logo"
 import { LocaleDropdown, localeToCountry } from '@/components/locale-dropdown'
-import Flag from "react-flagpack"
-import { useLocale } from "next-intl";
-import { useRouter } from "next/router";
+import Logo from "./logo"
 
 const navLinks = [
     {
@@ -42,7 +41,7 @@ const navLinks = [
         name: "Careers",
         href: "#",
     },
-];
+]
 
 const socialItems = [
     {
@@ -70,7 +69,7 @@ const socialItems = [
         href: "https://youtube.com",
         icon: (props) => <Icon {...props} icon="fontisto:youtube-play" />,
     },
-];
+]
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME
 
@@ -181,5 +180,5 @@ export default function Footer() {
                 </p>
             </div>
         </footer>
-    );
+    )
 }

@@ -1,9 +1,9 @@
-import Image from "next/image"
 import { cn } from "@daveyplate/tailwind-drag-dropzone"
 import { useIsClient } from "@uidotdev/usehooks"
+import Image from "next/image"
 import { toast } from "sonner"
 
-import { useAutoTranslate, AutoTranslate } from 'next-auto-translate'
+import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
@@ -28,16 +28,15 @@ import {
     RocketLaunchIcon
 } from "@heroicons/react/24/outline"
 
-import NewFooter from "@/components/footer"
 import ScrollingBanner from "@/components/scrolling-banner"
 
-import NextJSLogo from "@/../public/logos/nextjs.svg"
-import SupabaseLogo from "@/../public/logos/supabase.svg"
-import NextUILogo from "@/../public/logos/nextui.svg"
 import CapacitorLogo from "@/../public/logos/capacitor.svg"
-import VercelLogo from "@/../public/logos/vercel.svg"
+import NextJSLogo from "@/../public/logos/nextjs.svg"
+import NextUILogo from "@/../public/logos/nextui.svg"
 import StripeLogo from "@/../public/logos/stripe.svg"
+import SupabaseLogo from "@/../public/logos/supabase.svg"
 import TailwindLogo from "@/../public/logos/tailwind.svg"
+import VercelLogo from "@/../public/logos/vercel.svg"
 
 export default function IndexPage() {
     const isClient = useIsClient()
@@ -136,9 +135,9 @@ export default function IndexPage() {
                                         <Spinner size="sm" color="current" />
                                     }
                                     onPress={() => {
-                                        toast.loading(autoTranslate("loading", "Loading"))
+                                        const t = toast.loading(autoTranslate("loading", "Loading"))
                                         setTimeout(() => {
-                                            toast.dismiss()
+                                            toast.dismiss(t)
                                         }, 4000)
                                     }}
                                 >

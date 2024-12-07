@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
-import { useLocale } from "next-intl"
 import { useSession } from "@supabase/auth-helpers-react"
+import { useLocale } from "next-intl"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 import { useEntities, useEntity } from "@daveyplate/supabase-swr-entities/client"
 
-import { Popover, PopoverTrigger, PopoverContent, Button, Badge } from "@nextui-org/react"
 import { BellIcon } from "@heroicons/react/24/outline"
+import { Badge, Button, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react"
 
 import NotificationItem from "@/components/notifications/notification-item"
 import NotificationsCard from "@/components/notifications/notifications-card"
@@ -107,7 +107,7 @@ export default function NotificationsPopover() {
                 </Button>
             </PopoverTrigger>
 
-            <PopoverContent className="w-[94svw] p-0 sm:w-[420px]">
+            <PopoverContent className="w-[94svw] p-0 sm:w-[420px] max-h-[88svh]">
                 <NotificationsCard
                     notifications={notifications}
                     setIsOpen={setIsOpen}
