@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/router"
-import { useLocale } from "next-intl"
 import { useSession } from "@supabase/auth-helpers-react"
+import { useLocale } from "next-intl"
+import { useRouter } from "next/router"
+import { useEffect, useRef, useState } from "react"
 
-import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
-import { getLocaleValue, isExport, useEntity } from "@daveyplate/supabase-swr-entities/client"
-import { PageTitle } from "@daveyplate/next-page-title"
 import { OpenGraph } from "@daveyplate/next-open-graph"
+import { PageTitle } from "@daveyplate/next-page-title"
+import { getLocaleValue, isExport, useEntity } from "@daveyplate/supabase-swr-entities/client"
 import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
+import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
+import { CloudArrowUpIcon, PencilIcon, PhotoIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import {
     Badge,
     Button,
@@ -16,19 +17,22 @@ import {
     CardBody,
     CardHeader,
     cn,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
     Skeleton
 } from "@nextui-org/react"
-import { PencilIcon, PhotoIcon } from "@heroicons/react/24/outline"
 import { toast } from "sonner"
 
-import { createClient } from "@/utils/supabase/component"
-import { getTranslationProps } from "@/i18n/translation-props"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { Link } from "@/i18n/routing"
+import { getTranslationProps } from "@/i18n/translation-props"
+import { createClient } from "@/utils/supabase/component"
 
-import UserAvatar from "@/components/user-avatar"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
+import UserAvatar from "@/components/user-avatar"
 import { CropImageModal, defaultLocalization } from "@daveyplate/nextui-crop-image-modal"
 
 export default function UserPage({ user_id, user: fallbackData }) {
@@ -94,25 +98,58 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         className="flex flex-col justify-end overflow-visible w-full h-full aspect-[4/1]"
                     >
                         <Skeleton isLoaded={!!user && !uploadingBanner} className="w-full h-full">
-                            <Button
-                                className={cn(isMe ? "opacity-100 " : "opacity-0",
-                                    user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
-                                    "absolute left-3 top-3 text-white"
-                                )}
-                                isIconOnly
-                                radius="full"
-                                size="sm"
-                                variant="light"
-                                isDisabled={!isMe}
-                                onPress={() => bannerUploadRef.current()}
-                            >
-                                <PhotoIcon className="size-4" />
-                            </Button>
+                            <Dropdown className="min-w-0">
+                                <DropdownTrigger>
+                                    <Button
+                                        className={cn(isMe ? "opacity-100 " : "opacity-0",
+                                            user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
+                                            "absolute left-3 top-3"
+                                        )}
+                                        isIconOnly
+                                        radius="full"
+                                        size="sm"
+                                        variant="light"
+                                        isDisabled={!isMe}
+                                    >
+                                        <PhotoIcon className="size-4" />
+                                    </Button>
+                                </DropdownTrigger>
+
+                                <DropdownMenu>
+                                    <DropdownItem
+                                        color="success"
+                                        startContent={<CloudArrowUpIcon className="size-5" />}
+                                        onPress={() => bannerUploadRef.current()}
+                                    >
+                                        {autoTranslate("upload_banner", "Upload Banner")}
+                                    </DropdownItem>
+
+                                    {user?.banner_url ? (
+                                        <DropdownItem
+                                            color="danger"
+                                            onPress={async () => {
+                                                const { error } = await updateUser({ banner_url: null })
+                                                error && toast.error(error.message)
+                                            }}
+                                            startContent={<TrashIcon className="size-5" />}
+                                        >
+                                            {autoTranslate("delete_banner", "Delete Banner")}
+                                        </DropdownItem>
+                                    ) : <></>}
+
+                                    <DropdownItem
+                                        startContent={<XMarkIcon className="size-5" />}
+                                    >
+                                        {autoTranslate("cancel", "Cancel")}
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+
 
                             <OptionsDropdown
                                 className={cn(!isMe ? "opacity-100" : "opacity-0",
                                     user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
-                                    "absolute right-3 top-3 transition-all text-white"
+                                    "absolute right-3 top-3 transition-all"
                                 )}
                                 variant="light"
                                 isDisabled={isMe}
@@ -123,7 +160,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                 href="/edit-profile"
                                 className={cn(isMe ? "opacity-100 " : "opacity-0",
                                     user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
-                                    "absolute right-3 top-3 text-white"
+                                    "absolute right-3 top-3"
                                 )}
                                 radius="full"
                                 size="sm"
