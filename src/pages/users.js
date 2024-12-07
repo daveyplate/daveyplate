@@ -25,9 +25,10 @@ export default function UsersPage() {
 
     return (
         <div className="p-4">
-            <div className="flex flex-col gap-4 max-w-xl mx-auto">
+            <div className="flex flex-col gap-4 items-center">
                 <Input
                     fullWidth
+                    className="pt-safe max-w-xl"
                     isClearable
                     placeholder={autoTranslate('search_placeholder', "Search...")}
                     startContent={
@@ -35,11 +36,10 @@ export default function UsersPage() {
                     }
                     value={search}
                     onValueChange={setSearch}
-                    className="pt-safe max-w-xl"
                 />
 
                 {!users?.length && !isLoading && (
-                    <Card>
+                    <Card fullWidth className="max-w-xl">
                         <CardBody className="p-8">
                             <AutoTranslate tKey="no_users">
                                 No users found...
@@ -49,7 +49,7 @@ export default function UsersPage() {
                 )}
 
                 {isLoading && !users && [...Array(8)].fill({}).map((_, index) => (
-                    <Card key={index}>
+                    <Card key={index} fullWidth className="max-w-xl">
                         <CardBody className="p-4">
                             <div className="flex items-center gap-2">
                                 <Skeleton className="size-10 rounded-full" />
@@ -66,6 +66,8 @@ export default function UsersPage() {
                 {users?.map((user, index) => (
                     <Card
                         key={index}
+                        fullWidth
+                        className="max-w-xl"
                         as={Link}
                         href={`/user?user_id=${user.id}`}
                         linkAs={`/user/${user.id}`}
@@ -109,7 +111,6 @@ export default function UsersPage() {
 
 export async function getStaticProps({ locale, params }) {
     const translationProps = await getTranslationProps({ locale, params })
-
 
     return { props: { ...translationProps, } }
 }
