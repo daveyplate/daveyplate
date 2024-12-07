@@ -1,13 +1,13 @@
 import { useTheme } from "next-themes"
 
-import { Toaster } from "sonner"
-import { Spinner } from "@nextui-org/react"
 import {
     CheckCircleIcon,
     ExclamationCircleIcon,
     ExclamationTriangleIcon,
     InformationCircleIcon
 } from "@heroicons/react/24/outline"
+import { Spinner } from "@nextui-org/react"
+import { Toaster } from "sonner"
 
 export default function ToastProvider() {
     const { theme } = useTheme()
