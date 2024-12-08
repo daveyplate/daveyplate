@@ -2,7 +2,7 @@ import { useSessionContext } from "@supabase/auth-helpers-react"
 import { useLocale } from "next-intl"
 import { useEffect, useState } from "react"
 
-import { useDeleteEntities, useEntities, useEntity, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useDeleteEntities, useEntities, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
 import { useAutoTranslate } from 'next-auto-translate'
 
 import {
@@ -28,18 +28,17 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
     const locale = useLocale()
     const { autoTranslate } = useAutoTranslate("notifications")
 
-    const { entity: metadata, isLoading: metadataLoading } = useEntity(session && "metadata", "me")
     const {
         entities: notifications,
         mutate: mutateNotifications,
         updateEntity: updateNotification,
         deleteEntity: deleteNotification,
         isLoading: notificationsLoading,
-    } = useEntities(metadata?.notifications_enabled && "notifications", { lang: locale }, { fallbackData })
+    } = useEntities(session && "notifications", { lang: locale }, { fallbackData })
     const updateEntities = useUpdateEntities()
     const deleteEntities = useDeleteEntities()
 
-    const isLoading = sessionLoading || metadataLoading || notificationsLoading
+    const isLoading = sessionLoading || notificationsLoading
 
     const [activeTab, setActiveTab] = useState("all")
 

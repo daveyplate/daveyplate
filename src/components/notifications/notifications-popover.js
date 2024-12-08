@@ -20,7 +20,7 @@ export default function NotificationsPopover() {
         entities: notifications,
         updateEntity: updateNotification,
         deleteEntity: deleteNotification
-    } = useEntities(metadata?.notifications_enabled && "notifications", { lang: locale })
+    } = useEntities(session && "notifications", { lang: locale })
 
     const [badgeCount, setBadgeCount] = useState(0)
     const [previousNotifications, setPreviousNotifications] = useState([])
