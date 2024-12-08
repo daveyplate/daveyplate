@@ -197,7 +197,7 @@ export default function Chat() {
             </ScrollShadow>
 
             <Form
-                className="px-2 mt-auto flex flex-col bg w-full items-center"
+                className="px-2 mt-auto flex flex-col w-full items-center"
                 onSubmit={sendMessage}
             >
                 <Input
@@ -207,10 +207,8 @@ export default function Chat() {
                     size="lg"
                     variant="bordered"
                     placeholder={
-                        session
-                            ? whisperUser
-                                ? `Whisper...`
-                                : "Message..."
+                        session ?
+                            (whisperUser ? `Whisper...` : "Message...")
                             : "Sign in to send messages"
                     }
                     value={content}
