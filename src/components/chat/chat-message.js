@@ -174,7 +174,7 @@ export default memo(({
                         )}
                     >
                         <div className="flex gap-3">
-                            <div className="w-full text-small font-semibold text-default-foreground">
+                            <div className="w-full text-small font-semibold">
                                 {message.user?.full_name || "Unnamed"}
 
                                 {isWhisper && (
@@ -204,7 +204,7 @@ export default memo(({
                             </div>
                         )}
 
-                        <div className="text-small text-default-900 flex justify-between gap-2">
+                        <div className="text-small flex justify-between gap-2">
                             <div className="whitespace-pre-line">
                                 {localizedMessage}
                             </div>
