@@ -1,9 +1,10 @@
 import { useSession } from '@supabase/auth-helpers-react'
 
-import { AutoTranslate } from 'next-auto-translate'
 import { useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { AutoTranslate } from 'next-auto-translate'
 
-import { Switch, CardBody, CardHeader } from "@nextui-org/react"
+import { CardBody, CardHeader, Switch } from "@nextui-org/react"
+import CellWrapper from './cell-wrapper'
 
 export default function NotificationSettings() {
     const session = useSession()
@@ -25,47 +26,47 @@ export default function NotificationSettings() {
             </CardHeader>
 
             <CardBody className="gap-3">
-                <Switch
-                    isSelected={!metadata?.notifications_enabled}
-                    onValueChange={(value) => updateMetadata({ notifications_enabled: !value })}
-                    classNames={{
-                        base: "flex-row-reverse justify-between w-full max-w-full"
-                    }}
-                    className="bg-content2 p-4 rounded-medium"
-                    isDisabled={!metadata}
-                >
-                    <AutoTranslate tKey="pause_all">
-                        Pause all
-                    </AutoTranslate>
-                </Switch>
+                <CellWrapper>
+                    <p>
+                        <AutoTranslate tKey="pause_all">
+                            Pause all
+                        </AutoTranslate>
+                    </p>
 
-                <Switch
-                    isSelected={!!metadata?.notifications_badge_enabled}
-                    onValueChange={(value) => updateMetadata({ notifications_badge_enabled: value })}
-                    classNames={{
-                        base: "flex-row-reverse justify-between w-full max-w-full"
-                    }}
-                    className="bg-content2 p-4 rounded-medium"
-                    isDisabled={!metadata}
-                >
-                    <AutoTranslate tKey="show_badge">
-                        Show Badge
-                    </AutoTranslate>
-                </Switch>
+                    <Switch
+                        isSelected={!metadata?.notifications_enabled}
+                        onValueChange={(value) => updateMetadata({ notifications_enabled: !value })}
+                        isDisabled={!metadata}
+                    />
+                </CellWrapper>
 
-                <Switch
-                    isSelected={!!metadata?.show_badge_count}
-                    onValueChange={(value) => updateMetadata({ show_badge_count: value })}
-                    classNames={{
-                        base: "flex-row-reverse justify-between w-full max-w-full"
-                    }}
-                    className="bg-content2 p-4 rounded-medium"
-                    isDisabled={!metadata}
-                >
-                    <AutoTranslate tKey="badge_count">
-                        Badge Count
-                    </AutoTranslate>
-                </Switch>
+                <CellWrapper>
+                    <p>
+                        <AutoTranslate tKey="show_badge">
+                            Show Badge
+                        </AutoTranslate>
+                    </p>
+
+                    <Switch
+                        isSelected={!!metadata?.notifications_badge_enabled}
+                        onValueChange={(value) => updateMetadata({ notifications_badge_enabled: value })}
+                        isDisabled={!metadata}
+                    />
+                </CellWrapper>
+
+                <CellWrapper>
+                    <p>
+                        <AutoTranslate tKey="badge_count">
+                            Badge Count
+                        </AutoTranslate>
+                    </p>
+
+                    <Switch
+                        isSelected={!!metadata?.show_badge_count}
+                        onValueChange={(value) => updateMetadata({ show_badge_count: value })}
+                        isDisabled={!metadata}
+                    />
+                </CellWrapper>
             </CardBody>
 
             <CardHeader className="px-4 pb-0">
@@ -77,47 +78,47 @@ export default function NotificationSettings() {
             </CardHeader>
 
             <CardBody className="gap-3">
-                <Switch
-                    isSelected={!!metadata?.notifications_push}
-                    onValueChange={(value) => updateMetadata({ notifications_push: value })}
-                    classNames={{
-                        base: "flex-row-reverse justify-between w-full max-w-full"
-                    }}
-                    className="bg-content2 p-4 rounded-medium"
-                    isDisabled={!metadata}
-                >
-                    <AutoTranslate tKey="push">
-                        Push
-                    </AutoTranslate>
-                </Switch>
+                <CellWrapper>
+                    <p>
+                        <AutoTranslate tKey="push">
+                            Push
+                        </AutoTranslate>
+                    </p>
 
-                <Switch
-                    isSelected={!!metadata?.notifications_email}
-                    onValueChange={(value) => updateMetadata({ notifications_email: value })}
-                    classNames={{
-                        base: "flex-row-reverse justify-between w-full max-w-full"
-                    }}
-                    className="bg-content2 p-4 rounded-medium"
-                    isDisabled={!metadata}
-                >
-                    <AutoTranslate tKey="email">
-                        Email
-                    </AutoTranslate>
-                </Switch>
+                    <Switch
+                        isSelected={!!metadata?.notifications_push}
+                        onValueChange={(value) => updateMetadata({ notifications_push: value })}
+                        isDisabled={!metadata}
+                    />
+                </CellWrapper>
 
-                <Switch
-                    isSelected={!!metadata?.notifications_sms}
-                    onValueChange={(value) => updateMetadata({ notifications_sms: value })}
-                    classNames={{
-                        base: "flex-row-reverse justify-between w-full max-w-full"
-                    }}
-                    className="bg-content2 p-4 rounded-medium"
-                    isDisabled={!metadata}
-                >
-                    <AutoTranslate tKey="sms">
-                        SMS
-                    </AutoTranslate>
-                </Switch>
+                <CellWrapper>
+                    <p>
+                        <AutoTranslate tKey="email">
+                            Email
+                        </AutoTranslate>
+                    </p>
+
+                    <Switch
+                        isSelected={!!metadata?.notifications_email}
+                        onValueChange={(value) => updateMetadata({ notifications_email: value })}
+                        isDisabled={!metadata}
+                    />
+                </CellWrapper>
+
+                <CellWrapper>
+                    <p>
+                        <AutoTranslate tKey="sms">
+                            SMS
+                        </AutoTranslate>
+                    </p>
+
+                    <Switch
+                        isSelected={!!metadata?.notifications_sms}
+                        onValueChange={(value) => updateMetadata({ notifications_sms: value })}
+                        isDisabled={!metadata}
+                    />
+                </CellWrapper>
             </CardBody>
 
             <CardHeader className="px-4 pb-0">
@@ -130,20 +131,19 @@ export default function NotificationSettings() {
 
             <CardBody className="gap-3">
                 {notificationTypes.map(({ table, label }) => (
-                    <Switch
-                        key={`notifications_${table}`}
-                        isSelected={!!metadata?.[`notifications_${table}`]}
-                        onValueChange={(value) => updateMetadata({ [`notifications_${table}`]: value })}
-                        classNames={{
-                            base: "flex-row-reverse justify-between w-full max-w-full"
-                        }}
-                        className="bg-content2 p-4 rounded-medium"
-                        isDisabled={!metadata}
-                    >
-                        <AutoTranslate tKey={`notifications_${table}`}>
-                            {label}
-                        </AutoTranslate>
-                    </Switch>
+                    <CellWrapper key={`notifications_${table}`}>
+                        <p>
+                            <AutoTranslate tKey={`notifications_${table}`}>
+                                {label}
+                            </AutoTranslate>
+                        </p>
+
+                        <Switch
+                            isSelected={!!metadata?.[`notifications_${table}`]}
+                            onValueChange={(value) => updateMetadata({ [`notifications_${table}`]: value })}
+                            isDisabled={!metadata}
+                        />
+                    </CellWrapper>
                 ))}
             </CardBody>
         </>
