@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useEntity, useInfiniteEntities, usePeers } from "@daveyplate/supabase-swr-entities/client"
 
 import { ArrowUpIcon } from "@heroicons/react/24/solid"
-import { Button, Chip, Input, cn } from "@nextui-org/react"
+import { Button, Chip, cn, Form, Input, ScrollShadow } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from "@/i18n/translation-props"
@@ -23,6 +23,7 @@ export default function Chat() {
     const [lastWhisperUser, setLastWhisperUser] = useState(null)
     const [whisperUser, setWhisperUser] = useState(null)
     const inputRef = useRef(null)
+    const scrollRef = useRef(null)
 
     useEffect(() => { whisperUser && setLastWhisperUser(whisperUser) }, [whisperUser])
 
@@ -107,7 +108,7 @@ export default function Chat() {
         , [messages, whispers, messagesLoading, whispersLoading])
 
     const handleScroll = () => {
-        const { scrollTop, scrollHeight, clientHeight } = document.scrollingElement
+        const { scrollTop, scrollHeight, clientHeight } = scrollRef.current
         prevScrollTop.current = scrollTop
 
         if (scrollTop < 512) {
@@ -127,26 +128,19 @@ export default function Chat() {
     }
 
     useEffect(() => {
-        document.addEventListener("scroll", handleScroll, true)
-        // document.addEventListener("touchmove", handleScroll, true)
-        // document.addEventListener("gesturechange", handleScroll, true)
-
-        return () => {
-            document.removeEventListener("scroll", handleScroll, true)
-            // document.removeEventListener("touchmove", handleScroll, true)
-            // document.removeEventListener("gesturechange", handleScroll, true)
-        }
+        scrollRef.current?.addEventListener("scroll", handleScroll, true)
+        return () => scrollRef.current?.removeEventListener("scroll", handleScroll, true)
     }, [size, whispersSize, hasMore, hasMoreWhispers, isValidating])
 
     useEffect(() => {
         if (shouldScrollDown) {
-            const scrollDistane = document.scrollingElement.scrollHeight - document.scrollingElement.scrollTop
-            window.scrollTo({ top: document.scrollingElement.scrollHeight, behavior: scrollDistane < 1024 ? "auto" : "auto" })
+            const scrollDistance = scrollRef.current.scrollHeight - scrollRef.current.scrollTop
+            scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: scrollDistance < 1024 ? "auto" : "auto" })
             size > 1 && setSize(1)
             whispersSize > 1 && setWhispersSize(1)
         } else if (prevScrollHeight.current && !messagesValidating && !whispersValidating) {
-            const { scrollHeight } = document.scrollingElement
-            window.scrollTo(0, prevScrollTop.current + (scrollHeight - prevScrollHeight.current))
+            const { scrollHeight } = scrollRef.current
+            scrollRef.current?.scrollTo({ top: scrollHeight - prevScrollHeight.current, behavior: "auto" })
             prevScrollHeight.current = null
         }
     }, [messagesAndWhispers, isValidating])
@@ -181,88 +175,80 @@ export default function Chat() {
 
     return (
         <div className={cn((sessionLoading || !messagesAndWhispers) && "opacity-0",
-            "flex px-5 flex-col w-full max-w-xl mx-auto transition-all grow"
+            "flex flex-col grow max-h-[calc(100vh-76px-64px)] items-center transition-all"
         )}>
-            <div className="sticky top-0 -mt-[60px] md:-mt-[76px] h-[60px] md:h-[76px] bg-background z-20" />
-            <div className="sticky top-[60px] md:top-[76px] h-[40px] bg-gradient-to-b from-background to-transparent z-20" />
+            <ScrollShadow ref={scrollRef} className="flex flex-col px-6 py-4 w-full items-center">
+                <div className="max-w-xl w-full flex flex-col-reverse gap-6">
+                    {messagesAndWhispers?.map((message) => (
+                        <Message
+                            key={message.id}
+                            message={message}
+                            user={user}
+                            isOnline={isOnline}
+                            mutateMessage={message.recipient_id ? mutateWhisper : mutateMessage}
+                            updateMessage={message.recipient_id ? updateWhisper : updateMessage}
+                            deleteMessage={message.recipient_id ? deleteWhisper : deleteMessage}
+                            sendData={sendMessageData}
+                            sendWhisperData={sendWhisperData}
+                            setWhisperUser={setWhisperUser}
+                        />
+                    ))}
+                </div>
+            </ScrollShadow>
 
-            <div className="flex flex-col gap-4 w-full flex-col-reverse p-4 grow">
-                {messagesAndWhispers?.map((message) => (
-                    <Message
-                        key={message.id}
-                        message={message}
-                        user={user}
-                        isOnline={isOnline}
-                        mutateMessage={message.recipient_id ? mutateWhisper : mutateMessage}
-                        updateMessage={message.recipient_id ? updateWhisper : updateMessage}
-                        deleteMessage={message.recipient_id ? deleteWhisper : deleteMessage}
-                        sendData={sendMessageData}
-                        sendWhisperData={sendWhisperData}
-                        setWhisperUser={setWhisperUser}
-                    />
-                ))}
-            </div>
-
-            <div className="sticky bottom-0 -mb-[64px] flex flex-col z-20 mt-auto">
-                <div
-                    className={cn(shouldScrollDown ? "opacity-0 !h-0" : "opacity-100",
-                        "bg-gradient-to-t from-background/90 to-transparent w-full h-[40px] transition-all"
-                    )}
-                />
-
-                <form onSubmit={sendMessage} className="mx-auto w-full max-w-xl bg-background px-4 pb-safe">
-                    <Input
-                        autoFocus
-                        ref={inputRef}
-                        size="lg"
-                        variant="bordered"
-                        placeholder={
-                            session
-                                ? whisperUser
-                                    ? `Whisper...`
-                                    : "Message..."
-                                : "Sign in to send messages"
-                        }
-                        value={content}
-                        onValueChange={setContent}
-                        isDisabled={!session}
-                        autoComplete="off"
-                        startContent={
-                            whisperUser && (
-                                <Chip
-                                    size="lg"
-                                    variant="flat"
-                                    color="secondary"
-                                    className="-ms-1 gap-1"
-                                    avatar={
-                                        <UserAvatar user={whisperUser} />
-                                    }
-                                    onClose={() => setWhisperUser(null)}
-                                >
-                                    <div className="max-w-20 overflow-hidden truncate">
-                                        {whisperUser.full_name}
-                                    </div>
-                                </Chip>
-                            )
-                        }
-                        endContent={
-                            <Button
-                                size="sm"
-                                color="primary"
-                                isIconOnly
-                                radius="full"
-                                className="-me-1"
-                                isDisabled={!content || !session}
-                                onPressStart={() => sendMessage()}
+            <Form
+                className="px-2 mt-auto flex flex-col bg w-full items-center"
+                onSubmit={sendMessage}
+            >
+                <Input
+                    ref={inputRef}
+                    className="max-w-xl"
+                    autoFocus
+                    size="lg"
+                    variant="bordered"
+                    placeholder={
+                        session
+                            ? whisperUser
+                                ? `Whisper...`
+                                : "Message..."
+                            : "Sign in to send messages"
+                    }
+                    value={content}
+                    onValueChange={setContent}
+                    isDisabled={!session}
+                    startContent={
+                        whisperUser && (
+                            <Chip
+                                size="lg"
+                                variant="flat"
+                                color="secondary"
+                                className="-ms-1 gap-1"
+                                avatar={
+                                    <UserAvatar user={whisperUser} />
+                                }
+                                onClose={() => setWhisperUser(null)}
                             >
-                                <ArrowUpIcon className="size-4" />
-                            </Button>
-                        }
-                    />
-                </form>
-
-                <div className="h-[64px] bg-background" />
-            </div>
+                                <div className="max-w-20 overflow-hidden truncate">
+                                    {whisperUser.full_name}
+                                </div>
+                            </Chip>
+                        )
+                    }
+                    endContent={
+                        <Button
+                            size="sm"
+                            color="primary"
+                            isIconOnly
+                            radius="full"
+                            className="-me-1"
+                            isDisabled={!content || !session}
+                            onPressStart={() => sendMessage()}
+                        >
+                            <ArrowUpIcon className="size-4" />
+                        </Button>
+                    }
+                />
+            </Form>
         </div>
     )
 }
