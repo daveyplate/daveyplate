@@ -276,8 +276,14 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         return toast.error(uploadError.message)
                     }
 
-                    const avatarUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/avatars/${fileName}` + `?${new Date().getTime()}`
+                    const { data: { publicUrl } } = supabase
+                        .storage
+                        .from('avatars')
+                        .getPublicUrl(fileName)
+
+                    const avatarUrl = `${publicUrl}?${new Date().getTime()}`
                     const { error } = await updateUser({ avatar_url: avatarUrl })
+                    supabase.auth.updateUser({ data: { avatar_url: avatarUrl } })
 
                     setUploadingAvatar(false)
                     error && toast.error(error.message)
@@ -304,7 +310,12 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         return toast.error(uploadError.message)
                     }
 
-                    const bannerUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/banners/${fileName}` + `?${new Date().getTime()}`
+                    const { data: { publicUrl } } = supabase
+                        .storage
+                        .from('banners')
+                        .getPublicUrl(fileName)
+
+                    const bannerUrl = `${publicUrl}?${new Date().getTime()}`
                     const { error } = await updateUser({ banner_url: bannerUrl })
 
                     setUploadingBanner(false)

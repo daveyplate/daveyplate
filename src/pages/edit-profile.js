@@ -1,31 +1,31 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocale } from 'use-intl'
 
-import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
+import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
 import { getLocaleValue, useEntity } from '@daveyplate/supabase-swr-entities/client'
 import { DragDropzone } from '@daveyplate/tailwind-drag-dropzone'
-import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
+import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
 import {
+    CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon
+} from '@heroicons/react/24/outline'
+import {
+    Badge,
     Button,
     Card,
     CardBody,
+    CardHeader,
     Input,
-    Textarea,
     Skeleton,
-    cn,
-    Badge,
-    CardHeader
+    Textarea,
+    cn
 } from "@nextui-org/react"
-import {
-    CheckIcon, CloudArrowUpIcon, PencilIcon, TrashIcon, UserCircleIcon, UserIcon
-} from '@heroicons/react/24/outline'
 import { toast } from 'sonner'
 
 import useAuthenticatedPage from '@/hooks/useAuthenticatedPage'
-import { createClient } from '@/utils/supabase/component'
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
+import { createClient } from '@/utils/supabase/component'
 import { isExport } from "@/utils/utils"
 
 import UserAvatar from '@/components/user-avatar'
@@ -280,8 +280,14 @@ export default function EditProfile() {
                         return toast.error(uploadError.message)
                     }
 
-                    const avatarUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/avatars/${fileName}` + `?${new Date().getTime()}`
+                    const { data: { publicUrl } } = supabase
+                        .storage
+                        .from('avatars')
+                        .getPublicUrl(fileName)
+
+                    const avatarUrl = `${publicUrl}?${new Date().getTime()}`
                     const { error } = await updateUser({ avatar_url: avatarUrl })
+                    supabase.auth.updateUser({ data: { avatar_url: avatarUrl } })
 
                     setUploadingAvatar(false)
                     error && toast.error(error.message)
