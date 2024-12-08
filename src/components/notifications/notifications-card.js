@@ -1,8 +1,8 @@
-import { useSession } from "@supabase/auth-helpers-react"
+import { useSessionContext } from "@supabase/auth-helpers-react"
 import { useLocale } from "next-intl"
 import { useEffect, useState } from "react"
 
-import { useDeleteEntities, useEntities, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useDeleteEntities, useEntities, useEntity, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
 import { useAutoTranslate } from 'next-auto-translate'
 
 import {
@@ -21,21 +21,25 @@ import { BellSlashIcon } from "@heroicons/react/24/solid"
 
 import NotificationItem from "@/components/notifications/notification-item"
 import { Link } from "@/i18n/routing"
+import NotificationSkeleton from "./notification-skeleton"
 
 export default function NotificationsCard({ notifications: fallbackData, setIsOpen, ...props }) {
-    const session = useSession()
+    const { session, isLoading: sessionLoading } = useSessionContext()
     const locale = useLocale()
     const { autoTranslate } = useAutoTranslate("notifications")
 
-    const { entity: metadata } = useEntity(session && "metadata", "me")
+    const { entity: metadata, isLoading: metadataLoading } = useEntity(session && "metadata", "me")
     const {
         entities: notifications,
         mutate: mutateNotifications,
         updateEntity: updateNotification,
         deleteEntity: deleteNotification,
+        isLoading: notificationsLoading,
     } = useEntities(metadata?.notifications_enabled && "notifications", { lang: locale }, { fallbackData })
     const updateEntities = useUpdateEntities()
     const deleteEntities = useDeleteEntities()
+
+    const isLoading = sessionLoading || metadataLoading || notificationsLoading
 
     const [activeTab, setActiveTab] = useState("all")
 
@@ -148,6 +152,8 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                                     deleteNotification={deleteNotification}
                                 />
                             ))
+                    ) : isLoading ? (
+                        [...Array(3)].map((_, index) => <NotificationSkeleton key={index} />)
                     ) : (
                         <div className="flex h-full w-full flex-col items-center justify-center gap-2">
                             <BellSlashIcon className="text-default-400 size-16" />
