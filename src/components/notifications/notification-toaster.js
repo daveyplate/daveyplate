@@ -20,7 +20,6 @@ export default function NotificationToaster() {
     const [previousNotifications, setPreviousNotifications] = useState([])
 
     useEffect(() => {
-        console.log("notifications changed")
         setPreviousNotifications(notifications)
         if (!previousNotifications) return
 
