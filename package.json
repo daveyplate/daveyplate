@@ -36,7 +36,7 @@
     "@heroicons/react": "^2.1.5",
     "@iamtraction/google-translate": "^2.0.1",
     "@next/bundle-analyzer": "^15.0.3",
-    "@nextui-org/react": "^2.6.4",
+    "@nextui-org/react": "^2.6.5",
     "@piotr-cz/swr-idb-cache": "^1.0.3",
     "@sidekickicons/react": "^0.7.0",
     "@supabase/auth-helpers-react": "^0.5.0",
