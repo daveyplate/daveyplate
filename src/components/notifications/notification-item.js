@@ -1,7 +1,6 @@
 import { useLocale } from "next-intl"
 import { useRouter } from "next/router"
 import { forwardRef, useCallback, useRef } from "react"
-import { toast } from "sonner"
 
 import { getLocaleValue } from "@daveyplate/supabase-swr-entities/client"
 
@@ -55,7 +54,6 @@ const NotificationItem = forwardRef(
         }, [router, localeUrl, localeLinkAs])
 
         const notificationPressed = useCallback(() => {
-            toast.dismiss()
             setIsOpen && setIsOpen(false)
 
             if (!is_read || !is_seen) {
@@ -173,7 +171,6 @@ const NotificationItem = forwardRef(
                         disableRipple
                         isIconOnly
                         onPress={() => {
-                            console.log("delete")
                             deleteNotification(notification_id)
                         }}
                     >

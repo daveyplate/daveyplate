@@ -1,36 +1,39 @@
-import { useEffect, useState } from "react"
-import { useLocale } from "next-intl"
 import { useSession } from "@supabase/auth-helpers-react"
+import { useLocale } from "next-intl"
+import { useEffect, useState } from "react"
 
 import { useDeleteEntities, useEntities, useUpdateEntities } from "@daveyplate/supabase-swr-entities/client"
+import { useAutoTranslate } from 'next-auto-translate'
 
 import {
     Button,
     Card,
     CardBody,
+    CardFooter,
     CardHeader,
     Chip,
-    Tabs,
-    Tab,
     ScrollShadow,
-    CardFooter,
+    Tab,
+    Tabs,
 } from "@nextui-org/react"
 
 import { BellSlashIcon } from "@heroicons/react/24/solid"
 
-import { Link } from "@/i18n/routing"
 import NotificationItem from "@/components/notifications/notification-item"
+import { Link } from "@/i18n/routing"
 
 export default function NotificationsCard({ notifications: fallbackData, setIsOpen, ...props }) {
     const session = useSession()
     const locale = useLocale()
+    const { autoTranslate } = useAutoTranslate("notifications")
 
+    const { entity: metadata } = useEntity(session && "metadata", "me")
     const {
         entities: notifications,
         mutate: mutateNotifications,
         updateEntity: updateNotification,
         deleteEntity: deleteNotification,
-    } = useEntities(session && "notifications", { lang: locale }, { fallbackData })
+    } = useEntities(metadata?.notifications_enabled && "notifications", { lang: locale }, { fallbackData })
     const updateEntities = useUpdateEntities()
     const deleteEntities = useDeleteEntities()
 
@@ -55,7 +58,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                 <div className="flex w-full items-center justify-between px-5 py-2">
                     <div className="inline-flex items-center gap-1">
                         <h4 className="inline-block align-middle text-large font-medium">
-                            Notifications
+                            {autoTranslate("notifications", "Notifications")}
                         </h4>
 
                         {!!notifications?.length && (
@@ -77,16 +80,16 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                                 })
                             }}
                         >
-                            Mark all as read
+                            {autoTranslate("mark_all_as_read", "Mark all as read")}
                         </Button>
                     )}
                 </div>
 
                 <Tabs
-                    aria-label="Notifications"
+                    aria-label={autoTranslate("notifications", "Notifications")}
                     classNames={{
                         base: "w-full",
-                        tabList: "gap-6 px-6 py-0 w-full relative rounded-none border-b border-default",
+                        tabList: "gap-6 px-6 py-0 w-full relative rounded-none border-b border-divider",
                         cursor: "w-full",
                         tab: "max-w-fit px-2 h-12",
                     }}
@@ -100,7 +103,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                         title={
                             <div className="flex items-center space-x-2">
                                 <span>
-                                    All
+                                    {autoTranslate("all", "All")}
                                 </span>
 
                                 {!!notifications?.length && (
@@ -117,7 +120,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                         title={
                             <div className="flex items-center space-x-2">
                                 <span>
-                                    Unread
+                                    {autoTranslate("unread", "Unread")}
                                 </span>
 
                                 {!!unreadNotifications?.length && (
@@ -150,7 +153,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                             <BellSlashIcon className="text-default-400 size-16" />
 
                             <p className="text-small text-default-400">
-                                No notifications yet.
+                                {autoTranslate("no_notifications_yet", "No notifications yet.")}
                             </p>
                         </div>
                     )}
@@ -164,7 +167,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                     variant="light"
                     onPress={() => setIsOpen(false)}
                 >
-                    Settings
+                    {autoTranslate("settings", "Settings")}
                 </Button>
 
                 {!!notifications?.length && (
@@ -177,7 +180,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                             })
                         }}
                     >
-                        Archive All
+                        {autoTranslate("archive_all", "Archive All")}
                     </Button>
                 )}
             </CardFooter>

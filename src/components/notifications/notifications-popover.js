@@ -16,7 +16,6 @@ export default function NotificationsPopover() {
     const session = useSession()
 
     const { entity: metadata } = useEntity(session && "metadata", "me")
-
     const {
         entities: notifications,
         updateEntity: updateNotification,

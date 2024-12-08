@@ -139,7 +139,6 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                 </DropdownMenu>
                             </Dropdown>
 
-
                             <OptionsDropdown
                                 className={cn(isMe && "hidden",
                                     user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
