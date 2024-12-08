@@ -25,8 +25,7 @@ export default memo(({
     sendData,
     sendWhisperData,
     updateMessage,
-    setWhisperUser,
-    scrollRef
+    setWhisperUser
 }) => {
     const router = useRouter()
     const session = useSession()
@@ -87,38 +86,37 @@ export default memo(({
             ref={messageRef}
             className={cn("flex gap-3", { "flex-row-reverse": isOutgoing })}
         >
-            <div className="relative flex-none">
-                <Dropdown className="min-w-0">
-                    <DropdownTrigger>
-                        <Button isIconOnly radius="full">
-                            <UserAvatar user={message.user} />
-                        </Button>
-                    </DropdownTrigger>
+            <Dropdown className="min-w-0">
+                <DropdownTrigger>
+                    <Button isIconOnly radius="full">
+                        <UserAvatar user={message.user} />
+                    </Button>
+                </DropdownTrigger>
 
-                    <DropdownMenu>
+                <DropdownMenu>
+                    <DropdownItem
+                        onPress={() => router.push(getPathname({
+                            href: `/user?user_id=${message.user_id}`, locale
+                        }), getPathname({
+                            href: `/user/${message.user_id}`, locale
+                        }))}
+                        startContent={<UserIcon className="size-5" />}
+                    >
+                        {autoTranslate('view_profile', 'View Profile')}
+                    </DropdownItem>
+
+                    {message.user_id !== user?.id && (
                         <DropdownItem
-                            onPress={() => router.push(getPathname({
-                                href: `/user?user_id=${message.user_id}`, locale
-                            }), getPathname({
-                                href: `/user/${message.user_id}`, locale
-                            }))}
-                            startContent={<UserIcon className="size-4" />}
+                            key="whisper"
+                            color="secondary"
+                            startContent={<ChatBubbleOvalLeftIcon className="size-5" />}
+                            onPress={() => setTimeout(() => setWhisperUser(message.user), 200)}
                         >
-                            {autoTranslate('view_profile', 'View Profile')}
+                            {autoTranslate('whisper', 'Whisper')}
                         </DropdownItem>
-
-                        {message.user_id !== user?.id && (
-                            <DropdownItem
-                                key="whisper"
-                                startContent={<ChatBubbleOvalLeftIcon className="size-4" />}
-                                onPress={() => setTimeout(() => setWhisperUser(message.user), 200)}
-                            >
-                                {autoTranslate('whisper', 'Whisper')}
-                            </DropdownItem>
-                        )}
-                    </DropdownMenu>
-                </Dropdown>
-            </div>
+                    )}
+                </DropdownMenu>
+            </Dropdown>
 
             <div className="flex max-w-[70%] flex-col gap-4">
                 {isEditing ? (
@@ -178,7 +176,7 @@ export default memo(({
                                 {message.user?.full_name || "Unnamed"}
 
                                 {isWhisper && (
-                                    <span className="ms-1 font-normal text-tiny text-primary-foreground/90">
+                                    <span className="ms-1.5 font-normal text-tiny text-primary-foreground/90">
                                         {autoTranslate('whispered', 'whispered')}
                                     </span>
                                 )}

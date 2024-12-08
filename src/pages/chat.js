@@ -4,15 +4,14 @@ import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useEntity, useInfiniteEntities, usePeers } from "@daveyplate/supabase-swr-entities/client"
 
-import { ArrowUpIcon } from "@heroicons/react/24/solid"
-import { Button, Chip, cn, Form, Input, ScrollShadow } from "@nextui-org/react"
+import { cn, ScrollShadow } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { isExport } from "@/utils/utils"
 
+import ChatInput from "@/components/chat/chat-input"
 import ChatMessage from "@/components/chat/chat-message"
-import UserAvatar from "@/components/user-avatar"
 
 export default function Chat() {
     const { session, isLoading: sessionLoading } = useSessionContext()
@@ -22,7 +21,6 @@ export default function Chat() {
     const [shouldScrollDown, setShouldScrollDown] = useState(true)
     const [lastWhisperUser, setLastWhisperUser] = useState(null)
     const [whisperUser, setWhisperUser] = useState(null)
-    const inputRef = useRef(null)
     const scrollRef = useRef(null)
 
     useEffect(() => { whisperUser && setLastWhisperUser(whisperUser) }, [whisperUser])
@@ -169,16 +167,12 @@ export default function Chat() {
         setWhisperUser(null)
     }
 
-    useEffect(() => {
-        whisperUser && inputRef.current?.focus()
-    }, [whisperUser])
-
     return (
         <div className={cn((sessionLoading || !messagesAndWhispers) && "opacity-0",
             "flex flex-col grow max-h-[calc(100vh-76px-64px)] items-center transition-all"
         )}>
-            <ScrollShadow ref={scrollRef} className="flex flex-col px-6 py-4 w-full items-center">
-                <div className="max-w-xl w-full flex flex-col-reverse gap-6">
+            <ScrollShadow ref={scrollRef} className="flex flex-col  w-full items-center">
+                <div className="max-w-xl w-full flex flex-col-reverse gap-6 px-6 py-4">
                     {messagesAndWhispers?.map((message) => (
                         <ChatMessage
                             key={message.id}
@@ -191,63 +185,19 @@ export default function Chat() {
                             sendData={sendMessageData}
                             sendWhisperData={sendWhisperData}
                             setWhisperUser={setWhisperUser}
-                            scrollRef={scrollRef}
                         />
                     ))}
                 </div>
             </ScrollShadow>
 
-            <Form
-                className="px-2 mt-auto flex flex-col w-full items-center"
-                onSubmit={sendMessage}
-            >
-                <Input
-                    ref={inputRef}
-                    className="max-w-xl"
-                    autoFocus
-                    size="lg"
-                    variant="bordered"
-                    placeholder={
-                        session ?
-                            (whisperUser ? `Whisper...` : "Message...")
-                            : "Sign in to send messages"
-                    }
-                    value={content}
-                    onValueChange={setContent}
-                    isDisabled={!session}
-                    startContent={
-                        whisperUser && (
-                            <Chip
-                                size="lg"
-                                variant="flat"
-                                color="secondary"
-                                className="-ms-1 gap-1"
-                                avatar={
-                                    <UserAvatar user={whisperUser} />
-                                }
-                                onClose={() => setWhisperUser(null)}
-                            >
-                                <div className="max-w-20 overflow-hidden truncate">
-                                    {whisperUser.full_name}
-                                </div>
-                            </Chip>
-                        )
-                    }
-                    endContent={
-                        <Button
-                            size="sm"
-                            color="primary"
-                            isIconOnly
-                            radius="full"
-                            className="-me-1"
-                            isDisabled={!content || !session}
-                            onPressStart={() => sendMessage()}
-                        >
-                            <ArrowUpIcon className="size-4" />
-                        </Button>
-                    }
-                />
-            </Form>
+            <ChatInput
+                content={content}
+                setContent={setContent}
+                session={session}
+                whisperUser={whisperUser}
+                setWhisperUser={setWhisperUser}
+                sendMessage={sendMessage}
+            />
         </div>
     )
 }
