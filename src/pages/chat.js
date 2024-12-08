@@ -11,7 +11,7 @@ import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { isExport } from "@/utils/utils"
 
-import Message from "@/components/chat/message"
+import ChatMessage from "@/components/chat/chat-message"
 import UserAvatar from "@/components/user-avatar"
 
 export default function Chat() {
@@ -180,7 +180,7 @@ export default function Chat() {
             <ScrollShadow ref={scrollRef} className="flex flex-col px-6 py-4 w-full items-center">
                 <div className="max-w-xl w-full flex flex-col-reverse gap-6">
                     {messagesAndWhispers?.map((message) => (
-                        <Message
+                        <ChatMessage
                             key={message.id}
                             message={message}
                             user={user}
@@ -191,6 +191,7 @@ export default function Chat() {
                             sendData={sendMessageData}
                             sendWhisperData={sendWhisperData}
                             setWhisperUser={setWhisperUser}
+                            scrollRef={scrollRef}
                         />
                     ))}
                 </div>
