@@ -1,6 +1,5 @@
 import { useSession } from "@supabase/auth-helpers-react"
 import { useLocale } from "next-intl"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
@@ -13,18 +12,16 @@ import NotificationItem from "@/components/notifications/notification-item"
 import NotificationsCard from "@/components/notifications/notifications-card"
 
 export default function NotificationsPopover() {
-    const router = useRouter()
     const locale = useLocale()
     const session = useSession()
 
+    const { entity: metadata } = useEntity(session && "metadata", "me")
+
     const {
         entities: notifications,
-        mutate: mutateNotifications,
         updateEntity: updateNotification,
         deleteEntity: deleteNotification
-    } = useEntities(session && "notifications", { lang: locale })
-
-    const { entity: metadata } = useEntity(session && "metadata", "me")
+    } = useEntities(metadata?.notifications_enabled && "notifications", { lang: locale })
 
     const [badgeCount, setBadgeCount] = useState(0)
     const [previousNotifications, setPreviousNotifications] = useState([])
@@ -64,7 +61,7 @@ export default function NotificationsPopover() {
                 <NotificationItem
                     notification={notifications[0]}
                     updateNotification={updateNotification}
-                    deleteNotification={updateNotification}
+                    deleteNotification={deleteNotification}
                     setIsOpen={setIsOpen}
                     disableSwipe={true}
                     className="rounded-xl border"
