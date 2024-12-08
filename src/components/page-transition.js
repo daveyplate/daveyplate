@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/router'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useRouter } from 'next/router'
+import { useEffect, useRef, useState } from 'react'
 import { isSafari } from 'react-device-detect'
 
 const PageTransition = ({ children }) => {
@@ -96,7 +96,7 @@ const PageTransition = ({ children }) => {
         <AnimatePresence initial={false}>
             <motion.div
                 key={router.asPath}
-                className="absolute w-svw h-svh bg-background"
+                className="absolute w-dvw h-dvh bg-background"
                 initial={{
                     x: direction === 'forward' ? '100%' : '-25%',
                     opacity: isMobile ? 1 : 0
