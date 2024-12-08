@@ -1,34 +1,35 @@
-import { useEffect } from 'react'
-import { SessionContextProvider } from '@supabase/auth-helpers-react'
-import { SWRConfig } from "swr"
 import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
+import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import { NuqsAdapter } from 'nuqs/adapters/next/pages'
+import { useEffect } from 'react'
+import { SWRConfig } from "swr"
 
-import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
 import de from 'javascript-time-ago/locale/de'
+import en from 'javascript-time-ago/locale/en'
 TimeAgo.addLocale(en)
 TimeAgo.addLocale(de)
 TimeAgo.setDefaultLocale('en')
 
-import { ThemeProvider } from "next-themes"
 import { NextUIProvider } from "@nextui-org/react"
+import { ThemeProvider } from "next-themes"
 import { toast } from 'sonner'
 
-import { AutoTranslateProvider } from 'next-auto-translate'
 import { PageTitleProvider } from '@daveyplate/next-page-title'
+import { AutoTranslateProvider } from 'next-auto-translate'
 
-import i18nConfig from 'i18n.config'
-import { usePathname, useLocaleRouter } from "@/i18n/routing"
+import { useLocaleRouter, usePathname } from "@/i18n/routing"
 import { createClient } from '@/utils/supabase/component'
 import { iOS } from '@/utils/utils'
+import i18nConfig from 'i18n.config'
 
+import { CapacitorProvider } from "@/components/providers/capacitor-provider"
 import MetaTheme from "@/components/providers/meta-theme"
 import ToastProvider from "@/components/providers/toast-provider"
-import { CapacitorProvider } from "@/components/providers/capacitor-provider"
+import NotificationToaster from "../notifications/notification-toaster"
 
 const localeValues = [
     'fr-FR', 'fr-CA', 'de-DE', 'en-US', 'en-GB', 'ja-JP',
@@ -106,6 +107,7 @@ export default function Providers({ children, ...pageProps }) {
                                     {children}
 
                                     <ToastProvider />
+                                    <NotificationToaster />
                                     <CapacitorProvider />
 
                                     <SpeedInsights debug={false} />
