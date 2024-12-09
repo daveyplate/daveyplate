@@ -226,7 +226,7 @@ export default memo(({
 
                         {localizedMessage != originalMessage && (
                             <>
-                                <Divider className={cn((isOutgoing || isWhisper) && "light:invert")} />
+                                <Divider className={cn((isOutgoing || isWhisper) && "invert dark:invert-0")} />
 
                                 <div className="flex justify-start items-center gap-3">
                                     <Flag
