@@ -48,38 +48,10 @@ export default function Providers({ children, ...pageProps }) {
     const supabase = createClient()
     useWindowFocusBlur()
 
-    /*
-    const cacheProvider = useCacheProvider({
-        dbName: 'daveyplate',
-        storeName: 'swr-cache',
-    })
-    */
-
     const nextUILocale = localeValues.find((locale) => locale.startsWith(pageProps.locale))
 
     useEffect(() => {
         window.history.scrollRestoration = iOS() ? 'auto' : 'manual'
-
-        // Enable pull to refresh for iOS PWA
-        /*
-        const standalone = window.matchMedia("(display-mode: standalone)").matches
-
-        if (standalone) {
-            PullToRefresh.init({
-                instructionsReleaseToRefresh: " ",
-                instructionsPullToRefresh: " ",
-                instructionsRefreshing: " ",
-                iconRefreshing: ReactDOMServer.renderToString(
-                    <Spinner color="white" size="sm" className="invert dark:invert-0" />
-                ),
-                iconArrow: ReactDOMServer.renderToString(
-                    <ArrowDownIcon className="size-5 mx-auto text-foreground" />
-                )
-            })
-        }
-
-        return () => PullToRefresh.destroyAll()
-        */
     }, [])
 
     return (
