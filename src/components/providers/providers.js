@@ -26,6 +26,8 @@ import { iOS } from '@/utils/utils'
 import i18nConfig from 'i18n.config'
 
 import { CapacitorProvider } from "@/components/providers/capacitor-provider"
+import { useWindowFocusBlur } from "@daveyplate/use-window-focus-blur"
+
 import MetaTheme from "@/components/providers/meta-theme"
 import ToastProvider from "@/components/providers/toast-provider"
 import NotificationToaster from "../notifications/notification-toaster"
@@ -44,6 +46,8 @@ export default function Providers({ children, ...pageProps }) {
     const localeRouter = useLocaleRouter()
     const pathname = usePathname()
     const supabase = createClient()
+    useWindowFocusBlur()
+
     /*
     const cacheProvider = useCacheProvider({
         dbName: 'daveyplate',

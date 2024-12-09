@@ -32,7 +32,7 @@
     "@daveyplate/supabase-swr-entities": "^3.0.62",
     "@daveyplate/tailwind-drag-dropzone": "^1.0.4",
     "@daveyplate/use-scroll-restoration": "^1.0.4",
-    "@daveyplate/use-window-focus-blur": "^1.0.0",
+    "@daveyplate/use-window-focus-blur": "^1.0.1",
     "@heroicons/react": "^2.1.5",
     "@iamtraction/google-translate": "^2.0.1",
     "@next/bundle-analyzer": "^15.0.3",
