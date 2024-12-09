@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import { getLocaleValue, useCreateEntity, useDeleteEntity } from '@daveyplate/supabase-swr-entities/client'
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
-import { ArrowRightIcon, ChatBubbleOvalLeftIcon, HeartIcon, PencilIcon, TrashIcon, UserIcon } from '@heroicons/react/24/solid'
+import { ArrowRightIcon, ChatBubbleOvalLeftIcon, HeartIcon, PencilIcon, TrashIcon, UserIcon } from '@heroicons/react/24/outline'
 import { AvatarGroup, Button, cn, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Textarea } from "@nextui-org/react"
 import Flag from 'react-flagpack'
 import ReactTimeAgo from 'react-time-ago'
