@@ -1,7 +1,7 @@
 import type { ScrollShadowProps } from "@nextui-org/react"
 
 import { cn, ScrollShadow } from "@nextui-org/react"
-import React from "react"
+import React, { ReactElement } from "react"
 
 interface ScrollingBannerProps extends ScrollShadowProps {
   isReverse?: boolean
@@ -80,7 +80,7 @@ const ScrollingBanner = React.forwardRef<HTMLDivElement, ScrollingBannerProps>(
           className,
         )}
         style={{
-          // @ts-ignore
+          // @ts-expect-error TailwindCSS custom properties
           "--gap": gap,
           "--duration": `${duration}s`,
           ...style,
@@ -96,7 +96,7 @@ const ScrollingBanner = React.forwardRef<HTMLDivElement, ScrollingBannerProps>(
             "hover:[animation-play-state:paused]": shouldPauseOnHover,
           })}
         >
-          {React.Children.map(children, (child) => React.cloneElement(child as any))}
+          {React.Children.map(children, (child) => React.cloneElement(child as ReactElement))}
         </div>
       </ScrollShadow>
     )

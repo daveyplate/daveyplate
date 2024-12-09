@@ -1,5 +1,5 @@
+import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
-import { createServerClient, serializeCookieHeader } from '@supabase/ssr'
 
 export function createClient(req, res) {
     // Custom Implementation - For CORS, use Bearer token
@@ -22,7 +22,7 @@ export function createClient(req, res) {
                     return req.cookies.getAll()
                 },
                 setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value, options }) => req.cookies.set(name, value))
+                    cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value))
                     cookiesToSet.forEach(({ name, value, options }) =>
                         res.cookies.set(name, value, options)
                     )

@@ -1,4 +1,3 @@
-import { useCacheProvider } from "@piotr-cz/swr-idb-cache"
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import { NuqsAdapter } from 'nuqs/adapters/next/pages'
 import { useEffect } from 'react'
@@ -45,10 +44,12 @@ export default function Providers({ children, ...pageProps }) {
     const localeRouter = useLocaleRouter()
     const pathname = usePathname()
     const supabase = createClient()
+    /*
     const cacheProvider = useCacheProvider({
         dbName: 'daveyplate',
         storeName: 'swr-cache',
     })
+    */
 
     const nextUILocale = localeValues.find((locale) => locale.startsWith(pageProps.locale))
 
@@ -81,7 +82,7 @@ export default function Providers({ children, ...pageProps }) {
         <PageTitleProvider>
             <SessionContextProvider supabaseClient={supabase}>
                 <SWRConfig value={{
-                    onError: (error, key) => {
+                    onError: (error) => {
                         if (error.status !== 403 && error.status !== 404) {
                             // We can send the error to Sentry,
                             // or show a notification UI.

@@ -155,7 +155,10 @@ export default memo(({
                                 onPress={async () => {
                                     setIsEditing(false)
                                     const { error } = await deleteMessage(message.id) || {}
-                                    isWhisper && !error && sendWhisperData({ event: "delete_entity" })
+
+                                    if (isWhisper && !error) {
+                                        sendWhisperData({ event: "delete_entity" })
+                                    }
                                 }}
                                 variant="flat"
                             >

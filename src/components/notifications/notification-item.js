@@ -63,7 +63,6 @@ const NotificationItem = forwardRef(
 
         /**
          * Defines the content for different types of notifications.
-         */
         const contentByType = {
             request: (
                 <div className="flex gap-2 pt-2">
@@ -77,6 +76,7 @@ const NotificationItem = forwardRef(
                 </div>
             )
         }
+         */
 
         return (
             <SwipeToDelete
