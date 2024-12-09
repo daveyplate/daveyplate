@@ -281,10 +281,12 @@ export default function UserPage({ user_id, user: fallbackData }) {
                         .getPublicUrl(fileName)
 
                     const avatarUrl = `${publicUrl}?${new Date().getTime()}`
-                    const { error } = await updateUser({ avatar_url: avatarUrl })
-                    supabase.auth.updateUser({ data: { avatar_url: avatarUrl } })
 
+                    // TODO figure out how this auth update triggers a re-render
+                    await supabase.auth.updateUser({ data: { avatar_url: null } })
+                    const { error } = await updateUser({ avatar_url: avatarUrl })
                     setUploadingAvatar(false)
+
                     error && toast.error(error.message)
                 }}
                 onError={(error) => toast.error(error.message)}

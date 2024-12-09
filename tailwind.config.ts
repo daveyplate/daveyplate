@@ -9,6 +9,7 @@ export default {
     "./src/**/*.{ts,tsx,js,jsx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@daveyplate/supabase-auth-nextui/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@daveyplate/nextui-crop-image-modal/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
