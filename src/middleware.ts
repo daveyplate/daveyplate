@@ -1,9 +1,10 @@
-import { rateLimit } from '@daveyplate/next-rate-limit'
 import { nextCors } from '@daveyplate/next-cors-middleware'
+import { rateLimit } from '@daveyplate/next-rate-limit'
+import { NextRequest } from 'next/server'
 
 const allowedOrigins = ['http://localhost:3000']
 
-export function middleware(request) {
+export function middleware(request: NextRequest) {
     // CORS
     const response = nextCors({ request, allowedOrigins })
 

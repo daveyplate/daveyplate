@@ -29,7 +29,7 @@
     "@daveyplate/nextui-crop-image-modal": "^1.0.5",
     "@daveyplate/nextui-fixed-avatar": "^1.0.6",
     "@daveyplate/supabase-auth-nextui": "^1.0.5",
-    "@daveyplate/supabase-swr-entities": "^3.0.24",
+    "@daveyplate/supabase-swr-entities": "^3.0.25",
     "@daveyplate/tailwind-drag-dropzone": "^1.0.4",
     "@daveyplate/use-scroll-restoration": "^1.0.4",
     "@daveyplate/use-window-focus-blur": "^1.0.0",
