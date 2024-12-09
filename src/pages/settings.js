@@ -28,7 +28,8 @@ export default function Settings() {
             <Card fullWidth className="max-w-xl px-1 pt-2">
                 <Tabs
                     className="p-3"
-                    classNames={{ base: cn(!session && "hidden") }}
+                    classNames={{ tabContent: "text-small", base: cn(!session && "hidden") }}
+                    size="lg"
                     selectedKey={activeTab}
                     onSelectionChange={setActiveTab}
                 >
