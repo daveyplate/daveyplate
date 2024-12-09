@@ -6,3 +6,7 @@
 .flex-center {
     @apply flex flex-col grow p-4 gap-4 items-center justify-center w-full;
 }
+
+body { 
+    @apply antialiased;
+}

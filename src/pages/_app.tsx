@@ -16,12 +16,13 @@ import DefaultFont from "@/styles/fonts"
 import Footer from "@/components/footer"
 import Header from "@/components/header"
 import Providers from "@/components/providers/providers"
+import { AppProps } from 'next/app'
 
-const MyApp = ({ Component, pageProps }) => {
+const MyApp = ({ Component, pageProps }: AppProps) => {
     const router = useRouter()
 
     useEffect(() => {
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
             document.documentElement.classList.add('ua-ios')
         }
     }, [])

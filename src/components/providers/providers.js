@@ -95,8 +95,8 @@ export default function Providers({ children, ...pageProps }) {
                             <NuqsAdapter>
                                 <AutoTranslateProvider
                                     pathname={pathname}
-                                    defaultLocale={i18nConfig.i18n.defaultLocale}
-                                    locales={i18nConfig.i18n.locales}
+                                    defaultLocale={i18nConfig.defaultLocale}
+                                    locales={i18nConfig.locales}
                                     messages={pageProps.messages || []}
                                     locale={pageProps.locale}
                                     debug={false}

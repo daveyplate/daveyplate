@@ -1,14 +1,14 @@
-import NextLink from 'next/link'
-import { forwardRef } from 'react'
 import { createNavigation } from 'next-intl/navigation'
 import { defineRouting } from 'next-intl/routing'
+import NextLink from 'next/link'
+import { forwardRef } from 'react'
 
-import i18nConfig from 'i18n.config'
 import { isExport } from '@/utils/utils'
+import i18nConfig from 'i18n.config'
 
 export const routing = defineRouting({
-    locales: i18nConfig.i18n.locales,
-    defaultLocale: i18nConfig.i18n.defaultLocale,
+    locales: i18nConfig.locales,
+    defaultLocale: i18nConfig.defaultLocale,
     localePrefix: isExport() ? 'always' : 'as-needed'
 })
 

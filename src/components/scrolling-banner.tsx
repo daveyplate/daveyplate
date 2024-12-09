@@ -1,6 +1,16 @@
-import React from "react";
-import { ScrollShadow } from "@nextui-org/react";
-import { cn } from "@nextui-org/react";
+import type { ScrollShadowProps } from "@nextui-org/react"
+
+import { cn, ScrollShadow } from "@nextui-org/react"
+import React from "react"
+
+interface ScrollingBannerProps extends ScrollShadowProps {
+  isReverse?: boolean
+  showShadow?: boolean
+  shouldPauseOnHover?: boolean
+  isVertical?: boolean
+  gap?: string
+  duration?: number // in seconds
+}
 
 /*
   This example requires some changes to your TailwindCSS config:
@@ -30,7 +40,7 @@ import { cn } from "@nextui-org/react";
   }
   ```
 */
-const ScrollingBanner = React.forwardRef(
+const ScrollingBanner = React.forwardRef<HTMLDivElement, ScrollingBannerProps>(
   (
     {
       className,
@@ -46,14 +56,14 @@ const ScrollingBanner = React.forwardRef(
     },
     ref,
   ) => {
-    const shadowProps = {
+    const shadowProps: ScrollShadowProps = {
       isEnabled: showShadow,
       offset: -20,
       size: 300,
       orientation: isVertical ? "vertical" : "horizontal",
       visibility: "both",
       ...props,
-    };
+    }
 
     return (
       <ScrollShadow
@@ -77,7 +87,7 @@ const ScrollingBanner = React.forwardRef(
         }}
       >
         <div
-          className={cn("flex w-max items-stretch items-center gap-[--gap]", {
+          className={cn("flex w-max items-stretch gap-[--gap]", {
             "flex-col": isVertical,
             "h-full": isVertical,
             "animate-scrolling-banner": !isVertical,
@@ -86,13 +96,13 @@ const ScrollingBanner = React.forwardRef(
             "hover:[animation-play-state:paused]": shouldPauseOnHover,
           })}
         >
-          {React.Children.map(children, (child) => React.cloneElement(child))}
+          {React.Children.map(children, (child) => React.cloneElement(child as any))}
         </div>
       </ScrollShadow>
-    );
+    )
   },
-);
+)
 
-ScrollingBanner.displayName = "ScrollingBanner";
+ScrollingBanner.displayName = "ScrollingBanner"
 
-export default ScrollingBanner;
+export default ScrollingBanner

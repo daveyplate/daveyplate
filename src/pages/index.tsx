@@ -1,4 +1,5 @@
 import { cn } from "@daveyplate/tailwind-drag-dropzone"
+import { GetStaticProps } from 'next'
 import Image from "next/image"
 import { toast } from "sonner"
 
@@ -81,6 +82,7 @@ export default function IndexPage() {
 
                             <DropdownMenu>
                                 <DropdownItem
+                                    key="default"
                                     startContent={
                                         <PlusCircleIcon className="size-5" />
                                     }
@@ -90,6 +92,7 @@ export default function IndexPage() {
                                 </DropdownItem>
 
                                 <DropdownItem
+                                    key="success"
                                     color="success"
                                     startContent={
                                         <CheckCircleIcon className="size-5" />
@@ -100,6 +103,7 @@ export default function IndexPage() {
                                 </DropdownItem>
 
                                 <DropdownItem
+                                    key="info"
                                     color="primary"
                                     startContent={
                                         <InformationCircleIcon className="size-5" />
@@ -110,6 +114,7 @@ export default function IndexPage() {
                                 </DropdownItem>
 
                                 <DropdownItem
+                                    key="warning"
                                     color="warning"
                                     startContent={
                                         <ExclamationTriangleIcon className="size-5" />
@@ -120,6 +125,7 @@ export default function IndexPage() {
                                 </DropdownItem>
 
                                 <DropdownItem
+                                    key="error"
                                     color="danger"
                                     startContent={
                                         <ExclamationCircleIcon className="size-5" />
@@ -130,6 +136,7 @@ export default function IndexPage() {
                                 </DropdownItem>
 
                                 <DropdownItem
+                                    key="loading"
                                     color="secondary"
                                     startContent={
                                         <Spinner size="sm" color="current" />
@@ -172,9 +179,9 @@ export default function IndexPage() {
                     <ScrollingBanner shouldPauseOnHover={false} gap="2rem">
                         <Image src={NextJSLogo} className="w-32" alt="Next.js" />
                         <Image src={SupabaseLogo} className="w-36" alt="Supabase" />
-                        <Image src={NextUILogo} className="w-36" alt="NextUI" />
+                        <Image src={NextUILogo} className="w-36 h-36" alt="NextUI" />
                         <Image src={CapacitorLogo} className="w-36 grayscale invert" alt="Capacitor" />
-                        <Image src={VercelLogo} className="w-40" alt="Vercel" />
+                        <Image src={VercelLogo} className="w-36 h-36" alt="Vercel" />
                         <Image src={StripeLogo} className="w-24" alt="Stripe" />
                         <Image src={TailwindLogo} className="w-36 grayscale invert" alt="Tailwind CSS" />
                     </ScrollingBanner>
@@ -184,7 +191,7 @@ export default function IndexPage() {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }

@@ -6,5 +6,5 @@ import i18nConfig from 'i18n.config'
  */
 export const getLocalePaths = () => ({
   fallback: false,
-  paths: i18nConfig.i18n.locales.map((locale) => ({ params: { locale } }))
+  paths: i18nConfig.locales.map((locale) => ({ params: { locale } }))
 })

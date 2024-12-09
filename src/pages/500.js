@@ -1,5 +1,5 @@
-import { AutoTranslate } from "next-auto-translate"
 import { getTranslationProps } from "@/i18n/translation-props"
+import { AutoTranslate } from "next-auto-translate"
 
 export default function Custom500() {
     return (

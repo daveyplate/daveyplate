@@ -14,7 +14,7 @@ import i18nConfig from 'i18n.config'
  * @returns {Promise<TranslationProps>} An object containing the messages, locale, and locales.
  */
 export const getTranslationProps = async ({ locale, params }) => {
-    locale = params?.locale || locale || i18nConfig.i18n.defaultLocale
+    locale = params?.locale || locale || i18nConfig.defaultLocale
 
     let messages = {}
     try { messages = (await import(`messages/${locale}.json`)).default } catch { }

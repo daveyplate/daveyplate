@@ -1,13 +1,11 @@
-import { isExport, useEntities } from '@daveyplate/supabase-swr-entities/client'
-import { Card, CardBody, Image, Skeleton } from "@nextui-org/react"
 import UserAvatar from "@/components/user-avatar"
-import { Link } from "@/i18n/routing"
-import { useState } from 'react'
-import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
-import { useLocale } from 'next-intl'
-import { getTranslationProps } from "@/i18n/translation-props"
-import { AutoTranslate } from 'next-auto-translate'
 import { getLocalePaths } from '@/i18n/locale-paths'
+import { Link } from "@/i18n/routing"
+import { getTranslationProps } from "@/i18n/translation-props"
+import { getLocaleValue, isExport, useEntities } from '@daveyplate/supabase-swr-entities/client'
+import { Card, CardBody, Image, Skeleton } from "@nextui-org/react"
+import { AutoTranslate } from 'next-auto-translate'
+import { useLocale } from 'next-intl'
 
 export default function BlogPage() {
     const locale = useLocale()

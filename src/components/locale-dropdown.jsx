@@ -1,12 +1,12 @@
-import { useRouter } from "next/router"
 import { useLocale } from "next-intl"
+import { useRouter } from "next/router"
 
-import Flag from "react-flagpack"
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
+import Flag from "react-flagpack"
 
-import i18nConfig from 'i18n.config'
 import { getPathname, usePathname } from "@/i18n/routing"
 import { isExport } from "@/utils/utils"
+import i18nConfig from 'i18n.config'
 
 export const localeToCountry = {
     "en": "US",
@@ -34,7 +34,7 @@ export function LocaleDropdown({ children, ...props }) {
     const router = useRouter()
     const currentLocale = useLocale()
     const pathname = usePathname()
-    const locales = i18nConfig.i18n.locales
+    const locales = i18nConfig.locales
 
     const handleLocaleChange = (locale) => {
         if (isExport()) {

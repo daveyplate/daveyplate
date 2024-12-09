@@ -1,7 +1,7 @@
-const { nextui } = require("@nextui-org/react")
+import { nextui } from "@nextui-org/react"
+import type { Config } from "tailwindcss"
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   future: {
     hoverOnlyWhenSupported: true,
   },
@@ -45,4 +45,4 @@ module.exports = {
     require("tailwindcss-animate"),
     require("tailwindcss-safe-area"),
   ],
-}
+} satisfies Config
