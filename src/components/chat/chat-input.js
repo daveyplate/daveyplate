@@ -1,7 +1,9 @@
-import UserAvatar from '@/components/user-avatar'
+import { useEffect, useRef } from "react"
+
 import { ArrowUpIcon } from "@heroicons/react/24/solid"
 import { Button, Chip, Form, Input } from "@nextui-org/react"
-import { useEffect, useRef } from "react"
+
+import UserAvatar from '@/components/user-avatar'
 
 export default function ChatInput({ content, setContent, session, whisperUser, setWhisperUser, sendMessage }) {
     const inputRef = useRef(null)
