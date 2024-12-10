@@ -11,6 +11,7 @@ import { isExport } from "@/utils/utils"
 
 import { createClient } from "@/utils/supabase/component"
 import { getURL } from "@/utils/utils"
+import { Link } from "@/i18n/routing"
 
 export default function LoginPage() {
     const supabase = createClient()
@@ -40,15 +41,15 @@ export default function LoginPage() {
 
                 &nbsp;
 
-                <a href="/terms" className="underline">
+                <Link href="/terms" className="underline">
                     {autoTranslate("terms", "Terms")}
-                </a>
+                </Link>
 
                 &nbsp;&&nbsp;
 
-                <a href="/privacy" className="underline">
+                <Link href="/privacy" className="underline">
                     {autoTranslate("privacy", "Privacy")}
-                </a>
+                </Link>
             </p>
         </div>
     )
