@@ -11,6 +11,7 @@
     "ngrok": "ngrok http --domain=leaked.ngrok.dev 3000",
     "export": "NEXT_PUBLIC_IS_EXPORT=1 sh export.sh",
     "postinstall": "react-flagpack",
+    "generate-types": "supabase gen types typescript --project-id zwusuzefptvayftcobje > database.types.ts",
     "generate-icons": "generate-icons --source ./public/icons/icon-512.png",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=daveyplate"
   },
@@ -23,14 +24,14 @@
     "@capacitor/network": "^5.0.8",
     "@daveyplate/generate-icons": "^1.0.6",
     "@daveyplate/next-cors-middleware": "^1.0.2",
-    "@daveyplate/next-open-graph": "^1.0.11",
+    "@daveyplate/next-open-graph": "^1.0.12",
     "@daveyplate/next-page-title": "^1.0.4",
     "@daveyplate/next-rate-limit": "^1.0.9",
     "@daveyplate/nextui-confirm-modal": "^1.0.6",
     "@daveyplate/nextui-crop-image-modal": "^1.0.7",
     "@daveyplate/nextui-fixed-avatar": "^1.0.11",
     "@daveyplate/supabase-auth-nextui": "^1.0.6",
-    "@daveyplate/supabase-swr-entities": "^4.0.1",
+    "@daveyplate/supabase-swr-entities": "^4.0.2",
     "@daveyplate/tailwind-drag-dropzone": "^1.0.5",
     "@daveyplate/use-window-focus-blur": "^1.0.1",
     "@heroicons/react": "^2.1.5",
@@ -88,6 +89,7 @@
     "eslint-config-next": "15.0.4",
     "file-loader": "^6.2.0",
     "husky": "^9.1.6",
+    "supabase": "^2.0.0",
     "typescript": "^5"
   },
   "overrides": {

@@ -15,14 +15,15 @@ import { OpenGraph } from "@daveyplate/next-open-graph"
 import ArticleComment from '@/components/blog/article-comment'
 import { useSession } from '@supabase/auth-helpers-react'
 import { GetStaticPropsContext } from 'next'
+import { Article, Profile } from 'entity.types'
 
 export default function ArticlePage({ article_id, article: fallbackData }: { article_id: string, article: Record<string, unknown> }) {
     const locale = useLocale()
     const router = useRouter()
     const session = useSession()
-    const { entity: user } = useEntity(session && 'profiles', 'me')
+    const { entity: user } = useEntity<Profile>(session && 'profiles', 'me')
     const articleId = article_id || router.query.article_id as string
-    const { entity: article } = useEntity(articleId ? 'articles' : null, articleId, { lang: locale }, { fallbackData })
+    const { entity: article } = useEntity<Article>(articleId ? 'articles' : null, articleId, { lang: locale }, { fallbackData })
     const {
         entities: comments,
         createEntity: createComment,

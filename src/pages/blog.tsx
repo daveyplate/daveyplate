@@ -4,13 +4,14 @@ import { Link } from "@/i18n/routing"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { getLocaleValue, isExport, useEntities } from '@daveyplate/supabase-swr-entities/client'
 import { Card, CardBody, Image, Skeleton } from "@nextui-org/react"
+import { Article } from "entity.types"
 import { GetStaticPropsContext } from "next"
 import { AutoTranslate } from 'next-auto-translate'
 import { useLocale } from 'next-intl'
 
 export default function BlogPage() {
     const locale = useLocale()
-    const { entities: articles, isLoading } = useEntities('articles', { lang: locale })
+    const { entities: articles, isLoading } = useEntities<Article>('articles', { lang: locale })
 
     return (
         <div className="flex-container max-w-xl mx-auto">

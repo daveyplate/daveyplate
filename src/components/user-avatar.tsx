@@ -3,16 +3,16 @@ import { AvatarProps } from '@nextui-org/react'
 
 interface UserAvatarProps {
     user?: {
-        full_name?: string
-        username?: string
-        avatar_url?: string
-    }
+        full_name?: string | null
+        username?: string | null
+        avatar_url?: string | null
+    } | null
 }
 
 const UserAvatar = ({ user, ...props }: UserAvatarProps & AvatarProps) => {
     return (
         <Avatar
-            name={user?.full_name}
+            name={user?.full_name || ""}
             src={user?.avatar_url || ""}
             {...props}
         />
