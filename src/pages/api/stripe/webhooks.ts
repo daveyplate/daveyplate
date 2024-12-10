@@ -1,5 +1,6 @@
-import { buffer } from "micro";
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+import { buffer } from "micro"
+import Stripe from "stripe"
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 const relevantEvents = new Set([
     //'checkout.session.completed',
@@ -8,10 +9,11 @@ const relevantEvents = new Set([
     'customer.subscription.deleted'
 ])
 import { createClient } from '@/utils/supabase/service-role'
+import { NextApiRequest, NextApiResponse } from "next"
 
 export const config = { api: { bodyParser: false } }
 
-export default async (req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
     const body = await buffer(req)
     const sig = req.headers["stripe-signature"]
 
@@ -21,14 +23,14 @@ export default async (req, res) => {
     try {
         if (!sig || !webhookSecret) return
         event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
-    } catch (err) {
-        console.error(`❌ Error message: ${err.message}`)
-        res.status(400).end(`Webhook Error: ${err.message}`)
+    } catch (error) {
+        console.error(`❌ Error message: ${(error as Error).message}`)
+        res.status(400).end(`Webhook Error: ${(error as Error).message}`)
     }
 
     const supabase = createClient()
 
-    if (relevantEvents.has(event.type)) {
+    if (event && relevantEvents.has(event.type)) {
         try {
             switch (event.type) {
                 case 'customer.subscription.created':

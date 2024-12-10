@@ -1,12 +1,12 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import { createServerClient, serializeCookieHeader } from '@supabase/ssr'
+import { type NextApiRequest, type NextApiResponse } from 'next'
 
-export function createClient(req, res) {
-    // Custom Implementation - For CORS, use Bearer token
+export function createClient(req: NextApiRequest, res: NextApiResponse) {
     if (req.headers.authorization) {
         const supabase = createSupabaseClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
             { global: { headers: { Authorization: req.headers.authorization } } }
         )
 
@@ -14,8 +14,8 @@ export function createClient(req, res) {
     }
 
     const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         {
             cookies: {
                 getAll() {

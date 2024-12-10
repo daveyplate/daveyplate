@@ -1,8 +1,7 @@
 import { gzip, ungzip } from 'node-gzip'
 
 /**
- * Get the full URL of the site.
- * @returns {string} The full URL of the site.
+ * Get the full URL of the site via NEXT_PUBLIC_SITE_URL or NEXT_PUBLIC_VERCEL_URL.
  */
 export const getURL = () => {
   let url =
@@ -16,28 +15,23 @@ export const getURL = () => {
 
 /**
  * Compress and base64 encode a string
- * @param {string} string The string to compress
- * @returns {Promise<string>} The compressed base64 string
  */
-export const compress = async (string) => {
+export const compress = async (string: string) => {
   const compressed = await gzip(string)
   return Buffer.from(compressed).toString('base64')
 }
 
 /**
  * Decompress a base64 encoded string
- * @param {string} base64String The base64 encoded string to decompress
- * @returns {Promise<string>} The decompressed string
  */
-export const decompress = async (base64String) => {
+export const decompress = async (base64String: string) => {
   const compressedBuffer = Buffer.from(base64String, 'base64')
   const uncompressed = await ungzip(compressedBuffer)
   return uncompressed.toString()
 }
 
 /**
- * Check if the app is being exported
- * @returns {bool} NEXT_PUBLIC_IS_EXPORT == "1"
+ * Check if the app is being exported (NEXT_PUBLIC_IS_EXPORT == "1").
  */
 export const isExport = () => {
   return process.env.NEXT_PUBLIC_IS_EXPORT == "1"
@@ -45,7 +39,6 @@ export const isExport = () => {
 
 /**
  * Check if the current device is running iOS.
- * @returns {boolean} True if the device is running iOS, false otherwise.
  */
 export const iOS = () => {
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g)

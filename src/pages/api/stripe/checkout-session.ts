@@ -1,7 +1,10 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-import { createClient } from '@/utils/supabase/api'
+import Stripe from "stripe"
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
-export default async function handler(req, res) {
+import { createClient } from '@/utils/supabase/api'
+import { NextApiRequest, NextApiResponse } from 'next'
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const supabase = createClient(req, res)
         const { price, metadata, customer_name } = req.body
@@ -66,9 +69,9 @@ export default async function handler(req, res) {
             })
 
             res.json({ session })
-        } catch (err) {
-            console.error(err)
-            res.status(err.statusCode || 500).json(err.message)
+        } catch (error) {
+            console.error(error)
+            res.status(500).json((error as Error).message)
         }
     } else {
         res.setHeader('Allow', 'POST')
