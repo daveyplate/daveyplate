@@ -1,4 +1,3 @@
-import { cn } from "@daveyplate/tailwind-drag-dropzone"
 import { GetStaticProps } from 'next'
 import Image from "next/image"
 import { toast } from "sonner"
@@ -10,6 +9,7 @@ import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 
 import {
+    cn,
     Button,
     Dropdown,
     DropdownItem,
