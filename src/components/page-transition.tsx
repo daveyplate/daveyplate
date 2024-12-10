@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
-import { isSafari } from 'react-device-detect'
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter()

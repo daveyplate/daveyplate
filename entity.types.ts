@@ -6,3 +6,4 @@ export interface Article extends Tables<"articles"> {
     user: Profile
 }
 
+export interface Message extends Tables<"messages"> { }

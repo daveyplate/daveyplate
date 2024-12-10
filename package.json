@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev & nodemon --exec tsx code-sync.ts --quiet",
+    "dev": "next dev & nodemon --exec \"tsx code-sync.ts & next lint --quiet\" --quiet",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint --help",
     "cache-clean": "npm cache clean --force && npm cache verify",
     "ngrok": "ngrok http --domain=leaked.ngrok.dev 3000",
     "export": "NEXT_PUBLIC_IS_EXPORT=1 sh export.sh",
