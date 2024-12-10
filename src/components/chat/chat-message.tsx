@@ -16,6 +16,18 @@ import ReactTimeAgo from 'react-time-ago'
 import UserAvatar from '@/components/user-avatar'
 import { getPathname } from "@/i18n/routing"
 import { localeToCountry } from '../locale-dropdown'
+import { Message, MessageLike, Profile, Whisper } from 'entity.types'
+
+interface ChatMessageProps {
+    message: Message | Whisper
+    user: Profile
+    mutateMessage: (message: Message) => void
+    deleteMessage: (id: string) => Promise<any>
+    sendData: (data: any) => void
+    sendWhisperData: (data: any) => void
+    updateMessage: (id: string, data: Record<string, any>) => Promise<any>
+    setWhisperUser: (user: Profile) => void
+}
 
 export default memo(({
     message,
@@ -26,23 +38,23 @@ export default memo(({
     sendWhisperData,
     updateMessage,
     setWhisperUser
-}) => {
+}: ChatMessageProps) => {
     const router = useRouter()
     const session = useSession()
     const locale = useLocale()
     const { autoTranslate } = useAutoTranslate("message")
-    const isWhisper = !!message.recipient_id
+    const isWhisper = !!(message as Whisper).recipient_id
     const isOutgoing = message.user_id == session?.user.id
     const [isEditing, setIsEditing] = useState(false)
     const [editedContent, setEditedContent] = useState(getLocaleValue(message.content, locale))
-    const messageRef = useRef(null)
+    const messageRef = useRef<HTMLDivElement>(null)
 
-    const isMessageLiked = (message) => message.likes?.find((like) => like.user_id == user?.id)
+    const isMessageLiked = (message: Message | Whisper) => message.likes?.find((like) => like.user_id == user?.id)
     const createEntity = useCreateEntity()
     const deleteEntity = useDeleteEntity()
 
-    const likeMessage = (message) => {
-        const messageLike = { message_id: message.id, user_id: user.id }
+    const likeMessage = (message: Message) => {
+        const messageLike = { message_id: message.id, user_id: user.id } as MessageLike
         createEntity("message_likes", messageLike).then(({ error }) => {
             if (error) {
                 return mutateMessage({ ...message, likes: message.likes?.filter((like) => like.user_id != user.id) })
@@ -54,7 +66,7 @@ export default memo(({
         mutateMessage({ ...message, likes: [...(message.likes || []), { ...messageLike, user }] })
     }
 
-    const unlikeMessage = (message) => {
+    const unlikeMessage = (message: Message) => {
         const messageLike = message.likes?.find((like) => like.user_id == user.id)
         if (!messageLike) {
             toast.error("Message like not found")
@@ -95,6 +107,7 @@ export default memo(({
 
                 <DropdownMenu>
                     <DropdownItem
+                        key="view_profile"
                         onPress={() => router.push(getPathname({
                             href: `/user?user_id=${message.user_id}`, locale
                         }), getPathname({
@@ -105,7 +118,7 @@ export default memo(({
                         {autoTranslate('view_profile', 'View Profile')}
                     </DropdownItem>
 
-                    {message.user_id !== user?.id && (
+                    {message.user_id !== user?.id ? (
                         <DropdownItem
                             key="whisper"
                             color="secondary"
@@ -114,7 +127,7 @@ export default memo(({
                         >
                             {autoTranslate('whisper', 'Whisper')}
                         </DropdownItem>
-                    )}
+                    ) : null}
                 </DropdownMenu>
             </Dropdown>
 
@@ -195,13 +208,13 @@ export default memo(({
                             />
                         </div>
 
-                        {message.recipient_id && (
+                        {(message as Whisper).recipient_id && (
                             <div className="flex items-center gap-2 text-small">
                                 <ArrowRightIcon className="size-4 -mx-1" />
 
-                                <UserAvatar user={isOutgoing ? message.recipient : user} size="sm" className="ms-1 w-6 h-6" />
+                                <UserAvatar user={isOutgoing ? (message as Whisper).recipient : user} size="sm" className="ms-1 w-6 h-6" />
 
-                                {message.recipient?.full_name || (!isOutgoing && user?.full_name)}
+                                {(message as Whisper).recipient?.full_name || (!isOutgoing && user?.full_name)}
                             </div>
                         )}
 

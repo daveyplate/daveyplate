@@ -1,14 +1,14 @@
 import { useLocale } from "next-intl"
 import { useRouter } from "next/router"
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
+import { Dropdown, DropdownItem, DropdownMenu, DropdownProps, DropdownTrigger } from "@nextui-org/react"
 import Flag from "react-flagpack"
 
 import { getPathname, usePathname } from "@/i18n/routing"
 import { isExport } from "@/utils/utils"
 import i18nConfig from 'i18n.config'
 
-export const localeToCountry = {
+export const localeToCountry: Record<string, string> = {
     "en": "US",
     "de": "DE",
     "es": "ES",
@@ -30,22 +30,22 @@ export const localeToCountry = {
  * Dropdown component to switch between locales
  * @returns {JSX.Element}
  */
-export function LocaleDropdown({ children, ...props }) {
+export function LocaleDropdown({ children, ...props }: DropdownProps) {
     const router = useRouter()
     const currentLocale = useLocale()
     const pathname = usePathname()
     const locales = i18nConfig.locales
 
-    const handleLocaleChange = (locale) => {
+    const handleLocaleChange = (locale: string) => {
         if (isExport()) {
-            router.replace(getPathname({ href: pathname, locale }), null, { scroll: false })
+            router.replace(getPathname({ href: pathname, locale }), undefined, { scroll: false })
         } else {
-            router.replace(pathname, null, { locale, scroll: false })
+            router.replace(pathname, undefined, { locale, scroll: false })
         }
     }
 
     return (
-        <Dropdown placement="auto" {...props}>
+        <Dropdown {...props}>
             <DropdownTrigger>
                 {children}
             </DropdownTrigger>

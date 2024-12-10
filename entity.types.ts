@@ -6,4 +6,17 @@ export interface Article extends Tables<"articles"> {
     user: Profile
 }
 
-export interface Message extends Tables<"messages"> { }
+export interface MessageLike extends Tables<"message_likes"> {
+    user: Profile
+}
+
+export interface Message extends Tables<"messages"> {
+    likes: MessageLike[]
+    user: Profile
+}
+
+export interface Whisper extends Tables<"whispers"> {
+    user: Profile
+    recipient: Profile
+    likes: MessageLike[]
+}

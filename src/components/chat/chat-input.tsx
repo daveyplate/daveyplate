@@ -5,8 +5,17 @@ import { Button, Chip, Form, Input } from "@nextui-org/react"
 
 import UserAvatar from '@/components/user-avatar'
 
-export default function ChatInput({ content, setContent, session, whisperUser, setWhisperUser, sendMessage }) {
-    const inputRef = useRef(null)
+interface ChatInputProps {
+    content: string
+    setContent: (content: string) => void
+    session: boolean
+    whisperUser: any
+    setWhisperUser: (user: any) => void
+    sendMessage: () => void
+}
+
+export default function ChatInput({ content, setContent, session, whisperUser, setWhisperUser, sendMessage }: ChatInputProps) {
+    const inputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
         whisperUser && inputRef.current?.focus()
