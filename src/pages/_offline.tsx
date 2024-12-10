@@ -9,6 +9,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/solid"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
+import { GetStaticPropsContext } from "next"
 
 export default function OfflinePage() {
     const router = useRouter()
@@ -46,7 +47,7 @@ export default function OfflinePage() {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }

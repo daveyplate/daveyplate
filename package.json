@@ -31,7 +31,7 @@
     "@daveyplate/nextui-crop-image-modal": "^1.0.7",
     "@daveyplate/nextui-fixed-avatar": "^1.0.11",
     "@daveyplate/supabase-auth-nextui": "^1.0.6",
-    "@daveyplate/supabase-swr-entities": "^4.0.2",
+    "@daveyplate/supabase-swr-entities": "^4.0.3",
     "@daveyplate/tailwind-drag-dropzone": "^1.0.5",
     "@daveyplate/use-window-focus-blur": "^1.0.1",
     "@heroicons/react": "^2.1.5",

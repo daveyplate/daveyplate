@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
-import { useLocale, useRouter } from 'next-intl'
+import { useLocale } from 'next-intl'
 import { useSession } from '@supabase/auth-helpers-react'
 
 import { useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { useRouter } from 'next/router'
 
 export default function useProfileLocale() {
     const session = useSession()
@@ -20,10 +21,10 @@ export default function useProfileLocale() {
     }, [locale])
 
     useEffect(() => {
-        if (!metadata || !metadata.locale) return
+        if (!user || !user.locale) return
 
         if (user.locale !== locale) {
-            router.replace(router.asPath, null, { locale: metadata.locale })
+            router.replace(router.asPath, undefined, { locale: user.locale })
         }
     }, [user])
 }
