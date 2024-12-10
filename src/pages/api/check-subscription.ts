@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
 
         if (stripeSubscriptions) {
-            for (let subscription of stripeSubscriptions) {
+            for (const subscription of stripeSubscriptions) {
                 if (subscription.status == 'active' || subscription.status == 'trialing') {
                     // Update the user's subscription status
                     const supabaseAdmin = createAdminClient()

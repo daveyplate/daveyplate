@@ -36,7 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 case 'customer.subscription.created':
                 case 'customer.subscription.updated':
                 case 'customer.subscription.deleted':
-                    let receivedSubscription = event.data.object
+                    const receivedSubscription = event.data.object
 
                     const subscription = await stripe.subscriptions.retrieve(
                         receivedSubscription.id
