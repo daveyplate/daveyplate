@@ -1,5 +1,7 @@
 import { Avatar } from "@daveyplate/nextui-fixed-avatar"
-import { AvatarProps } from '@nextui-org/react'
+import { AvatarProps, ButtonProps } from '@nextui-org/react'
+
+// TODO inherit "as" props?
 
 interface UserAvatarProps {
     user?: {
@@ -9,7 +11,7 @@ interface UserAvatarProps {
     } | null
 }
 
-const UserAvatar = ({ user, ...props }: UserAvatarProps & AvatarProps) => {
+const UserAvatar = ({ user, ...props }: UserAvatarProps & AvatarProps & ButtonProps) => {
     return (
         <Avatar
             name={user?.full_name || ""}

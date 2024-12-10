@@ -11,16 +11,16 @@ import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
 import { createClient } from "@/utils/supabase/component"
+import { GetStaticPropsContext } from "next"
 
 export default () => {
     const supabase = createClient()
     const localeRouter = useLocaleRouter()
-    const clearCache = useClearCache()
+    const { clearCache } = useClearCache()
 
     useEffect(() => {
         if (Capacitor.isNativePlatform()) {
             CapacitorCookies.clearAllCookies()
-            CapacitorCookies.clearCookies()
         }
 
         setTimeout(() => {
@@ -41,7 +41,7 @@ export default () => {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }

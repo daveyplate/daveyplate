@@ -9,7 +9,7 @@ import { getLocaleValue, isExport, useEntity } from "@daveyplate/supabase-swr-en
 import { DragDropzone } from "@daveyplate/tailwind-drag-dropzone"
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
-import { CropImageModal, defaultLocalization } from "@daveyplate/nextui-crop-image-modal"
+import { CropImageModal, CropModalLocalization, defaultLocalization } from "@daveyplate/nextui-crop-image-modal"
 import { CloudArrowUpIcon, PencilIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline"
 import {
     Badge,
@@ -34,30 +34,34 @@ import { createClient } from "@/utils/supabase/component"
 import LightboxModal from "@/components/lightbox-modal"
 import OptionsDropdown from "@/components/options-dropdown"
 import UserAvatar from "@/components/user-avatar"
+import { Profile } from "entity.types"
+import { GetStaticProps } from "next"
 
-export default function UserPage({ user_id, user: fallbackData }) {
+export default function UserPage(
+    { user_id, user: fallbackData }: { user_id?: string, user?: Profile }
+) {
     const supabase = createClient()
     const locale = useLocale()
     const router = useRouter()
     const { autoTranslate } = useAutoTranslate()
     const session = useSession()
 
-    const userId = user_id || router.query.user_id
+    const userId = user_id || router.query.user_id as string
     const { entity: user, isLoading: userLoading } = useEntity(userId && 'profiles', userId, { lang: locale }, { fallbackData })
     const { updateEntity: updateUser } = useEntity(session && 'profiles', 'me', { lang: locale })
     const [lightboxOpen, setLightboxOpen] = useState(false)
-    const [bannerFile, setBannerFile] = useState(null)
     const [uploadingAvatar, setUploadingAvatar] = useState(false)
     const [uploadingBanner, setUploadingBanner] = useState(false)
-    const bannerUploadRef = useRef(null)
-    const [avatarFile, setAvatarFile] = useState(null)
+    const [avatarFile, setAvatarFile] = useState<File | null>(null)
+    const [bannerFile, setBannerFile] = useState<File | null>(null)
 
-    const uploadRef = useRef(null)
+    const uploadRef = useRef<() => void>(null)
+    const bannerUploadRef = useRef<() => void>(null)
 
     const isMe = session && userId == session.user.id
     const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
 
-    const localization = {}
+    const localization: CropModalLocalization = {}
     for (const key in defaultLocalization) {
         localization[key] = autoTranslate(key, defaultLocalization[key])
     }
@@ -117,15 +121,17 @@ export default function UserPage({ user_id, user: fallbackData }) {
 
                                 <DropdownMenu variant="flat">
                                     <DropdownItem
+                                        key="upload"
                                         color="success"
                                         startContent={<CloudArrowUpIcon className="size-5" />}
-                                        onPress={() => bannerUploadRef.current()}
+                                        onPress={() => bannerUploadRef.current!()}
                                     >
                                         {autoTranslate("upload_banner", "Upload Banner")}
                                     </DropdownItem>
 
                                     {user?.banner_url ? (
                                         <DropdownItem
+                                            key="delete"
                                             color="danger"
                                             onPress={async () => {
                                                 const { error } = await updateUser({ banner_url: null })
@@ -190,12 +196,12 @@ export default function UserPage({ user_id, user: fallbackData }) {
                                     variant="faded"
                                     className="bg-background"
                                     isInvisible={!isMe}
-                                    onPress={() => uploadRef.current()}
+                                    onPress={() => uploadRef.current!()}
                                 >
                                     <Skeleton isLoaded={!!user && !uploadingAvatar} className="rounded-full size-fit">
                                         <UserAvatar
                                             as={Button}
-                                            isIconOnly
+                                            isIconOnly={true}
                                             className="h-20 w-20 text-xl"
                                             size="lg"
                                             user={user}
@@ -329,7 +335,7 @@ export default function UserPage({ user_id, user: fallbackData }) {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }

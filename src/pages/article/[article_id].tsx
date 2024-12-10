@@ -3,6 +3,7 @@ import { getLocalePaths } from "@/i18n/locale-paths"
 import { isExport } from "@/utils/utils"
 import { getEntity } from '@daveyplate/supabase-swr-entities/server'
 import ArticlePage from '../article'
+import { GetStaticProps } from "next"
 
 export default ArticlePage
 
@@ -15,13 +16,13 @@ export async function getStaticPaths() {
     }
 }
 
-export async function getStaticProps({ locale, params }) {
+export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
     const translationProps = await getTranslationProps({ locale, params })
 
     if (isExport()) return { props: { ...translationProps, canGoBack: true } }
 
-    const { article_id } = params
-    const { entity: article } = await getEntity('articles', article_id, { lang: locale })
+    const { article_id } = params!
+    const { entity: article } = await getEntity('articles', article_id as string, { lang: locale })
 
     return {
         props: {

@@ -1,6 +1,7 @@
 import { useDebounce } from "@uidotdev/usehooks"
 import { useLocale } from "next-intl"
 import { useState } from "react"
+import { GetStaticProps } from "next"
 
 import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
@@ -112,7 +113,7 @@ export default function UsersPage() {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps, } }

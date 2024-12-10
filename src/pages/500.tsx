@@ -1,4 +1,5 @@
 import { getTranslationProps } from "@/i18n/translation-props"
+import { GetStaticPropsContext } from "next"
 import { AutoTranslate } from "next-auto-translate"
 
 export default function Custom500() {
@@ -13,7 +14,7 @@ export default function Custom500() {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }
