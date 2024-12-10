@@ -1,7 +1,7 @@
-const axios = require('axios')
-const fs = require('fs')
-const path = require('path')
-const ignore = require('ignore')
+import axios from 'axios'
+import fs from 'fs'
+import path from 'path'
+import ignore, { Ignore } from 'ignore'
 require('dotenv').config({ path: '.env.local' })
 
 // Load the configuration from code-sync.config.json
@@ -17,7 +17,7 @@ async function loadConfig() {
 }
 
 // Function to read .gitignore files and create an ignore instance
-async function getIgnoredFiles(ig, cwd) {
+async function getIgnoredFiles(ig: Ignore, cwd: string) {
     const gitignorePath = path.join(cwd, '.gitignore')
 
     // Check if .gitignore file exists
@@ -30,7 +30,7 @@ async function getIgnoredFiles(ig, cwd) {
 }
 
 // Function to recursively append file contents to a large string
-async function appendFilesRecursively(dir, config, ig) {
+async function appendFilesRecursively(dir: string, config: any, ig: Ignore) {
     let largeString = ''
 
     // Read directory contents
@@ -92,10 +92,10 @@ const codeSync = async () => {
 
             console.log('Code Synced Successfully')
         } catch (error) {
-            console.error('Code Sync Failed', error.response ? error.response.data : error.message)
+            console.error('Code Sync Failed', (error as Error).message)
         }
     } catch (error) {
-        console.error('Error:', error.message)
+        console.error('Error:', (error as Error).message)
     }
 }
 

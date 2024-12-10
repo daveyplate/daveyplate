@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev & nodemon --exec node code-sync.js --quiet",
+    "dev": "next dev & nodemon --exec tsx code-sync.ts --quiet",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -88,6 +88,7 @@
     "file-loader": "^6.2.0",
     "husky": "^9.1.6",
     "supabase": "^2.0.0",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   },
   "overrides": {
