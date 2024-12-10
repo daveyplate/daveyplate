@@ -14,14 +14,15 @@ import { PageTitle } from "@daveyplate/next-page-title"
 import { OpenGraph } from "@daveyplate/next-open-graph"
 import ArticleComment from '@/components/blog/article-comment'
 import { useSession } from '@supabase/auth-helpers-react'
+import { GetStaticPropsContext } from 'next'
 
-export default function ArticlePage({ article_id, article: fallbackData }) {
+export default function ArticlePage({ article_id, article: fallbackData }: { article_id: string, article: Record<string, unknown> }) {
     const locale = useLocale()
     const router = useRouter()
     const session = useSession()
     const { entity: user } = useEntity(session && 'profiles', 'me')
-    const articleId = article_id || router.query.article_id
-    const { entity: article } = useEntity(articleId && 'articles', articleId, { lang: locale }, { fallbackData })
+    const articleId = article_id || router.query.article_id as string
+    const { entity: article } = useEntity(articleId ? 'articles' : null, articleId, { lang: locale }, { fallbackData })
     const {
         entities: comments,
         createEntity: createComment,
@@ -84,7 +85,6 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
                                         src={article.thumbnail_url}
                                         alt={localizedTitle}
                                         className="w-12 h-12 mr-4"
-                                        objectFit="cover"
                                     />
                                 )}
                                 {localizedTitle}
@@ -143,7 +143,7 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
                         </Card>
                     )}
 
-                    {comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(comment => (
+                    {comments?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map(comment => (
                         <ArticleComment
                             key={comment.id}
                             comment={comment}
@@ -157,7 +157,7 @@ export default function ArticlePage({ article_id, article: fallbackData }) {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }

@@ -6,7 +6,13 @@ import { useLocale } from 'next-intl'
 import UserAvatar from '@/components/user-avatar'
 import { useSession } from '@supabase/auth-helpers-react'
 
-const ArticleComment = memo(({ comment, updateComment, deleteComment }) => {
+interface ArticleCommentProps {
+    comment: Record<string, any>
+    updateComment: (id: string, data: { content: { [key: string]: string } }) => void
+    deleteComment: (id: string) => void
+}
+
+const ArticleComment = memo(({ comment, updateComment, deleteComment }: ArticleCommentProps) => {
     const locale = useLocale()
     const session = useSession()
     const [isEditing, setIsEditing] = useState(false)

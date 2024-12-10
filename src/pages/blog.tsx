@@ -4,6 +4,7 @@ import { Link } from "@/i18n/routing"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { getLocaleValue, isExport, useEntities } from '@daveyplate/supabase-swr-entities/client'
 import { Card, CardBody, Image, Skeleton } from "@nextui-org/react"
+import { GetStaticPropsContext } from "next"
 import { AutoTranslate } from 'next-auto-translate'
 import { useLocale } from 'next-intl'
 
@@ -39,7 +40,6 @@ export default function BlogPage() {
                                     src={article.thumbnail_url}
                                     alt={getLocaleValue(article.title, locale)}
                                     className="w-12 h-12"
-                                    objectFit="cover"
                                 />
                             )}
 
@@ -64,7 +64,7 @@ export default function BlogPage() {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }
