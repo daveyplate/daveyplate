@@ -3,13 +3,13 @@ import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { isSafari } from 'react-device-detect'
 
-const PageTransition = ({ children }) => {
+const PageTransition = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter()
     const [direction, setDirection] = useState('forward')
     const [currentKeyIndex, setCurrentKeyIndex] = useState(0)
     const [isMobile, setIsMobile] = useState(false)
     const [disableAnimation, setDisableAnimation] = useState(false)
-    const windowHistoryKeys = useRef([])
+    const windowHistoryKeys = useRef<string[]>([])
 
     useEffect(() => {
         const checkMobile = () => {
@@ -64,21 +64,23 @@ const PageTransition = ({ children }) => {
         router.events.on('routeChangeComplete', onRouteChangeComplete)
 
         history.pushState = function () {
-            originalPushState.apply(this, arguments)
+            // originalPushState.apply(this, arguments)
             onRouteChange()
         }
 
         history.replaceState = function () {
-            originalReplaceState.apply(this, arguments)
+            // originalReplaceState.apply(this, arguments)
             onRouteChange()
         }
 
         router.beforePopState(() => {
+            /*
             if (isSafari && !global.backPressed) {
                 setDisableAnimation(true)
             }
 
             global.backPressed = false
+            */
             onRouteChange()
 
             return true

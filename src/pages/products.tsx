@@ -11,8 +11,11 @@ import { toast } from "sonner"
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
 import { isExport } from "@/utils/utils"
+import { GetStaticPropsContext } from "next"
 
-export default function Products({ products, prices }) {
+export default function Products(
+    { products, prices }: { products: Record<string, any>[], prices: Record<string, any>[] }
+) {
     const router = useRouter()
     const session = useSession()
     const { entity: user } = useEntity(session ? 'profiles' : null, 'me')
@@ -20,7 +23,7 @@ export default function Products({ products, prices }) {
 
     const [priceIdLoading, setPriceIdLoading] = useState(null)
 
-    const handleCheckout = async (product, price) => {
+    const handleCheckout = async (product: Record<string, any>, price: Record<string, any>) => {
         // Redirect to login if user is not logged in
         if (!user) {
             return router.push("/login?returnTo=/products", "/login")
@@ -101,7 +104,7 @@ export default function Products({ products, prices }) {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
@@ -109,8 +112,8 @@ export async function getStaticProps({ locale, params }) {
     // const products = await stripe.products.list().then(res => res.data)
     // const prices = await stripe.prices.list().then(res => res.data)
 
-    const products = []
-    const prices = []
+    const products: Record<string, any>[] = []
+    const prices: Record<string, any>[] = []
     return {
         props: {
             ...translationProps,
