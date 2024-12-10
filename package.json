@@ -20,7 +20,7 @@
     "@capacitor/core": "^5.7.6",
     "@capacitor/ios": "^5.7.6",
     "@capacitor/network": "^5.0.8",
-    "@daveyplate/generate-icons": "^1.0.4",
+    "@daveyplate/generate-icons": "^1.0.6",
     "@daveyplate/next-cors-middleware": "^1.0.2",
     "@daveyplate/next-open-graph": "^1.0.11",
     "@daveyplate/next-page-title": "^1.0.4",
