@@ -107,7 +107,7 @@ export default function UserPage(
                                     <Button
                                         className={cn(!isMe && "hidden",
                                             user?.banner_url && "backdrop-blur-sm",
-                                            "absolute left-3 top-3 bg-background/20"
+                                            "absolute left-3 top-3 bg-background/20 text-white"
                                         )}
                                         isIconOnly
                                         radius="full"
@@ -148,7 +148,7 @@ export default function UserPage(
                             <OptionsDropdown
                                 className={cn(isMe && "hidden",
                                     user?.banner_url ? "bg-background/20 backdrop-blur-sm" : "bg-background/20",
-                                    "absolute right-3 top-3 transition-all"
+                                    "absolute right-3 top-3 transition-all text-whites"
                                 )}
                                 variant="light"
                                 isDisabled={isMe}
@@ -159,7 +159,7 @@ export default function UserPage(
                                 href="/edit-profile"
                                 className={cn(!isMe && "hidden",
                                     user?.banner_url && "backdrop-blur-sm",
-                                    "absolute right-3 top-3 bg-background/20"
+                                    "absolute right-3 top-3 bg-background/20 text-white"
                                 )}
                                 radius="full"
                                 size="sm"
