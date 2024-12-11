@@ -42,7 +42,9 @@ const localeValues = [
     'el-GR', 'he-IL', 'fa-AF', 'am-ET', 'hi-IN', 'th-TH'
 ]
 
-export default function Providers({ children, ...pageProps }) {
+export default function Providers(
+    { children, ...pageProps }: { children: React.ReactNode } & { locale: string, messages: object[] }
+) {
     const localeRouter = useLocaleRouter()
     const pathname = usePathname()
     const supabase = createClient()

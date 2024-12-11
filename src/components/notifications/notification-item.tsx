@@ -12,8 +12,18 @@ import ReactTimeAgo from "react-time-ago"
 import { getPathname, Link } from "@/i18n/routing"
 
 import UserAvatar from "@/components/user-avatar"
+import { Notification } from "entity.types"
 
-const NotificationItem = forwardRef(
+interface NotificationItemProps {
+    notification: Notification
+    setIsOpen?: (isOpen: boolean) => void
+    className?: string
+    disableSwipe?: boolean
+    updateNotification: (id: string, data: Partial<Notification>) => void
+    deleteNotification: (id: string) => void
+}
+
+const NotificationItem = forwardRef<HTMLDivElement, NotificationItemProps>(
     ({
         notification: {
             id: notification_id,
@@ -37,19 +47,20 @@ const NotificationItem = forwardRef(
         const locale = useLocale()
         const localizedContent = getLocaleValue(content, locale)
         const contentParts = localizedContent.split('{sender}')
-        const localeUrl = getPathname({ href: url, locale })
-        const localeLinkAs = url_as && getPathname({ href: url_as, locale })
+        const localeUrl = url ? getPathname({ href: url, locale }) : undefined
+        const localeLinkAs = url_as ? getPathname({ href: url_as, locale }) : undefined
         const pointer = useRef({ x: 0, y: 0 })
 
-        const onMouseDown = useCallback((e) => {
+        const onMouseDown = useCallback((e: React.MouseEvent) => {
             pointer.current = { x: e.clientX, y: e.clientY }
         }, [])
 
-        const onClick = useCallback((e) => {
+        const onClick = useCallback((e: React.MouseEvent) => {
             const { x, y } = pointer.current
             if (Math.abs(e.clientX - x) > 10 || Math.abs(e.clientY - y) > 10) return
 
-            router.push(localeUrl, localeLinkAs)
+            if (localeUrl) router.push(localeUrl, localeLinkAs)
+
             notificationPressed()
         }, [router, localeUrl, localeLinkAs])
 
@@ -80,10 +91,8 @@ const NotificationItem = forwardRef(
 
         return (
             <SwipeToDelete
-                ref={ref}
                 className={cn(disableSwipe ? "!bg-transparent" : "!bg-danger")}
                 onDelete={() => deleteNotification(notification_id)}
-                height="fit"
                 deleteColor="transparent"
                 deleteComponent={
                     <TrashIcon className="size-4 mx-auto" />
@@ -91,6 +100,7 @@ const NotificationItem = forwardRef(
                 disabled={disableSwipe}
             >
                 <div
+                    ref={ref}
                     className={cn(
                         "group flex gap-3 border-b border-divider px-6 py-4 cursor-pointer select-none",
                         !is_read ? "bg-primary-50" : "bg-content1", className,
@@ -121,7 +131,7 @@ const NotificationItem = forwardRef(
                                 {sender ? (
                                     <UserAvatar user={sender} />
                                 ) : (
-                                    <Avatar src={avatar_url} />
+                                    <Avatar src={avatar_url || ""} />
                                 )}
                             </Badge>
                         </Button>

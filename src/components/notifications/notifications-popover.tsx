@@ -8,6 +8,7 @@ import { BellIcon } from "@heroicons/react/24/outline"
 import { Badge, Button, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react"
 
 import NotificationsCard from "@/components/notifications/notifications-card"
+import { Notification } from "entity.types"
 
 export default function NotificationsPopover() {
     const locale = useLocale()
@@ -15,10 +16,8 @@ export default function NotificationsPopover() {
 
     const { entity: metadata } = useEntity(session && "metadata", "me")
     const {
-        entities: notifications,
-        updateEntity: updateNotification,
-        deleteEntity: deleteNotification
-    } = useEntities(session && "notifications", { lang: locale })
+        entities: notifications
+    } = useEntities<Notification>(session && "notifications", { lang: locale })
 
     const [badgeCount, setBadgeCount] = useState(notifications?.filter((notification) => !notification.is_seen).length || 0)
     const [isOpen, setIsOpen] = useState(false)
@@ -61,8 +60,6 @@ export default function NotificationsPopover() {
                 <NotificationsCard
                     notifications={notifications}
                     setIsOpen={setIsOpen}
-                    updateNotification={updateNotification}
-                    deleteNotification={deleteNotification}
                 />
             </PopoverContent>
         </Popover>

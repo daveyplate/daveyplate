@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import useSWRConfig from 'swr'
+import { useSWRConfig } from 'swr'
 
 import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
@@ -33,11 +33,13 @@ export const CapacitorProvider = () => {
 
         checkAppLaunchUrl()
 
-        return () => App.removeAllListeners()
+        return () => {
+            App.removeAllListeners()
+        }
     }, [])
 
     // Create a session from the URL (OAuth callback)
-    const createSessionFromUrl = async (url) => {
+    const createSessionFromUrl = async (url: string) => {
         if (!url.includes('login-callback')) return
 
         // Extract the query string from the URL
@@ -72,7 +74,16 @@ export const CapacitorProvider = () => {
     }
 
     const checkAppLaunchUrl = async () => {
-        const { url } = await App.getLaunchUrl()
+        const appLaunchUrl = await App.getLaunchUrl()
+
+        if (!appLaunchUrl) {
+            console.log('checkAppLaunchUrl opened without URL')
+            return
+        }
+
+        const { url } = appLaunchUrl
         console.log('checkAppLaunchUrl opened with URL: ' + url)
     }
+
+    return <></>
 }

@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 
 import NotificationItem from "@/components/notifications/notification-item"
+import { Notification } from "entity.types"
 
 export default function NotificationToaster() {
     const locale = useLocale()
@@ -15,9 +16,9 @@ export default function NotificationToaster() {
         entities: notifications,
         updateEntity: updateNotification,
         deleteEntity: deleteNotification
-    } = useEntities(session && "notifications", { lang: locale })
+    } = useEntities<Notification>(session && "notifications", { lang: locale })
 
-    const [previousNotifications, setPreviousNotifications] = useState([])
+    const [previousNotifications, setPreviousNotifications] = useState<Notification[]>([])
 
     useEffect(() => {
         setPreviousNotifications(notifications)
@@ -32,7 +33,7 @@ export default function NotificationToaster() {
             // Skip notifications that are more than 1 minute old
             const notificationCreatedAt = new Date(notification.created_at)
             const now = new Date()
-            if (now - notificationCreatedAt > 60000) return false
+            if (now.getTime() - notificationCreatedAt.getTime() > 60000) return false
 
             return !previousNotifications?.some((previousNotification) => previousNotification.id == notification.id)
         })
@@ -62,4 +63,6 @@ export default function NotificationToaster() {
             dismissible: false
         })
     }, [notifications])
+
+    return <></>
 }

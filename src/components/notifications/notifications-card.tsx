@@ -11,6 +11,7 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
+    CardProps,
     Chip,
     ScrollShadow,
     Tab,
@@ -22,8 +23,11 @@ import { BellSlashIcon } from "@heroicons/react/24/solid"
 import NotificationItem from "@/components/notifications/notification-item"
 import { Link } from "@/i18n/routing"
 import NotificationSkeleton from "./notification-skeleton"
+import { Notification } from "entity.types"
 
-export default function NotificationsCard({ notifications: fallbackData, setIsOpen, ...props }) {
+export default function NotificationsCard(
+    { notifications: fallbackData, setIsOpen, ...props }: { notifications: Notification[], setIsOpen: (isOpen: boolean) => void } & CardProps
+) {
     const { session, isLoading: sessionLoading } = useSessionContext()
     const locale = useLocale()
     const { autoTranslate } = useAutoTranslate("notifications")
@@ -34,7 +38,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
         updateEntity: updateNotification,
         deleteEntity: deleteNotification,
         isLoading: notificationsLoading,
-    } = useEntities(session && "notifications", { lang: locale }, { fallbackData })
+    } = useEntities<Notification>(session && "notifications", { lang: locale }, { fallbackData })
     const updateEntities = useUpdateEntities()
     const deleteEntities = useDeleteEntities()
 
@@ -50,7 +54,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
         const unseenNotifications = notifications?.filter((notification) => !notification.is_seen)
         if (!unseenNotifications?.length) return
 
-        updateEntities("notifications", null, { is_seen: true }).then(() => {
+        updateEntities("notifications", {}, { is_seen: true }).then(() => {
             mutateNotifications()
         })
     }, [notifications])
@@ -78,7 +82,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                             radius="full"
                             variant="light"
                             onPress={() => {
-                                updateEntities("notifications", null, { is_read: true }).then(() => {
+                                updateEntities("notifications", {}, { is_read: true }).then(() => {
                                     mutateNotifications()
                                 })
                             }}
@@ -99,7 +103,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                     color="primary"
                     selectedKey={activeTab}
                     variant="underlined"
-                    onSelectionChange={setActiveTab}
+                    onSelectionChange={(key) => setActiveTab(key as string)}
                 >
                     <Tab
                         key="all"
@@ -141,7 +145,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                 <ScrollShadow className="h-[420px] w-full">
                     {activeNotifications?.length ? (
                         activeNotifications
-                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                             .map((notification) => (
                                 <NotificationItem
                                     key={notification.id}
@@ -180,7 +184,7 @@ export default function NotificationsCard({ notifications: fallbackData, setIsOp
                         variant="flat"
                         onPress={() => {
                             mutateNotifications([])
-                            deleteEntities("notifications").then(() => {
+                            deleteEntities("notifications", {}).then(() => {
                                 mutateNotifications()
                             })
                         }}

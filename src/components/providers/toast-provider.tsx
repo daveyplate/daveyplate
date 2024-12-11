@@ -7,7 +7,7 @@ export default function ToastProvider() {
 
     return (
         <Toaster
-            theme={theme}
+            theme={theme as "light" | "dark" | "system"}
             richColors={true}
             icons={{
                 loading: <Spinner size="sm" color="current" className="me-1 mt-1" />,

@@ -1,10 +1,13 @@
 import { useTheme } from "next-themes"
 import { useAutoTranslate } from "next-auto-translate"
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
+import { Dropdown, DropdownItem, DropdownMenu, DropdownProps, DropdownTrigger } from "@nextui-org/react"
 import { ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline"
+import { ReactNode } from "react"
 
-export function ThemeDropdown({ children, ...props }) {
+export function ThemeDropdown(
+    { children, ...props }: { children: ReactNode } & Omit<DropdownProps, "children">
+) {
     const { setTheme } = useTheme()
     const { autoTranslate } = useAutoTranslate("toggle_theme")
 

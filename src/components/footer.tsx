@@ -47,27 +47,27 @@ const socialItems = [
     {
         name: "Facebook",
         href: "https://facebook.com",
-        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:facebook" />,
+        icon: (props: Partial<IconProps>) => <Icon {...props} icon="fontisto:facebook" />,
     },
     {
         name: "Instagram",
         href: "https://instagram.com",
-        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:instagram" />,
+        icon: (props: Partial<IconProps>) => <Icon {...props} icon="fontisto:instagram" />,
     },
     {
         name: "Twitter",
         href: "https://twitter.com",
-        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:twitter" />,
+        icon: (props: Partial<IconProps>) => <Icon {...props} icon="fontisto:twitter" />,
     },
     {
         name: "GitHub",
         href: "https://github.com",
-        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:github" />,
+        icon: (props: Partial<IconProps>) => <Icon {...props} icon="fontisto:github" />,
     },
     {
         name: "YouTube",
         href: "https://youtube.com",
-        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:youtube-play" />,
+        icon: (props: Partial<IconProps>) => <Icon {...props} icon="fontisto:youtube-play" />,
     },
 ]
 

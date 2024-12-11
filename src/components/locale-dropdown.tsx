@@ -31,7 +31,7 @@ export const localeToCountry: Record<string, string> = {
  * Dropdown component to switch between locales
  */
 export function LocaleDropdown(
-    { children, ...props }: { children: ReactNode } & Omit<DropdownProps, 'children'>
+    { children, ...props }: { children: ReactNode } & Omit<DropdownProps, "children">
 ) {
     const router = useRouter()
     const currentLocale = useLocale()

@@ -184,6 +184,7 @@ export default function Header() {
                                         <DropdownSection title={session?.user.email || autoTranslate("account", "Account")}>
                                             {session && (
                                                 <DropdownItem
+                                                    key="view_profile"
                                                     startContent={<UserIcon className="size-5" />}
                                                     onPress={() => {
                                                         const url = getPathname({ href: `/user?user_id=${user.id}`, locale })
@@ -197,6 +198,7 @@ export default function Header() {
 
                                             {session && (
                                                 <DropdownItem
+                                                    key="edit_profile"
                                                     onPress={() => localeRouter.push("/edit-profile")}
                                                     startContent={<PencilIcon className="size-5" />}
                                                 >
@@ -204,25 +206,30 @@ export default function Header() {
                                                 </DropdownItem>
                                             )}
 
-                                            {!session && (
-                                                <DropdownItem
-                                                    onPress={() => localeRouter.push("/login")}
-                                                    startContent={<ArrowRightEndOnRectangleIcon className="size-5" />}
-                                                >
-                                                    {autoTranslate("log_in", "Log In")}
-                                                </DropdownItem>
-                                            )}
+                                            <>
+                                                {!session && (
+                                                    <DropdownItem
+                                                        key="log_in"
+                                                        onPress={() => localeRouter.push("/login")}
+                                                        startContent={<ArrowRightEndOnRectangleIcon className="size-5" />}
+                                                    >
+                                                        {autoTranslate("log_in", "Log In")}
+                                                    </DropdownItem>
+                                                )}
 
-                                            {!session && (
-                                                <DropdownItem
-                                                    onPress={() => localeRouter.push("/signup")}
-                                                    startContent={<UserPlusIcon className="size-5" />}
-                                                >
-                                                    {autoTranslate("sign_up", "Sign Up")}
-                                                </DropdownItem>
-                                            )}
+                                                {!session && (
+                                                    <DropdownItem
+                                                        key="sign_up"
+                                                        onPress={() => localeRouter.push("/signup")}
+                                                        startContent={<UserPlusIcon className="size-5" />}
+                                                    >
+                                                        {autoTranslate("sign_up", "Sign Up")}
+                                                    </DropdownItem>
+                                                )}
+                                            </>
 
                                             <DropdownItem
+                                                key="settings"
                                                 onPress={() => localeRouter.push("/settings")}
                                                 startContent={<Cog6ToothIcon className="size-5" />}
                                             >
@@ -231,6 +238,7 @@ export default function Header() {
 
                                             {session &&
                                                 <DropdownItem
+                                                    key="log_out"
                                                     onPress={() => localeRouter.push("/logout")}
                                                     color="danger"
                                                     startContent={<ArrowLeftStartOnRectangleIcon className="size-5" />}

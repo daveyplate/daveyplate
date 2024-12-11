@@ -14,6 +14,10 @@ export interface MessageLike extends Tables<"message_likes"> {
     user: Profile
 }
 
+export interface Notification extends Tables<"notifications"> {
+    sender: Profile
+}
+
 export interface Message extends Tables<"messages"> {
     likes: MessageLike[]
     user: Profile
