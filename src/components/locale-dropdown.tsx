@@ -7,6 +7,7 @@ import Flag from "react-flagpack"
 import { getPathname, usePathname } from "@/i18n/routing"
 import { isExport } from "@/utils/utils"
 import i18nConfig from 'i18n.config'
+import { ReactNode } from "react"
 
 export const localeToCountry: Record<string, string> = {
     "en": "US",
@@ -28,9 +29,10 @@ export const localeToCountry: Record<string, string> = {
 
 /**
  * Dropdown component to switch between locales
- * @returns {JSX.Element}
  */
-export function LocaleDropdown({ children, ...props }: DropdownProps) {
+export function LocaleDropdown(
+    { children, ...props }: { children: ReactNode } & Omit<DropdownProps, 'children'>
+) {
     const router = useRouter()
     const currentLocale = useLocale()
     const pathname = usePathname()

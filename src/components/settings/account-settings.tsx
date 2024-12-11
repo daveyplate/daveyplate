@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FormEvent } from 'react'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import { toast } from 'sonner'
 
@@ -44,7 +44,7 @@ export default function AccountSettings() {
         setEmail(session?.user.email || '')
     }, [session])
 
-    const updateEmail = async (e) => {
+    const updateEmail = async (e: FormEvent) => {
         e.preventDefault()
 
         setUpdatingEmail(true)
@@ -63,12 +63,12 @@ export default function AccountSettings() {
         toast.success(confirmEmail)
     }
 
-    const updatePassword = async (e) => {
+    const updatePassword = async (e: FormEvent) => {
         e.preventDefault()
 
         setUpdatingPassword(true)
 
-        const params = { password }
+        const params: { password: string; nonce?: string } = { password }
 
         if (requireNonce) {
             params.nonce = nonce

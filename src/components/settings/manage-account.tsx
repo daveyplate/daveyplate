@@ -6,7 +6,7 @@ import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 import { useEntity } from '@daveyplate/supabase-swr-entities/client'
 
 import { Button, CardBody, CardHeader } from "@nextui-org/react"
-import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
+import { Confirm, ConfirmModal } from '@daveyplate/nextui-confirm-modal'
 
 import { createClient } from '@/utils/supabase/component'
 import { Link, useLocaleRouter } from '@/i18n/routing'
@@ -18,7 +18,7 @@ export default function ManageAccount() {
     const { session } = useSessionContext()
     const { autoTranslate } = useAutoTranslate()
     const { updateEntity: updateUser, deleteEntity: deleteUser } = useEntity(session && 'profiles', 'me', null, { revalidateOnFocus: false })
-    const [confirm, setConfirm] = useState(null)
+    const [confirm, setConfirm] = useState<Confirm | null>(null)
 
     const deactivateText = autoTranslate('deactivate', 'Deactivate')
     const deactivateAccountText = autoTranslate('deactivate_account', 'Deactivate Account')

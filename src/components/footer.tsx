@@ -4,7 +4,7 @@ import { useLocale } from "next-intl"
 import { useRouter } from "next/router"
 import Flag from "react-flagpack"
 
-import { Icon } from "@iconify/react"
+import { Icon, IconProps } from "@iconify/react"
 import { Button, cn, Link, Spacer } from "@nextui-org/react"
 
 import { useAutoTranslate } from 'next-auto-translate'
@@ -47,27 +47,27 @@ const socialItems = [
     {
         name: "Facebook",
         href: "https://facebook.com",
-        icon: (props) => <Icon {...props} icon="fontisto:facebook" />,
+        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:facebook" />,
     },
     {
         name: "Instagram",
         href: "https://instagram.com",
-        icon: (props) => <Icon {...props} icon="fontisto:instagram" />,
+        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:instagram" />,
     },
     {
         name: "Twitter",
         href: "https://twitter.com",
-        icon: (props) => <Icon {...props} icon="fontisto:twitter" />,
+        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:twitter" />,
     },
     {
         name: "GitHub",
         href: "https://github.com",
-        icon: (props) => <Icon {...props} icon="fontisto:github" />,
+        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:github" />,
     },
     {
         name: "YouTube",
         href: "https://youtube.com",
-        icon: (props) => <Icon {...props} icon="fontisto:youtube-play" />,
+        icon: (props: Omit<IconProps, 'icon'>) => <Icon {...props} icon="fontisto:youtube-play" />,
     },
 ]
 

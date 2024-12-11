@@ -1,3 +1,5 @@
+import { Key } from 'react'
+import { GetStaticPropsContext } from 'next'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import { useQueryState } from 'nuqs'
 
@@ -31,7 +33,7 @@ export default function Settings() {
                     classNames={{ tabContent: "text-small", base: cn(!session && "hidden") }}
                     size="lg"
                     selectedKey={activeTab}
-                    onSelectionChange={setActiveTab}
+                    onSelectionChange={(key: Key) => setActiveTab(key as string)}
                 >
                     <Tab
                         key="settings"
@@ -82,7 +84,7 @@ export default function Settings() {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }

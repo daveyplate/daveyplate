@@ -7,7 +7,13 @@ import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@
 import { EllipsisHorizontalIcon, ExclamationTriangleIcon, ShareIcon } from '@heroicons/react/24/solid'
 import { toast } from 'sonner'
 
-const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
+const OptionsDropdown = (
+    { className, isDisabled, variant = "light" }: {
+        className: string,
+        isDisabled: boolean,
+        variant: "light" | "shadow" | "solid" | "bordered" | "flat" | "faded" | "ghost" | undefined
+    }
+) => {
     const { autoTranslate } = useAutoTranslate()
     const linkCopiedText = autoTranslate('link_copied', 'Link copied to clipboard')
     const router = useRouter()
@@ -19,7 +25,7 @@ const OptionsDropdown = ({ className, isDisabled, variant = "light" }) => {
 
     const handleShare = async () => {
         // Extract metadata
-        const title = document.querySelector('title').textContent;
+        const title = document.querySelector('title')?.textContent || ""
 
         // Handle share action
         if (navigator.share) {
