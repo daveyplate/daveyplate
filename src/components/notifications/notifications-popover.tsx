@@ -8,13 +8,13 @@ import { BellIcon } from "@heroicons/react/24/outline"
 import { Badge, Button, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react"
 
 import NotificationsCard from "@/components/notifications/notifications-card"
-import { Notification } from "entity.types"
+import { Metadata, Notification } from "entity.types"
 
 export default function NotificationsPopover() {
     const locale = useLocale()
     const session = useSession()
 
-    const { entity: metadata } = useEntity(session && "metadata", "me")
+    const { entity: metadata } = useEntity<Metadata>(session && "metadata", "me")
     const {
         entities: notifications
     } = useEntities<Notification>(session && "notifications", { lang: locale })

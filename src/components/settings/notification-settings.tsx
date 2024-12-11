@@ -5,10 +5,11 @@ import { AutoTranslate } from 'next-auto-translate'
 
 import { CardBody, CardHeader, Switch } from "@nextui-org/react"
 import CellWrapper from './cell-wrapper'
+import { Metadata } from 'entity.types'
 
 export default function NotificationSettings() {
     const session = useSession()
-    const { entity: metadata, updateEntity: updateMetadata } = useEntity(session ? 'metadata' : null, 'me', null, { revalidateOnFocus: false })
+    const { entity: metadata, updateEntity: updateMetadata } = useEntity<Metadata>(session ? 'metadata' : null, 'me', null, { revalidateOnFocus: false })
 
     const notificationTypes = [
         { table: 'whispers', label: 'Whispers' },
@@ -62,7 +63,6 @@ export default function NotificationSettings() {
                     </p>
 
                     <Switch
-                        isSelected={!!metadata?.show_badge_count}
                         onValueChange={(value) => updateMetadata({ show_badge_count: value })}
                         isDisabled={!metadata}
                     />
@@ -86,7 +86,6 @@ export default function NotificationSettings() {
                     </p>
 
                     <Switch
-                        isSelected={!!metadata?.notifications_push}
                         onValueChange={(value) => updateMetadata({ notifications_push: value })}
                         isDisabled={!metadata}
                     />
@@ -100,7 +99,6 @@ export default function NotificationSettings() {
                     </p>
 
                     <Switch
-                        isSelected={!!metadata?.notifications_email}
                         onValueChange={(value) => updateMetadata({ notifications_email: value })}
                         isDisabled={!metadata}
                     />
@@ -114,7 +112,6 @@ export default function NotificationSettings() {
                     </p>
 
                     <Switch
-                        isSelected={!!metadata?.notifications_sms}
                         onValueChange={(value) => updateMetadata({ notifications_sms: value })}
                         isDisabled={!metadata}
                     />
@@ -139,7 +136,7 @@ export default function NotificationSettings() {
                         </p>
 
                         <Switch
-                            isSelected={!!metadata?.[`notifications_${table}`]}
+                            isSelected={!!(metadata as any)?.[`notifications_${table}`]}
                             onValueChange={(value) => updateMetadata({ [`notifications_${table}`]: value })}
                             isDisabled={!metadata}
                         />

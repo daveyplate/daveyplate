@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { useTheme } from 'next-themes'
 import { useSession } from '@supabase/auth-helpers-react'
 import { useEntity } from '@daveyplate/supabase-swr-entities/client'
+import { Metadata } from 'entity.types'
 
 const lightBackground = '#FFFFFF'
 const darkBackground = '#000000'
@@ -10,7 +11,7 @@ const darkBackground = '#000000'
 export default function MetaTheme() {
     const { resolvedTheme, theme, setTheme } = useTheme()
     const session = useSession()
-    const { entity: metadata, updateEntity: updateMetadata } = useEntity(session && "metadata", 'me')
+    const { entity: metadata, updateEntity: updateMetadata } = useEntity<Metadata>(session && "metadata", 'me')
 
     useEffect(() => {
         if (!metadata) return
