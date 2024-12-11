@@ -25,7 +25,7 @@ interface ChatMessageProps {
     deleteMessage: (id: string) => Promise<any>
     sendData: (data: any) => void
     sendWhisperData: (data: any) => void
-    updateMessage: (id: string, data: Record<string, any>) => Promise<any>
+    updateMessage: (id: string, data: Partial<Message>) => Promise<any>
     setWhisperUser: (user: Profile) => void
 }
 
@@ -89,7 +89,6 @@ export default memo(({
             messageRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
         }
     }, [isEditing])
-
     const localizedMessage = getLocaleValue(message.content, locale, message.locale)
     const originalMessage = getLocaleValue(message.content, message.locale)
 

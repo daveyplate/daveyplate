@@ -12,10 +12,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { PageTitle } from "@daveyplate/next-page-title"
 import { OpenGraph } from "@daveyplate/next-open-graph"
-import ArticleComment from '@/components/blog/article-comment'
+import ArticleCommentCard from '@/components/blog/article-comment-card'
 import { useSession } from '@supabase/auth-helpers-react'
 import { GetStaticPropsContext } from 'next'
-import { Article, Profile } from 'entity.types'
+import { Article, ArticleComment, Profile } from 'entity.types'
 
 export default function ArticlePage({ article_id, article: fallbackData }: { article_id: string, article: Record<string, unknown> }) {
     const locale = useLocale()
@@ -29,7 +29,7 @@ export default function ArticlePage({ article_id, article: fallbackData }: { art
         createEntity: createComment,
         updateEntity: updateComment,
         deleteEntity: deleteComment,
-    } = useEntities(
+    } = useEntities<ArticleComment>(
         articleId && 'article_comments',
         { article_id: articleId, lang: locale },
         null,
@@ -145,7 +145,7 @@ export default function ArticlePage({ article_id, article: fallbackData }: { art
                     )}
 
                     {comments?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map(comment => (
-                        <ArticleComment
+                        <ArticleCommentCard
                             key={comment.id}
                             comment={comment}
                             updateComment={updateComment}

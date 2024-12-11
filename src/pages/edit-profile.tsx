@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { useLocale } from 'use-intl'
 
-import { ConfirmModal } from '@daveyplate/nextui-confirm-modal'
+import { Confirm, ConfirmModal } from '@daveyplate/nextui-confirm-modal'
 import { getLocaleValue, useEntity } from '@daveyplate/supabase-swr-entities/client'
 import { DragDropzone } from '@daveyplate/tailwind-drag-dropzone'
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
@@ -30,24 +30,26 @@ import { isExport } from "@/utils/utils"
 
 import UserAvatar from '@/components/user-avatar'
 import { CropImageModal } from '@daveyplate/nextui-crop-image-modal'
+import { Profile } from 'entity.types'
+import { GetStaticPropsContext } from 'next'
 
 export default function EditProfile() {
     const supabase = createClient()
     const locale = useLocale()
     const { autoTranslate } = useAutoTranslate()
     const { session } = useAuthenticatedPage()
-    const { entity: user, updateEntity: updateUser } = useEntity(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
+    const { entity: user, updateEntity: updateUser } = useEntity<Profile>(session ? 'profiles' : null, 'me', null, { revalidateOnFocus: false })
     const localizedBio = getLocaleValue(user?.bio, locale)
 
     const [name, setName] = useState(user?.full_name || '')
     const [bio, setBio] = useState(localizedBio || '')
     const [nameError, setNameError] = useState(null)
     const [bioError, setBioError] = useState(null)
-    const [avatarFile, setAvatarFile] = useState(null)
-    const [confirm, setConfirm] = useState(null)
+    const [avatarFile, setAvatarFile] = useState<File | null>(null)
+    const [confirm, setConfirm] = useState<Confirm | null>(null)
     const [uploadingAvatar, setUploadingAvatar] = useState(false)
 
-    const uploadRef = useRef(null)
+    const uploadRef = useRef(() => { })
 
     const maxBioLength = 500
 
@@ -75,12 +77,12 @@ export default function EditProfile() {
         }
     }
 
-    const updateProfile = async (e) => {
+    const updateProfile = async (e: FormEvent) => {
         e.preventDefault()
         if (!formChanged) return
 
         // Only send the fields that have changed
-        const params = { locale }
+        const params: Partial<Profile> = { locale }
 
         if (name != user.full_name) {
             params.full_name = name
@@ -303,7 +305,7 @@ export default function EditProfile() {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }

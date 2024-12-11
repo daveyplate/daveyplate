@@ -5,14 +5,15 @@ import { getLocaleValue } from '@daveyplate/supabase-swr-entities/client'
 import { useLocale } from 'next-intl'
 import UserAvatar from '@/components/user-avatar'
 import { useSession } from '@supabase/auth-helpers-react'
+import { ArticleComment } from 'entity.types'
 
 interface ArticleCommentProps {
-    comment: Record<string, any>
-    updateComment: (id: string, data: { content: { [key: string]: string } }) => void
+    comment: ArticleComment
+    updateComment: (id: string, data: Partial<ArticleComment>) => void
     deleteComment: (id: string) => void
 }
 
-const ArticleComment = memo(({ comment, updateComment, deleteComment }: ArticleCommentProps) => {
+const ArticleCommentCard = memo(({ comment, updateComment, deleteComment }: ArticleCommentProps) => {
     const locale = useLocale()
     const session = useSession()
     const [isEditing, setIsEditing] = useState(false)
@@ -102,4 +103,4 @@ const ArticleComment = memo(({ comment, updateComment, deleteComment }: ArticleC
     )
 })
 
-export default ArticleComment
+export default ArticleCommentCard

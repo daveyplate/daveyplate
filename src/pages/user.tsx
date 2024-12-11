@@ -55,8 +55,8 @@ export default function UserPage(
     const [avatarFile, setAvatarFile] = useState<File | null>(null)
     const [bannerFile, setBannerFile] = useState<File | null>(null)
 
-    const uploadRef = useRef<() => void>(null)
-    const bannerUploadRef = useRef<() => void>(null)
+    const uploadRef = useRef(() => { })
+    const bannerUploadRef = useRef(() => { })
 
     const isMe = session && userId == session.user.id
     const localizedBio = getLocaleValue(user?.bio, locale, user?.locale)
@@ -124,7 +124,7 @@ export default function UserPage(
                                         key="upload"
                                         color="success"
                                         startContent={<CloudArrowUpIcon className="size-5" />}
-                                        onPress={() => bannerUploadRef.current!()}
+                                        onPress={() => bannerUploadRef.current()}
                                     >
                                         {autoTranslate("upload_banner", "Upload Banner")}
                                     </DropdownItem>
@@ -196,7 +196,7 @@ export default function UserPage(
                                     variant="faded"
                                     className="bg-background"
                                     isInvisible={!isMe}
-                                    onPress={() => uploadRef.current!()}
+                                    onPress={() => uploadRef.current()}
                                 >
                                     <Skeleton isLoaded={!!user && !uploadingAvatar} className="rounded-full size-fit">
                                         <UserAvatar
