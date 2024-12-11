@@ -43,8 +43,8 @@ export default function EditProfile() {
 
     const [name, setName] = useState(user?.full_name || '')
     const [bio, setBio] = useState(localizedBio || '')
-    const [nameError, setNameError] = useState(null)
-    const [bioError, setBioError] = useState(null)
+    const [nameError, setNameError] = useState<string | null>(null)
+    const [bioError, setBioError] = useState<string | null>(null)
     const [avatarFile, setAvatarFile] = useState<File | null>(null)
     const [confirm, setConfirm] = useState<Confirm | null>(null)
     const [uploadingAvatar, setUploadingAvatar] = useState(false)
@@ -55,9 +55,9 @@ export default function EditProfile() {
 
     const formChanged = bio != localizedBio || name != user?.full_name
 
-    const nameRequired = autoTranslate('name_required', "Name is required")
-    const minName = autoTranslate('min_name', "Name must be at least 2 characters")
-    const maxBio = autoTranslate('max_bio', `Bio must be less than ${maxBioLength} characters`)
+    const nameRequired: string = autoTranslate('name_required', "Name is required")
+    const minName: string = autoTranslate('min_name', "Name must be at least 2 characters")
+    const maxBio: string = autoTranslate('max_bio', `Bio must be less than ${maxBioLength} characters`)
 
     const validateForm = () => {
         if (!user) return
