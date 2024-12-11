@@ -2,6 +2,8 @@ import { Tables } from "database.types"
 
 export interface Profile extends Tables<"profiles"> { }
 
+export interface Metadata extends Tables<"metadata"> { }
+
 export interface Article extends Tables<"articles"> {
     user: Profile
 }
