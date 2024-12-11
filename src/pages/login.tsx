@@ -1,17 +1,17 @@
+import { GetStaticPropsContext } from "next"
 import { useSessionContext } from "@supabase/auth-helpers-react"
 
-import { Auth, defaultLocalization } from "@daveyplate/supabase-auth-nextui"
+import { Auth, AuthLocalization, defaultLocalization } from "@daveyplate/supabase-auth-nextui"
 import { useAutoTranslate } from 'next-auto-translate'
 
 import { cn } from "@nextui-org/react"
 
 import { getLocalePaths } from "@/i18n/locale-paths"
 import { getTranslationProps } from '@/i18n/translation-props'
+import { Link } from "@/i18n/routing"
 import { isExport } from "@/utils/utils"
-
 import { createClient } from "@/utils/supabase/component"
 import { getURL } from "@/utils/utils"
-import { Link } from "@/i18n/routing"
 
 export default function LoginPage() {
     const supabase = createClient()
@@ -19,7 +19,7 @@ export default function LoginPage() {
     const { autoTranslate } = useAutoTranslate("auth")
 
     // Autotranslate the entire objects keys and values
-    const localization = {}
+    const localization: AuthLocalization = {}
     for (const key in defaultLocalization) {
         localization[key] = autoTranslate(key, defaultLocalization[key])
     }
@@ -35,6 +35,7 @@ export default function LoginPage() {
                 baseUrl={getURL()}
                 localization={localization}
             />
+
 
             <p className="text-center text-small text-default-400 max-w-sm">
                 {autoTranslate("by_continuing", "By continuing, you agree to our")}
@@ -55,7 +56,7 @@ export default function LoginPage() {
     )
 }
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps({ locale, params }: GetStaticPropsContext) {
     const translationProps = await getTranslationProps({ locale, params })
 
     return { props: { ...translationProps } }
