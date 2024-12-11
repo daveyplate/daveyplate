@@ -151,7 +151,7 @@ export default function UserPage(
                                     "absolute right-3 top-3 transition-all text-whites"
                                 )}
                                 variant="light"
-                                isDisabled={isMe}
+                                isDisabled={!!isMe}
                             />
 
                             <Button
