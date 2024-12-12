@@ -1,26 +1,87 @@
-import { useAPI } from "@daveyplate/supabase-swr-entities/client"
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js"
 import { HTTP_METHOD } from "next/dist/server/web/http"
-import useSWR, { SWRConfiguration } from "swr"
+import useSWR, { mutate, SWRConfiguration, useSWRConfig } from "swr"
 import { createQueries } from "./entities-provider"
+import { createBrowserClient } from "@supabase/ssr"
+import { SupabaseClient } from "@supabase/supabase-js"
+import { getURL } from "../utils"
+import { cache, useCallback, useEffect } from "react"
 
-export type QueryFilters = Record<string, unknown>
+const supabase: SupabaseClient = createBrowserClient(
+    getURL() + "/api",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { isSingleton: false }
+)
 
-export function useEntities<T = any>(
+export interface QueryFilters {
+    [key: string]: any
+}
+
+export interface Entity {
+    id: string
+    [key: string]: any
+}
+
+const amendEntity = (currentData: Entity[], entity: Entity) => {
+    const index = currentData.findIndex((d) => d.id == entity.id)
+
+    if (index > -1) {
+        const newData = [...currentData]
+        newData[index] = { ...newData[index], ...entity }
+        return newData
+    }
+
+    return currentData
+}
+
+export function useEntities<T = Entity>(
     table?: string | null,
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
     const query = table ? (createQueries() as any)[table] : null
-    const swr = useSupabaseSWR<T[]>(query, filters, config)
+    const swr = useSupabaseSWR<T[]>(table, query, filters, config)
+    const { mutate } = swr
 
+    const swrConfig = useSWRConfig()
+
+    const update = useCallback(async (id: string, values: Partial<T>) => {
+        mutate(async () => {
+            if (!table) throw new Error('Table is required')
+
+            const { data, error } = await supabase.from(table)
+                .update(values).eq('id', id).select()
+
+            if (error) {
+                swrConfig.onError(error, table, swrConfig)
+                throw error
+            }
+
+            return data as T[]
+        }, {
+            populateCache: (result, currentData) => {
+                if (!currentData) return result
+                if (!result.length) return currentData
+
+                const newData = amendEntity(currentData as Entity[], result[0] as Entity)
+                return newData as T[]
+            },
+            optimisticData(currentData) {
+                if (!currentData) []
+
+                const newData = amendEntity(currentData as Entity[], { id, ...values })
+                return newData as T[]
+            },
+            revalidate: false
+        })
+    }, [mutate])
     // TODO mutate for update, insert, delete
     // TODO cache propagation on data change
 
-    return { ...swr }
+    return { ...swr, update }
 }
 
-export function useEntity<T = any>(
+export function useEntity<T = Entity>(
     table?: string | null,
     id?: string | null,
     filters?: QueryFilters | null,
@@ -31,20 +92,57 @@ export function useEntity<T = any>(
 }
 
 export function useSupabaseSWR<T>(
+    table?: string | null,
     query?: PostgrestFilterBuilder<any, any, any> | null,
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
+    const { cache, mutate } = useSWRConfig()
+
     if (query && filters) applyFilters(query, filters)
 
     const queryJson: { method: HTTP_METHOD, url: string } = JSON.parse(JSON.stringify(query))
     const queryPath = queryJson?.url.split("/rest/v1/")[1]
+    const swrKey = queryPath ? `entities:${queryPath}` : null
 
-    return useSWR<T>(
-        queryPath,
+    const swr = useSWR<T>(
+        swrKey,
         async () => await query!.throwOnError().then(({ data }) => data),
         config || undefined
     )
+
+    const { data } = swr as { data: Entity[] | undefined }
+
+    useEffect(() => {
+        if (!data) return
+
+        // populate cache
+        for (const key of cache.keys()) {
+            if (key == swrKey) continue
+            if (!key.startsWith('entities:')) continue
+            if (key.replace('entities:', '').split('?')[0] != table) continue
+
+            const { data: cacheData } = cache.get(key)! as { data: Entity[] }
+            if (!cacheData) continue
+
+            // compare cacheData and data for any changes to individual entities
+            // use JSON stringify to compare every matched id entity
+            let newData = [...cacheData]
+
+            for (const entity of newData) {
+                const currentEntity = data.find((d) => d.id === entity.id)
+                if (currentEntity && JSON.stringify(currentEntity) != JSON.stringify(entity)) {
+                    newData = amendEntity(newData, currentEntity)
+                }
+            }
+
+            if (JSON.stringify(newData) != JSON.stringify(cacheData)) {
+                mutate(key, newData, false)
+            }
+        }
+    }, [data])
+
+    return swr
 }
 
 function applyFilters(

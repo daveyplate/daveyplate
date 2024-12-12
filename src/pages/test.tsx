@@ -7,7 +7,7 @@ import { Article, Profile, useProfile } from "@/utils/supabase/entities-provider
 export default function Test() {
     const session = useSession()
     const { data: profile } = useProfile(session?.user?.id)
-    const { data: profiles, mutate } = useEntities<Profile>("profiles")
+    const { data: profiles, update, mutate } = useEntities<Profile>("profiles")
     const [fullName, setFullName] = useState<string>(profile?.full_name || "")
 
     useEffect(() => {
@@ -23,38 +23,41 @@ export default function Test() {
             </Button>
 
             {profile && (
-                <Card fullWidth className="max-w-sm p-2">
-                    <CardBody className="items-start">
-                        <User
-                            avatarProps={{
-                                src: profile.avatar_url || undefined,
-                            }}
-                            name={profile.full_name}
+                <>
+                    <Card fullWidth className="max-w-sm p-2">
+                        <CardBody className="items-start">
+                            <User
+                                avatarProps={{
+                                    src: profile.avatar_url || undefined,
+                                }}
+                                name={profile.full_name}
+                            />
+                        </CardBody>
+                    </Card>
+
+                    <p>Update Profile</p>
+
+                    <Form className="w-full max-w-sm gap-3" onSubmit={async (e) => {
+                        e.preventDefault()
+                        update(profile.id, { full_name: fullName })
+                    }}>
+                        <Input
+                            fullWidth
+                            label="Full Name"
+                            placeholder="John Doe"
+                            value={fullName}
+                            onValueChange={setFullName}
                         />
-                    </CardBody>
-                </Card>
+
+                        <Button
+                            type="submit"
+                            color="primary"
+                        >
+                            Save
+                        </Button>
+                    </Form>
+                </>
             )}
-
-            <p>Update Profile</p>
-
-            <Form className="w-full max-w-sm gap-3" onSubmit={async (e) => {
-                e.preventDefault()
-            }}>
-                <Input
-                    fullWidth
-                    label="Full Name"
-                    placeholder="John Doe"
-                    value={fullName}
-                    onValueChange={setFullName}
-                />
-
-                <Button
-                    type="submit"
-                    color="primary"
-                >
-                    Save
-                </Button>
-            </Form>
 
             <p>All Profiles</p>
 
