@@ -6,15 +6,16 @@ import { createBrowserClient } from "@supabase/ssr"
 import { SupabaseClient } from "@supabase/supabase-js"
 import { getURL } from "../utils"
 import { cache, useCallback, useEffect } from "react"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
 
-const supabase: SupabaseClient = createBrowserClient(
-    getURL() + "/api",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { isSingleton: false }
-)
+const baseUrl = getURL() + "/api"
 
 export interface QueryFilters {
     [key: string]: any
+}
+
+export interface SupabaseQuery extends Omit<PostgrestFilterBuilder<any, any, any>, "url"> {
+    url: URL
 }
 
 export interface Entity {
@@ -39,6 +40,7 @@ export function useEntities<T = Entity>(
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
+    const supabase = useSupabaseClient()
     const query = table ? (createQueries() as any)[table] : null
     const swr = useSupabaseSWR<T[]>(table, query, filters, config)
     const { mutate } = swr
@@ -49,8 +51,11 @@ export function useEntities<T = Entity>(
         mutate(async () => {
             if (!table) throw new Error('Table is required')
 
-            const { data, error } = await supabase.from(table)
-                .update(values).eq('id', id).select()
+            const updateQuery = supabase.from(table).update(values)
+                .eq('id', id).select() as unknown as SupabaseQuery
+            updateQuery.url = new URL(updateQuery.url.toString().replace(process.env.NEXT_PUBLIC_SUPABASE_URL!, baseUrl))
+
+            const { data, error } = await updateQuery
 
             if (error) {
                 swrConfig.onError(error, table, swrConfig)
@@ -93,13 +98,17 @@ export function useEntity<T = Entity>(
 
 export function useSupabaseSWR<T>(
     table?: string | null,
-    query?: PostgrestFilterBuilder<any, any, any> | null,
+    query?: SupabaseQuery | null,
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
     const { cache, mutate } = useSWRConfig()
 
     if (query && filters) applyFilters(query, filters)
+
+    if (query) {
+        query.url = new URL(query.url.toString().replace(process.env.NEXT_PUBLIC_SUPABASE_URL!, baseUrl))
+    }
 
     const queryJson: { method: HTTP_METHOD, url: string } = JSON.parse(JSON.stringify(query))
     const queryPath = queryJson?.url.split("/rest/v1/")[1]
@@ -126,7 +135,6 @@ export function useSupabaseSWR<T>(
             if (!cacheData) continue
 
             // compare cacheData and data for any changes to individual entities
-            // use JSON stringify to compare every matched id entity
             let newData = [...cacheData]
 
             for (const entity of newData) {
@@ -146,7 +154,7 @@ export function useSupabaseSWR<T>(
 }
 
 function applyFilters(
-    query: PostgrestFilterBuilder<any, any, any>,
+    query: SupabaseQuery,
     filters: QueryFilters
 ) {
     for (const [key, value] of Object.entries(filters)) {

@@ -3,12 +3,9 @@ import { Database } from "database.types"
 import { QueryFilters, useEntities, useEntity } from "./supabase-swr"
 import { createBrowserClient } from "@supabase/ssr"
 import { getURL } from "../utils"
+import { createClient } from "./component"
 
-const supabaseClient: SupabaseClient<Database> = createBrowserClient(
-    getURL() + "/api",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { isSingleton: false }
-)
+const supabaseClient: SupabaseClient<Database> = createClient()
 
 export const createQueries = () => {
     return {
