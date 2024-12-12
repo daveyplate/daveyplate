@@ -2,12 +2,11 @@ import { useSession } from "@supabase/auth-helpers-react"
 import { useEffect, useState } from "react"
 import { Button, Card, CardBody, Form, Input, User } from "@nextui-org/react"
 import { useEntities, useEntity } from "@/utils/supabase/supabase-swr"
-import { Article, Profile } from "@/utils/supabase/entities-provider"
-import { profile } from "console"
+import { Article, Profile, useProfile } from "@/utils/supabase/entities-provider"
 
 export default function Test() {
     const session = useSession()
-    const { data: profile } = useEntity<Profile>("profiles", session?.user?.id)
+    const { data: profile } = useProfile(session?.user?.id)
     const { data: profiles, mutate } = useEntities<Profile>("profiles")
     const [fullName, setFullName] = useState<string>(profile?.full_name || "")
 

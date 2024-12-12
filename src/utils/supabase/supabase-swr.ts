@@ -6,27 +6,27 @@ import { createQueries } from "./entities-provider"
 
 export type QueryFilters = Record<string, unknown>
 
-export function useEntities<T>(
+export function useEntities<T = any>(
     table?: string | null,
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
-
     const query = table ? (createQueries() as any)[table] : null
     const swr = useSupabaseSWR<T[]>(query, filters, config)
+
+    // TODO mutate for update, insert, delete
+    // TODO cache propagation on data change
 
     return { ...swr }
 }
 
-export function useEntity<T>(
+export function useEntity<T = any>(
     table?: string | null,
     id?: string | null,
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
-    const swr = useEntities<T>(table, id ? { id, ...filters } : filters, config)
-
-    console.log("filters", filters)
+    const swr = useEntities<T>(table, id ? { id, ...filters } : { ...filters, limit: 1 }, config)
     return { ...swr, data: swr.data?.[0] }
 }
 
@@ -35,7 +35,6 @@ export function useSupabaseSWR<T>(
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
-    const { getAPI } = useAPI()
     if (query && filters) applyFilters(query, filters)
 
     const queryJson: { method: HTTP_METHOD, url: string } = JSON.parse(JSON.stringify(query))
@@ -43,12 +42,7 @@ export function useSupabaseSWR<T>(
 
     return useSWR<T>(
         queryPath,
-        async () => {
-            console.log("queryPath", queryPath)
-            return await query!.throwOnError().then(({ data }) => data)
-
-            // return await getAPI(`/api/rest/v1/${queryPath}`) as T
-        },
+        async () => await query!.throwOnError().then(({ data }) => data),
         config || undefined
     )
 }
@@ -58,32 +52,34 @@ function applyFilters(
     filters: QueryFilters
 ) {
     for (const [key, value] of Object.entries(filters)) {
-        if (['limit', 'offset', 'order'].includes(key)) continue
+        if (['offset', 'order'].includes(key)) continue
 
-        if (key == 'or') {
-            query = query.or(value as string)
+        if (key == 'limit') {
+            query.limit(value as number)
+        } else if (key == 'or') {
+            query.or(value as string)
         } else if (key.endsWith('_neq')) {
-            query = query.neq(key.slice(0, -4), value)
+            query.neq(key.slice(0, -4), value)
         } else if (key.endsWith('_in')) {
-            query = query.in(key.slice(0, -3), (value as string).split(','))
+            query.in(key.slice(0, -3), (value as string).split(','))
         } else if (key.endsWith('_like')) {
-            query = query.ilike(key.slice(0, -5), `%${value}%`)
+            query.ilike(key.slice(0, -5), `%${value}%`)
         } else if (key.endsWith('_ilike')) {
-            query = query.ilike(key.slice(0, -6), `%${value}%`)
+            query.ilike(key.slice(0, -6), `%${value}%`)
         } else if (key.endsWith('_search')) {
-            query = query.textSearch(key.slice(0, -7), `'${value}'`, { type: 'websearch' })
+            query.textSearch(key.slice(0, -7), `'${value}'`, { type: 'websearch' })
         } else if (key.endsWith('_gt')) {
-            query = query.gt(key.slice(0, -3), value)
+            query.gt(key.slice(0, -3), value)
         } else if (key.endsWith('_lt')) {
-            query = query.lt(key.slice(0, -3), value)
+            query.lt(key.slice(0, -3), value)
         } else if (key.endsWith('_gte')) {
-            query = query.gte(key.slice(0, -3), value)
+            query.gte(key.slice(0, -3), value)
         } else if (key.endsWith('_lte')) {
-            query = query.lte(key.slice(0, -3), value)
+            query.lte(key.slice(0, -3), value)
         } else if (value == "null" || value == null) {
-            query = query.is(key, null)
+            query.is(key, null)
         } else {
-            query = query.eq(key, value)
+            query.eq(key, value)
         }
     }
 }

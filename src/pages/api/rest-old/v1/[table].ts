@@ -18,19 +18,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Prepare headers
         const headers: HeadersInit = {
+            'ApiKey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
             'Content-Type': 'application/json',
         }
 
-        // If session exists, add the Authorization header
+        // If session exists, append is_server to the JWT and add the Authorization header
         if (session) {
             const decoded = jwt.verify(session.access_token, process.env.SUPABASE_JWT_SECRET)
-            decoded.service_role_key = process.env.SUPABASE_SERVICE_ROLE_KEY
+            decoded.is_server = true
             const newToken = jwt.sign(decoded, process.env.SUPABASE_JWT_SECRET)
 
             headers['Authorization'] = `Bearer ${newToken}`
         }
-
-        headers['ApiKey'] = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
         const response = await fetch(url, {
             method: req.method,
