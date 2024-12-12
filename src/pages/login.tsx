@@ -36,7 +36,6 @@ export default function LoginPage() {
                 localization={localization}
             />
 
-
             <p className="text-center text-small text-default-400 max-w-sm">
                 {autoTranslate("by_continuing", "By continuing, you agree to our")}
 

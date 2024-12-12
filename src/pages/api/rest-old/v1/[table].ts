@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/api'
 import { NextApiRequest, NextApiResponse } from 'next'
-var jwt = require('jsonwebtoken')
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const supabase = createClient(req, res)
@@ -24,9 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // If session exists, append is_server to the JWT and add the Authorization header
         if (session) {
-            const decoded = jwt.verify(session.access_token, process.env.SUPABASE_JWT_SECRET)
+            const decoded = jwt.verify(session.access_token, process.env.SUPABASE_JWT_SECRET!) as JwtPayload
             decoded.is_server = true
-            const newToken = jwt.sign(decoded, process.env.SUPABASE_JWT_SECRET)
+            const newToken = jwt.sign(decoded, process.env.SUPABASE_JWT_SECRET!)
 
             headers['Authorization'] = `Bearer ${newToken}`
         }

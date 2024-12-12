@@ -1,9 +1,7 @@
-import { SupabaseClient, QueryData } from "@supabase/supabase-js"
+import { QueryData, SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "database.types"
-import { QueryFilters, useEntities, useEntity } from "./supabase-swr"
-import { createBrowserClient } from "@supabase/ssr"
-import { getURL } from "../utils"
 import { createClient } from "./component"
+import { QueryFilters, useEntities, useEntity } from "./supabase-swr"
 
 const supabaseClient: SupabaseClient<Database> = createClient()
 
@@ -14,10 +12,8 @@ export const createQueries = () => {
     }
 }
 
-const queries = createQueries()
-
-export type Profile = QueryData<typeof queries["profiles"]>[0]
-export type Article = QueryData<typeof queries["articles"]>[0]
+export type Profile = QueryData<ReturnType<typeof createQueries>["profiles"]>[0]
+export type Article = QueryData<ReturnType<typeof createQueries>["articles"]>[0]
 
 export function useProfiles(enabled: boolean | null = true, filters?: QueryFilters | null) {
     return useEntities<Profile>(enabled ? "profiles" : null, filters)

@@ -1,8 +1,8 @@
+import { Profile, useProfile } from "@/utils/supabase/entities-provider"
+import { useEntities } from "@/utils/supabase/supabase-swr"
+import { Button, Card, CardBody, Form, Input, User } from "@nextui-org/react"
 import { useSession } from "@supabase/auth-helpers-react"
 import { useEffect, useState } from "react"
-import { Button, Card, CardBody, Form, Input, User } from "@nextui-org/react"
-import { useEntities, useEntity } from "@/utils/supabase/supabase-swr"
-import { Article, Profile, useProfile } from "@/utils/supabase/entities-provider"
 
 export default function Test() {
     const session = useSession()

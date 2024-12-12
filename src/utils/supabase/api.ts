@@ -1,4 +1,3 @@
-import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import { createServerClient, serializeCookieHeader } from '@supabase/ssr'
 import { type NextApiRequest, type NextApiResponse } from 'next'
 

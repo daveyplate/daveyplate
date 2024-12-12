@@ -1,12 +1,10 @@
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js"
 import { HTTP_METHOD } from "next/dist/server/web/http"
-import useSWR, { mutate, SWRConfiguration, useSWRConfig } from "swr"
-import { createQueries } from "./entities-provider"
-import { createBrowserClient } from "@supabase/ssr"
-import { SupabaseClient } from "@supabase/supabase-js"
+import { useCallback, useEffect } from "react"
+import useSWR, { SWRConfiguration, useSWRConfig } from "swr"
 import { getURL } from "../utils"
-import { cache, useCallback, useEffect } from "react"
-import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { createQueries } from "./entities-provider"
 
 const baseUrl = getURL() + "/api"
 

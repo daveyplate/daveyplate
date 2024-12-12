@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/api'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-import { NextApiRequest, NextApiResponse } from 'next'
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 const apiProxy = createProxyMiddleware({
     target: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -10,10 +10,12 @@ const apiProxy = createProxyMiddleware({
         '^/api': ''
     },
     on: {
+        /*
         proxyReq: async (proxyReq) => {
             // console.log("remove forwarding headrs")
             // proxyReq.removeHeader('X-Forwarded-Host')
         }
+        */
     }
 })
 
