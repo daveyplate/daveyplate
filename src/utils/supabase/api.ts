@@ -3,6 +3,7 @@ import { createServerClient, serializeCookieHeader } from '@supabase/ssr'
 import { type NextApiRequest, type NextApiResponse } from 'next'
 
 export function createClient(req: NextApiRequest, res: NextApiResponse) {
+    /*
     if (req.headers.authorization) {
         const supabase = createSupabaseClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -12,6 +13,7 @@ export function createClient(req: NextApiRequest, res: NextApiResponse) {
 
         return supabase
     }
+    */
 
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,

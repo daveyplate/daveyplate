@@ -9,10 +9,8 @@ export function middleware(request: NextRequest) {
     const response = nextCors({ request, allowedOrigins })
 
     // Rate Limiting
-    if (process.env.NODE_ENV === 'production') {
-        const rateLimitResponse = rateLimit({ request, response })
-        if (rateLimitResponse) return rateLimitResponse
-    }
+    const rateLimitResponse = rateLimit({ request, response })
+    if (rateLimitResponse) return rateLimitResponse
 
     return response
 }

@@ -1,4 +1,4 @@
-import { SessionContextProvider } from '@supabase/auth-helpers-react'
+import { SessionContextProvider, SupabaseClient } from '@supabase/auth-helpers-react'
 import { NuqsAdapter } from 'nuqs/adapters/next/pages'
 import { useEffect } from 'react'
 import { SWRConfig } from "swr"
@@ -43,11 +43,12 @@ const localeValues = [
 ]
 
 export default function Providers(
-    { children, ...pageProps }: { children: React.ReactNode } & { locale: string, messages: object[] }
+    { children, ...pageProps }: { children: React.ReactNode } & { locale: string, messages: object[], supabase: SupabaseClient }
 ) {
     const localeRouter = useLocaleRouter()
     const pathname = usePathname()
     const supabase = createClient()
+    pageProps.supabase = supabase
     useWindowFocusBlur()
 
     const nextUILocale = localeValues.find((locale) => locale.startsWith(pageProps.locale))
