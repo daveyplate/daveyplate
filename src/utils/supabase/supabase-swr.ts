@@ -1,9 +1,9 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js"
+import { createQueries } from "entities.generated"
 import { HTTP_METHOD } from "next/dist/server/web/http"
 import { useCallback, useEffect } from "react"
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr"
-import { createQueries } from "./swr-entities"
 
 export interface QueryFilters {
     [key: string]: any

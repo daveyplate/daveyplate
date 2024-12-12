@@ -12,7 +12,7 @@
     "export": "NEXT_PUBLIC_IS_EXPORT=1 sh export.sh",
     "postinstall": "react-flagpack",
     "generate-types": "supabase gen types typescript --project-id zwusuzefptvayftcobje > database.types.ts",
-    "generate-entities": "tsx generate-entities.ts",
+    "generate-entities": "npm run generate-types && tsx generate-entities.ts",
     "generate-icons": "generate-icons --source ./public/icons/icon-512.png",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=daveyplate"
   },

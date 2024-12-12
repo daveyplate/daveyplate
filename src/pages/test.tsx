@@ -1,7 +1,7 @@
-import { Profiles, useProfile } from "@/utils/supabase/swr-entities"
 import { useEntities } from "@/utils/supabase/supabase-swr"
 import { Button, Card, CardBody, Form, Input, User } from "@nextui-org/react"
 import { useSession } from "@supabase/auth-helpers-react"
+import { Profiles, useProfile } from "entities.generated"
 import { useEffect, useState } from "react"
 
 export default function Test() {
