@@ -9,7 +9,7 @@ export interface QueryFilters {
     [key: string]: any
 }
 
-export interface SupabaseQuery extends PostgrestFilterBuilder<any, any, any> { }
+export type SupabaseQuery = PostgrestFilterBuilder<any, any, any>
 
 export interface Entity {
     id: string
