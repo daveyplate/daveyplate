@@ -10,7 +10,7 @@ export function useProfiles(enabled = true, filters?: QueryFilters | null) {
     const query = supabase.from(table).select()
     type QueryType = QueryData<typeof query>
 
-    const swr = useSupabaseSWR<QueryType>(enabled ? query : null, filters)
+    const swr = useSupabaseSWR<QueryType>("profiles", enabled ? query : null, filters)
 
     return { ...swr }
 }

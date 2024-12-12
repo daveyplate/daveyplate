@@ -9,9 +9,7 @@ export interface QueryFilters {
     [key: string]: any
 }
 
-export interface SupabaseQuery extends Omit<PostgrestFilterBuilder<any, any, any>, "url"> {
-    url: URL
-}
+export interface SupabaseQuery extends PostgrestFilterBuilder<any, any, any> { }
 
 export interface Entity {
     id: string
