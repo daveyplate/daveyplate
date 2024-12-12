@@ -3,10 +3,7 @@ import { PostgrestFilterBuilder } from "@supabase/postgrest-js"
 import { HTTP_METHOD } from "next/dist/server/web/http"
 import { useCallback, useEffect } from "react"
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr"
-import { getURL } from "../utils"
-import { createQueries } from "./entities-provider"
-
-const baseUrl = getURL() + "/api"
+import { createQueries } from "./swr-entities"
 
 export interface QueryFilters {
     [key: string]: any
@@ -33,25 +30,24 @@ const amendEntity = (currentData: Entity[], entity: Entity) => {
     return currentData
 }
 
-export function useEntities<T = Entity>(
+export function useEntities<T extends Entity[]>(
     table?: string | null,
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
     const supabase = useSupabaseClient()
     const query = table ? (createQueries() as any)[table] : null
-    const swr = useSupabaseSWR<T[]>(table, query, filters, config)
+    const swr = useSupabaseSWR<T>(table, query, filters, config)
     const { mutate } = swr
 
     const swrConfig = useSWRConfig()
 
-    const update = useCallback(async (id: string, values: Partial<T>) => {
+    const update = useCallback(async (id: string, values: Partial<T[0]>) => {
         mutate(async () => {
             if (!table) throw new Error('Table is required')
 
             const updateQuery = supabase.from(table).update(values)
-                .eq('id', id).select() as unknown as SupabaseQuery
-            updateQuery.url = new URL(updateQuery.url.toString().replace(process.env.NEXT_PUBLIC_SUPABASE_URL!, baseUrl))
+                .eq('id', id).select()
 
             const { data, error } = await updateQuery
 
@@ -60,20 +56,20 @@ export function useEntities<T = Entity>(
                 throw error
             }
 
-            return data as T[]
+            return data as T
         }, {
             populateCache: (result, currentData) => {
                 if (!currentData) return result
-                if (!result.length) return currentData
+                if (!(result as Entity[]).length) return currentData
 
-                const newData = amendEntity(currentData as Entity[], result[0] as Entity)
-                return newData as T[]
+                const newData = amendEntity(currentData as Entity[], (result as Entity[])[0] as Entity)
+                return newData as T
             },
             optimisticData(currentData) {
                 if (!currentData) []
 
                 const newData = amendEntity(currentData as Entity[], { id, ...values })
-                return newData as T[]
+                return newData as T
             },
             revalidate: false
         })
@@ -84,17 +80,17 @@ export function useEntities<T = Entity>(
     return { ...swr, update }
 }
 
-export function useEntity<T = Entity>(
+export function useEntity<T extends Entity[]>(
     table?: string | null,
     id?: string | null,
     filters?: QueryFilters | null,
     config?: SWRConfiguration | null
 ) {
     const swr = useEntities<T>(table, id ? { id, ...filters } : { ...filters, limit: 1 }, config)
-    return { ...swr, data: swr.data?.[0] }
+    return { ...swr, data: swr.data?.[0] as T[0] }
 }
 
-export function useSupabaseSWR<T>(
+export function useSupabaseSWR<T = Entity[]>(
     table?: string | null,
     query?: SupabaseQuery | null,
     filters?: QueryFilters | null,
@@ -103,10 +99,6 @@ export function useSupabaseSWR<T>(
     const { cache, mutate } = useSWRConfig()
 
     if (query && filters) applyFilters(query, filters)
-
-    if (query) {
-        query.url = new URL(query.url.toString().replace(process.env.NEXT_PUBLIC_SUPABASE_URL!, baseUrl))
-    }
 
     const queryJson: { method: HTTP_METHOD, url: string } = JSON.parse(JSON.stringify(query))
     const queryPath = queryJson?.url.split("/rest/v1/")[1]

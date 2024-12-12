@@ -12,13 +12,13 @@ export const createQueries = () => {
     }
 }
 
-export type Profile = QueryData<ReturnType<typeof createQueries>["profiles"]>[0]
-export type Article = QueryData<ReturnType<typeof createQueries>["articles"]>[0]
+export type Profiles = QueryData<ReturnType<typeof createQueries>["profiles"]>
+export type Articles = QueryData<ReturnType<typeof createQueries>["articles"]>
 
 export function useProfiles(enabled: boolean | null = true, filters?: QueryFilters | null) {
-    return useEntities<Profile>(enabled ? "profiles" : null, filters)
+    return useEntities<Profiles>(enabled ? "profiles" : null, filters)
 }
 
 export function useProfile(id?: string | null, filters?: QueryFilters | null) {
-    return useEntity<Profile>((id || filters) ? "profiles" : null, id, filters)
+    return useEntity<Profiles>((id || filters) ? "profiles" : null, id, filters)
 }

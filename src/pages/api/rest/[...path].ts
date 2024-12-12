@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const supabase = createClient(req, res)
     const { data: { session } } = await supabase.auth.getSession()
 
-    // If session exists, append is_server to the JWT and add the Authorization header
+    // If session exists, append is_server = true to the JWT and add the Authorization header
     if (session) {
         const decoded = jwt.verify(session.access_token, process.env.SUPABASE_JWT_SECRET!) as JwtPayload
 
