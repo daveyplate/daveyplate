@@ -1,6 +1,6 @@
 import { QueryData, SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "database.types"
-import { createClient } from "./component"
+import { createClient } from "@/utils/supabase/component"
 import { QueryFilters, useEntities, useEntity } from "./supabase-swr"
 
 const supabaseClient: SupabaseClient<Database> = createClient()
