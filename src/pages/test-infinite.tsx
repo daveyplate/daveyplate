@@ -1,4 +1,3 @@
-import ChatMessage from "@/components/chat/chat-message"
 import { useSupabaseInfiniteSWR } from "@/utils/supabase/supabase-swr"
 import { useSession } from "@supabase/auth-helpers-react"
 import { Message } from "entities.generated"
@@ -29,9 +28,7 @@ export default function Test() {
     return (
         <div className="flex flex-col grow items-center justify center p-4 gap-4">
             <div className="w-full max-w-xl flex flex-col gap-4">
-                {messages?.map(message => (
-                    <ChatMessage key={message.id} message={message as any} />
-                ))}
+
             </div>
         </div>
     )
