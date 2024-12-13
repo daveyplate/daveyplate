@@ -1,19 +1,17 @@
-import ChatMessage from "@/components/chat/chat-message"
-import { useEntities } from "@/utils/supabase/supabase-swr"
+import { useSupabaseInfiniteSWR } from "@/utils/supabase/supabase-swr"
 import { Button, Card, CardBody, Form, Input, User } from "@nextui-org/react"
 import { useSession } from "@supabase/auth-helpers-react"
-import { Profile, useMessages, useProfile } from "entities.generated"
+import { Profile, useProfiles } from "entities.generated"
 import { useEffect, useState } from "react"
 
 export default function Test() {
     const session = useSession()
-    const { profile } = useProfile(null, { match: { id: session?.user?.id } })
-    const { data: profiles, update, mutate } = useEntities<Profile>("profiles")
-    const { messages } = useMessages(true, { limit: 20 })
-    const [fullName, setFullName] = useState<string>(profile?.full_name || "")
+    const { data: profile } = useSupabaseInfiniteSWR<Profile>(session ? "profiles" : null, { id: session?.user?.id })
+    const { data: profiles, update, mutate } = useProfiles()
+    const [fullName, setFullName] = useState<string>(profile?.[0]?.full_name || "")
 
     useEffect(() => {
-        setFullName(profile?.full_name || "")
+        setFullName(profile?.[0]?.full_name || "")
     }, [profile])
 
     return (
@@ -24,15 +22,21 @@ export default function Test() {
                 Mutate
             </Button>
 
-            {profile && (
+            <Button onPress={() => {
+                fetch("/api/test")
+            }}>
+                FETCH
+            </Button>
+
+            {profile?.[0] && (
                 <>
                     <Card fullWidth className="max-w-sm p-2">
                         <CardBody className="items-start">
                             <User
                                 avatarProps={{
-                                    src: profile.avatar_url || undefined,
+                                    src: profile[0].avatar_url || undefined,
                                 }}
-                                name={profile.full_name}
+                                name={profile[0].full_name}
                             />
                         </CardBody>
                     </Card>
@@ -41,7 +45,7 @@ export default function Test() {
 
                     <Form className="w-full max-w-sm gap-3" onSubmit={async (e) => {
                         e.preventDefault()
-                        update(profile.id, { full_name: fullName })
+                        update(profile[0].id, { full_name: fullName })
                     }}>
                         <Input
                             fullWidth
@@ -61,15 +65,7 @@ export default function Test() {
                 </>
             )}
 
-            <p>Messages</p>
-
-            <div className="w-full max-w-xl flex flex-col gap-4">
-                {messages?.map(message => (
-                    <ChatMessage key={message.id} message={message as any} />
-                ))}
-            </div>
-
-            <p>All Profiles</p>
+            <p>Profiles</p>
 
             {profiles?.map(profile => (
                 <Card key={profile.id} fullWidth className="max-w-sm p-2">
