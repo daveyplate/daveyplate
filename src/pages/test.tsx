@@ -22,12 +22,6 @@ export default function Test() {
                 Mutate
             </Button>
 
-            <Button onPress={() => {
-                fetch("/api/test", { headers: { "x-forwarded-for": Math.random().toString() } })
-            }}>
-                FETCH
-            </Button>
-
             {profile?.[0] && (
                 <>
                     <Card fullWidth className="max-w-sm p-2">

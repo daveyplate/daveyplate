@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     const response = nextCors({ request, allowedOrigins })
 
     // Rate Limiting
-    const rateLimitResponse = rateLimit({ request, response, ipLimit: 10, sessionLimit: 90000 })
+    const rateLimitResponse = await rateLimit({ request, response })
     if (rateLimitResponse) return rateLimitResponse
 
     return response
