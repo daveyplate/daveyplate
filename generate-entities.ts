@@ -112,12 +112,12 @@ function generateEntitiesFile(tables: string[], selectConfig: SelectConfig) {
 
         content += `\nexport function use${useEntitiesName}(enabled: boolean | null = true, filters?: QueryFilters<${className}> | null, config?: SWRConfiguration | null) {\n`
         content += `    const result = useEntities<${className}>(enabled ? "${table}" : null, filters, config)\n`
-        content += `    return {...result, ${lowercaseFirstLetter(useEntitiesName)}: result.data}\n`
+        content += `    return { ...result, ${lowercaseFirstLetter(useEntitiesName)}: result.data }\n`
         content += `}\n`
 
         content += `\nexport function use${useEntityName}(id?: string | null, filters?: QueryFilters<${className}> | null, config?: SWRConfiguration | null) {\n`
         content += `    const result = useEntity<${className}>((id || filters) ? "${table}" : null, id, filters, config)\n`
-        content += `    return {...result, ${lowercaseFirstLetter(useEntityName)}: result.data}\n`
+        content += `    return { ...result, ${lowercaseFirstLetter(useEntityName)}: result.data }\n`
         content += `}\n`
     })
 

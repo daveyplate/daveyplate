@@ -33,90 +33,90 @@ export type Whisper = QueryData<ReturnType<typeof createQueries>["whispers"]>[0]
 
 export function useArticleComments(enabled: boolean | null = true, filters?: QueryFilters<ArticleComment> | null, config?: SWRConfiguration | null) {
     const result = useEntities<ArticleComment>(enabled ? "article_comments" : null, filters, config)
-    return {...result, articleComments: result.data}
+    return { ...result, articleComments: result.data }
 }
 
 export function useArticleComment(id?: string | null, filters?: QueryFilters<ArticleComment> | null, config?: SWRConfiguration | null) {
     const result = useEntity<ArticleComment>((id || filters) ? "article_comments" : null, id, filters, config)
-    return {...result, articleComment: result.data}
+    return { ...result, articleComment: result.data }
 }
 
 export function useArticles(enabled: boolean | null = true, filters?: QueryFilters<Article> | null, config?: SWRConfiguration | null) {
     const result = useEntities<Article>(enabled ? "articles" : null, filters, config)
-    return {...result, articles: result.data}
+    return { ...result, articles: result.data }
 }
 
 export function useArticle(id?: string | null, filters?: QueryFilters<Article> | null, config?: SWRConfiguration | null) {
     const result = useEntity<Article>((id || filters) ? "articles" : null, id, filters, config)
-    return {...result, article: result.data}
+    return { ...result, article: result.data }
 }
 
 export function useMessageLikes(enabled: boolean | null = true, filters?: QueryFilters<MessageLike> | null, config?: SWRConfiguration | null) {
     const result = useEntities<MessageLike>(enabled ? "message_likes" : null, filters, config)
-    return {...result, messageLikes: result.data}
+    return { ...result, messageLikes: result.data }
 }
 
 export function useMessageLike(id?: string | null, filters?: QueryFilters<MessageLike> | null, config?: SWRConfiguration | null) {
     const result = useEntity<MessageLike>((id || filters) ? "message_likes" : null, id, filters, config)
-    return {...result, messageLike: result.data}
+    return { ...result, messageLike: result.data }
 }
 
 export function useMessages(enabled: boolean | null = true, filters?: QueryFilters<Message> | null, config?: SWRConfiguration | null) {
     const result = useEntities<Message>(enabled ? "messages" : null, filters, config)
-    return {...result, messages: result.data}
+    return { ...result, messages: result.data }
 }
 
 export function useMessage(id?: string | null, filters?: QueryFilters<Message> | null, config?: SWRConfiguration | null) {
     const result = useEntity<Message>((id || filters) ? "messages" : null, id, filters, config)
-    return {...result, message: result.data}
+    return { ...result, message: result.data }
 }
 
 export function useMetadatas(enabled: boolean | null = true, filters?: QueryFilters<Metadata> | null, config?: SWRConfiguration | null) {
     const result = useEntities<Metadata>(enabled ? "metadata" : null, filters, config)
-    return {...result, metadatas: result.data}
+    return { ...result, metadatas: result.data }
 }
 
 export function useMetadata(id?: string | null, filters?: QueryFilters<Metadata> | null, config?: SWRConfiguration | null) {
     const result = useEntity<Metadata>((id || filters) ? "metadata" : null, id, filters, config)
-    return {...result, metadata: result.data}
+    return { ...result, metadata: result.data }
 }
 
 export function useNotifications(enabled: boolean | null = true, filters?: QueryFilters<Notification> | null, config?: SWRConfiguration | null) {
     const result = useEntities<Notification>(enabled ? "notifications" : null, filters, config)
-    return {...result, notifications: result.data}
+    return { ...result, notifications: result.data }
 }
 
 export function useNotification(id?: string | null, filters?: QueryFilters<Notification> | null, config?: SWRConfiguration | null) {
     const result = useEntity<Notification>((id || filters) ? "notifications" : null, id, filters, config)
-    return {...result, notification: result.data}
+    return { ...result, notification: result.data }
 }
 
 export function usePeers(enabled: boolean | null = true, filters?: QueryFilters<Peer> | null, config?: SWRConfiguration | null) {
     const result = useEntities<Peer>(enabled ? "peers" : null, filters, config)
-    return {...result, peers: result.data}
+    return { ...result, peers: result.data }
 }
 
 export function usePeer(id?: string | null, filters?: QueryFilters<Peer> | null, config?: SWRConfiguration | null) {
     const result = useEntity<Peer>((id || filters) ? "peers" : null, id, filters, config)
-    return {...result, peer: result.data}
+    return { ...result, peer: result.data }
 }
 
 export function useProfiles(enabled: boolean | null = true, filters?: QueryFilters<Profile> | null, config?: SWRConfiguration | null) {
     const result = useEntities<Profile>(enabled ? "profiles" : null, filters, config)
-    return {...result, profiles: result.data}
+    return { ...result, profiles: result.data }
 }
 
 export function useProfile(id?: string | null, filters?: QueryFilters<Profile> | null, config?: SWRConfiguration | null) {
     const result = useEntity<Profile>((id || filters) ? "profiles" : null, id, filters, config)
-    return {...result, profile: result.data}
+    return { ...result, profile: result.data }
 }
 
 export function useWhispers(enabled: boolean | null = true, filters?: QueryFilters<Whisper> | null, config?: SWRConfiguration | null) {
     const result = useEntities<Whisper>(enabled ? "whispers" : null, filters, config)
-    return {...result, whispers: result.data}
+    return { ...result, whispers: result.data }
 }
 
 export function useWhisper(id?: string | null, filters?: QueryFilters<Whisper> | null, config?: SWRConfiguration | null) {
     const result = useEntity<Whisper>((id || filters) ? "whispers" : null, id, filters, config)
-    return {...result, whisper: result.data}
+    return { ...result, whisper: result.data }
 }
