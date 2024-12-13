@@ -20,7 +20,6 @@ import { Message, MessageLike, Profile, Whisper } from 'entity.types'
 
 interface ChatMessageProps {
     message: Message | Whisper
-    user: Profile
     mutateMessage: (message: Message) => void
     deleteMessage: (id: string) => Promise<any>
     sendData: (data: any) => void
@@ -31,7 +30,6 @@ interface ChatMessageProps {
 
 export default memo(({
     message,
-    user,
     mutateMessage,
     deleteMessage,
     sendData,
@@ -41,6 +39,7 @@ export default memo(({
 }: ChatMessageProps) => {
     const router = useRouter()
     const session = useSession()
+    const user = message.user
     const locale = useLocale()
     const { autoTranslate } = useAutoTranslate("message")
     const isWhisper = !!(message as Whisper).recipient_id

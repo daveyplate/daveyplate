@@ -1,3 +1,4 @@
+import ChatMessage from "@/components/chat/chat-message"
 import { useEntities } from "@/utils/supabase/supabase-swr"
 import { Button, Card, CardBody, Form, Input, User } from "@nextui-org/react"
 import { useSession } from "@supabase/auth-helpers-react"
@@ -8,7 +9,7 @@ export default function Test() {
     const session = useSession()
     const { profile } = useProfile(null, { match: { id: session?.user?.id } })
     const { data: profiles, update, mutate } = useEntities<Profile>("profiles")
-    const { messages } = useMessages(true)
+    const { messages } = useMessages(true, { limit: 20 })
     const [fullName, setFullName] = useState<string>(profile?.full_name || "")
 
     useEffect(() => {
@@ -62,19 +63,11 @@ export default function Test() {
 
             <p>Messages</p>
 
-            {messages?.map(message => (
-                <Card key={message.id} fullWidth className="max-w-sm p-2">
-                    <CardBody className="items-start">
-                        {message.user.full_name}
-
-                        {message.likes.map(like => (
-                            <div key={like.id}>
-                                {like.user.full_name}
-                            </div>
-                        ))}
-                    </CardBody>
-                </Card>
-            ))}
+            <div className="w-full max-w-xl flex flex-col gap-4">
+                {messages?.map(message => (
+                    <ChatMessage key={message.id} message={message as any} />
+                ))}
+            </div>
 
             <p>All Profiles</p>
 

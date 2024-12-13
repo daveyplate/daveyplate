@@ -2,8 +2,9 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js"
 import { createQueries } from "entities.generated"
 import { HTTP_METHOD } from "next/dist/server/web/http"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr"
+import useSWRInfinite, { SWRInfiniteConfiguration } from "swr/infinite"
 
 export type SupabaseQuery = PostgrestFilterBuilder<any, any, any>
 
@@ -38,7 +39,6 @@ export function useEntities<T extends Entity>(
     const { mutate } = swr
 
     const swrConfig = useSWRConfig()
-
 
     const update = useCallback(async (id: string, values: Partial<T>) => {
         mutate(async () => {
@@ -89,6 +89,71 @@ export function useEntity<T extends Entity>(
     return { ...swr, data: swr.data?.[0] }
 }
 
+
+
+export function useSupabaseInfiniteSWR<T extends Entity>(
+    table?: string | null,
+    filters?: QueryFilters<T> | null,
+    config?: SWRInfiniteConfiguration | null
+) {
+    const { cache } = useSWRConfig()
+
+    const createQuery = (pageIndex: number) => {
+        const query: SupabaseQuery = (createQueries() as any)[table!]!
+        const newFilters = {
+            ...filters,
+            limit: filters?.limit || 100,
+            offset: pageIndex * (filters?.limit || 100),
+        } as QueryFilters<T>
+        applyFilters<T>(query, newFilters)
+
+        return query
+    }
+
+    const getKey = (pageIndex: number, previousPageData: Entity[]) => {
+        if (previousPageData && !previousPageData.length) return null
+        if (!table) return null
+
+        const query = createQuery(pageIndex)
+
+        const queryJson: { method: HTTP_METHOD, url: string } = JSON.parse(JSON.stringify(query))
+        const queryPath = queryJson?.url.split("/rest/v1/")[1]
+        const swrKey = queryPath ? `entities:${queryPath}` : null
+
+        return [swrKey, pageIndex]
+    }
+
+    const swr = useSWRInfinite<T[]>(
+        getKey,
+        async ([_, pageIndex]) => {
+            const query = createQuery(pageIndex)
+            return await query!.throwOnError().then(({ data }) => data)
+        },
+        config || undefined
+    )
+
+    const { data } = swr
+
+    const entities = useMemo<T[]>(() => {
+        if (!data) return []
+
+        return data.reduce((acc, page) => [...acc, ...page], [] as T[])
+    }, [data])
+
+    useEffect(() => {
+        if (!data) return
+
+        // populate cache
+        for (const key of cache.keys()) {
+            if (!key.includes("entities")) continue
+            console.log(key, cache.get(key))
+        }
+    }, [data])
+
+    return { ...swr, data: entities }
+}
+
+
 export function useSupabaseSWR<T extends Entity>(
     table?: string | null,
     query?: SupabaseQuery | null,
@@ -109,7 +174,7 @@ export function useSupabaseSWR<T extends Entity>(
         config || undefined
     )
 
-    const { data } = swr as { data: Entity[] | undefined }
+    const { data } = swr
 
     useEffect(() => {
         if (!data) return
@@ -147,7 +212,7 @@ function applyFilters<T extends Entity>(
     filters: QueryFilters<T>
 ) {
     for (const [key, value] of Object.entries(filters)) {
-        if (key in ["limit", "offset", "order", "or", "match"]) continue
+        if (["limit", "offset", "order", "or", "match"].includes(key)) continue
 
         if (value == null) {
             query.is(key, null)
@@ -222,7 +287,8 @@ function applyFilters<T extends Entity>(
     if (filters.range) {
         query.range(filters.range[0], filters.range[1])
     } else if (filters.offset) {
-        query.range(filters.offset, filters.limit || 100)
+        console.log("got offset", filters.offset)
+        query.range(filters.offset, filters.offset + (filters.limit || 100))
     }
 
     if (Array.isArray(filters.order)) {
