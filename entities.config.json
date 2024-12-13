@@ -3,6 +3,16 @@
         "articles": [
             "*",
             "user:user_id!inner(*)"
+        ],
+        "messages": [
+            "*",
+            "user:profiles!inner(*)",
+            "likes:message_likes(user_id, user:profiles(id, full_name, avatar_url))"
+        ],
+        "whispers": [
+            "*",
+            "user:profiles!whispers_user_id_fkey!inner(*)",
+            "recipient:profiles!whispers_recipient_id_fkey!inner(*)"
         ]
     }
 }

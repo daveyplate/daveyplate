@@ -10,12 +10,12 @@ export const createQueries = () => {
         "article_comments": supabaseClient.from("article_comments").select(),
         "articles": supabaseClient.from("articles").select("*,user:user_id!inner(*)"),
         "message_likes": supabaseClient.from("message_likes").select(),
-        "messages": supabaseClient.from("messages").select(),
+        "messages": supabaseClient.from("messages").select("*,user:profiles!inner(*),likes:message_likes(user_id, user:profiles(id, full_name, avatar_url))"),
         "metadata": supabaseClient.from("metadata").select(),
         "notifications": supabaseClient.from("notifications").select(),
         "peers": supabaseClient.from("peers").select(),
         "profiles": supabaseClient.from("profiles").select(),
-        "whispers": supabaseClient.from("whispers").select(),
+        "whispers": supabaseClient.from("whispers").select("*,user:profiles!whispers_user_id_fkey!inner(*),recipient:profiles!whispers_recipient_id_fkey!inner(*)"),
     }
 }
 

@@ -1,23 +1,8 @@
-import { createClient } from '@/utils/supabase/api'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { NextApiRequest, NextApiResponse } from 'next'
 
-const apiProxy = createProxyMiddleware({
-    target: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    changeOrigin: true,
-    pathRewrite: {
-        '^/api': ''
-    },
-    on: {
-        /*
-        proxyReq: async (proxyReq) => {
-            // console.log("remove forwarding headrs")
-            // proxyReq.removeHeader('X-Forwarded-Host')
-        }
-        */
-    }
-})
+import { createClient } from '@/utils/supabase/api'
 
 export const config = {
     api: {
@@ -26,28 +11,34 @@ export const config = {
     }
 }
 
+const apiProxy = createProxyMiddleware({
+    target: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api': '' }
+})
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const supabase = createClient(req, res)
     const { data: { session } } = await supabase.auth.getSession()
 
-    // If session exists, append is_server = true to the JWT and add the Authorization header
-    if (session) {
-        const decoded = jwt.verify(session.access_token, process.env.SUPABASE_JWT_SECRET!) as JwtPayload
+    const accessToken = req.headers.authorization?.replace('Bearer ', '') || session?.access_token
 
-        if (decoded) {
-            decoded.is_server = true
-            const newToken = jwt.sign(decoded, process.env.SUPABASE_JWT_SECRET!)
-            delete req.headers['authorization']
-            delete req.headers['Authorization']
-            req.headers['authorization'] = `Bearer ${newToken}`
-        }
+    // Append is_server = true to JWT for RLS
+    const decodedJwt = accessToken ? {
+        ...jwt.verify(accessToken, process.env.SUPABASE_JWT_SECRET!) as JwtPayload,
+        is_server: true
+    } : { is_server: true }
+
+    const newToken = jwt.sign(decodedJwt, process.env.SUPABASE_JWT_SECRET!)
+    req.headers.authorization = `Bearer ${newToken}`
+
+    if (!req.headers.apikey) {
+        req.headers.apikey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     }
 
     return new Promise((resolve, reject) => {
         apiProxy(req, res, (result) => {
-            if (result instanceof Error) {
-                return reject(result)
-            }
+            if (result instanceof Error) return reject(result)
 
             return resolve(result)
         })

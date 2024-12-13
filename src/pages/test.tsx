@@ -1,13 +1,15 @@
 import { useEntities } from "@/utils/supabase/supabase-swr"
 import { Button, Card, CardBody, Form, Input, User } from "@nextui-org/react"
 import { useSession } from "@supabase/auth-helpers-react"
-import { Profiles, useProfile } from "entities.generated"
+import { Profiles, useMessages, useProfile, useWhispers } from "entities.generated"
 import { useEffect, useState } from "react"
 
 export default function Test() {
     const session = useSession()
     const { data: profile } = useProfile(session?.user?.id)
     const { data: profiles, update, mutate } = useEntities<Profiles>("profiles")
+    const { data: whispers } = useWhispers()
+    const { data: messages } = useMessages()
     const [fullName, setFullName] = useState<string>(profile?.full_name || "")
 
     useEffect(() => {
@@ -58,6 +60,26 @@ export default function Test() {
                     </Form>
                 </>
             )}
+
+            <p>Messages</p>
+
+            {messages?.map(message => (
+                <Card key={message.id} fullWidth className="max-w-sm p-2">
+                    <CardBody className="items-start">
+                        {message.user.full_name}
+                        {JSON.stringify(message)}
+                    </CardBody>
+                </Card>
+            ))}
+
+            {whispers?.map(whisper => (
+                <Card key={whisper.id} fullWidth className="max-w-sm p-2">
+                    <CardBody className="items-start">
+                        {whisper.recipient.full_name}
+                        {JSON.stringify(whisper)}
+                    </CardBody>
+                </Card>
+            ))}
 
             <p>All Profiles</p>
 
