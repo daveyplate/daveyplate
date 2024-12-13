@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cache-clean": "npm cache clean --force && npm cache verify",
+    "clean-cache": "npm cache clean --force && npm cache verify",
     "ngrok": "ngrok http --domain=leaked.ngrok.dev 3000",
     "export": "NEXT_PUBLIC_IS_EXPORT=1 sh export.sh",
     "postinstall": "react-flagpack",
