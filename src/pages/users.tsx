@@ -1,9 +1,7 @@
 import { useDebounce } from "@uidotdev/usehooks"
-import { useLocale } from "next-intl"
 import { useState } from "react"
 import { GetStaticProps } from "next"
 
-import { useEntities } from "@daveyplate/supabase-swr-entities/client"
 import { AutoTranslate, useAutoTranslate } from 'next-auto-translate'
 
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid"
@@ -14,16 +12,15 @@ import { getLocalePaths } from "@/i18n/locale-paths"
 import { Link } from "@/i18n/routing"
 import { getTranslationProps } from "@/i18n/translation-props"
 import { isExport } from "@/utils/utils"
-
+import { useProfiles } from "entities.generated"
 
 export default function UsersPage() {
-    const locale = useLocale()
     const { autoTranslate } = useAutoTranslate()
     const [search, setSearch] = useState('')
     const debouncedSearch = useDebounce(search, 300)
 
-    const { entities, isLoading } = useEntities('profiles', debouncedSearch ? { full_name_ilike: debouncedSearch, lang: locale } : { lang: locale }, { keepPreviousData: true })
-    const users = entities?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
+    const { data, isLoading } = useProfiles(true, debouncedSearch ? { full_name_ilike: debouncedSearch } : null, { keepPreviousData: true })
+    const users = data?.filter(user => user.full_name?.toLowerCase().includes(search.toLowerCase()))
 
     return (
         <div className="p-4">
@@ -91,8 +88,8 @@ export default function UsersPage() {
 
                                         &nbsp;
 
-                                        <span className={cn(user.claims?.premium ? "text-success" : "text-foreground")}>
-                                            {user.claims?.premium ?
+                                        <span className={cn(false ? "text-success" : "text-foreground")}>
+                                            {false ?
                                                 <AutoTranslate tKey="active">
                                                     Active
                                                 </AutoTranslate>

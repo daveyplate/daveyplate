@@ -5,10 +5,6 @@ import { HTTP_METHOD } from "next/dist/server/web/http"
 import { useCallback, useEffect } from "react"
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr"
 
-export interface QueryFilters {
-    [key: string]: any
-}
-
 export type SupabaseQuery = PostgrestFilterBuilder<any, any, any>
 
 export interface Entity {
@@ -28,24 +24,28 @@ const amendEntity = (currentData: Entity[], entity: Entity) => {
     return currentData
 }
 
-export function useEntities<T extends Entity[]>(
+export function useEntities<T extends Entity>(
     table?: string | null,
-    filters?: QueryFilters | null,
+    filters?: QueryFilters<T> | null,
     config?: SWRConfiguration | null
 ) {
     const supabase = useSupabaseClient()
+    // TODO pass <Database> to the provider? and inherit type here somehow?
     const query = table ? (createQueries() as any)[table] : null
+    const select = query.url.searchParams.get("select") as string || "*"
+
     const swr = useSupabaseSWR<T>(table, query, filters, config)
     const { mutate } = swr
 
     const swrConfig = useSWRConfig()
 
-    const update = useCallback(async (id: string, values: Partial<T[0]>) => {
+
+    const update = useCallback(async (id: string, values: Partial<T>) => {
         mutate(async () => {
             if (!table) throw new Error('Table is required')
 
             const updateQuery = supabase.from(table).update(values)
-                .eq('id', id).select()
+                .eq('id', id).select(select) as unknown as SupabaseQuery
 
             const { data, error } = await updateQuery
 
@@ -54,55 +54,56 @@ export function useEntities<T extends Entity[]>(
                 throw error
             }
 
-            return data as T
+            return data as T[]
         }, {
             populateCache: (result, currentData) => {
-                if (!currentData) return result
-                if (!(result as Entity[]).length) return currentData
+                if (!currentData?.length) return result
+                if (!result.length) return currentData
 
-                const newData = amendEntity(currentData as Entity[], (result as Entity[])[0] as Entity)
-                return newData as T
+                const newData = amendEntity(currentData, result[0])
+                return newData as T[]
             },
             optimisticData(currentData) {
-                if (!currentData) []
+                if (!currentData) return []
 
-                const newData = amendEntity(currentData as Entity[], { id, ...values })
-                return newData as T
+                const newData = amendEntity(currentData, { id, ...values })
+                return newData as T[]
             },
             revalidate: false
         })
     }, [mutate])
-    // TODO mutate for update, insert, delete
-    // TODO cache propagation on data change
+
+    // TODO INFINITE !
+    // TODO mutate for insert, delete
 
     return { ...swr, update }
 }
 
-export function useEntity<T extends Entity[]>(
+export function useEntity<T extends Entity>(
     table?: string | null,
     id?: string | null,
-    filters?: QueryFilters | null,
+    filters?: QueryFilters<T> | null,
     config?: SWRConfiguration | null
 ) {
-    const swr = useEntities<T>(table, id ? { id, ...filters } : { ...filters, limit: 1 }, config)
-    return { ...swr, data: swr.data?.[0] as T[0] }
+    const swr = useEntities<T>(table, id ? { id, ...filters } : { ...filters, limit: 1 } as any, config)
+    return { ...swr, data: swr.data?.[0] }
 }
 
-export function useSupabaseSWR<T = Entity[]>(
+export function useSupabaseSWR<T extends Entity>(
     table?: string | null,
     query?: SupabaseQuery | null,
-    filters?: QueryFilters | null,
+    filters?: QueryFilters<T> | null,
     config?: SWRConfiguration | null
 ) {
     const { cache, mutate } = useSWRConfig()
 
-    if (query && filters) applyFilters(query, filters)
+    if (query && filters) applyFilters<T>(query, filters)
 
     const queryJson: { method: HTTP_METHOD, url: string } = JSON.parse(JSON.stringify(query))
     const queryPath = queryJson?.url.split("/rest/v1/")[1]
     const swrKey = queryPath ? `entities:${queryPath}` : null
 
-    const swr = useSWR<T>(
+    const swr = useSWR<T[]>(
         swrKey,
         async () => await query!.throwOnError().then(({ data }) => data),
         config || undefined
@@ -141,40 +142,153 @@ export function useSupabaseSWR<T = Entity[]>(
     return swr
 }
 
-function applyFilters(
+function applyFilters<T extends Entity>(
     query: SupabaseQuery,
-    filters: QueryFilters
+    filters: QueryFilters<T>
 ) {
     for (const [key, value] of Object.entries(filters)) {
-        if (['offset', 'order'].includes(key)) continue
+        if (key in ["limit", "offset", "order", "or", "match"]) continue
 
-        if (key == 'limit') {
-            query.limit(value as number)
-        } else if (key == 'or') {
-            query.or(value as string)
-        } else if (key.endsWith('_neq')) {
-            query.neq(key.slice(0, -4), value)
-        } else if (key.endsWith('_in')) {
-            query.in(key.slice(0, -3), (value as string).split(','))
-        } else if (key.endsWith('_like')) {
-            query.ilike(key.slice(0, -5), `%${value}%`)
-        } else if (key.endsWith('_ilike')) {
-            query.ilike(key.slice(0, -6), `%${value}%`)
-        } else if (key.endsWith('_search')) {
-            query.textSearch(key.slice(0, -7), `'${value}'`, { type: 'websearch' })
-        } else if (key.endsWith('_gt')) {
-            query.gt(key.slice(0, -3), value)
-        } else if (key.endsWith('_lt')) {
-            query.lt(key.slice(0, -3), value)
-        } else if (key.endsWith('_gte')) {
-            query.gte(key.slice(0, -3), value)
-        } else if (key.endsWith('_lte')) {
-            query.lte(key.slice(0, -3), value)
-        } else if (value == "null" || value == null) {
+        if (value == null) {
             query.is(key, null)
-        } else {
-            query.eq(key, value)
+            continue
         }
+
+        if (typeof value != "object") {
+            query.eq(key, value)
+            continue
+        }
+
+        const columnFilter = value as ColumnFilters<T[keyof T]>
+
+        if (columnFilter.eq) {
+            query.eq(key, columnFilter.eq)
+        } else if (columnFilter.neq) {
+            query.neq(key, columnFilter.neq)
+        } else if (columnFilter.gt) {
+            query.gt(key, columnFilter.gt)
+        } else if (columnFilter.gte) {
+            query.gte(key, columnFilter.gte)
+        } else if (columnFilter.lt) {
+            query.lt(key, columnFilter.lt)
+        } else if (columnFilter.lte) {
+            query.lte(key, columnFilter.lte)
+        } else if (columnFilter.like) {
+            query.like(key, columnFilter.like)
+        } else if (columnFilter.ilike) {
+            query.ilike(key, columnFilter.ilike)
+        } else if (columnFilter.is) {
+            query.is(key, columnFilter.is)
+        } else if (columnFilter.in) {
+            query.in(key, columnFilter.in)
+        } else if (columnFilter.contains) {
+            query.contains(key, columnFilter.contains)
+        } else if (columnFilter.containedBy) {
+            query.containedBy(key, columnFilter.containedBy)
+        } else if (columnFilter.rangeGt) {
+            query.rangeGt(key, columnFilter.rangeGt)
+        } else if (columnFilter.rangeGte) {
+            query.rangeGte(key, columnFilter.rangeGte)
+        } else if (columnFilter.rangeLt) {
+            query.rangeLt(key, columnFilter.rangeLt)
+        } else if (columnFilter.rangeLte) {
+            query.rangeLte(key, columnFilter.rangeLte)
+        } else if (columnFilter.rangeAdjacent) {
+            query.rangeAdjacent(key, columnFilter.rangeAdjacent)
+        } else if (columnFilter.overlaps) {
+            query.overlaps(key, columnFilter.overlaps as any)
+        } else if (columnFilter.textSearch) {
+            query.textSearch(key, columnFilter.textSearch.query, {
+                type: columnFilter.textSearch.type,
+                config: columnFilter.textSearch.config
+            })
+        } else if (columnFilter.not) {
+            query.not(key, columnFilter.not.operator, columnFilter.not.value)
+        } else if (columnFilter.filter) {
+            query.filter(key, columnFilter.filter.operator, columnFilter.filter.value)
+        }
+    }
+
+    if (filters.or) {
+        query.or(filters.or)
+    }
+
+    if (filters.match) {
+        query.match(filters.match)
+    }
+
+    query.limit(filters.limit != undefined ? filters.limit : 100)
+
+    if (filters.range) {
+        query.range(filters.range[0], filters.range[1])
+    } else if (filters.offset) {
+        query.range(filters.offset, filters.limit || 100)
+    }
+
+    if (Array.isArray(filters.order)) {
+        for (const order of filters.order) {
+            query.order(order.column as string, {
+                ascending: order.options?.ascending,
+                nullsFirst: order.options?.nullsFirst,
+                referencedTable: order.options?.referencedTable
+            })
+        }
+    } else if (filters.order) {
+        query.order(filters.order.column as string, {
+            ascending: filters.order.options?.ascending,
+            nullsFirst: filters.order.options?.nullsFirst,
+            referencedTable: filters.order.options?.referencedTable
+        })
     }
 }
 
+
+// FILTERS
+
+type ColumnFilters<T> = {
+    eq?: T,
+    neq?: T,
+    gt?: T,
+    gte?: T,
+    lt?: T,
+    lte?: T,
+    like?: string,
+    ilike?: string,
+    is?: unknown,
+    in?: Partial<T>[],
+    contains?: Partial<T> | string,
+    containedBy?: Partial<T> | string,
+    rangeGt?: string,
+    rangeGte?: string,
+    rangeLt?: string,
+    rangeLte?: string,
+    rangeAdjacent?: string,
+    overlaps?: Partial<T> | string,
+    textSearch?: { query: string, config?: string; type?: "plain" | "phrase" | "websearch" },
+    not?: { operator: string, value: unknown }
+    filter?: { operator: string, value: unknown }
+}
+
+type Order<T> = {
+    column: keyof T,
+    options?: {
+        ascending?: boolean
+        nullsFirst?: boolean
+        referencedTable?: undefined
+    } | null
+}
+
+export type QueryFilters<T> = {
+    [key in keyof T]?: ColumnFilters<T[key]> | T[key]
+} & {
+    or?: string
+    match?: Partial<T>
+    order?: Order<T>[] | Order<T> | null
+    limit?: number
+    range?: [number, number]
+    offset?: number
+    explain?: boolean
+    apply?: (query: SupabaseQuery) => void
+} & {
+    [key: string]: ColumnFilters<unknown> | unknown
+}

@@ -1,15 +1,14 @@
 import { useEntities } from "@/utils/supabase/supabase-swr"
 import { Button, Card, CardBody, Form, Input, User } from "@nextui-org/react"
 import { useSession } from "@supabase/auth-helpers-react"
-import { Profiles, useMessages, useProfile, useWhispers } from "entities.generated"
+import { Profile, useMessages, useProfile } from "entities.generated"
 import { useEffect, useState } from "react"
 
 export default function Test() {
     const session = useSession()
-    const { data: profile } = useProfile(session?.user?.id)
-    const { data: profiles, update, mutate } = useEntities<Profiles>("profiles")
-    const { data: whispers } = useWhispers()
-    const { data: messages } = useMessages()
+    const { profile } = useProfile(null, { match: { id: session?.user?.id } })
+    const { data: profiles, update, mutate } = useEntities<Profile>("profiles")
+    const { messages } = useMessages(true)
     const [fullName, setFullName] = useState<string>(profile?.full_name || "")
 
     useEffect(() => {
@@ -67,16 +66,12 @@ export default function Test() {
                 <Card key={message.id} fullWidth className="max-w-sm p-2">
                     <CardBody className="items-start">
                         {message.user.full_name}
-                        {JSON.stringify(message)}
-                    </CardBody>
-                </Card>
-            ))}
 
-            {whispers?.map(whisper => (
-                <Card key={whisper.id} fullWidth className="max-w-sm p-2">
-                    <CardBody className="items-start">
-                        {whisper.recipient.full_name}
-                        {JSON.stringify(whisper)}
+                        {message.likes.map(like => (
+                            <div key={like.id}>
+                                {like.user.full_name}
+                            </div>
+                        ))}
                     </CardBody>
                 </Card>
             ))}

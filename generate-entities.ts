@@ -4,6 +4,11 @@ import ts from 'typescript'
 
 type SelectConfig = Record<string, string[]>
 
+function lowercaseFirstLetter(str: string): string {
+    if (!str) return str
+    return str.charAt(0).toLowerCase() + str.slice(1)
+}
+
 function toCamelCase(str: string): string {
     return str
         .replace(/(?:^\w|[A-Z]|\b\w|_\w)/g, function (match, index) {
@@ -72,9 +77,11 @@ function loadSelectConfig(): SelectConfig {
 // Function to generate content for entities.generated.ts
 function generateEntitiesFile(tables: string[], selectConfig: SelectConfig) {
     let content = `import { QueryData, SupabaseClient } from "@supabase/supabase-js"\n`
-    content += `import { Database } from "database.types"\n`
-    content += `import { createClient } from "@/utils/supabase/component"\n`
+    content += `import { SWRConfiguration } from "swr"\n\n`
+
     content += `import { QueryFilters, useEntities, useEntity } from "@/utils/supabase/supabase-swr"\n\n`
+    content += `import { createClient } from "@/utils/supabase/component"\n`
+    content += `import { Database } from "database.types"\n`
 
     content += `const supabaseClient: SupabaseClient<Database> = createClient()\n\n`
 
@@ -92,21 +99,25 @@ function generateEntitiesFile(tables: string[], selectConfig: SelectConfig) {
     content += `}\n\n`
 
     tables.forEach((table) => {
-        const className = toCamelCase(table)
-        content += `export type ${className} = QueryData<ReturnType<typeof createQueries>["${table}"]>\n`
+        const camelCaseName = toCamelCase(table)
+        const className = camelCaseName.endsWith('s') ? camelCaseName.slice(0, -1) : camelCaseName
+        content += `export type ${className} = QueryData<ReturnType<typeof createQueries>["${table}"]>[0]\n`
     })
 
     tables.forEach((table) => {
-        const className = toCamelCase(table)
+        const camelCaseName = toCamelCase(table)
+        const className = camelCaseName.endsWith('s') ? camelCaseName.slice(0, -1) : camelCaseName
         const useEntityName = className.endsWith('s') ? className.slice(0, -1) : className
         const useEntitiesName = className.endsWith('s') ? className : `${className}s`
 
-        content += `\nexport function use${useEntitiesName}(enabled: boolean | null = true, filters?: QueryFilters | null) {\n`
-        content += `    return useEntities<${className}>(enabled ? "${table}" : null, filters)\n`
+        content += `\nexport function use${useEntitiesName}(enabled: boolean | null = true, filters?: QueryFilters<${className}> | null, config?: SWRConfiguration | null) {\n`
+        content += `    const result = useEntities<${className}>(enabled ? "${table}" : null, filters, config)\n`
+        content += `    return {...result, ${lowercaseFirstLetter(useEntitiesName)}: result.data}\n`
         content += `}\n`
 
-        content += `\nexport function use${useEntityName}(id?: string | null, filters?: QueryFilters | null) {\n`
-        content += `    return useEntity<${className}>((id || filters) ? "${table}" : null, id, filters)\n`
+        content += `\nexport function use${useEntityName}(id?: string | null, filters?: QueryFilters<${className}> | null, config?: SWRConfiguration | null) {\n`
+        content += `    const result = useEntity<${className}>((id || filters) ? "${table}" : null, id, filters, config)\n`
+        content += `    return {...result, ${lowercaseFirstLetter(useEntityName)}: result.data}\n`
         content += `}\n`
     })
 
