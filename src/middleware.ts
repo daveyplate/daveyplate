@@ -4,15 +4,13 @@ import { NextRequest } from 'next/server'
 
 const allowedOrigins = ['http://localhost:3000']
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     // CORS
     const response = nextCors({ request, allowedOrigins })
 
     // Rate Limiting
-    if (process.env.NODE_ENV === 'production') {
-        const rateLimitResponse = rateLimit({ request, response })
-        if (rateLimitResponse) return rateLimitResponse
-    }
+    const rateLimitResponse = rateLimit({ request, response, ipLimit: 10, sessionLimit: 90000 })
+    if (rateLimitResponse) return rateLimitResponse
 
     return response
 }
