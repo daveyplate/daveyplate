@@ -2,6 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import ts from 'typescript'
 
+type SelectConfig = Record<string, string[]>
+
 function toCamelCase(str: string): string {
     return str
         .replace(/(?:^\w|[A-Z]|\b\w|_\w)/g, function (match, index) {
@@ -54,8 +56,21 @@ function extractTablesTypes(): string[] {
     return tables
 }
 
+// Load select configurations from entities.config.json if it exists
+function loadSelectConfig(): SelectConfig {
+    const configPath = path.resolve(__dirname, 'entities.config.json')
+
+    if (fs.existsSync(configPath)) {
+        const configContent = fs.readFileSync(configPath, 'utf8')
+        const config = JSON.parse(configContent)
+        return config.selects || {}
+    }
+
+    return {}
+}
+
 // Function to generate content for entities.generated.ts
-function generateEntitiesFile(tables: string[]) {
+function generateEntitiesFile(tables: string[], selectConfig: SelectConfig) {
     let content = `import { QueryData, SupabaseClient } from "@supabase/supabase-js"\n`
     content += `import { Database } from "database.types"\n`
     content += `import { createClient } from "@/utils/supabase/component"\n`
@@ -67,7 +82,10 @@ function generateEntitiesFile(tables: string[]) {
     content += `    return {\n`
 
     tables.forEach((table) => {
-        content += `        "${table}": supabaseClient.from("${table}").select(),\n`
+        const selectParams = selectConfig[table]
+            ? `.select("${selectConfig[table].join(',')}")`
+            : `.select()`
+        content += `        "${table}": supabaseClient.from("${table}")${selectParams},\n`
     })
 
     content += `    }\n`
@@ -97,4 +115,5 @@ function generateEntitiesFile(tables: string[]) {
 
 // Main execution
 const tables = extractTablesTypes()
-generateEntitiesFile(tables)
+const selectConfig = loadSelectConfig()
+generateEntitiesFile(tables, selectConfig)

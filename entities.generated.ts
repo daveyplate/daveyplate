@@ -8,7 +8,7 @@ const supabaseClient: SupabaseClient<Database> = createClient()
 export const createQueries = () => {
     return {
         "article_comments": supabaseClient.from("article_comments").select(),
-        "articles": supabaseClient.from("articles").select(),
+        "articles": supabaseClient.from("articles").select("*,user:user_id!inner(*)"),
         "message_likes": supabaseClient.from("message_likes").select(),
         "messages": supabaseClient.from("messages").select(),
         "metadata": supabaseClient.from("metadata").select(),

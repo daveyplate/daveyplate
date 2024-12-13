@@ -1,0 +1,8 @@
+{
+    "selects": {
+        "articles": [
+            "*",
+            "user:user_id!inner(*)"
+        ]
+    }
+}
