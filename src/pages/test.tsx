@@ -23,7 +23,7 @@ export default function Test() {
             </Button>
 
             <Button onPress={() => {
-                fetch("/api/test")
+                fetch("/api/test", { headers: { "x-forwarded-for": Math.random().toString() } })
             }}>
                 FETCH
             </Button>
