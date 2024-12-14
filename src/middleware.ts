@@ -9,10 +9,7 @@ export async function middleware(request: NextRequest) {
     const response = nextCors({ request, allowedOrigins })
 
     // Rate Limiting
-    const rateLimitResponse = await rateLimit({ request, response })
-    if (rateLimitResponse) return rateLimitResponse
-
-    return response
+    return await rateLimit({ request, response, upstash: { enabled: true, analytics: true } })
 }
 
 // Apply middleware to all API routes
