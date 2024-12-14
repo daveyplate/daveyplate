@@ -1,6 +1,6 @@
-import { createClient } from "@/utils/supabase/edge"
-import { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { jwtVerify, SignJWT } from "jose"
+import { createClient } from "@/utils/supabase/server"
 
 export const config = {
     runtime: "edge",
@@ -10,8 +10,11 @@ export const config = {
 }
 
 export default async (req: NextRequest): Promise<Response> => {
+    // Prepare the Request context
+    NextResponse.next()
+
     // Get the Access Token from the Authorization header or the Session
-    const supabase = createClient(req)
+    const supabase = await createClient()
     const { data: { session } } = await supabase.auth.getSession()
 
     const secret = new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET!)
