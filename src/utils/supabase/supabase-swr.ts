@@ -71,8 +71,9 @@ export function useEntities<T extends Entity>(
             },
             optimisticData(currentData) {
                 if (!currentData) return []
+                const existingEntity = currentData.find((d) => d.id == id)
 
-                const newData = amendEntity(currentData, { id, ...values })
+                const newData = amendEntity(currentData, { id, ...existingEntity, ...values })
                 return newData as T[]
             },
             revalidate: false
