@@ -4,12 +4,12 @@ import { NextRequest } from 'next/server'
 
 const allowedOrigins = ['http://localhost:3000']
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
     // CORS
     const response = nextCors({ request, allowedOrigins })
 
     // Rate Limiting
-    return await rateLimit({ request, response, upstash: { enabled: false, analytics: true } })
+    return rateLimit({ request, response, upstash: { enabled: false, analytics: true } })
 }
 
 // Apply middleware to all API routes
