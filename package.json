@@ -52,6 +52,7 @@
     "framer-motion": "^11.13.5",
     "http-proxy-middleware": "^3.0.3",
     "javascript-time-ago": "^2.5.11",
+    "jose": "^5.9.6",
     "jsonwebtoken": "^9.0.2",
     "micro": "^10.0.1",
     "next": "^15.0.2",
