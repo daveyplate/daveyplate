@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/edge"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 import { jwtVerify, SignJWT } from "jose"
 
 export const config = {
@@ -9,14 +9,15 @@ export const config = {
     }
 }
 
-export default async (req: NextRequest, res: NextResponse): Promise<Response> => {
-    const supabase = createClient(req, res)
+export default async (req: NextRequest): Promise<Response> => {
+    // Get the Access Token from the Authorization header or the Session
+    const supabase = createClient(req)
     const { data: { session } } = await supabase.auth.getSession()
 
     const secret = new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET!)
     const accessToken = req.headers.get('authorization')?.replace('Bearer ', '') || session?.access_token
 
-    // Append is_server = true to JWT for RLS
+    // Append is_server = true to the JWT for RLS
     const decodedJwt = accessToken ? {
         ...(await jwtVerify(accessToken, secret)).payload,
         is_server: true
@@ -27,14 +28,12 @@ export default async (req: NextRequest, res: NextResponse): Promise<Response> =>
         .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
         .sign(secret)
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    // Build the Supabase API URL and remove the dynamic path from the query string
+    const proxyUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+        + req.nextUrl.pathname.replace("/api", "")
+        + req.nextUrl.search.split("&supabase")[0].split("?supabase")[0]
 
-    if (!supabaseUrl) {
-        return new Response("Supabase URL not defined", { status: 500 })
-    }
-
-    const proxyUrl = supabaseUrl + req.nextUrl.pathname.replace("/api", "") + req.nextUrl.search.split("&supabase")[0].split("?supabase")[0]
-
+    // Proxy the request to Supabase with the appropriate headers
     return await fetch(proxyUrl, {
         method: req.method,
         headers: {
