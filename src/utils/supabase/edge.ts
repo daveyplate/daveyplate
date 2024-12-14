@@ -12,8 +12,8 @@ export function createClient(req: NextRequest) {
                 },
                 setAll(cookiesToSet) {
                     cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value))
-                },
-            },
+                }
+            }
         }
     )
 

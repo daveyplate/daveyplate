@@ -1,13 +1,8 @@
 import { NextRequest } from "next/server"
 import { jwtVerify, SignJWT } from "jose"
-import { createClient } from "@/utils/supabase/edge"
 
-export const config = {
-    runtime: "edge",
-    api: {
-        bodyParser: false
-    }
-}
+import { createClient } from "@/utils/supabase/edge"
+export const config = { runtime: "edge" }
 
 export default async (req: NextRequest) => {
     // Get the Access Token from the Authorization header or the Session
