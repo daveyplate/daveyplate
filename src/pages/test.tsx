@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 
 export default function Test() {
     const session = useSession()
-    const { data: profile } = useSupabaseInfiniteSWR<Profile>(session ? "profiles" : null, { id: session?.user?.id })
+    const { data: profile, count } = useSupabaseInfiniteSWR<Profile>(session ? "profiles" : null, { id: session?.user?.id })
     const { data: profiles, update, mutate } = useProfiles()
     const [fullName, setFullName] = useState<string>(profile?.[0]?.full_name || "")
 
@@ -19,7 +19,7 @@ export default function Test() {
             <p>My Profile</p>
 
             <Button onPress={() => mutate()}>
-                Mutate
+                Mutate {count}
             </Button>
 
             {profile?.[0] && (

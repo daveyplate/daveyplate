@@ -1,7 +1,7 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js"
 import { createQueries } from "entities.generated"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr"
 import useSWRInfinite, { SWRInfiniteConfiguration } from "swr/infinite"
 
@@ -103,24 +103,25 @@ export function useSupabaseInfiniteSWR<T extends Entity>(
     config?: SWRInfiniteConfiguration | null
 ) {
     const { cache } = useSWRConfig()
+    const [count, setCount] = useState(0)
 
     const createQuery = (pageIndex: number) => {
         const query: SupabaseQuery = (createQueries() as any)[table!]!
         if (!query) throw new Error(`Query not found for table: "${table}" in entities.generated.ts`)
 
-        const newFilters = filters?.id ? filters : {
+        const queryFilters = filters?.id ? filters : {
             ...filters,
             limit: filters?.limit || 100,
             offset: pageIndex * (filters?.limit || 100),
         } as QueryFilters<T>
-        applyFilters<T>(query, newFilters)
+        applyFilters<T>(query, queryFilters)
 
         return query
     }
 
     const getKey = (pageIndex: number, previousPageData: Entity[]) => {
-        if (previousPageData && !previousPageData.length) return null
         if (!table) return null
+        if (previousPageData && !previousPageData?.length) return null
 
         const query = createQuery(pageIndex)
         const queryPath = query.url.toString().split("/rest/v1/")[1]
@@ -130,12 +131,30 @@ export function useSupabaseInfiniteSWR<T extends Entity>(
 
     const swr = useSWRInfinite<T[]>(
         getKey,
-        async ([, pageIndex]) => await createQuery(pageIndex)!.throwOnError().then(({ data }) => data),
+        async ([, pageIndex]) => {
+            const { data, count } = await createQuery(pageIndex)!.throwOnError()
+            if (count) setCount(count)
+            return data
+        },
         config || undefined
     )
 
     const { data } = swr
-    const entities = useMemo<T[]>(() => data?.reduce((acc, page) => [...acc, ...page], []) || [], [data])
+    const allEntities = data?.reduce((acc, page) => [...acc, ...page], []) || []
+
+    // Remove duplicates
+    const entities = useMemo(() => {
+        const seen = new Set()
+        return allEntities.filter((entity) => {
+            const duplicate = seen.has(entity)
+            seen.add(entity)
+            return !duplicate
+        })
+    }, [data])
+
+    useEffect(() => {
+        setCount(Math.max(count, entities.length))
+    }, [entities, count])
 
     useEffect(() => {
         if (!data) return
@@ -147,7 +166,8 @@ export function useSupabaseInfiniteSWR<T extends Entity>(
         }
     }, [data])
 
-    return { ...swr, data: entities }
+    const hasMore = count > allEntities?.length || (data ? data[data.length - 1].length >= (filters?.limit || 100) : true)
+    return { ...swr, data: entities, hasMore, count }
 }
 
 

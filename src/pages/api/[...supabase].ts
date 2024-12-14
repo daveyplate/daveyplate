@@ -37,7 +37,7 @@ export default async (req: NextRequest) => {
             "content-type": req.headers.get('content-type') || 'application/json',
             apikey: req.headers.get('apikey') || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
             authorization: `Bearer ${newToken}`,
-            prefer: 'return=representation',
+            prefer: req.headers.get('prefer') || 'return=representation',
         },
         body: req.body
     })
