@@ -1,6 +1,6 @@
-import { createClient } from "@/utils/supabase/edge"
 import { NextRequest } from "next/server"
 import { jwtVerify, SignJWT } from "jose"
+import { createClient } from "@/utils/supabase/edge"
 
 export const config = {
     runtime: "edge",
