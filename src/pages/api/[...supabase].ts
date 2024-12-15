@@ -1,10 +1,11 @@
-import { NextRequest } from "next/server"
 import { SupabaseClient } from "@supabase/supabase-js"
 import { jwtVerify, SignJWT } from "jose"
 
-import { createClient } from "@/utils/supabase/edge"
+import { headers } from "next/headers"
+import { IncomingMessage } from "http"
+import { NextApiRequest, NextApiResponse } from "next"
 
-export const config = { runtime: "edge" }
+// export const config = { runtime: "edge" }
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -14,65 +15,85 @@ const corsHeaders = {
     "Access-Control-Max-Age": "7200"
 }
 
-export default async (req: NextRequest) => {
-    const supabase = createClient(req)
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+    //=const supabase = createClient(req)
+
+    // Required for Next Edge API Requests to be parsed out of the URL query
     const dynamicPathname = "supabase"
 
-    return fetchSupabaseAPI({
-        supabaseClient: supabase,
-        method: req.method,
-        pathname: req.nextUrl.pathname.replace("/api", ""),
-        query: req.nextUrl.search.split(`&${dynamicPathname}`)[0].split(`?${dynamicPathname}`)[0],
-        headers: Object.fromEntries(req.headers.entries()),
-        body: req.body
+    const response = await supabaseApiProxy({
+        // supabase,
+        req,
+        parseUrl: (url) => url
+            .split(`&${dynamicPathname}`)[0]
+            .split(`?${dynamicPathname}`)[0]
     })
+
+    // Determine content type and send response accordingly
+    const contentType = response.headers.get('content-type') || ""
+
+    if (contentType.includes('application/json')) {
+        const data = await response.json()
+        res.json(data)
+    } else if (contentType.startsWith('image/') || contentType.includes('application/octet-stream')) {
+        const buffer = await response.arrayBuffer()
+        res.send(Buffer.from(buffer))
+    } else {
+        const text = await response.text()
+        res.send(text)
+    }
 }
 
-interface FetchSupabaseOptions {
-    supabaseClient?: SupabaseClient | null,
-    supabaseUrl?: string | null,
-    apiKey?: string | null,
-    jwtSecret?: string | null,
-    method: string,
-    pathname: string,
-    query?: string | null,
-    headers: Record<string, any>,
-    body?: BodyInit | null,
-    enableCors?: boolean
+
+/**
+ * Parses the Supabase API pathname from provided URL
+ */
+function parseSupabaseUrl(url: string) {
+    const regex = /(\/[^/]+\/v1)(\/[^?]*)(\?.*)?/
+    const match = url.match(regex)
+
+    if (match) {
+        // Reconstruct the path including everything after '/v1'
+        const pathSegment = match[1] + match[2]
+        const queryString = match[3] || ''
+        return pathSegment + queryString
+    }
+
+    throw new Error("Invalid URL")
 }
 
 /**
  * Fetches the Supabase API with the given options.
  * 
- * @param {FetchSupabaseOptions} options - The options for fetching the Supabase API.
+ * @param {SupabaseApiProxyOptions} options - The options for fetching the Supabase API.
  * @param {SupabaseClient | null} [options.supabaseClient] - Optional SupabaseClient for fallback Access Token.
+ * @param {Request} options.request - Request or NextApiRequest object.
+ * @param {(url: string) => string} [options.parseUrl] - Optional function to parse the URL.
  * @param {string | null} [options.supabaseUrl] - Your project's Supabase URL.
  * @param {string | null} [options.apiKey] - Supabase Anon API key.
  * @param {string | null} [options.jwtSecret] - Supabase JWT secret for re-signing tokens.
- * @param {string} options.method - HTTP Method.
- * @param {string} options.pathname - The Supabase API pathname for the request.
- * @param {string | null} [options.query] - The query string for the request.
- * @param {Record<string, any>} options.headers - The headers for the request.
- * @param {BodyInit | null} [options.body] - The body for the request.
  * @param {boolean} [options.enableCors] - Whether to enable CORS headers.
  */
-const fetchSupabaseAPI = async ({
-    supabaseClient,
+
+interface SupabaseApiProxyOptions {
+    supabase?: SupabaseClient | null,
+    req: Request | IncomingMessage,
+    parseUrl?: (url: string) => string,
+    supabaseUrl?: string | null,
+    apiKey?: string | null,
+    jwtSecret?: string | null,
+    enableCors?: boolean
+}
+
+const supabaseApiProxy = async ({
+    supabase,
+    req,
+    parseUrl,
     supabaseUrl,
     apiKey,
     jwtSecret,
-    method,
-    pathname,
-    query,
-    headers,
-    body,
     enableCors
-}: FetchSupabaseOptions) => {
-    // Handle CORS Preflight Requests
-    if (enableCors && method == "OPTIONS") {
-        return new Response(null, { headers: corsHeaders })
-    }
-
+}: SupabaseApiProxyOptions) => {
     // Load the Supabase Environment Variables
     supabaseUrl = supabaseUrl
         || process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -80,8 +101,23 @@ const fetchSupabaseAPI = async ({
         || process.env.SUPA_URL
     if (!supabaseUrl) throw new Error("supabaseUrl is required")
 
+    let request = req as Request
+
+    if (!(req instanceof Request)) {
+        request = new Request(req.headers.host + req.url!, {
+            method: req.method,
+            headers: req.headers as HeadersInit,
+            body: (req as any).body ? JSON.stringify((req as any).body) : null
+        })
+    }
+
+    // Handle CORS Preflight Requests
+    if (enableCors && request.method == "OPTIONS") {
+        return new Response(null, { headers: corsHeaders })
+    }
+
     apiKey = apiKey
-        || headers["apikey"]
+        || request.headers.get("apikey")
         || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
         || process.env.SUPABASE_ANON_KEY
         || process.env.SUPA_ANON_KEY
@@ -93,8 +129,8 @@ const fetchSupabaseAPI = async ({
     if (!jwtSecret) throw new Error("jwtSecret is required")
 
     // Get the Access Token from the Authorization Header or the Session
-    const sessionResult = await supabaseClient?.auth.getSession()
-    const accessToken = headers.authorization?.replace("Bearer ", "") || sessionResult?.data?.session?.access_token
+    const sessionResult = await supabase?.auth.getSession()
+    const accessToken = request.headers.get("authorization")?.replace("Bearer ", "") || sessionResult?.data?.session?.access_token
     const secret = new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET!)
 
     // Append is_server = true to the JWT for RLS
@@ -109,7 +145,12 @@ const fetchSupabaseAPI = async ({
         .sign(secret)
 
     // Build the Supabase API URL
-    const proxyUrl = supabaseUrl + pathname + query
+    const pathname = parseSupabaseUrl(request.url)
+    let url = supabaseUrl + pathname
+
+    if (parseUrl) {
+        url = parseUrl(url)
+    }
 
     // Inherit the appropriate headers
     const inheritHeaders = ["content-length", "content-type", "prefer", "x-upsert", "accept-profile", "content-profile"]
@@ -119,15 +160,16 @@ const fetchSupabaseAPI = async ({
     )
 
     // Fetch the Supabase API
-    const response = await fetch(proxyUrl, {
-        method,
+    const response = await fetch(url, {
+        method: request.method,
         headers: {
             ...forwardHeaders,
             "apikey": apiKey,
             "authorization": `Bearer ${newToken}`,
         },
-        body
-    })
+        body: request.body,
+        duplex: "half"
+    } as any)
 
     // Apply the CORS Headers
     if (enableCors) {
